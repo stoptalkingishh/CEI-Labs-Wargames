@@ -11,11 +11,15 @@ This repository contains the infrastructure and challenge generation scripts to 
 
 ## 🚀 Setup Instructions
 
-### 1. Generate the Challenges
-The challenges are generated using Python scripts to format them perfectly for CTFd's `ctfcli` tool.
+### 1. Generate and Deploy the Challenges
+You can build and deploy the entire training pipeline directly into your CTFd instance using the automated deployment script. 
+
+Ensure you pass your CTFd scoreboard details as environment variables if running in an automated CI/CD runner:
 
 ```bash
-cd scripts/
-python3 build_bandit.py
-# python3 build_krypton.py
-# python3 build_natas.py
+export CTFD_URL="[https://your-ctfd-scoreboard.com](https://your-ctfd-scoreboard.com)"
+export CTFD_TOKEN="your_admin_token_here"
+
+# This builds all modules (Bandit, Krypton, Natas) and syncs them
+chmod +x deploy.sh
+./deploy.sh
