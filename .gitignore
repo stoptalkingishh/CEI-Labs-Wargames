@@ -1,0 +1,15 @@
+# Ignore the 56 generated CTFd challenge folders
+challenges/*/
+
+# Ignore Python compilation caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore local ctfcli hidden configurations (contains sensitive API tokens!)
+.ctf/
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
