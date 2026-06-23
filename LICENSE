@@ -1,0 +1,48 @@
+================================================================---------
+CEI-Labs-Wargames END USER LICENSE AGREEMENT (EULA)
+================================================================---------
+Copyright (c) 2026 CEI-Labs. All rights reserved.
+
+1. PROPRIETARY RIGHTS AND LICENSE GRANT
+The software, scripts, automation tools, database structures, and custom 
+configurations contained within the "CEI-Labs-Wargames" repository are the 
+exclusive intellectual property of CEI-Labs. 
+
+CEI-Labs hereby grants you a non-exclusive, non-transferable, revocable license 
+to use, modify, and run this software solely for non-commercial, personal, 
+and educational purposes. 
+
+2. COMMERCIAL USE RESTRICTIONS
+You may NOT use this software, its generated challenges, or its infrastructure 
+for any commercial or revenue-generating activities (including but not limited 
+to paid training events, corporate bootcamps, or commercial platforms) without 
+obtaining prior written consent and a separate commercial license from CEI-Labs.
+
+3. MODIFICATION AND DERIVATIVE WORKS
+You may modify the scripts for your own private, non-commercial use. You may 
+not redistribute modified versions of these scripts under any open-source or 
+permissive license that conflicts with the proprietary rights of CEI-Labs.
+
+-------------------------------------------------------------------------
+THIRD-PARTY DISCLAIMER AND ATTRIBUTION: OVERTHEWIRE INTELLECTUAL PROPERTY
+-------------------------------------------------------------------------
+This repository utilizes references, connection instructions, and conceptual 
+frameworks derived from the OverTheWire community (https://overthewire.org).
+
+Copyright (c) 2007-2026 OverTheWire. All rights reserved.
+
+1. OWNERSHIP
+CEI-Labs does not claim ownership of any challenge descriptions, wargame concepts, 
+server names, or flags associated with OverTheWire's wargames (including but not 
+limited to Bandit, Krypton, and Natas). All such content remains the exclusive 
+intellectual property of OverTheWire or its respective credited authors.
+
+2. FAIR USE & COMPLIANCE
+This repository does NOT host, redistribute, or replicate OverTheWire's binary 
+files, challenge code, or restricted system configurations. This project acts 
+purely as an external scoring wrapper (via CTFd) that directs users to play 
+interactively on the official, public OverTheWire servers. 
+
+Users of this software must strictly adhere to the OverTheWire Rules of Engagement 
+found at https://overthewire.org/rules/.
+================================================================---------
