@@ -242,19 +242,21 @@ challenges_data = [
     }
 ]
 
-# Generate folder and files
-base_dir = "../challenges"
+# Generate folder and files relative to the repo root folder dynamically
+script_dir = os.path.dirname(os.path.abspath(__file__))
+base_dir = os.path.abspath(os.path.join(script_dir, "..", "challenges"))
 os.makedirs(base_dir, exist_ok=True)
 
 for ch in challenges_data:
     folder_path = os.path.join(base_dir, ch["id"])
     os.makedirs(folder_path, exist_ok=True)
     
+    escaped_desc = ch['desc'].replace('\n', '\n  ')
     yaml_content = f"""name: "{ch['name']}"
 author: "OverTheWire"
 category: "Linux Basics"
 description: |
-  {ch['desc'].replace(chr(10), chr(10) + '  ')}
+  {escaped_desc}
 value: {ch['points']}
 type: standard
 flags:
@@ -267,4 +269,4 @@ version: "0.1"
     with open(file_path, "w") as f:
         f.write(yaml_content)
 
-print(f"Successfully generated {len(challenges_data)} Bandit challenges inside the '{base_dir}' folder!")
+print(f"Successfully generated {len(challenges_data)} Bandit challenges inside '{base_dir}'!")
