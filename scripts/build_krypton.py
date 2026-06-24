@@ -6,139 +6,66 @@ challenges_data = [
         "id": "krypton-00",
         "name": "Krypton 0 -> 1: Base64 Decoding",
         "points": 200,
-        "desc": "**Goal:** Decrypt the first password using Base64 decoding.\n\nWelcome to Krypton! The first level is easy. The following string encodes the password for level 1 using Base64:\n\n
-http://googleusercontent.com/immersive_entry_chip/0
-
----
-
-### 5. `scripts/build_natas.py`
-```python
-import os
-
-# Define the dataset for Natas Levels 0 to 14 based on OTW specifications
-challenges_data = [
-    {
-        "id": "natas-00",
-        "name": "Natas 0 -> 1: View Source",
-        "points": 200,
-        "desc": "**Goal:** Retrieve the password for the next level from the page source.\n\nNavigate to the level webpage and inspect the underlying HTML source code to find the hidden flag.\n\n* **URL:** `http://natas0.natas.labs.overthewire.org`\n* **Username:** `natas0`\n* **Password:** `natas0`",
-        "flag": "g9D9cREhslqBKtcA2uVOCe7MbL6WAocT"
+        "desc": "**Goal:** Decrypt the first password using Base64 decoding.\n\nWelcome to Krypton! The first level is easy. The following string encodes the password for level 1 using Base64:\n\n```text\nS1JZUFRPTklTR1JFQVQ=\n```\n\nDecode this string to find the password, then log in to the next level.\n\n**Connection Information:**\n* **Host:** `krypton.labs.overthewire.org`\n* **Port:** `2231`\n* **Username:** `krypton1`\n* **Password:** (The decoded string)",
+        "flag": "KRYPTONISGREAT"
     },
     {
-        "id": "natas-01",
-        "name": "Natas 1 -> 2: Right-Click Block",
-        "points": 250,
-        "desc": "**Goal:** Find the password on a page that attempts to block right-clicking.\n\nNavigate to the URL and log in using the flag from Natas 0.\n\n* **URL:** `http://natas1.natas.labs.overthewire.org`\n\n*Tip: Use browser keyboard shortcuts (e.g., F12, Ctrl+U, or Cmd+Option+I) or curl to view the source directly.*",
-        "flag": "ZluruAthQk7Q2MqmDeTiUij2ZvWy2mBi"
-    },
-    {
-        "id": "natas-02",
-        "name": "Natas 2 -> 3: Directory Traversal (Files)",
+        "id": "krypton-01",
+        "name": "Krypton 1 -> 2: Caesar Rotations",
         "points": 300,
-        "desc": "**Goal:** Find the hidden password file on the server.\n\nThere is nothing obvious in the source code of this page, except for an embedded image. Investigate the directories and files on the web server to find where the password file is hidden.\n\n* **URL:** `http://natas2.natas.labs.overthewire.org`",
-        "flag": "sJIJNW6ucpu6HPZ1ZAyN8VRdTepNnQA4"
+        "desc": "SSH into `krypton.labs.overthewire.org` on port `2231` using username `krypton1`.\n\nThe password for level 2 is in the file **'krypton2'** inside the home directory. It is encrypted using a simple rotation cipher (ROT). \n\nNote that the ciphertext preserves plaintext word boundaries to help you analyze the shift. Decrypt the file contents to get the next flag.",
+        "flag": "ROTTEN"
     },
     {
-        "id": "natas-03",
-        "name": "Natas 3 -> 4: Web Crawlers (Robots.txt)",
-        "points": 350,
-        "desc": "**Goal:** Intercept files hidden from search engine crawlers.\n\nThere is a hint in the source code: *\"there is nothing on this page\"*. Think about how search engines index pages and what files prevent them from crawling certain directories.\n\n* **URL:** `http://natas3.natas.labs.overthewire.org`",
-        "flag": "Z9mAndu1YccU99H73fsu6mptUz2uEAte"
-    },
-    {
-        "id": "natas-04",
-        "name": "Natas 4 -> 5: Referer Spoofing",
+        "id": "krypton-02",
+        "name": "Krypton 2 -> 3: Caesar's Shift Program",
         "points": 400,
-        "desc": "**Goal:** Spoof your HTTP Referer header.\n\nThe page states: *\"Access disallowed. You are visiting from '' while authorized users should come only from 'http://natas5.natas.labs.overthewire.org/'\"*.\n\nUse an intercepting proxy (like OWASP ZAP) or `curl` to manipulate your HTTP headers.\n\n* **URL:** `http://natas4.natas.labs.overthewire.org`",
-        "flag": "iCOgHandNo6eV127665PhSAsgS2abV0M"
+        "desc": "SSH into `krypton.labs.overthewire.org` on port `2231` using username `krypton2`.\n\nThe password for level 3 is in the file **krypton3**. It is in a 5-letter group ciphertext format, encrypted with a Caesar Cipher.\n\nYou do not have direct access to the key, but you have access to a program called `encrypt` in `/krypton/krypton2/` that will encrypt anything you pass to it using the same key. \n\n**Hint:**\nThe `encrypt` binary looks for `keyfile.dat` in your current working directory. Create a temporary directory in `/tmp`, link to the keyfile, grant permissions, and run the tool:\n```bash\nmktemp -d\ncd /tmp/tmp.XXXXXX\nln -s /krypton/krypton2/keyfile.dat\nchmod 777 .\n/krypton/krypton2/encrypt /etc/issue\n```",
+        "flag": "CAESARISEASY"
     },
     {
-        "id": "natas-05",
-        "name": "Natas 5 -> 6: Cookie Manipulation",
-        "points": 450,
-        "desc": "**Goal:** Modify your active session cookies.\n\nThe page states: *\"You are not logged in\"*. Check your browser's Developer Tools (Storage/Cookies tab) to see what cookies are being passed to the server and alter them to authorize yourself.\n\n* **URL:** `http://natas5.natas.labs.overthewire.org`",
-        "flag": "f94020Bh6bUNF6M9776QvSAsSgS2abV0"
-    },
-    {
-        "id": "natas-06",
-        "name": "Natas 6 -> 7: Hidden Inclusion Files",
+        "id": "krypton-03",
+        "name": "Krypton 3 -> 4: Frequency Analysis",
         "points": 500,
-        "desc": "**Goal:** Locate and read an included secret file.\n\nThis page requires you to submit a secret key to view the password. Inspect the PHP source code using the \"View sourcecode\" link on the page to find where the secret is stored on the server.\n\n* **URL:** `http://natas6.natas.labs.overthewire.org`",
-        "flag": "7z3hDeo6i6vF9M9776QvSAsSgS2abV0M"
+        "desc": "SSH into `krypton.labs.overthewire.org` on port `2231` using username `krypton3`.\n\nYou have intercepted several encrypted messages (`found1`, `found2`, `found3`) encrypted with the same key. The password to the next level is in the file **krypton4**.\n\nUse **Frequency Analysis** to map the ciphertext letters back to English. Plaintexts are in American English. Analyze the letter distributions to crack the monoalphabetic substitution cipher.",
+        "flag": "BRUTE"
     },
     {
-        "id": "natas-07",
-        "name": "Natas 7 -> 8: Local File Inclusion (LFI)",
-        "points": 550,
-        "desc": "**Goal:** Exploit a Local File Inclusion vulnerability to read system files.\n\nThe page allows you to navigate between \"Home\" and \"About\" via a URL parameter. Abuse this parameter to read the contents of `/etc/natas_webpass/natas8`.\n\n* **URL:** `http://natas7.natas.labs.overthewire.org`",
-        "flag": "8Ps3hDeo6i6vF9M9776QvSAsSgS2abV0"
-    },
-    {
-        "id": "natas-08",
-        "name": "Natas 8 -> 9: Reversing Crypto Schemes",
+        "id": "krypton-04",
+        "name": "Krypton 4 -> 5: Vigenère Cipher (Known Length)",
         "points": 600,
-        "desc": "**Goal:** Reverse-engineer a server-side encryption function.\n\nThis level requires a secret submit key. View the source code to see how the server processes and compares the secret. You will need to reverse the encoding functions (Base64, hex encoding, string reversing) to recover the original secret.\n\n* **URL:** `http://natas8.natas.labs.overthewire.org`",
-        "flag": "W0608Rh6bUNF6M9776QvSAsSgS2abV0M"
+        "desc": "SSH into `krypton.labs.overthewire.org` on port `2231` using username `krypton4`.\n\nThis level introduces polyalphabetic substitution via a **Vigenère Cipher**.\n\nYou have intercepted two longer English messages. Crucially, you know that the **key length is 6**.\n\nThe password to level 5 is in the usual place, encrypted with this 6-letter repeating key. Determine the key and decode the password.",
+        "flag": "CLEARTEXT"
     },
     {
-        "id": "natas-09",
-        "name": "Natas 9 -> 10: Command Injection I",
-        "points": 650,
-        "desc": "**Goal:** Execute arbitrary system commands through an input field.\n\nThis page executes a search query. View the source code to see how the input is passed directly to a shell command (`grep`). Inject shell metacharacters (like `;` or `|`) to read `/etc/natas_webpass/natas10`.\n\n* **URL:** `http://natas9.natas.labs.overthewire.org`",
-        "flag": "n94020Bh6bUNF6M9776QvSAsSgS2abV0"
-    },
-    {
-        "id": "natas-10",
-        "name": "Natas 10 -> 11: Command Injection II (Sanitization Bypass)",
+        "id": "krypton-05",
+        "name": "Krypton 5 -> 6: Vigenère Cipher (Unknown Length)",
         "points": 700,
-        "desc": "**Goal:** Bypass basic command injection filters.\n\nThis is similar to the previous level, but the input is now filtered to block characters like `;` and `&`. Find a way to read `/etc/natas_webpass/natas11` using only allowed characters inside the search string.\n\n* **URL:** `http://natas10.natas.labs.overthewire.org`",
-        "flag": "U0608Rh6bUNF6M9776QvSAsSgS2abV0M"
+        "desc": "SSH into `krypton.labs.overthewire.org` on port `2231` using username `krypton5`.\n\nThis is another polyalphabetic Vigenère Cipher challenge, but this time **the key length is unknown**.\n\nUse index of coincidence or Kasiski examination to find the key length, then perform frequency analysis on each sliced subset of the ciphertext to retrieve the password from the **krypton6** file.",
+        "flag": "KEYLENGTH"
     },
     {
-        "id": "natas-11",
-        "name": "Natas 11 -> 12: XOR Encryption Bypass",
-        "points": 750,
-        "desc": "**Goal:** Forge server-side encrypted data.\n\nThis page uses XOR encryption to store user preferences in a cookie. View the source code, find the XOR key by comparing plaintext to ciphertext, and forge a cookie that sets the `showpassword` field to `yes`.\n\n* **URL:** `http://natas11.natas.labs.overthewire.org`",
-        "flag": "ED9020Bh6bUNF6M9776QvSAsSgS2abV0"
-    },
-    {
-        "id": "natas-12",
-        "name": "Natas 12 -> 13: Arbitrary File Upload (Web Shell)",
+        "id": "krypton-06",
+        "name": "Krypton 6 -> 7: Stream Ciphers & Randomness",
         "points": 800,
-        "desc": "**Goal:** Upload a malicious script and execute it on the server.\n\nThis page allows users to upload JPEG profile pictures. Exploit the lack of server-side file extension checking to upload a PHP web shell (e.g., `shell.php`) and execute commands to read the next password.\n\n* **URL:** `http://natas12.natas.labs.overthewire.org`",
-        "flag": "j0608Rh6bUNF6M9776QvSAsSgS2abV0M"
-    },
-    {
-        "id": "natas-13",
-        "name": "Natas 13 -> 14: File Upload Bypass (Magic Bytes)",
-        "points": 850,
-        "desc": "**Goal:** Bypass magic byte validation during file upload.\n\nThis is similar to level 12, but the server now checks if the file is a real image using `exif_imagetype()`. Forge your PHP payload to start with the standard JPEG/PNG magic bytes to bypass the image validation filter.\n\n* **URL:** `http://natas13.natas.labs.overthewire.org`",
-        "flag": "L0608Rh6bUNF6M9776QvSAsSgS2abV0M"
-    },
-    {
-        "id": "natas-14",
-        "name": "Natas 14 -> 15: SQL Injection (SQLi)",
-        "points": 900,
-        "desc": "**Goal:** Bypass authentication using SQL Injection.\n\nThis page features a secure login form connected to a SQL database. Inject SQL syntax (e.g., `' OR 1=1 --`) into the input fields to manipulate the database query and log in without a password.\n\n* **URL:** `http://natas14.natas.labs.overthewire.org`",
-        "flag": "A0608Rh6bUNF6M9776QvSAsSgS2abV0M"
+        "desc": "SSH into `krypton.labs.overthewire.org` on port `2231` using username `krypton6`.\n\nModern ciphers attempt to create an on-the-fly 'random' keystream to encrypt incoming plaintext one byte at a time (Stream Ciphers). Typically, the key byte is XOR'd with the plaintext.\n\nThe binary `encrypt6` in your directory will read the keyfile (which you cannot read) and encrypt any message you desire using the key AND a pseudo-random number generator (PRNG).\n\nPerform a **known-ciphertext attack** by introducing plaintext of your choice. The challenge is not simple, but the PRNG is mathematically weak. Crack the PRNG to decrypt the password for level 7.",
+        "flag": "RANDOM"
     }
 ]
 
-# Generate folder and files relative to the repo root folder dynamically
-script_dir = os.path.dirname(os.path.abspath(__file__))
-base_dir = os.path.abspath(os.path.join(script_dir, "..", "challenges"))
+# Generate folder and files
+base_dir = "../challenges"
 os.makedirs(base_dir, exist_ok=True)
 
 for ch in challenges_data:
     folder_path = os.path.join(base_dir, ch["id"])
     os.makedirs(folder_path, exist_ok=True)
     
-    escaped_desc = ch['desc'].replace('\n', '\n  ')
     yaml_content = f"""name: "{ch['name']}"
 author: "OverTheWire"
-category: "Web Security"
+category: "Cryptography"
 description: |
-  {escaped_desc}
+  {ch['desc'].replace(chr(10), chr(10) + '  ')}
 value: {ch['points']}
 type: standard
 flags:
@@ -151,4 +78,4 @@ version: "0.1"
     with open(file_path, "w") as f:
         f.write(yaml_content)
 
-print(f"Successfully generated {len(challenges_data)} Natas challenges inside '{base_dir}'!")
+print(f"Successfully generated {len(challenges_data)} Krypton challenges inside the '{base_dir}' folder!")
