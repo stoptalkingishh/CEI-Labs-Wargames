@@ -6,66 +6,69 @@ challenges_data = [
         "id": "krypton-00",
         "name": "Krypton 0 -> 1: Base64 Decoding",
         "points": 200,
-        "desc": "**Goal:** Decrypt the first password using Base64 decoding.\n\nWelcome to Krypton! The first level is easy. The following string encodes the password for level 1 using Base64:\n\n```text\nS1JZUFRPTklTR1JFQVQ=\n```\n\nDecode this string to find the password, then log in to the next level.\n\n**Connection Information:**\n* **Host:** `krypton.labs.overthewire.org`\n* **Port:** `2231`\n* **Username:** `krypton1`\n* **Password:** (The decoded string)",
+        "desc": "**Goal:** Decrypt the first password using Base64 decoding.\n\nWelcome to Krypton! The first level is easy. The following string encodes the password for level 1 using Base64:\n\n`S1JZUFRPTklTR1JFQVQ=`\n\nUse a Base64 decoder (like the `base64 -d` command) to find the flag.",
         "flag": "KRYPTONISGREAT"
     },
     {
         "id": "krypton-01",
-        "name": "Krypton 1 -> 2: Caesar Rotations",
-        "points": 300,
-        "desc": "SSH into `krypton.labs.overthewire.org` on port `2231` using username `krypton1`.\n\nThe password for level 2 is in the file **'krypton2'** inside the home directory. It is encrypted using a simple rotation cipher (ROT). \n\nNote that the ciphertext preserves plaintext word boundaries to help you analyze the shift. Decrypt the file contents to get the next flag.",
+        "name": "Krypton 1 -> 2: ROT13 Substitution Cipher",
+        "points": 250,
+        "desc": "**Goal:** Decrypt a classic Caesar cipher (ROT13).\n\nSSH into `krypton.labs.overthewire.org` on port `2231` (username: `krypton1`).\n\nThe password for level 2 is located in `/krypton/krypton1/krypton2`. It is encrypted with a simple ROT13 rotation cipher.\n\n*Hint: The `tr` command is very useful for translating characters (e.g., `tr \"[:alpha:]\" \"N-ZA-Mn-za-m\"`).*",
         "flag": "ROTTEN"
     },
     {
         "id": "krypton-02",
-        "name": "Krypton 2 -> 3: Caesar's Shift Program",
-        "points": 400,
-        "desc": "SSH into `krypton.labs.overthewire.org` on port `2231` using username `krypton2`.\n\nThe password for level 3 is in the file **krypton3**. It is in a 5-letter group ciphertext format, encrypted with a Caesar Cipher.\n\nYou do not have direct access to the key, but you have access to a program called `encrypt` in `/krypton/krypton2/` that will encrypt anything you pass to it using the same key. \n\n**Hint:**\nThe `encrypt` binary looks for `keyfile.dat` in your current working directory. Create a temporary directory in `/tmp`, link to the keyfile, grant permissions, and run the tool:\n```bash\nmktemp -d\ncd /tmp/tmp.XXXXXX\nln -s /krypton/krypton2/keyfile.dat\nchmod 777 .\n/krypton/krypton2/encrypt /etc/issue\n```",
+        "name": "Krypton 2 -> 3: Caesar Cipher (Unknown Shift)",
+        "points": 300,
+        "desc": "**Goal:** Determine the shift of a Caesar Cipher by encrypting known plaintext.\n\nSSH into `krypton.labs.overthewire.org` on port `2231` (username: `krypton2`).\n\nCreate a temp directory, symlink the `keyfile.dat`, and use the provided `encrypt` binary to encrypt a string of 'A's. Compare the output to figure out the key shift, then reverse it to read the next password.",
         "flag": "CAESARISEASY"
     },
     {
         "id": "krypton-03",
         "name": "Krypton 3 -> 4: Frequency Analysis",
-        "points": 500,
-        "desc": "SSH into `krypton.labs.overthewire.org` on port `2231` using username `krypton3`.\n\nYou have intercepted several encrypted messages (`found1`, `found2`, `found3`) encrypted with the same key. The password to the next level is in the file **krypton4**.\n\nUse **Frequency Analysis** to map the ciphertext letters back to English. Plaintexts are in American English. Analyze the letter distributions to crack the monoalphabetic substitution cipher.",
+        "points": 350,
+        "desc": "**Goal:** Crack a substitution cipher using frequency analysis.\n\nSSH into `krypton.labs.overthewire.org` on port `2231` (username: `krypton3`).\n\nYou are given intercepted texts in English. Count the frequency of the letters to determine the substitution alphabet. \n\n*Hint: E, T, A, O, I, N are the most common letters in the English language.*",
         "flag": "BRUTE"
     },
     {
         "id": "krypton-04",
-        "name": "Krypton 4 -> 5: Vigenère Cipher (Known Length)",
-        "points": 600,
-        "desc": "SSH into `krypton.labs.overthewire.org` on port `2231` using username `krypton4`.\n\nThis level introduces polyalphabetic substitution via a **Vigenère Cipher**.\n\nYou have intercepted two longer English messages. Crucially, you know that the **key length is 6**.\n\nThe password to level 5 is in the usual place, encrypted with this 6-letter repeating key. Determine the key and decode the password.",
+        "name": "Krypton 4 -> 5: Vigenère Cipher (Known Key Length)",
+        "points": 400,
+        "desc": "**Goal:** Decrypt a Vigenère cipher when you know the key length.\n\nSSH into `krypton.labs.overthewire.org` on port `2231` (username: `krypton4`).\n\nThe README tells you the key length is 6. You can brute-force common 6-letter words or use a Vigenère solver on the intercepted text to find the key, then use it to decode the password.",
         "flag": "CLEARTEXT"
     },
     {
         "id": "krypton-05",
-        "name": "Krypton 5 -> 6: Vigenère Cipher (Unknown Length)",
-        "points": 700,
-        "desc": "SSH into `krypton.labs.overthewire.org` on port `2231` using username `krypton5`.\n\nThis is another polyalphabetic Vigenère Cipher challenge, but this time **the key length is unknown**.\n\nUse index of coincidence or Kasiski examination to find the key length, then perform frequency analysis on each sliced subset of the ciphertext to retrieve the password from the **krypton6** file.",
-        "flag": "KEYLENGTH"
+        "name": "Krypton 5 -> 6: Vigenère Cipher (Kasiski Test)",
+        "points": 450,
+        "desc": "**Goal:** Decrypt a Vigenère cipher without knowing the key length.\n\nSSH into `krypton.labs.overthewire.org` on port `2231` (username: `krypton5`).\n\nUse the Kasiski examination method to find repeating patterns in the ciphertext. This will help you guess the key length (likely 3, 6, or 9). Once the length is known, apply frequency analysis to recover the key.",
+        "flag": "RANDOM"
     },
     {
         "id": "krypton-06",
-        "name": "Krypton 6 -> 7: Stream Ciphers & Randomness",
-        "points": 800,
-        "desc": "SSH into `krypton.labs.overthewire.org` on port `2231` using username `krypton6`.\n\nModern ciphers attempt to create an on-the-fly 'random' keystream to encrypt incoming plaintext one byte at a time (Stream Ciphers). Typically, the key byte is XOR'd with the plaintext.\n\nThe binary `encrypt6` in your directory will read the keyfile (which you cannot read) and encrypt any message you desire using the key AND a pseudo-random number generator (PRNG).\n\nPerform a **known-ciphertext attack** by introducing plaintext of your choice. The challenge is not simple, but the PRNG is mathematically weak. Crack the PRNG to decrypt the password for level 7.",
-        "flag": "RANDOM"
+        "name": "Krypton 6 -> 7: Stream Cipher / LFSR",
+        "points": 500,
+        "desc": "**Goal:** Reverse a Linear-Feedback Shift Register (LFSR) stream cipher.\n\nSSH into `krypton.labs.overthewire.org` on port `2231` (username: `krypton6`).\n\nEncrypt long strings of identical characters (e.g., all 'A's) using the provided binary to find the repeating keystream pattern (it repeats every 30 characters). Map the integer differences and subtract them from the encrypted password to retrieve the final flag.",
+        "flag": "LFSRISNOTRANDOM"
     }
 ]
 
-# Generate folder and files
-base_dir = "../challenges"
+# Generate folder and files relative to the repo root folder dynamically
+script_dir = os.path.dirname(os.path.abspath(__file__))
+base_dir = os.path.abspath(os.path.join(script_dir, "..", "challenges"))
+
 os.makedirs(base_dir, exist_ok=True)
 
 for ch in challenges_data:
     folder_path = os.path.join(base_dir, ch["id"])
     os.makedirs(folder_path, exist_ok=True)
     
+    escaped_desc = ch['desc'].replace('\n', '\n  ')
     yaml_content = f"""name: "{ch['name']}"
 author: "OverTheWire"
 category: "Cryptography"
 description: |
-  {ch['desc'].replace(chr(10), chr(10) + '  ')}
+  {escaped_desc}
 value: {ch['points']}
 type: standard
 flags:
@@ -78,4 +81,4 @@ version: "0.1"
     with open(file_path, "w") as f:
         f.write(yaml_content)
 
-print(f"Successfully generated {len(challenges_data)} Krypton challenges inside the '{base_dir}' folder!")
+print(f"Successfully generated {len(challenges_data)} Krypton challenges inside '{base_dir}'!")
