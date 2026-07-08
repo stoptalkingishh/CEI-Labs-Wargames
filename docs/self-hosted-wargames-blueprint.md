@@ -38,6 +38,36 @@ Natas is, in reality, **one single web server** hosting many vhosts, with
 per-level Unix users controlling which password files are readable from
 which level.
 
+### Research methodology (how the facts below were actually gathered)
+
+Two sources, used deliberately in this order:
+
+1. **Limited, passive-only direct interaction with OTW's live Natas
+   server**, using OTW's own published, intended starting credentials
+   (`natas0`/`natas0`) — explicitly bounded to viewing responses/page
+   source, exactly what each level's own instructions say to do. This
+   confirmed real infrastructure facts no write-up states explicitly:
+   `Server: Apache/2.4.66 (Ubuntu)` (from response headers), the exact
+   static HTML/CSS/JS scaffold OTW wraps every level in (including a
+   `wechall` integration explicitly commented as "nothing to do with the
+   level" — noise to ignore when designing our own version), and
+   `mod_autoindex` directory-listing behavior on natas2 confirmed live
+   rather than assumed from a write-up. This stopped at natas2: the
+   session's own safety controls flagged fetching the actual
+   directory-listing-discovered file as crossing from "view what the
+   level shows you" into "perform the exploitation step against a live
+   third-party system," and declined it — a stricter line than this
+   plan had drawn for itself, respected rather than argued with. No
+   further live levels were attempted past that point.
+2. **Community write-ups for everything else** (levels 3-14's specific
+   mechanisms, the PHP version implications) — the primary, scalable
+   source for this research, cross-checked across multiple independent
+   write-ups per level rather than trusting a single source, per
+   instruction. This is standard practice for a wargame OTW has
+   published openly and encourages solving; every technique below is
+   publicly documented by numerous independent solvers, not discovered
+   through any original probing of OTW's infrastructure.
+
 ### Natas's real stack — researched and confirmed
 
 Community write-ups consistently confirm: **PHP + Apache + MySQL (a LAMP
@@ -325,18 +355,46 @@ checklist as the template.
 
 - [ ] `CEI-Labs-Wargames/targets/natas/Dockerfile`, `FROM`
       `operator/targets/base-linux` (`debian:12-slim`).
-- [ ] Install: `apache2`, `libapache2-mpm-itk`, `php`, `libapache2-mod-php`
-      (or the PHP version matching whichever levels need specific PHP
-      behavior — confirm PHP major version doesn't affect any of the 15
-      authored lessons before pinning one), `mariadb-server` (or
-      `mariadb-server` in the same container for simplicity, since this
-      is a single-purpose disposable-per-team box, not a shared service —
-      no need for a separate DB container here the way `cei-labs-engine`
-      does for CTFd's own DB).
+- [ ] **PHP version — resolved, not a placeholder.** Researched and
+      confirmed: real Natas's SQLi-relevant levels (14, and 15/17 just
+      beyond our scope) use `mysql_connect()`/`mysql_query()`/
+      `mysql_close()` — the **old `ext/mysql` extension, removed entirely
+      in PHP 7.0**. This isn't cosmetic; that function family simply does
+      not exist on any PHP 7+ install, so faithfully reproducing this
+      level's exact code requires a genuinely legacy PHP. This is the
+      concrete case behind "we'll likely need older systems/services,"
+      confirmed rather than assumed. **Install PHP 5.6** (last PHP 5.x
+      release) via the `sury.org`/`ondrej/php`-style legacy-PHP APT
+      repository, layered on top of the same `debian:12-slim` base —
+      confirmed viable in 2026 (this is the standard, still-maintained
+      path for exactly this "old PHP on a current base OS" need; using
+      it keeps one base-OS family project-wide instead of reaching for a
+      different, older distro just for Natas). Install
+      `php5.6-mysql` alongside base `php5.6`/`libapache2-mod-php5.6`.
+  - [ ] **Verify:** `php5.6 -m` inside the built image lists `mysql`
+        (the legacy extension, distinct from `mysqli`/`pdo_mysql`);
+        confirm `mysql_connect()` is actually callable, not just that
+        the package installed without error.
   - [ ] **Verify:** `apache2ctl -M` inside the built image lists `mpm_itk`
         as the active MPM (not `prefork`/`event`/`worker` — MPM-ITK
         replaces the MPM entirely, it isn't a bolt-on module; confirm no
-        conflicting MPM package got pulled in as a dependency).
+        conflicting MPM package got pulled in as a dependency) **and**
+        that PHP 5.6 (not any Debian-12-default PHP that may have been
+        pulled in as a dependency of something else) is the version
+        actually executing — `phpinfo()` on a throwaway test vhost during
+        the build, removed before shipping.
+  - [ ] **Risk flagged, not hidden:** genuinely running PHP 5.6 means
+        running an interpreter with known, public, unpatched CVEs by
+        design — that's the point of a CTF target, not an oversight. The
+        Phase 4a "no externally published port at all" isolation (below)
+        and Phase 6 hardening are what make this safe to run: the target
+        has no reachability from anywhere except its own team's attacker,
+        so PHP 5.6's *other*, unintended vulnerabilities can't be
+        leveraged for anything beyond that single isolated pair.
+      Add `mariadb-server` in the same container for simplicity, since
+      this is a single-purpose disposable-per-team box, not a shared
+      service — no need for a separate DB container the way
+      `cei-labs-engine` does for CTFd's own DB.
 - [ ] One Apache `<VirtualHost>` block per level (`natas0`–`natas14`),
       each with its own `AssignUserID natasN natasN` line, its own
       `DocumentRoot`, and — for levels the real game distinguishes by
@@ -373,16 +431,54 @@ checklist as the template.
         exactly the tables that level's lesson expects to be reachable —
         confirms the DB-level privilege boundary matches the file-level
         one.
-- [ ] Content-author each of the 15 vulnerability lessons (auth bypass,
-      SQLi, LFI, command injection, weak crypto, file upload, cookie
-      forgery, PHP object injection — matching whatever `build_natas.py`'s
-      existing 15 entries already describe).
+- [ ] Content-author each of the 15 vulnerability lessons. **Correction
+      to earlier draft:** "PHP object injection" was in this blueprint's
+      first pass because it's part of Natas's general topic range —
+      research now confirms that's real Natas level 25-26, well beyond
+      the 0-14 subset actually authored in this repo (confirmed level 14
+      = SQLi, matching what `build_natas.py`'s sync log already showed:
+      "Natas 14 -> 15: SQL Injection (SQLi)"). **Object injection is out
+      of scope for these 15 levels** — remove it from the topic list;
+      don't build content for it.
+
+      Researched, per-level technical reference for what natas0-natas14
+      actually teach (independent write-ups cross-checked against each
+      other, not a single source) — build each level's PHP/Apache config
+      to match this mechanism specifically, not just the category name:
+
+      | Level | Mechanism to recreate |
+      | :--- | :--- |
+      | 0 | Password sits in an HTML comment in the page source — pure "view source" lesson, no PHP logic needed. |
+      | 1 | Same as 0, but `oncontextmenu` JS blocks right-click — the lesson is knowing `view-source:` or devtools bypasses client-side-only restrictions. Password still just an HTML comment. |
+      | 2 | Page references `files/pixel.png`; Apache directory listing (`mod_autoindex`) is left on for `/files/`, exposing an unlinked `users.txt` alongside it. Requires `Options +Indexes` on that one directory. |
+      | 3 | `/robots.txt` has a `Disallow:` entry pointing at a hidden directory that itself has directory listing on, containing a `users.txt`. Lesson: robots.txt tells you what NOT to crawl, which is exactly what a human should check. |
+      | 4 | Page checks the `Referer` header and only shows the password if it equals this same level's own URL — trivially forgeable client-side header, lesson is that `Referer` is not an auth mechanism. |
+      | 5 | Cookie `loggedin=0`; page logic is `if ($_COOKIE['loggedin'] == 1) { show password }` — classic client-trusted-cookie auth bypass. |
+      | 6 | Page provides an explicit "View sourcecode" link (**intentional feature, not a bug** — several early levels are meant to teach reading PHP before finding bugs). Source reveals a form comparing user input against a `$secret` value defined in a separate `includes/secret.inc` file — also fetchable directly since it's still under the webroot, revealing the secret. |
+      | 7 | `?page=` parameter is used in a PHP `include`/`require` without sanitization — classic LFI, path-traversal to `/etc/natas_webpass/natas8`. |
+      | 8 | An `encodeSecret()` function chains `base64_encode` → `strrev` → `bin2hex`; page shows the *encoded* result and asks for the plaintext that would encode to it — lesson is reversing a simple, discoverable (source is visible) encoding chain, not real cryptography. |
+      | 9 | Page runs `passthru("grep -i $key dictionary.txt")` with `$key` taken straight from user input, no escaping — direct OS command injection via shell metacharacters. |
+      | 10 | Same `grep` pattern as 9, but `preg_match('/[;|&]/', $key)` blocks the obvious shell metacharacters — lesson is that `grep` itself accepts a second filename argument, so injecting *arguments* (not shell operators) still achieves arbitrary file read without needing a blocked character. |
+      | 11 | State is stored in a cookie XOR-encrypted with a short repeating key; the *default* (logged-out) plaintext is known (`array("showpassword"=>"no","bgcolor"=>"#ffffff")`), so `known_plaintext XOR ciphertext = key` recovers the key, letting you forge a cookie with `showpassword=yes`. |
+      | 12 | Upload form only checks the client-supplied filename's extension (not real content), and saves+serves uploaded files as-is — upload a `.php` file containing a one-line web shell, then request it to execute arbitrary PHP (e.g. reading the next password file). |
+      | 13 | Same upload flow as 12, but adds an EXIF/`getimagesize()`-style check on the file's actual bytes — bypassed by prepending real JPEG magic bytes/header before the PHP payload, since PHP doesn't care what precedes `<?php` as long as it's still valid to execute. |
+      | 14 | Login form builds `SELECT * FROM users WHERE username="<input>" AND password="<input>"` via raw string concatenation into `mysql_query()` (the PHP 5.6 legacy extension from above) — classic SQLi, e.g. `" OR ""="` in either field bypasses the check entirely. This is the level that anchors the whole PHP-version requirement. |
+
   - [ ] **Verify per level as authored:** actually exploit it yourself
         (or delegate a full pass to the Phase 7 playthrough, but at
         minimum smoke-test each as it's written) — confirm the intended
-        vulnerability is present, exploitable via the intended technique,
-        and yields the next level's access/password through that
-        technique specifically, not through some unintended shortcut.
+        vulnerability is present, exploitable via the intended technique
+        from the table above, and yields the next level's access/password
+        through that technique specifically, not through some unintended
+        shortcut.
+  - [ ] **Verify against the repo, not just against research:** before
+        finalizing each level's implementation, cross-check this table's
+        mechanism against what `build_natas.py`'s actual existing
+        description/flag for that level implies — if any level's already-
+        authored content clearly describes a different mechanism than the
+        table above, the repo's own content wins; treat a mismatch as a
+        signal to re-read that specific level's write-ups more carefully,
+        not to silently override the repo.
 - [ ] Read-only filesystem for anything not intentionally
       vulnerable-and-writable as part of a specific lesson (e.g. a
       file-upload level legitimately needs one writable directory — scope
@@ -562,3 +658,35 @@ the integration check, not the first time anything gets tested.
   on) hasn't been individually verified per level yet — flagged in
   Phase 4a as something to confirm while content-authoring, not deferred
   silently.
+
+## Research sources
+
+Official:
+- [OverTheWire: Bandit](https://overthewire.org/wargames/bandit/)
+- [OverTheWire: Krypton](https://overthewire.org/wargames/krypton/)
+- [OverTheWire: Natas](https://overthewire.org/wargames/natas/)
+
+Natas per-level mechanisms (cross-checked across multiple independent
+write-ups per level, per the level table in Phase 4a):
+- [[OTW] Write-up for the Natas Wargame — BreakInSecurity](https://axcheron.github.io/writeups/otw/natas/)
+- [OverTheWire Natas Level 5 Solution — Medium](https://greenorangge1.medium.com/overthewire-natas-level-5-7a2a3a208ed1)
+- [OverTheWire: Natas Level 3→4 — jsinix](https://medium.com/overthewire-natas-writeup-by-jsinix/overthewire-natas-level-3-level-4-984c608aaf4)
+- [OverTheWire: Natas Level 6→7 — jsinix](https://medium.com/overthewire-natas-writeup-by-jsinix/overthewire-natas-level-6-level-7-c0bd8af915d7)
+- [OverTheWire Natas Level 0–11 — Medium](https://medium.com/@kiddosz/overthewire-natas-level-0-level-11-cac088c41f09)
+- [OverTheWire: 'Natas' Solutions 11-15 — jhalon](https://jhalon.github.io/over-the-wire-natas2/)
+- [SQL Injection — Bypassing Double Quotes — Natas Level 14 — Motasem Hamdan](https://motasem-notes.net/sql-injection-bypassing-double-quotes-overthewire-natas-level-14/)
+- [OvertheWire Natas 1 To 34 Full Writeup — CertCube](https://blog.certcube.com/overthewire-natas/)
+- [OverTheWire: Natas Level 25→26 (PHP Object Injection, real level ~25-26, confirmed out of scope for our 0-14 subset) — jsinix](https://medium.com/overthewire-natas-writeup-by-jsinix/overthewire-natas-level-25-26-a2661a5b17ea)
+- [OverTheWire – natas22,24-26 – Ivan's IT learning blog](https://ivanitlearning.wordpress.com/2020/02/02/overthewire-natas2224-26-more-php-fun/)
+
+Krypton per-level topics:
+- [OverTheWire Krypton (Levels 0-9) — LearnHacking.io](https://learnhacking.io/overthewire-krypton-levels-0-9/)
+- [[OTW] Write-up for the Krypton Wargame — BreakInSecurity](https://axcheron.github.io/writeups/otw/krypton/)
+
+PHP 5.6 / legacy `mysql_*` extension on a current base OS:
+- [Docker file for PHP 5.6 with Apache, MySQL extension — GitHub Gist](https://gist.github.com/guibranco/9342f83c5e51b7ec85d9046c652d1074)
+- [Dockerizing Legacy PHP Apps: A Step-by-Step Migration Guide — DoHost](https://dohost.us/index.php/2026/03/26/dockerizing-legacy-php-apps-a-step-by-step-migration-guide/)
+
+Apache MPM-ITK (per-vhost `AssignUserID`):
+- [apache2-mpm-itk — official project page](http://mpm-itk.sesse.net/)
+- [Debian package: libapache2-mpm-itk](https://packages.debian.org/search?keywords=libapache2-mpm-itk)
