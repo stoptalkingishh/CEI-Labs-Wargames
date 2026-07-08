@@ -1,4 +1,3 @@
-```bash
 #!/bin/bash
 # CEI-Labs-Wargames Deployment Script
 # This script generates all challenge files and uploads them to CTFd non-interactively.
@@ -39,9 +38,15 @@ if [ -n "$CTFD_URL" ] && [ -n "$CTFD_TOKEN" ]; then
     cat << EOF > .ctf/config
 [config]
 url = $CTFD_URL
-token = $CTFD_TOKEN
-insecure = false
+access_token = $CTFD_TOKEN
 EOF
+    if [ "${CTFD_INSECURE:-false}" = "true" ]; then
+        echo "ssl_verify = false" >> .ctf/config
+        echo "⚠️  CTFD_INSECURE=true — TLS certificate verification is disabled."
+    fi
+    printf '
+[challenges]
+' >> .ctf/config
 elif [ ! -d ".ctf" ]; then
     echo "⚠️  No existing configuration found and CTFD environment variables are empty."
     echo "   Prompting for interactive initialization..."
@@ -77,4 +82,3 @@ else
 fi
 echo "=========================================="
 
-```
