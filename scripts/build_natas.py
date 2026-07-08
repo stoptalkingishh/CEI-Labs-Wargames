@@ -110,7 +110,8 @@ challenges_data = [
 ]
 
 # Generate folder and files
-base_dir = "../challenges"
+script_dir = os.path.dirname(os.path.abspath(__file__))
+base_dir = os.path.abspath(os.path.join(script_dir, "..", "challenges"))
 os.makedirs(base_dir, exist_ok=True)
 
 for ch in challenges_data:
