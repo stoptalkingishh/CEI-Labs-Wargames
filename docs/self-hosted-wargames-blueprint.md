@@ -177,45 +177,98 @@ challenge YAML to the instance types that already exist."
    Natas additionally needs Apache/MariaDB/PHP/MPM-ITK layered on top —
    still Debian 12, still one base-image family project-wide.
 
-## Phase 1 — Base Image Work (cei-labs-engine)
+## Phase 1 — Base Image Work (cei-labs-engine) — ✅ COMPLETE (2026-07-08)
 
-- [ ] **`operator/kali-novnc/Dockerfile`**: add `openssh-server` to the
-      `apt-get install` list; add `mkdir -p /var/run/sshd`; generate a
-      host key at build time (`ssh-keygen -A`); ensure the existing
-      `operator` user's password (already set from `VNC_PASSWORD`) works
-      for SSH login too (no separate credential to manage — same
-      variable, same value, both protocols).
-  - [ ] **Verify:** `docker build` succeeds; `docker run` the image
-        standalone, confirm `sshd` starts (check `docker logs` /
-        `ps aux` inside the container) alongside the existing VNC/noVNC
-        startup script — the two must not race or fight over the startup
-        script's `tail -f /dev/null` foreground-keeper pattern. Update
-        `/start.sh` to launch `sshd` explicitly (`/usr/sbin/sshd`
-        daemonizes on its own; don't background it manually and lose the
-        PID).
-  - [ ] **Verify:** `EXPOSE 22` added alongside the existing `EXPOSE
-        6080`; confirm both ports are listed in `docker inspect`.
-  - [ ] **Verify:** SSH in as `operator` with the same password used for
-        VNC, from a separate test container on the same Docker network —
-        confirms the credential is genuinely shared, not two separate
-        auth paths that happen to coincide today and drift later.
-- [ ] Confirm `operator/targets/base-linux` needs **no changes** for
-      Bandit/Krypton (already has `openssh-server`, `netcat-openbsd`,
-      `curl`, `iproute2`) — this is a check, not an implementation step;
-      only act if something's actually missing once Phase 2 starts.
-- [ ] **Read, don't guess:** open `scripts/challenges-load.sh` in full
-      and confirm the exact YAML key names its "instance-mapping sync
-      step" reads (`instance_type`, `image`, `target_image`,
-      `attacker_image`, `attacker_port`, and — needs confirming —
-      `instance_group`, `shutdown_on_solve`). Record the confirmed field
-      names here before writing any Phase 5/Phase 2-4 YAML, since a
-      silently-wrong key name would fail invisibly (CTFd would just show
-      no "Launch Environment" button, with no obvious error).
-  - [ ] **Verify:** cross-check the confirmed field names against
-        `docker/ctfd/plugins/instance-launcher/models.py`'s
-        `InstanceChallengeConfig` columns (already read — listed above)
-        to make sure the sync script's YAML parsing and the DB model
-        agree on every field name.
+Branch: `feature/self-hosted-wargames-base-images` (not yet merged to
+`main`, not yet pushed — local commit pending). All items below actually
+built and tested locally, not just planned.
+
+- [x] **`operator/kali-novnc/Dockerfile`**: added `openssh-server` to the
+      `apt-get install` list; `mkdir -p /var/run/sshd` + `ssh-keygen -A`;
+      `PasswordAuthentication yes` / `PermitRootLogin no` set explicitly
+      in `sshd_config`; same `operator` user/password already used for
+      VNC now also works for SSH — no second credential.
+  - [x] **Verified:** built and ran the image standalone. `sshd` starts
+        cleanly alongside VNC/noVNC — confirmed via `ps aux` showing all
+        5 expected processes (`Xtigervnc`, `xfce4-session`,
+        `dbus-launch`, `websockify`, `sshd`), healthcheck reporting
+        `healthy`.
+  - [x] **Verified:** `EXPOSE 22` added alongside `EXPOSE 6080`; both
+        confirmed present via `docker inspect`.
+  - [x] **Verified:** SSH login as `operator` with the exact same
+        password used for VNC succeeded (tested via a scripted client,
+        not just "should work") — confirms one genuinely shared
+        credential across both protocols.
+  - [x] **Verified noVNC still works** — didn't just add SSH and assume
+        the existing path was untouched; `curl`'d the noVNC web root and
+        got `200`.
+  - [x] **Two pre-existing bugs found and fixed along the way** (both
+        unrelated to the SSH work — confirmed by building the
+        *unmodified* Dockerfile from `main` and reproducing both
+        failures there first, before concluding they weren't something
+        this change introduced):
+    1. **TigerVNC config path**: `kalilinux/kali-rolling:latest` now
+       ships a TigerVNC version that uses the XDG-compliant
+       `~/.config/tigervnc/` path instead of the legacy `~/.vnc/`, and
+       its auto-migration between the two fails outright in this
+       environment (`vncserver: Could not migrate ... to
+       .../.config/tigervnc`). Fixed by writing `xstartup`/`passwd`
+       directly to `~/.config/tigervnc/` instead of `~/.vnc/`, bypassing
+       the broken migration path entirely.
+    2. **`xstartup` exits too early**: the original script backgrounded
+       the window manager (`xfce4-session &`) and returned immediately;
+       current TigerVNC treats an xstartup script returning that fast as
+       "session exited too early" and tears the whole server down.
+       Fixed by running `exec xfce4-session` in the foreground instead.
+    This means **`kali-novnc` was completely non-functional on `main`**
+    against the current Kali rolling base before this session — not a
+    hypothetical, reproduced twice (build-from-`main`, then build with
+    only the SSH diff applied, same failure both times) and fixed as
+    part of this same branch. Important since this image is also the
+    Natas attacker for Phase 4 — would have silently blocked that phase
+    too if left unfound.
+- [x] Confirmed `operator/targets/base-linux` needs **no changes** for
+      Bandit/Krypton. Built it standalone and checked directly (not
+      assumed): Debian's `openssh-server` package auto-generates SSH host
+      keys via its own postinst script at `apt-get install` time — no
+      explicit `ssh-keygen -A` needed here (unlike the Kali-rolling image
+      above, where it's needed explicitly) — `sshd -t` reported the
+      config valid immediately after build.
+- [x] **Read `scripts/challenges-load.sh` in full — field names
+      confirmed exactly as planned:** `instance_type`, `image`, `port`,
+      `target_image`, `attacker_image`, `attacker_port`,
+      `instance_group`, `shutdown_on_solve` (default `true`) — all
+      present, all matching `InstanceChallengeConfig`'s columns. No
+      adjustment needed to Phase 2-4's planned YAML field names.
+  - [x] **New finding, not previously known — changes Phase 5's scope:**
+        `challenges-load.sh` only syncs `instance_type` metadata for
+        challenge YAML living under **`cei-labs-engine`'s own**
+        `challenges/sprint{1,2,3}-*/` directories, via a
+        `sync_instance_mapping()` function that POSTs to
+        `/plugins/instance-launcher/admin/mappings/sync`, authenticated
+        with the `plugin_shared_secret` Docker secret.
+        **`CEI-Labs-Wargames`' own `deploy.sh` has no equivalent step at
+        all** — it only calls plain `ctf challenge push`/`sync`/`install`
+        (via `ctfcli`), which populates ordinary CTFd challenge fields
+        (name/description/flags/value/category) but has no concept of
+        `instance_type` and never touches the instance-launcher plugin's
+        mapping table. **Consequence: adding `instance_type`/
+        `instance_group`/etc. to `build_bandit.py` et al.'s generated
+        YAML, as Phase 2-4 plan to, will silently do nothing** (no
+        "Launch Environment" button appears) unless `deploy.sh` also
+        gets its own version of `sync_instance_mapping()`. Moved to
+        Phase 5 as a concrete, now-necessary task — see below.
+  - [x] **Second finding, a decision point, not resolved here:**
+        `cei-labs-engine`'s own `challenges/sprint2-web/challenges.yml`
+        already contains two hardcoded stub entries — "OTW Natas Level
+        0" and "OTW Natas Level 1" — as part of a small curated
+        Sprint-1/2/3 gated curriculum, entirely separate from and
+        unaware of `CEI-Labs-Wargames`' full 15-level generated Natas
+        set. This is a content overlap discovered while reading the
+        loader script, not something this blueprint should silently
+        resolve (delete the stubs? keep both? merge the curricula?) —
+        flagged for a decision alongside Phase 8's rollout, not blocking
+        Phase 2-4's build work.
 
 ## Phase 2 — Bandit Self-Hosted Target (34 levels, one persistent machine)
 
@@ -543,6 +596,26 @@ checklist as the template.
 
 ## Phase 5 — Cross-Repo Consistency Check
 
+- [ ] **New, load-bearing task found during Phase 1 — do this before
+      Phase 7's verification, or "Launch Environment" will never appear
+      for any Bandit/Krypton/Natas challenge:** add a
+      `sync_instance_mapping()` step to `CEI-Labs-Wargames/deploy.sh`,
+      mirroring `cei-labs-engine/scripts/challenges-load.sh`'s existing
+      function of the same name (same YAML fields read, same
+      `/plugins/instance-launcher/admin/mappings/sync` POST, same
+      `plugin_shared_secret`-based auth — `SYNC_SECRET_FILE` will need to
+      point at wherever this repo's copy of that secret lives, likely
+      passed in the same way `CTFD_URL`/`CTFD_TOKEN` already are today).
+      Without this, `ctfcli`'s plain `challenge push`/`sync`/`install`
+      calls (all `deploy.sh` does today) populate ordinary CTFd fields
+      only — `instance_type` and friends in the YAML get silently
+      ignored.
+  - [ ] **Verify:** after adding this step, resync one already-modified
+        challenge (e.g. a single Bandit level with `instance_type:
+        single-target` set) and confirm — via CTFd's admin UI or the
+        `instance_launcher_configs` table directly — that a real
+        `InstanceChallengeConfig` row was created, *before* doing this
+        for all 56 challenges.
 - [ ] Confirm no `cei-labs-net` changes are actually needed:
       `single-target` and `target-attacker` both already fall within the
       documented `10.10.20.0/24:30000-32767` (SSH/target ports) and
