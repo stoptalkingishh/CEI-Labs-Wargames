@@ -27,7 +27,7 @@ write-ups, current as of 2026-07):
 | :--- | :--- | :--- | :--- | :--- |
 | Bandit | SSH, `bandit.labs.overthewire.org:2220` | 34 (0–33) | **34** — full parity | Linux fundamentals: permissions, `find`/`grep`, setuid, cron, git, ssh keys |
 | Krypton | SSH, `krypton.labs.overthewire.org:2231` (different port than Bandit) | ~8 (0–7) | **7** — full parity | Base64, ROT13, Caesar, Vigenère (known-length), Vigenère (Kasiski), stream cipher/LFSR |
-| Natas | HTTP Basic Auth, `natasN.natas.labs.overthewire.org`, one PHP app per level | 34+ (0–33+) | **15** — curated subset | Auth bypass, SQLi, LFI, command injection, weak crypto, file upload, cookie forgery, PHP object injection |
+| Natas | HTTP Basic Auth, `natasN.natas.labs.overthewire.org`, one PHP app per level | 34+ (0–33+) | **15** — curated subset (levels 0-14 only) | View-source, client-side-restriction bypass, directory listing, robots.txt, Referer-header spoofing, cookie auth bypass, source disclosure, LFI, encoding puzzle, command injection (x2), XOR cookie forgery, file upload (x2), SQLi — see the per-level table in Phase 4a |
 
 **This is a scoped job**: self-host what's already authored (34 + 7 + 15 =
 56 challenges, already live in CTFd per earlier testing), not expand to
@@ -649,6 +649,15 @@ the integration check, not the first time anything gets tested.
 
 ## Known open follow-ups (explicitly out of scope for this blueprint, noted so they aren't lost)
 
+- **Natas scope confirmed as a deliberate decision (2026-07-08), not a
+  gap:** this blueprint self-hosts exactly the 15 already-authored levels
+  (0-14). Levels 25-26 (PHP Object Injection) and the rest of real Natas's
+  34+ level catalog are explicitly **not** part of this build. If that
+  ever changes, it's a distinct future project — new content authoring in
+  `CEI-Labs-Wargames` (new CTFd challenges, new vhosts/users on the Natas
+  target image, extending the same MPM-ITK/PHP-5.6 pattern this blueprint
+  already establishes) — not a correction to this one. Revisit this
+  blueprint's scope table (top of file) if/when that's greenlit.
 - The flags currently in `build_bandit.py`/`build_krypton.py`/
   `build_natas.py` were flagged earlier as looking like placeholder
   values — worth a content-accuracy pass, independent of this
