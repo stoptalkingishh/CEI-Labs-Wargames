@@ -20,10 +20,9 @@ INSTANCE_GROUP = "natas"
 CONNECT_NOTE = (
     "Launch your Natas environment from this challenge (shared across all "
     "Natas levels -- launching any one of them starts the same range: one "
-    "attacker workstation plus this level's target). Your attacker "
-    "supports both a full desktop in the browser (noVNC) and SSH, so use "
-    "whichever you're more comfortable with. From the attacker, the "
-    "target for this level is reachable at"
+    "attacker workstation plus this level's target). Connect to your "
+    "attacker via the noVNC link CTFd shows you (a full desktop in your "
+    "browser). From there, the target for this level is reachable at"
 )
 
 # Define the dataset for Natas Levels 0 to 14 based on OTW specifications
