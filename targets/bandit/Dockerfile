@@ -75,6 +75,7 @@ RUN chmod +x /opt/build/*.sh /opt/build/*.py \
     && /opt/build/05-setup-tls.sh \
     && python3 /opt/build/06-setup-levels-17-18.py \
     && python3 /opt/build/08-setup-levels-21-24.py \
+    && python3 /opt/build/09-setup-levels-25-26.py \
     && rm -rf /opt/build
 
 # Level 19: reads bandit-19's flag (bandit20's password) from this file --
