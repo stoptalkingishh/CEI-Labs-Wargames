@@ -258,17 +258,25 @@ built and tested locally, not just planned.
         "Launch Environment" button appears) unless `deploy.sh` also
         gets its own version of `sync_instance_mapping()`. Moved to
         Phase 5 as a concrete, now-necessary task — see below.
-  - [x] **Second finding, a decision point, not resolved here:**
-        `cei-labs-engine`'s own `challenges/sprint2-web/challenges.yml`
-        already contains two hardcoded stub entries — "OTW Natas Level
-        0" and "OTW Natas Level 1" — as part of a small curated
-        Sprint-1/2/3 gated curriculum, entirely separate from and
-        unaware of `CEI-Labs-Wargames`' full 15-level generated Natas
-        set. This is a content overlap discovered while reading the
-        loader script, not something this blueprint should silently
-        resolve (delete the stubs? keep both? merge the curricula?) —
-        flagged for a decision alongside Phase 8's rollout, not blocking
-        Phase 2-4's build work.
+  - [x] **RESOLVED (2026-07-08):** decided to scrub, not merge or keep
+        both. Removed `challenges/sprint1-otw/` (15-level partial Bandit
+        duplicate + a "Sprint 1 Complete" gate marker),
+        `challenges/sprint2-web/` (the 2 "OTW Natas" stubs + Juice Shop
+        entries), and `challenges/sprint3-pccc/` (crAPI/PCCC content)
+        from `cei-labs-engine` entirely — branch
+        `feature/self-hosted-wargames-base-images` @ `d1e8fff`.
+        Rationale: `cei-labs-engine` is a platform, not a content
+        author — all challenge content belongs in dedicated wargames
+        repos (`CEI-Labs-Wargames` for Bandit/Krypton/Natas). Confirmed
+        safe before removing: `scripts/challenges-load.sh`'s
+        `load_sprint()` already handles a missing directory gracefully
+        (warns and skips, doesn't error — read the source to confirm,
+        didn't assume), and the repo's CI (`validate.yml`) walks the
+        whole tree generically for YAML syntax checking, no hardcoded
+        path dependency on the removed directories. Updated
+        `README.md`'s Training Tracks intro, Quick Start step 4, and
+        the Event Readiness Roadmap to reflect that challenge content
+        is sourced externally now.
 
 ## Phase 2 — Bandit Self-Hosted Target (34 levels, one persistent machine)
 
@@ -596,26 +604,44 @@ checklist as the template.
 
 ## Phase 5 — Cross-Repo Consistency Check
 
-- [ ] **New, load-bearing task found during Phase 1 — do this before
-      Phase 7's verification, or "Launch Environment" will never appear
-      for any Bandit/Krypton/Natas challenge:** add a
-      `sync_instance_mapping()` step to `CEI-Labs-Wargames/deploy.sh`,
-      mirroring `cei-labs-engine/scripts/challenges-load.sh`'s existing
-      function of the same name (same YAML fields read, same
-      `/plugins/instance-launcher/admin/mappings/sync` POST, same
-      `plugin_shared_secret`-based auth — `SYNC_SECRET_FILE` will need to
-      point at wherever this repo's copy of that secret lives, likely
-      passed in the same way `CTFD_URL`/`CTFD_TOKEN` already are today).
-      Without this, `ctfcli`'s plain `challenge push`/`sync`/`install`
-      calls (all `deploy.sh` does today) populate ordinary CTFd fields
-      only — `instance_type` and friends in the YAML get silently
-      ignored.
-  - [ ] **Verify:** after adding this step, resync one already-modified
-        challenge (e.g. a single Bandit level with `instance_type:
-        single-target` set) and confirm — via CTFd's admin UI or the
-        `instance_launcher_configs` table directly — that a real
-        `InstanceChallengeConfig` row was created, *before* doing this
-        for all 56 challenges.
+- [x] **DONE (2026-07-08):** added `sync_instance_mapping()` to
+      `CEI-Labs-Wargames/deploy.sh` (branch `feature/self-hosted-wargames`
+      @ `1e1ff23`), mirroring `challenges-load.sh`'s function of the same
+      name — same payload shape, same endpoint, same header. Reads the
+      shared secret from a `CTFD_SYNC_SECRET` env var (opt-in, backward
+      compatible — unset behaves exactly as before) instead of a local
+      secrets file, since this repo isn't colocated with
+      `cei-labs-engine`'s `docker/secrets/`.
+  - [x] **Verified for real, not just written:** posted a real payload
+        for an already-synced challenge against the actual running local
+        CTFd — got a 403 on the first attempt.
+  - [x] **New bug found and fixed as a result — genuinely load-bearing,
+        affects `challenges-load.sh` too, not just this new caller:**
+        `/plugins/instance-launcher/admin/mappings/sync` had no CSRF
+        exemption, so CTFd's global CSRF check rejected every call before
+        the route's own `X-Sync-Auth` check ever ran — this route had
+        apparently never been exercised end-to-end before now. Fixed in
+        `cei-labs-engine` (branch `feature/self-hosted-wargames-base-images`
+        @ `e3e6350`) with CTFd's own documented mechanism for exactly this
+        case, `@bypass_csrf_protection` — confirmed via CTFd's own source
+        this only exempts the session-based CSRF nonce, not the route's
+        actual `X-Sync-Auth` access control, which is unchanged.
+  - [x] **Verified after the fix:** rebuilt and redeployed the local CTFd
+        image, re-posted the same payload — `HTTP 200`, and confirmed via
+        a **direct query against the `instance_launcher_configs` table**
+        (not just trusting the API response) that a real row landed with
+        the exact posted values.
+  - [x] **Incidental finding, noted not fixed:** hit a separate,
+        unrelated build failure while rebuilding the CTFd image —
+        `docker/ctfd/docker-entrypoint-wrapper.sh` had CRLF line endings
+        in this local Windows checkout (breaking its shebang inside the
+        Linux container), caused by `git checkout -b` + Windows Git's
+        default `core.autocrlf` with no `.gitattributes` forcing LF for
+        shell scripts. Confirmed the repo's actual stored content is LF
+        (no diff after stripping `\r` locally) — this is a checkout-time
+        risk for any Windows contributor, not a repo content bug. Worth a
+        `.gitattributes` (`*.sh text eol=lf`) at some point; not blocking,
+        not done here.
 - [ ] Confirm no `cei-labs-net` changes are actually needed:
       `single-target` and `target-attacker` both already fall within the
       documented `10.10.20.0/24:30000-32767` (SSH/target ports) and
