@@ -40,6 +40,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     netcat-openbsd \
     ncat \
     socat \
+    openssl \
     python3 \
     python3-minimal \
     vim \
@@ -58,6 +59,8 @@ RUN chmod +x /opt/build/*.sh /opt/build/*.py \
     && /opt/build/02-set-passwords.sh \
     && python3 /opt/build/03-setup-levels-00-12.py \
     && /opt/build/04-setup-level-13.sh \
+    && /opt/build/05-setup-tls.sh \
+    && python3 /opt/build/06-setup-levels-17-18.py \
     && rm -rf /opt/build
 
 COPY daemons/ /opt/bandit-daemons/
