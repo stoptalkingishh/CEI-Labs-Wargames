@@ -1,0 +1,3 @@
+<?php
+$secret = "FaCoRtOfSecrets42";
+?>

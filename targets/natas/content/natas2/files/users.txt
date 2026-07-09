@@ -1,0 +1,4 @@
+#username:password
+alice:s3cr3tNotTheOne
+bob:alsoNotTheOne
+natas3:sJIJNW6ucpu6HPZ1ZAyN8VRdTepNnQA4
