@@ -367,6 +367,29 @@ built and tested locally, not just planned.
 - [ ] Keep the flags as-is (self-authored, not OTW's) — only the
       environment changes, not the answer-checking mechanism.
 
+### Phase 2 status: COMPLETE (2026-07-09)
+
+All 34 levels (0-33) built in `targets/bandit/`, live-tested end to end
+against a real running container (SSH clients, actual exploitation
+technique per level, not just flag-matching) — 46 checks across levels
+0-26, 13 checks across levels 27-33, all passing. `scripts/build_bandit.py`
+now sets `instance_type: single-target`, `image:
+ghcr.io/stoptalkingishh/cei-labs-wargames/bandit-target:latest`,
+`instance_group: bandit` (shared across all 34), and `shutdown_on_solve:
+true` on bandit-33 only. Verified live against a real local
+`cei-labs-engine` Swarm stack: `deploy.sh` synced all 34 instance mappings
+with zero errors, and hitting `/plugins/instance-launcher/launch/<id>` for
+two different Bandit challenge IDs (bandit-00 and bandit-33) resolved to
+the exact same orchestrator-created container — confirming the shared
+`instance_group` mechanism works through the real CTFd → orchestrator →
+Docker chain, not just on paper. Levels 27-31 (git clone/commit-history/
+branch/tag/push-hook) use five `git-shell`-restricted service accounts
+(`banditN-git`) matching the real game's design, each logged into with the
+same password as the corresponding `banditN` player account. Level 32
+(uppercase shell) escapes via `$0`; level 33 (final) is a from-scratch
+design (real OTW's actual level-33 mechanic isn't documented anywhere
+reliable) using a classic `rbash` + `find -exec` escape.
+
 ## Phase 3 — Krypton Self-Hosted Target (7 levels, one persistent machine)
 
 Same pattern as Phase 2, scaled to Krypton's smaller, crypto-focused scope.
@@ -409,6 +432,26 @@ checklist as the template.
       shared `instance_group: krypton`, `shutdown_on_solve: true` only on
       the final level, same pattern as Bandit.
 - [ ] Rewrite descriptions to drop the OTW hostname references.
+
+### Phase 3 status: COMPLETE (2026-07-09)
+
+All 7 levels built in `targets/krypton/`. Level 0 needs no SSH/instance at
+all (pure Base64 string in the description, no `instance_type` set in its
+`challenge.yml`); levels 1-6 share one `instance_group: krypton` box,
+`shutdown_on_solve: true` only on level 6 (final). Levels 2 and 6 ship
+compiled `encrypt` binaries (`src/caesar_encrypt.c`, `src/lfsr_encrypt.c`)
+used as the single source of truth at build time to generate each level's
+stored ciphertext — no risk of a from-scratch Python reimplementation
+drifting out of sync with what the binary actually does at runtime.
+Live-tested against a real running container: 13/13 checks, including
+Kasiski examination and index-of-coincidence checks run as genuine
+algorithms (not just known-key round-trips) for the two Vigenère levels,
+and a real LFSR-keystream-recovery-then-decrypt for the final level.
+Verified live against the local `cei-labs-engine` Swarm stack exactly like
+Bandit: `deploy.sh` synced all 6 instance mappings with zero errors, and
+launching `krypton-01` through the real `/plugins/instance-launcher/launch`
+endpoint produced a genuine container whose ROT13 ciphertext decrypted
+correctly over an actual SSH session.
 
 ## Phase 4 — Natas Self-Hosted LAMP Target + Kali Attacker (15 levels, one web server + one shared attacker per team)
 
