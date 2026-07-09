@@ -21,8 +21,9 @@ CONNECT_NOTE = (
     "Launch your Natas environment from this challenge (shared across all "
     "Natas levels -- launching any one of them starts the same range: one "
     "attacker workstation plus this level's target). Connect to your "
-    "attacker via the noVNC link CTFd shows you (a full desktop in your "
-    "browser). From there, the target for this level is reachable at"
+    "attacker however you prefer: noVNC (a full desktop in your browser) "
+    "or SSH, using the connection details CTFd shows you. From there, the "
+    "target for this level is reachable at"
 )
 
 # Define the dataset for Natas Levels 0 to 14 based on OTW specifications
