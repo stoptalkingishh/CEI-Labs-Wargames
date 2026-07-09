@@ -53,8 +53,75 @@ elif [ ! -d ".ctf" ]; then
     ctf init
 fi
 
+# Pushes a challenge's instance_type/image/instance_group/etc. (if its
+# challenge.yml declares any) into CTFd's instance-launcher plugin, so a
+# "Launch Environment" button appears. Mirrors cei-labs-engine's
+# scripts/challenges-load.sh sync_instance_mapping() function exactly —
+# same payload shape, same endpoint, same header name — but reads the
+# shared secret from an env var instead of a local secrets file, since
+# this repo isn't colocated with cei-labs-engine's docker/secrets/.
+# ctfcli itself has no concept of instance_type; without this step those
+# fields in challenge.yml are silently ignored.
+sync_instance_mapping() {
+    local challenge_dir="$1"
+    local challenge_yaml="$challenge_dir/challenge.yml"
+
+    if [ -z "${CTFD_SYNC_SECRET:-}" ] || [ ! -f "$challenge_yaml" ]; then
+        return 0
+    fi
+
+    local payload
+    payload=$(python3 - "$challenge_yaml" <<'PYEOF' 2>/dev/null || true
+import json
+import sys
+
+import yaml
+
+with open(sys.argv[1]) as f:
+    data = yaml.safe_load(f) or {}
+
+instance_type = data.get("instance_type")
+if not instance_type:
+    sys.exit(0)
+
+print(json.dumps({
+    "challenge_name": data.get("name"),
+    "instance_type": instance_type,
+    "image": data.get("image"),
+    "port": data.get("port"),
+    "target_image": data.get("target_image"),
+    "attacker_image": data.get("attacker_image"),
+    "attacker_port": data.get("attacker_port"),
+    "instance_group": data.get("instance_group"),
+    "shutdown_on_solve": data.get("shutdown_on_solve", True),
+}))
+PYEOF
+    )
+
+    [ -z "$payload" ] && return 0
+
+    local http_code
+    http_code=$(curl -sk -o /dev/null -w '%{http_code}' \
+        -X POST "${CTFD_URL}/plugins/instance-launcher/admin/mappings/sync" \
+        -H "X-Sync-Auth: ${CTFD_SYNC_SECRET}" \
+        -H "Content-Type: application/json" \
+        -d "$payload")
+
+    if [ "$http_code" = "200" ]; then
+        echo "Synced instance mapping for $(basename "$challenge_dir")"
+    else
+        echo "⚠️  Instance mapping sync returned HTTP ${http_code} for $(basename "$challenge_dir")"
+    fi
+}
+
 # 4. Challenge Upload and Sync Loop
 echo "[4/4] Syncing Challenges to CTFd..."
+if [ -z "${CTFD_SYNC_SECRET:-}" ]; then
+    echo "ℹ️  CTFD_SYNC_SECRET not set — challenge content will sync, but no"
+    echo "   'Launch Environment' buttons will be wired up. Set it (the same"
+    echo "   value as cei-labs-engine's plugin_shared_secret Docker secret)"
+    echo "   to enable instance-launcher mapping sync."
+fi
 challenges_found=0
 
 for dir in challenges/*/ ; do
@@ -63,8 +130,8 @@ for dir in challenges/*/ ; do
     dir_trimmed="${dir%/}"
     echo "----------------------------------------"
     echo "Syncing challenge from: $dir_trimmed"
-    
-    # Try syncing first (which updates changes). If it fails because the 
+
+    # Try syncing first (which updates changes). If it fails because the
     # challenge doesn't exist yet on the server, install it.
     if ! ctf challenge sync "$dir_trimmed" 2>/dev/null; then
         echo "Challenge not found on CTFd. Installing challenge as new..."
@@ -72,6 +139,8 @@ for dir in challenges/*/ ; do
     else
         echo "Successfully synced challenge metadata!"
     fi
+
+    sync_instance_mapping "$dir_trimmed"
 done
 
 echo "=========================================="
