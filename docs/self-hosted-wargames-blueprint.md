@@ -645,6 +645,34 @@ correctly over an actual SSH session.
       OTW hostnames; mention that both noVNC (browser) and SSH access are
       available, so players pick whichever they're comfortable with.
 
+### Phase 4 status: COMPLETE (2026-07-09)
+
+Target image (`targets/natas/`), attacker extension (`cei-labs-engine`'s
+`kali-novnc`), and CTFd wiring (`scripts/build_natas.py`) are all done and
+pushed. Two real infrastructure bugs found and fixed via live testing
+(not assumed): installing `libapache2-mpm-itk` alongside the `apache2`
+metapackage leaves `mpm_prefork` also loaded, and its idle worker pool
+starts as the global default `www-data` with no capability left to
+switch to a vhost's `AssignUserID` identity — fixed via a dedicated
+`apache-itk-idle` system user with `cap_setuid`/`cap_setgid` granted
+narrowly to the `apache2` binary via `setcap` (confirmed with the user
+first, since this is a genuine privilege-model choice, not assumed). A
+stray `Require all granted` alongside `Require user natasN` made Basic
+Auth a no-op app-wide until removed. 30/30 live HTTP-exploitation checks
+passed against a real running container for all 15 levels. Wiring
+verified against a real local Swarm stack: launched a real range through
+`/plugins/instance-launcher/launch`, confirmed via direct container exec
+that the attacker can reach the target internally, gets the correct
+flag, and that the target is unreachable (not just access-denied — DNS
+doesn't even resolve) from outside the range. Also surfaced two
+pre-existing `cei-labs-engine` quirks unrelated to Natas specifically:
+local testing needs the same `ghcr.io/local-test/...` fake-org
+convention `cei-labs-engine`'s own core images already use (a real
+`ghcr.io/stoptalkingishh/...` path with a prior CI-published image will
+silently shadow a same-tagged local build), and the orchestrator's
+instance/range bookkeeping is pure in-memory with no reconciliation
+against actual Docker state.
+
 ## Phase 5 — Cross-Repo Consistency Check
 
 - [x] **DONE (2026-07-08):** added `sync_instance_mapping()` to
@@ -685,27 +713,41 @@ correctly over an actual SSH session.
         risk for any Windows contributor, not a repo content bug. Worth a
         `.gitattributes` (`*.sh text eol=lf`) at some point; not blocking,
         not done here.
-- [ ] Confirm no `cei-labs-net` changes are actually needed:
-      `single-target` and `target-attacker` both already fall within the
-      documented `10.10.20.0/24:30000-32767` (SSH/target ports) and
-      `:80,443` (Traefik/noVNC) rules from the earlier integration work.
-  - [ ] **Verify:** re-read `cei-labs-net/docs/security-qos-policy.md`
-        and `network-topology.md`'s current port-range language and
-        confirm it already covers: Bandit/Krypton's directly-published
-        SSH ports (30000–32767, already documented), and the Natas
-        attacker's port 22 (new, but same directly-published-port
-        mechanism as any other `single-target`-style port, so likely
-        already covered by the same range) plus its noVNC 6080 (Traefik,
-        already documented as 80/443). If the SSH addition to
-        `kali-novnc` changes how that specific port gets published
-        (e.g. it's part of a `target-attacker` range rather than a
-        `single-target`, which may use a different port-allocation path
-        in the orchestrator) — confirm which allocation path it
-        actually uses before concluding no firewall change is needed.
-- [ ] Update `cei-labs-net/docs/ecosystem-architecture.md` with a short
-      note (once built) that Bandit/Krypton/Natas are now self-hosted
-      `single-target`/`target-attacker` instances rather than pointing at
-      OverTheWire — documentation-only, reflecting reality.
+- [x] **DONE (2026-07-09):** Confirmed no `cei-labs-net` changes are
+      needed — but not for the reason originally assumed. Traced the
+      orchestrator's own code directly rather than re-reading the docs
+      and hoping: `instance_types.plan_range_attacker()` (the
+      `target-attacker` planner) is called from `controller.py` with **no
+      port allocator at all** — unlike `plan_single_target`, which
+      explicitly takes an `allocated_port`. `target-attacker` ranges
+      (Natas) get **zero directly-published ports**, ever — the attacker
+      is reachable *only* via Traefik (labels only, HTTP/HTTPS through
+      the existing 80/443), full stop. This also means the SSH server
+      Phase 1 added to `kali-novnc` is currently **unreachable from
+      outside any range** — checked `spawn-workspaces.sh`'s bulk-spawn
+      path too (a second, independent deployment route for the same
+      image) and found it publishes port 6080 (noVNC) for the `kali`
+      type, never 22. SSH access genuinely doesn't exist anywhere in the
+      current deployment surface for this image, despite the server
+      being installed and running. Fixed the false "SSH is available"
+      claim in every Natas challenge description (`build_natas.py`) —
+      noVNC only, until/unless the orchestrator grows a real mechanism to
+      expose it (a real feature, not done here — would need its own
+      port-allocation design plus a corresponding `cei-labs-net` firewall
+      rule, exactly the kind of change this checklist item was written to
+      catch before it ships silently broken).
+  - [x] **Verified:** re-read `cei-labs-net/docs/security-qos-policy.md`
+        and `network-topology.md` — both already document `30000–32767`
+        (covers Bandit/Krypton's `single-target` SSH) and `80,443`
+        (covers Natas's `target-attacker` noVNC, and is now confirmed to
+        be the *only* thing that instance type ever needs). No edit
+        needed to either file.
+- [x] **DONE (2026-07-09):** Updated
+      `cei-labs-net/docs/ecosystem-architecture.md` (branch
+      `docs/self-hosted-wargames-status-note`) with a status note on
+      finding #7 (the open-internet dependency) — flags it as in-flight
+      on a feature branch rather than a permanent fact, and records the
+      confirmed no-firewall-change-needed conclusion above.
 
 ## Phase 6 — Hardening & Size Pass (all new/changed images)
 
