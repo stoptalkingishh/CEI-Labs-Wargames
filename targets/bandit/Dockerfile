@@ -8,6 +8,18 @@
 #
 # Built FROM cei-labs-engine's operator/targets/base-linux, per that
 # image's own documented extension contract.
+#
+# Multi-stage: levels 19-20 need genuine SUID binaries (setuid on scripts
+# is ignored by the Linux kernel, so these must be compiled C), but the
+# compiler itself has no business shipping in the final image -- keeps
+# the "as light as possible" requirement intact.
+FROM debian:12-slim AS builder
+RUN apt-get update && apt-get install -y --no-install-recommends gcc libc6-dev \
+    && rm -rf /var/lib/apt/lists/*
+COPY src/level19_setuid.c src/level20_suconnect.c /tmp/
+RUN gcc -O2 -o /tmp/level19_setuid /tmp/level19_setuid.c \
+    && gcc -O2 -o /tmp/level20_suconnect /tmp/level20_suconnect.c
+
 FROM ghcr.io/local-test/cei-labs-engine/target-base-linux:dev
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -54,6 +66,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN useradd -r -m -s /usr/sbin/nologin banditd
 
 COPY build/ /opt/build/
+COPY src/ /opt/build/src/
 RUN chmod +x /opt/build/*.sh /opt/build/*.py \
     && /opt/build/01-create-users.sh \
     && /opt/build/02-set-passwords.sh \
@@ -61,7 +74,28 @@ RUN chmod +x /opt/build/*.sh /opt/build/*.py \
     && /opt/build/04-setup-level-13.sh \
     && /opt/build/05-setup-tls.sh \
     && python3 /opt/build/06-setup-levels-17-18.py \
+    && python3 /opt/build/08-setup-levels-21-24.py \
     && rm -rf /opt/build
+
+# Level 19: reads bandit-19's flag (bandit20's password) from this file --
+# readable only by bandit20, exactly the same file-permission convention
+# every other level uses.
+RUN echo "GbKksEFF4yrVs6il55v6gwY5aVje5f0j" > /etc/bandit_pass/bandit20 \
+    && chown bandit20:bandit20 /etc/bandit_pass/bandit20 \
+    && chmod 400 /etc/bandit_pass/bandit20
+
+# Setuid ROOT (not setuid bandit20) -- the binary itself drops privilege
+# down to bandit20 internally via getpwnam()+setuid(); see the comment
+# in src/level19_setuid.c for why setuid-bandit20-directly doesn't
+# actually work here (confirmed by live testing, not assumed).
+COPY --from=builder /tmp/level19_setuid /home/bandit19/bandit20-do
+RUN chown root:root /home/bandit19/bandit20-do \
+    && chmod 4755 /home/bandit19/bandit20-do
+
+# Level 20: SUID binary owned by bandit21, sitting in bandit20's home.
+COPY --from=builder /tmp/level20_suconnect /home/bandit20/suconnect
+RUN chown bandit21:bandit21 /home/bandit20/suconnect \
+    && chmod 4755 /home/bandit20/suconnect
 
 COPY daemons/ /opt/bandit-daemons/
 RUN chown -R banditd:banditd /opt/bandit-daemons \
