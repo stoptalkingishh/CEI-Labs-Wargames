@@ -13,12 +13,14 @@ KRYPTON_IMAGE = "ghcr.io/stoptalkingishh/cei-labs-wargames/krypton-target:latest
 # shutdown_on_solve.
 INSTANCE_GROUP = "krypton"
 
-CONNECT_NOTE = (
-    "Launch your Krypton environment from this challenge (shared across "
-    "all Krypton levels -- launching any one of them starts the same "
-    "persistent box) and connect via SSH to the host/port CTFd shows you "
-    "once it's ready."
-)
+# A player's connection details (host/port, live status) come from the
+# "Launch Environment" control on this challenge itself -- injected into
+# the challenge view by cei-labs-engine's instance-launcher plugin, not
+# written into these descriptions, since the port is only known once an
+# instance actually exists. See the "Krypton: Start Here" challenge for
+# how that control works. All levels 1-6 connect as a Linux user named
+# after the level (`krypton1`, `krypton2`, ...) using the previous level's
+# flag as that account's password.
 
 # Define the dataset for Krypton Levels 0 to 6 based on OTW specifications
 challenges_data = [
@@ -26,49 +28,49 @@ challenges_data = [
         "id": "krypton-00",
         "name": "Krypton 0 -> 1: Base64 Decoding",
         "points": 200,
-        "desc": "**Goal:** Decrypt the first password using Base64 decoding.\n\nWelcome to Krypton! The first level is easy and needs no SSH connection at all. The following string encodes the password for level 1 using Base64:\n\n`S1JZUFRPTklTR1JFQVQ=`\n\nUse a Base64 decoder (like the `base64 -d` command) to find the flag.",
+        "desc": "**Goal:** Decode a Base64-encoded password.\n\nThis level needs no environment at all -- the following string encodes the password for level 1 in Base64:\n\n`S1JZUFRPTklTR1JFQVQ=`\n\nDecode it (e.g. with the `base64 -d` command) to find the flag.",
         "flag": "KRYPTONISGREAT"
     },
     {
         "id": "krypton-01",
         "name": "Krypton 1 -> 2: ROT13 Substitution Cipher",
         "points": 250,
-        "desc": f"{CONNECT_NOTE} Log in as `krypton1` using the flag from the previous level as your password.\n\nThe password for level 2 is located in `/krypton/krypton1/krypton2`. It is encrypted with a simple ROT13 rotation cipher.\n\n*Hint: The `tr` command is very useful for translating characters (e.g., `tr \"[:alpha:]\" \"N-ZA-Mn-za-m\"`).*",
+        "desc": "**Goal:** Reverse a ROT13 rotation cipher.\n\nLog in as `krypton1`. The next password is in `/krypton/krypton1/krypton2`, encrypted with a simple ROT13 rotation.\n\n*Hint: the `tr` command translates characters directly, e.g. `tr \"[:alpha:]\" \"N-ZA-Mn-za-m\"`.*",
         "flag": "ROTTEN"
     },
     {
         "id": "krypton-02",
         "name": "Krypton 2 -> 3: Caesar Cipher (Unknown Shift)",
         "points": 300,
-        "desc": f"{CONNECT_NOTE} Log in as `krypton2` using the flag from the previous level as your password.\n\nThe password for level 3 is in `/krypton/krypton2/krypton3`, encrypted with a Caesar cipher whose shift is derived from `/krypton/krypton2/keyfile.dat` (not human-readable -- don't just `cat` it). Symlink the keyfile into a scratch directory and use the `encrypt` binary next to it on a known plaintext (a long string of 'A's) to observe the shift, then reverse it to read the next password.",
+        "desc": "**Goal:** Recover a Caesar cipher's shift by observing a known-plaintext encryption.\n\nLog in as `krypton2`. `/krypton/krypton2/krypton3` is encrypted with a Caesar shift derived from `/krypton/krypton2/keyfile.dat` (not human-readable -- don't just `cat` it). Symlink the keyfile into a scratch directory, then run the `encrypt` binary next to it on a known plaintext (a long run of `A`s) to observe the shift it produces, and reverse that shift to read the next password.",
         "flag": "CAESARISEASY"
     },
     {
         "id": "krypton-03",
         "name": "Krypton 3 -> 4: Frequency Analysis",
         "points": 350,
-        "desc": f"{CONNECT_NOTE} Log in as `krypton3` using the flag from the previous level as your password.\n\n`/krypton/krypton3/krypton4` is intercepted English text encrypted with a simple substitution cipher (each letter always maps to the same other letter). Count the frequency of the letters to determine the substitution alphabet.\n\n*Hint: E, T, A, O, I, N are the most common letters in the English language.*",
+        "desc": "**Goal:** Break a substitution cipher using letter-frequency analysis.\n\nLog in as `krypton3`. `/krypton/krypton3/krypton4` is English text under a simple substitution cipher (each letter always maps to the same other letter). Count letter frequencies and match them against typical English letter frequency to recover the substitution alphabet.\n\n*Hint: E, T, A, O, I, N are the most common letters in English.*",
         "flag": "BRUTE"
     },
     {
         "id": "krypton-04",
-        "name": "Krypton 4 -> 5: Vigenère Cipher (Known Key Length)",
+        "name": "Krypton 4 -> 5: Vigenere Cipher (Known Key Length)",
         "points": 400,
-        "desc": f"{CONNECT_NOTE} Log in as `krypton4` using the flag from the previous level as your password.\n\n`/krypton/krypton4/krypton5` is a Vigenère cipher with a key exactly 6 letters long (see the README next to it). Split the ciphertext into 6 interleaved groups and solve each as its own Caesar shift to recover the password.",
+        "desc": "**Goal:** Break a Vigenere cipher when the key length is already known.\n\nLog in as `krypton4`. `/krypton/krypton4/krypton5` is a Vigenere cipher with a key exactly 6 letters long (see the README next to it). Split the ciphertext into 6 interleaved groups and solve each independently as its own Caesar shift.",
         "flag": "CLEARTEXT"
     },
     {
         "id": "krypton-05",
-        "name": "Krypton 5 -> 6: Vigenère Cipher (Kasiski Test)",
+        "name": "Krypton 5 -> 6: Vigenere Cipher (Kasiski Test)",
         "points": 450,
-        "desc": f"{CONNECT_NOTE} Log in as `krypton5` using the flag from the previous level as your password.\n\n`/krypton/krypton5/krypton6` is a Vigenère cipher, but this time the key length isn't given. Use the Kasiski examination method to find repeating patterns in the ciphertext and estimate the key length (likely 3, 6, or 9). Once the length is known, apply frequency analysis to recover the key.",
+        "desc": "**Goal:** Break a Vigenere cipher when the key length isn't given.\n\nLog in as `krypton5`. `/krypton/krypton5/krypton6` is another Vigenere cipher, but this time you don't know the key length. Use the Kasiski examination (repeating ciphertext patterns) to estimate it -- likely 3, 6, or 9 -- then apply frequency analysis per group to recover the key.",
         "flag": "RANDOM"
     },
     {
         "id": "krypton-06",
         "name": "Krypton 6 -> 7: Stream Cipher / LFSR",
         "points": 500,
-        "desc": f"{CONNECT_NOTE} Log in as `krypton6` using the flag from the previous level as your password.\n\nThis is the final Krypton level. `/krypton/krypton6/final` is encrypted with a stream cipher whose keystream repeats every 30 characters -- the `encrypt` binary next to it implements it. Encrypt a long run of identical letters (e.g. 30+ 'A's) to read the repeating keystream directly off the output, then use it to decrypt the final flag.",
+        "desc": "**Goal:** Recover a repeating keystream and use it to decrypt the final password.\n\nLog in as `krypton6`. This is the final Krypton level. `/krypton/krypton6/final` is encrypted with a stream cipher whose keystream repeats every 30 characters -- the `encrypt` binary next to it implements it. Encrypt a long run of identical characters (30+ of them) to read the repeating keystream straight off the output, then use it to decrypt the final flag.",
         "flag": "LFSRISNOTRANDOM"
     }
 ]
