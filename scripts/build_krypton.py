@@ -108,42 +108,44 @@ challenges_data = [
 # Crawl/walk/run hints per level (not krypton-start-here -- its
 # description is already a full walkthrough). See build_bandit.py's
 # HINTS comment for the tier structure and the quoting constraint (no
-# literal double-quotes -- this script builds YAML by hand).
+# literal double-quotes -- this script builds YAML by hand). Krypton is
+# concept-heavy, so tier 1 is often a reading link rather than a bare
+# command, matching each description's own "Helpful reading" section.
 HINTS = {
     "krypton-00": [
-        ("`man base64` -- there's no cipher here at all, just a standard reversible text encoding.", 10),
-        ("Base64 turns arbitrary bytes into a fixed set of readable characters (letters, digits, `+`, `/`, `=` padding) -- recognizing that character set (and the trailing `=`) is the tell that it's Base64, not an actual cipher requiring a key.", 100),
+        ("`man base64`.", 10),
+        ("Base64 turns arbitrary bytes into a fixed set of readable characters (letters, digits, `+`, `/`, `=` padding). Recognizing that character set -- including the trailing `=` padding -- is the tell that it's Base64, not an actual cipher, and Base64's own tooling has a documented decode flag.", 100),
         ("`echo 'S1JZUFRPTklTR1JFQVQ=' | base64 -d` decodes the string straight back to the plaintext password -- no key, shift, or other secret involved.", 150),
     ],
     "krypton-01": [
-        ("`man tr` -- specifically giving it two matching character ranges to translate between.", 15),
-        ("ROT13 shifts every letter 13 positions through the alphabet, wrapping at the end. Since the alphabet has 26 letters, shifting by 13 twice returns you to the start -- meaning the SAME transformation both encrypts and decrypts.", 125),
+        ("[ROT13 on Wikipedia](https://en.wikipedia.org/wiki/ROT13).", 15),
+        ("ROT13 shifts every letter 13 positions through the alphabet, wrapping at the end. Since the alphabet has 26 letters, shifting by 13 twice returns you to the start -- meaning the SAME transformation both encrypts and decrypts. `tr` can perform an arbitrary letter-for-letter substitution given two character ranges.", 125),
         ("Log in as `krypton1`, then `tr '[:alpha:]' 'N-ZA-Mn-za-m' < /krypton/krypton1/krypton2` maps every letter 13 positions ahead (wrapping past Z to A) -- applying this once to the ciphertext reverses the ROT13 and reveals the password.", 187),
     ],
     "krypton-02": [
-        ("`man tr` -- you'll need it to apply the shift once you know it.", 15),
-        ("The `encrypt` binary looks for `keyfile.dat` in your CURRENT directory, not a fixed path. Make a scratch directory, symlink the real keyfile into it, then run `encrypt` on a string you already know the plaintext of (like a long run of `A`s) -- comparing input to output tells you the exact shift.", 150),
-        ("Full method: `mktemp -d` for a scratch directory, `cd` into it, then `ln -s /krypton/krypton2/keyfile.dat` so `encrypt` (which only looks in your current directory) can find it. Run `/krypton/krypton2/encrypt` against a file of your own containing many repeated `A` characters -- since every `A` shifts by the exact same amount, the output tells you precisely which letter `A` became, and that letter's position in the alphabet is the shift (e.g. if `A` becomes `M`, the shift is 12). Once you know the shift, reverse it against `krypton3` with `tr`, e.g. `tr 'A-Za-z' 'N-ZA-Mn-za-m'` for a shift of 13, adjusting the rotation to match what you actually found.", 225),
+        ("[Known-plaintext attack on Wikipedia](https://en.wikipedia.org/wiki/Known-plaintext_attack).", 15),
+        ("The `encrypt` binary looks for `keyfile.dat` in your CURRENT directory, not a fixed path, and will encrypt any plaintext you give it using that key. If you feed it text whose plaintext you already know, comparing your known input against its output reveals exactly what the cipher did to it.", 150),
+        ("`mktemp -d` for a scratch directory, `cd` into it, then `ln -s /krypton/krypton2/keyfile.dat` so `encrypt` (which only looks in your current directory) can find it. Run `/krypton/krypton2/encrypt` against a file of your own containing many repeated `A` characters -- since every `A` shifts by the exact same amount, the output tells you precisely which letter `A` became, and that letter's position in the alphabet is the shift (e.g. if `A` becomes `M`, the shift is 12). Once you know the shift, reverse it against `krypton3` with `tr`, e.g. `tr 'A-Za-z' 'N-ZA-Mn-za-m'` for a shift of 13, adjusting the rotation to match what you actually found.", 225),
     ],
     "krypton-03": [
-        ("`man tr`, `man sort`, `man uniq` -- you'll be counting how often each letter appears.", 20),
-        ("In normal English text, letters don't appear equally often -- E, T, A, O, I, N are consistently the most common. If a substitution cipher always maps the same plaintext letter to the same ciphertext letter, counting ciphertext letter frequencies and matching the ranking against known English frequency order recovers the substitution alphabet, one letter at a time.", 175),
-        ("Combine the ciphertext with the extra intercepted files (`found1`, `found2`, `found3` -- more sample text encrypted with the SAME key means more data for the same statistics) and count letter frequency: `cat /krypton/krypton3/found1 /krypton/krypton3/found2 /krypton/krypton3/found3 /krypton/krypton3/krypton4 | tr -cd 'A-Za-z' | tr 'a-z' 'A-Z' | fold -w1 | sort | uniq -c | sort -rn`. Map the most frequent output letter to E, next to T, and so on down the standard English frequency order (E T A O I N ...), then apply that substitution with `tr` against `krypton4` to reveal the password. Some letters may need manual correction/guessing once partial words start appearing.", 262),
+        ("[Frequency analysis on Wikipedia](https://en.wikipedia.org/wiki/Frequency_analysis).", 20),
+        ("In normal English text, letters don't appear equally often -- E, T, A, O, I, N are consistently the most common. If a substitution cipher always maps the same plaintext letter to the same ciphertext letter, counting ciphertext letter frequencies and matching the ranking against known English frequency order recovers the substitution alphabet, one letter at a time. The extra intercepted files (`found1`, `found2`, `found3`) were encrypted with the SAME key, so combining them gives more data for the same statistics.", 175),
+        ("Combine the ciphertext with the extra intercepted files and count letter frequency: `cat /krypton/krypton3/found1 /krypton/krypton3/found2 /krypton/krypton3/found3 /krypton/krypton3/krypton4 | tr -cd 'A-Za-z' | tr 'a-z' 'A-Z' | fold -w1 | sort | uniq -c | sort -rn`. Map the most frequent output letter to E, next to T, and so on down the standard English frequency order (E T A O I N ...), then apply that substitution with `tr` against `krypton4` to reveal the password. Some letters may need manual correction/guessing once partial words start appearing.", 262),
     ],
     "krypton-04": [
-        ("`man tr` again -- you'll be splitting the ciphertext into 6 separate streams first.", 20),
-        ("A Vigenere cipher with a 6-letter key actually applies 6 DIFFERENT Caesar shifts in rotation -- character 1 uses shift A, character 2 uses shift B, ..., character 7 goes back to shift A, and so on. If you pull out every 6th character starting from each of the 6 starting positions, each resulting group was encrypted with just ONE consistent shift, solvable the same way as a normal Caesar cipher (frequency analysis or a known-plaintext guess).", 200),
+        ("[Vigenere cipher on Wikipedia](https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher).", 20),
+        ("A Vigenere cipher with a 6-letter key actually applies 6 DIFFERENT Caesar shifts in rotation -- character 1 uses shift A, character 2 uses shift B, ..., character 7 goes back to shift A, and so on. Pulling out every 6th character starting from each of the 6 starting positions produces 6 groups, each encrypted with just ONE consistent shift -- solvable the same way as a normal Caesar cipher.", 200),
         ("Split the ciphertext into 6 interleaved groups (characters at positions 0, 6, 12, ... form group 1; positions 1, 7, 13, ... form group 2; and so on). Run frequency analysis (same technique as the previous level) on EACH group independently to find its own Caesar shift, then reassemble the 6 recovered shifts back into their original character positions to read the full plaintext password.", 300),
     ],
     "krypton-05": [
-        ("Same tools as level 4, plus this time you first need to figure out the key length itself before splitting into groups.", 20),
-        ("Look for repeated 3+ character substrings appearing more than once in the ciphertext, and note the DISTANCE (in characters) between each repeat -- this is the classical Kasiski examination. The true key length usually divides most of these distances evenly, since a repeated plaintext fragment only produces identical ciphertext when it lines up with the same position in the repeating key.", 200),
+        ("[Kasiski examination on Wikipedia](https://en.wikipedia.org/wiki/Kasiski_examination).", 20),
+        ("Look for repeated 3+ character substrings appearing more than once in the ciphertext, and note the DISTANCE (in characters) between each repeat. The true key length usually divides most of these distances evenly, since a repeated plaintext fragment only produces identical ciphertext when it lines up with the same position in the repeating key.", 200),
         ("Search the ciphertext for repeated 3-4 character sequences and record the distance between each occurrence; find the greatest common factor across those distances (in this deployment, that points to a key length of 9). Once the key length is known, split into that many interleaved groups exactly as in the previous level, solve each group's Caesar shift via frequency analysis, and reassemble.", 300),
     ],
     "krypton-06": [
-        ("`man xxd` and basic byte arithmetic -- you're working with raw bytes now, not readable text.", 25),
-        ("The stream cipher XORs (or byte-wise adds/subtracts, depending on implementation) each plaintext byte with a 'random' keystream byte -- but that keystream turns out to repeat every 30 characters. If you can get the encryption binary to encrypt a LONG run of identical known characters (so you know the plaintext for every byte), the differences between your known input and its output directly reveal the repeating keystream itself.", 225),
-        ("Run `/krypton/krypton6/encrypt` on an input of 30+ repeated identical characters (e.g. a long run of `A`s) -- since every plaintext byte is the same known value, the corresponding output bytes reveal the raw keystream directly (subtract/XOR your known plaintext byte from each output byte, matching whatever operation the cipher uses). Once you have the 30-byte repeating keystream, apply the same operation between it and `/krypton/krypton6/final` (cycling the keystream every 30 bytes) to recover the final plaintext password.", 337),
+        ("`man xxd`.", 25),
+        ("The stream cipher combines each plaintext byte with a 'random' keystream byte -- but that keystream turns out to repeat every 30 characters. If you can get the encryption binary to encrypt a LONG run of identical known characters, the relationship between your known input and its output at each position directly reveals the repeating keystream itself, byte for byte.", 225),
+        ("Run `/krypton/krypton6/encrypt` on an input of 30+ repeated identical characters (e.g. a long run of `A`s) -- since every plaintext byte is the same known value, the corresponding output bytes reveal the raw keystream directly (compare your known plaintext byte against each output byte, matching whatever operation the cipher uses). Once you have the 30-byte repeating keystream, apply the same relationship between it and `/krypton/krypton6/final` (cycling the keystream every 30 bytes) to recover the final plaintext password.", 337),
     ],
 }
 

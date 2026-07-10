@@ -306,193 +306,196 @@ challenges_data = [
 # description is already a full walkthrough). A HINTS entry is either a
 # single (content, cost) tuple (legacy) or a list of up to 3 tuples,
 # cheapest first:
-#   tier 1 "crawl" -- near-free. Just a nudge: which tool(s) to reach
-#     for, mirroring the description's own "Commands you may need" list,
-#     sometimes a reading link. Should work for someone who doesn't even
-#     know the tool exists yet.
-#   tier 2 "walk" -- costs about half the challenge's points. Explains
-#     what that tool/reference actually means for THIS problem -- not
-#     just "here's the manual," but "here's how to read the manual for
-#     your situation." A real lifeline.
-#   tier 3 "run" -- costs most of the challenge's points (deliberately:
-#     using it should leave almost nothing to "win" by solving after).
-#     A close-to-complete walkthrough of the METHOD, condensed from real
-#     writeups where the technique isn't obvious -- but still requires
-#     the player to run the commands and read the output themselves
-#     rather than just handing over the literal answer.
+#   tier 1 "crawl" -- near-free. ONLY the bare tool/manpage name or a
+#     single reading link, nothing more -- no explanation of what it
+#     does or how it applies here. Same spirit as the description's own
+#     "Commands you may need" list. For someone who already knows the
+#     concept but is rusty on the exact tool/syntax.
+#   tier 2 "walk" -- about half the challenge's points. A real
+#     explanation of the underlying concept that explicitly names tier
+#     1's tool/reference, but stops short of the literal exact command
+#     line, flag combination, or payload -- the player still connects it
+#     to the problem themselves. A real lifeline, not a finished command.
+#   tier 3 "run" -- most of the challenge's points (deliberately: using
+#     it should leave almost nothing to "win" by solving after). A
+#     close-to-complete walkthrough of the METHOD, explaining WHY it
+#     works and HOW to execute it, condensed from real writeups where the
+#     technique isn't obvious -- still requires the player to run the
+#     commands and read output themselves rather than being handed the
+#     literal flag value.
 # Content must not contain a literal double-quote character (this script
 # builds YAML by hand, not via PyYAML -- use backticks/single quotes for
 # anything that needs quoting).
 HINTS = {
     "bandit-00": [
-        ("`man ssh` -- if you've never used SSH before, it's just a secure remote login program: `ssh <user>@<host> -p <port>`.", 5),
-        ("Once connected and logged in as `bandit0`/`bandit0`, `ls` shows what's in the home directory, and `cat <filename>` prints a file's contents.", 50),
-        ("Full method: `ssh bandit0@<host> -p <port>`, enter password `bandit0` when prompted, then `cat readme` once logged in. Whatever it prints is the flag for this level -- submit it here.", 75),
+        ("`man ssh`.", 5),
+        ("SSH is a secure remote login program: `ssh <user>@<host> -p <port>` opens a login session on another machine. Once logged in, standard commands like `ls` and `cat` work exactly as they would on your own machine.", 50),
+        ("Connect with `ssh bandit0@<host> -p <port>`, enter password `bandit0` when prompted, then run `cat readme` once logged in. Whatever it prints is the flag for this level -- submit it here.", 75),
     ],
     "bandit-01": [
-        ("`man ls`, `man cat` -- a filename that's just `-` looks like a command-line option to most tools.", 10),
-        ("Most Linux commands treat a bare `-` as 'read from standard input' or as the start of a flag, not as a literal filename. You need a way to say 'this specific path' instead of letting the shell interpret it.", 75),
-        ("Two ways around it: prefix the filename with its path, `cat ./-`, or use `--` to tell `cat` that everything after it is a filename, not a flag: `cat -- -`. Either reads the file's contents, which is the flag for this level.", 112),
+        ("`man cat`.", 10),
+        ("Most command-line tools treat a filename starting with `-` as an option flag, not a literal filename, because `-` conventionally introduces flags. `cat`'s manual page documents a standard way to tell it 'everything after this point is a filename, not a flag.'", 75),
+        ("A filename of just `-` gets misread as a flag by `cat`. Reference it unambiguously with `cat -- -` (the `--` tells `cat` to stop parsing flags) or `cat ./-` (a leading path makes it clearly a filename). Either prints the file's contents, which is the flag for this level.", 112),
     ],
     "bandit-02": [
-        ("`man ls` -- look at how `ls -la` displays filenames containing spaces.", 15),
-        ("A space normally separates arguments on a command line, so a filename containing spaces needs to be treated as ONE argument -- either by quoting the whole name, or by escaping each space individually.", 100),
-        ("`ls -la` in the home directory shows a file literally named `spaces in this filename`. Read it with either `cat 'spaces in this filename'` (single quotes around the whole name) or `cat spaces\\ in\\ this\\ filename` (a backslash before each space).", 150),
+        ("`man ls`.", 15),
+        ("A space normally separates one argument from the next on a command line, so a filename containing spaces has to be passed as a single argument somehow -- either by wrapping the whole name in quotes, or by escaping each individual space character.", 100),
+        ("`ls -la` in the home directory shows a file literally named `spaces in this filename`. Read it with `cat 'spaces in this filename'` (single quotes around the whole name) or `cat spaces\\ in\\ this\\ filename` (a backslash before each space).", 150),
     ],
     "bandit-03": [
-        ("`man ls` -- specifically the `-a` flag.", 15),
-        ("On Linux, any filename starting with a `.` is hidden from a plain directory listing by convention (not a real permission, just a display convention every standard tool respects).", 100),
-        ("`ls -la inhere` (the `-a` flag shows hidden entries, `-l` gives you a readable list) reveals a dotfile. `cat` that filename directly to read the password.", 150),
+        ("`man ls`.", 15),
+        ("On Linux, any filename starting with a `.` is hidden from a plain directory listing by convention -- not a real permission, just a display convention every standard tool respects. `ls` has a documented flag to show hidden entries too.", 100),
+        ("`ls -la inhere` (the `-a` flag shows hidden entries) reveals a dotfile. `cat` that filename directly to read the password.", 150),
     ],
     "bandit-04": [
-        ("`man file` -- it identifies a file's actual content type, independent of what it's named.", 5),
-        ("Run `file ./inhere/*` to check every file in the directory in one command. Most will report as generic 'data'; exactly one will report as some form of text.", 150),
-        ("Full method: `cd inhere`, then `file ./*` (or `file -- *` if any names start with a dash) to see every file's real type in one pass -- the decoys are named to look identical, but `file` reads actual bytes, not names. The binary ones will report as 'data'; exactly one will report as ASCII/text. Once you've spotted that filename, `cat` it (quoting or escaping the name if it starts with a dash) to read the password.", 225),
+        ("`man file`.", 5),
+        ("`file` identifies a file's actual content type by reading its bytes, independent of what it's named -- useful when several identically-patterned filenames hide one real difference. It also accepts a wildcard/glob to check many files in one call.", 150),
+        ("`cd inhere`, then `file ./*` (or `file -- *` if any names start with a dash) checks every file's real type in one pass -- the decoys are named to look identical, but `file` reads actual bytes, not names. The binary ones report as 'data'; exactly one reports as ASCII/text. Once you've spotted that filename, `cat` it (quoting or escaping the name if it starts with a dash) to read the password.", 225),
     ],
     "bandit-05": [
-        ("`man find` -- specifically its `-size`, `-type`, and `!` (negation) options.", 15),
-        ("`find` can filter by multiple properties at once by chaining tests together on one command line; each test narrows the result set further, so combining all three properties from the goal text into one `find` call should leave very few (ideally one) candidates.", 175),
-        ("`find inhere -size 1033c -type f ! -executable` chains all three properties (size, regular file, not executable) into one search. If more than one result comes back, run `file` on each -- only the genuinely human-readable one is the password file; the rest are decoys.", 262),
+        ("`man find`.", 15),
+        ("`find` can filter by multiple properties at once -- size, type, permissions -- by chaining several tests on one command line, narrowing the result set with each added test. Combining every property mentioned in the goal text into one search should leave very few candidates.", 175),
+        ("`find inhere -size 1033c -type f ! -executable` chains all three stated properties (size, regular file, not executable) into one search. If more than one result comes back, run `file` on each -- only the genuinely human-readable one is the password file; the rest are decoys.", 262),
     ],
     "bandit-06": [
-        ("`man find` -- specifically `-user`, `-group`, and `-size`, plus how to search from `/` instead of your home directory.", 20),
-        ("This time the file isn't anywhere under your home directory at all -- it's somewhere on the server. `find` can search the whole filesystem starting from `/`, but that means it will also try to look inside directories you don't have permission to read, which prints a lot of noise to the screen.", 200),
-        ("`find / -user bandit7 -group bandit6 -size 33c 2>/dev/null` searches the entire filesystem for the three stated properties at once; `2>/dev/null` throws away the 'Permission denied' errors so the one real result isn't buried in noise. `cat` whatever path it returns.", 300),
+        ("`man find`.", 20),
+        ("`find` can search starting from any directory, including the whole filesystem from `/`, and filter by owner and group as well as size. Searching from `/` also means it will try to look inside directories you can't read, which prints a lot of permission-denied noise you'll want to suppress.", 200),
+        ("`find / -user bandit7 -group bandit6 -size 33c 2>/dev/null` searches the entire filesystem for the three stated properties at once; `2>/dev/null` throws away the permission-denied errors so the one real result isn't buried in noise. `cat` whatever path it returns.", 300),
     ],
     "bandit-07": [
-        ("`man grep` -- specifically how to search for a word and see the surrounding text.", 25),
-        ("`data.txt` is large, but the password sits right next to a specific marker word mentioned in the goal text. A text-search tool can jump straight to that line instead of you scrolling through the whole file.", 225),
+        ("`man grep`.", 25),
+        ("A text-search tool can jump straight to the line containing a specific word instead of you scrolling through a large file by hand -- the goal text names the exact marker word to search for.", 225),
         ("`grep millionth data.txt` prints only the line(s) containing that word -- the password is the value right next to it on that same line.", 337),
     ],
     "bandit-08": [
-        ("`man sort`, `man uniq` -- specifically `uniq`'s `-u` flag.", 30),
-        ("`uniq` only detects duplicate lines that are ADJACENT to each other, so the file needs to be sorted first before `uniq` can group all identical lines together. Once sorted, `uniq -u` prints only the lines that have no duplicate at all.", 250),
+        ("`man uniq`.", 30),
+        ("`uniq` only detects duplicate lines that are directly ADJACENT to each other, so a file needs sorting first before `uniq` can group identical lines together. Once sorted, `uniq` has a documented flag for printing only the lines with no duplicate at all.", 250),
         ("`sort data.txt | uniq -u` sorts the file so identical lines become adjacent, then prints only the lines that occur exactly once -- that's the password, since every decoy line in the file appears more than once.", 375),
     ],
     "bandit-09": [
-        ("`man strings`, `man grep` -- `data.txt` isn't plain text this time.", 30),
-        ("`strings` pulls out only the human-readable runs of characters from an otherwise binary/garbage file. Once you can see the readable strings, the goal text tells you the password is preceded by several `=` characters, which you can filter for.", 250),
+        ("`man strings`.", 30),
+        ("`strings` pulls out only the human-readable runs of characters from an otherwise binary/garbage file -- once the readable text is visible, the goal text tells you the password is preceded by several `=` characters, which a text-search tool can filter for.", 250),
         ("`strings data.txt | grep '^='` extracts the readable text from the binary file, then filters to just the line(s) that start with one or more `=` characters -- the password follows the equals signs on that line.", 375),
     ],
     "bandit-10": [
-        ("`man base64` -- specifically its `-d` (decode) flag.", 35),
-        ("The password isn't disguised or hidden this time, just encoded in a standard, reversible text format. If you recognize the character set (letters, digits, `+`, `/`, `=` padding), that's your clue which decoder to reach for.", 275),
-        ("`base64 -d data.txt` (or `cat data.txt | base64 -d`) decodes the file directly back to the plaintext password -- no other steps needed.", 412),
+        ("`man base64`.", 35),
+        ("The password isn't hidden this time, just encoded in a standard, reversible text format -- recognizing the character set (letters, digits, `+`, `/`, `=` padding) is the tell for which encoding it is, and that encoding's own tool has a documented flag for reversing it.", 275),
+        ("`base64 -d data.txt` decodes the file directly back to the plaintext password -- no other steps needed.", 412),
     ],
     "bandit-11": [
-        ("`man tr` -- specifically how to give it two character ranges to translate between.", 35),
-        ("ROT13 shifts every letter 13 places through the alphabet, wrapping around at the end. Because the alphabet has 26 letters and 13 is exactly half, applying the SAME shift twice returns you to the original text -- so encoding and decoding use the identical transformation.", 275),
+        ("`man tr`.", 35),
+        ("ROT13 shifts every letter 13 places through the alphabet, wrapping at the end. Because the alphabet has 26 letters and 13 is exactly half, applying the SAME shift twice returns you to the original text -- meaning encoding and decoding are the identical operation. `tr` can perform an arbitrary letter-for-letter substitution given two character ranges.", 275),
         ("`tr 'A-Za-z' 'N-ZA-Mn-za-m' < data.txt` maps every letter to the one 13 positions ahead (wrapping past Z back to A), which both encodes and decodes ROT13 since it's a self-inverse cipher. Running the file through this once reveals the password.", 412),
     ],
     "bandit-12": [
-        ("`man xxd`, `man file` -- `data.txt` isn't a normal hexdump you read directly, it's a hexdump OF something else.", 40),
-        ("A hexdump is a text representation of raw binary bytes -- to get the real file back, you first have to reverse the hexdump into actual binary, and only then can you see what kind of file it really is. Repeat: check the file type, act on what it says, repeat again, since it's been compressed more than once.", 350),
-        ("Copy `data.txt` to a scratch directory (e.g. `mkdir /tmp/work && cp data.txt /tmp/work && cd /tmp/work`), then `xxd -r data.txt > data.bin` to reverse the hexdump back to real bytes. Run `file data.bin` to see what compression it actually is (in this deployment: gzip, then bzip2 underneath that) -- rename with the right extension and decompress one layer (`gunzip`/`bunzip2`), checking `file` again after each step, until what's left is plain text: the password.", 525),
+        ("`man xxd`.", 40),
+        ("A hexdump is a text representation of raw binary bytes, not a file you read directly -- `xxd` can convert a hexdump back into real binary. Once it's real bytes again, `file` can tell you what kind of (likely compressed) data it actually is, and the process may need repeating more than once.", 350),
+        ("Copy `data.txt` to a scratch directory, then `xxd -r data.txt > data.bin` to reverse the hexdump back to real bytes. Run `file data.bin` to see what compression it actually is (in this deployment: gzip, then bzip2 underneath that) -- decompress one layer (`gunzip`/`bunzip2`), checking `file` again after each step, until what's left is plain text: the password.", 525),
     ],
     "bandit-13": [
-        ("`man ssh` -- specifically the `-i` flag for using a specific private key file.", 40),
-        ("SSH doesn't only support password logins -- a private key file can authenticate you directly, without ever typing a password, as long as the matching public key is already trusted by the target account. SSH is also picky about key file permissions and will refuse to use an overly-permissive one.", 350),
-        ("`chmod 600 sshkey.private` first if SSH complains the key's permissions are too open, then `ssh -i sshkey.private bandit14@localhost` logs you straight into `bandit14` on the SAME box (no new host/port needed) using that key instead of a password. Once in, `cat /etc/bandit_pass/bandit14` reads the next password.", 525),
+        ("`man ssh`.", 40),
+        ("SSH doesn't only support password logins -- a private key file can authenticate you directly, as long as the matching public key is already trusted by the target account. SSH's manual documents both how to specify a key file and how strict it is about that file's permissions.", 350),
+        ("`chmod 600 sshkey.private` first if SSH complains the key's permissions are too open, then `ssh -i sshkey.private bandit14@localhost` logs you straight into `bandit14` on the SAME box using that key instead of a password. Once in, `cat /etc/bandit_pass/bandit14` reads the next password.", 525),
     ],
     "bandit-14": [
-        ("`man nc` (netcat) -- a simple way to send raw text to a TCP port and read what comes back.", 45),
-        ("'Submitting' a password to a port just means opening a raw connection to that port and sending the password as a line of text, the same way a real network service would receive it. Netcat is the standard, minimal tool for exactly this.", 375),
+        ("`man nc`.", 45),
+        ("'Submitting' a password to a port just means opening a raw TCP connection to that port and sending the password as a line of text -- netcat is the standard, minimal tool for opening a raw connection and sending/receiving whatever text you type.", 375),
         ("`nc localhost 30000` opens a connection to the port; once connected, type the CURRENT level's password (bandit14's own password) and press enter. The service reads it, and if correct, sends back the password for bandit15.", 562),
     ],
     "bandit-15": [
-        ("`man openssl` -- specifically the `s_client` subcommand, netcat's encrypted-connection cousin.", 45),
-        ("This port speaks the same protocol as the last level, but wrapped in SSL/TLS encryption -- plain `nc` can't speak SSL, so you need a client that can perform the TLS handshake before sending your text.", 400),
+        ("`man openssl`.", 45),
+        ("This port speaks the same protocol as the last level, but wrapped in SSL/TLS encryption -- plain netcat can't perform a TLS handshake, so you need a client that can. OpenSSL ships a subcommand specifically for opening an encrypted client connection by hand.", 400),
         ("`openssl s_client -connect localhost:30001` performs the TLS handshake and drops you into an encrypted session; once connected, type bandit15's password and press enter, same as the netcat step before. The response contains bandit16's password.", 600),
     ],
     "bandit-16": [
-        ("`man nmap` -- specifically a port-range scan (`-p START-END`), and its SSL-detection service scan.", 50),
-        ("Not every port in the given range is actually listening, and among the ones that are, only one both accepts SSL/TLS AND expects your password -- the others will just echo whatever you send back at you. Scanning first narrows down which ports are worth trying at all before you connect to each by hand.", 425),
-        ("`nmap -p 31000-32000 --open localhost` lists which ports in the range actually have something listening; `nmap -p 31000-32000 --open -sV localhost` additionally tries to identify which of those speak SSL. Connect to each SSL-speaking candidate with `openssl s_client -connect localhost:<port>` and send bandit16's password -- only one will respond with bandit17's.", 637),
+        ("`man nmap`.", 50),
+        ("Not every port in the given range is actually listening, and among the ones that are, only one both speaks SSL/TLS AND expects your password. A port scanner can narrow down which ports in a range are even open before you try connecting to each by hand, and can also try to identify which protocol each one speaks.", 425),
+        ("`nmap -p 31000-32000 --open localhost` lists which ports in the range actually have something listening; adding `-sV` additionally tries to identify which of those speak SSL. Connect to each SSL-speaking candidate with `openssl s_client -connect localhost:<port>` and send bandit16's password -- only one will respond with bandit17's.", 637),
     ],
     "bandit-17": [
-        ("`man diff` -- it shows the differences between two files line by line.", 50),
-        ("Both files are large, but only ONE line changed between them -- comparing them line-by-line yourself would be tedious and error-prone. A diff tool exists specifically to surface exactly what changed between two versions of similar text.", 425),
+        ("`man diff`.", 50),
+        ("Both files are large, but only ONE line changed between them -- a diff tool exists specifically to surface exactly what changed between two versions of similar text, rather than you comparing them line-by-line by hand.", 425),
         ("`diff passwords.old passwords.new` prints only the lines that differ between the two files (conventionally prefixed with `<` for the old version and `>` for the new one). The `>` line is the current password for bandit18.", 637),
     ],
     "bandit-18": [
-        ("`man ssh` -- specifically that `ssh user@host command` can run ONE command remotely without ever opening an interactive shell.", 55),
-        ("The account's `.bashrc` is what's logging you out -- but `.bashrc` only runs for INTERACTIVE login shells. If you can get SSH to execute a single command directly, without starting an interactive shell session at all, `.bashrc` never gets a chance to run.", 475),
+        ("`man ssh`.", 55),
+        ("The account's `.bashrc` is what's logging you out, but `.bashrc` only runs for INTERACTIVE login shells. SSH's manual documents a form of the command that runs a single remote command directly, without starting an interactive shell session at all.", 475),
         ("`ssh bandit18@<host> -p <port> cat readme` appends a command directly to the SSH invocation -- SSH runs just that one command non-interactively over the connection and returns its output, entirely bypassing the interactive-shell startup (and therefore `.bashrc`) that would otherwise log you out immediately.", 712),
     ],
     "bandit-19": [
-        ("`man find` -- specifically how to locate files with the setuid bit set (`-perm -4000`), though in this case the binary is already sitting in the home directory.", 55),
-        ("A setuid binary runs with the FILE OWNER's permissions, not the permissions of whoever launched it -- meaning if `root` (or `bandit20`) owns this binary, running it lets you act with THAT account's privileges for as long as the binary is running, even though you're logged in as `bandit19`.", 475),
-        ("Run the setuid binary in bandit19's home directory with no arguments first to see its usage message -- it expects a command to run with elevated privilege. Passing it something like `./bandit20-do cat /etc/bandit_pass/bandit20` (quoted as one argument if needed) runs that `cat` as the binary's owner, printing bandit20's password directly.", 712),
+        ("[Setuid on Wikipedia](https://en.wikipedia.org/wiki/Setuid).", 55),
+        ("A setuid binary runs with the FILE OWNER's permissions, not the permissions of whoever launched it -- meaning if a more-privileged account owns this binary, running it lets you act with THAT account's privileges for as long as it's running. Running an unfamiliar binary with no arguments often prints a usage message telling you how it expects to be invoked.", 475),
+        ("Run the setuid binary in bandit19's home directory with no arguments to see its usage message -- it expects a command to run with elevated privilege. Passing it something like `./bandit20-do cat /etc/bandit_pass/bandit20` (quoted as one argument if needed) runs that `cat` as the binary's owner, printing bandit20's password directly.", 712),
     ],
     "bandit-20": [
-        ("`man nc` again, this time as a LISTENER (`-l`) instead of a client, plus basic job control (`&`, `jobs`, `fg`) to run two things in one SSH session.", 60),
-        ("The setuid binary here doesn't read a password from a file -- it CONNECTS OUT to a port on localhost that YOU choose, and expects to receive the previous level's password over that connection. That means you need something listening on that port BEFORE you trigger the binary, ready to send the password the instant it connects.", 525),
+        ("`man nc`.", 60),
+        ("The setuid binary here doesn't read a password from a file -- it CONNECTS OUT to a port on localhost that YOU choose, expecting to receive the previous level's password over that connection. That means something needs to be listening on that port BEFORE the binary is triggered; netcat can act as a listener (`-l`) as well as a client, and basic shell job control (`&`, `fg`) lets you run two things in one SSH session.", 525),
         ("In one terminal (or backgrounded with `&`), start a listener: `nc -lvp <some port>`. In a second connection (or foreground job), run the setuid binary with that same port number as its argument. Back in the listener's session, type bandit20's password and press enter -- the binary reads it, validates it, and sends back bandit21's password over that same connection, which the listener will print.", 787),
     ],
     "bandit-21": [
-        ("`man crontab`, or `man 5 crontab` for the config file FORMAT specifically -- look in `/etc/cron.d/`.", 60),
-        ("Cron runs commands automatically on a schedule, configured by plain text files that name WHICH user runs WHAT command and how often. Reading the config tells you exactly what's about to run and as whom, without needing to reverse-engineer anything.", 525),
+        ("`man 5 crontab`.", 60),
+        ("Cron runs commands automatically on a schedule, configured by plain text files under `/etc/cron.d/` that name WHICH user runs WHAT command and how often. Reading the config directly tells you exactly what's about to run and as whom, without needing to reverse-engineer anything.", 525),
         ("`cat /etc/cron.d/*` lists every scheduled job on the box, including one that already does the work of writing the next password somewhere for you (as a bandit22-privileged process) -- read the command it runs and follow where it writes its output to get the password.", 787),
     ],
     "bandit-22": [
-        ("`man cat` -- same starting point as the level before (`/etc/cron.d/`), but this time the cron entry points at a SCRIPT rather than doing the work inline.", 65),
-        ("The cron job calls a shell script by path rather than running a command directly -- since that script runs with bandit23's privileges (not yours), reading the script itself (which you CAN do) tells you exactly where it writes its output, even though the destination may be somewhere you can't list ahead of time.", 562),
+        ("`man 5 crontab`.", 65),
+        ("The cron job here calls a shell script by path rather than running a command directly -- since that script runs with bandit23's privileges (not yours), reading the script's own source (which you CAN do) tells you exactly where it writes its output, even if that destination isn't obvious ahead of time.", 562),
         ("`cat /etc/cron.d/*` shows the job runs a script under `/usr/bin/cronjob_bandit22.sh` (or similarly named) as bandit23. `cat` that script directly -- it computes an output filename from `whoami` piped through `md5sum`, which you can reproduce yourself by substituting `bandit23` for the username, then `cat` the resulting path under `/tmp` to read the password it wrote there.", 837),
     ],
     "bandit-23": [
-        ("Same starting point as levels 21-22 (`/etc/cron.d/`), but read the script's logic carefully this time -- specifically what it does with files matching a pattern.", 65),
+        ("`man 5 crontab`.", 65),
         ("This cron job scans a shared, world-writable directory for files matching a pattern, then RUNS each one it finds (as bandit24) before deleting it. If you can predict or control that pattern, you can place your own script where the cron job will pick it up and execute it with bandit24's privileges.", 562),
         ("Read the cron script under `/etc/cron.d/` (as bandit22) to see exactly which directory it scans and what naming pattern qualifies a file to be executed. Write a small script of your own into that directory matching the pattern -- one that copies `/etc/bandit_pass/bandit24` somewhere you (bandit23) can read, e.g. into `/tmp` -- make it executable, and wait a minute for the next cron sweep to run it for you.", 837),
     ],
     "bandit-24": [
-        ("`man nc` -- you'll be sending MANY attempts in a loop, not typing them by hand.", 70),
-        ("10,000 possible 4-digit PINs is small enough to try every single one programmatically in well under a minute -- write a loop that sends the current password plus each PIN (0000 through 9999) to the port, and watch for the one response that doesn't say Wrong.", 650),
-        ("A simple brute-force loop, e.g. in bash: `for pin in $(seq -w 0 9999); do echo <bandit24-password> $pin; done | nc -q1 localhost 30002 > /tmp/results.txt`, then `grep -v Wrong /tmp/results.txt` to filter out every failed attempt and surface the one real response containing bandit25's password. (`-q1` tells netcat to close shortly after input ends, so it doesn't hang waiting on the socket forever.)", 975),
+        ("`man nc`.", 70),
+        ("10,000 possible 4-digit PINs is small enough to try every single one programmatically in well under a minute -- a shell loop can generate every PIN from 0000 through 9999 and pipe each attempt, one per line, into a single netcat connection.", 650),
+        ("A brute-force loop, e.g. in bash: `for pin in $(seq -w 0 9999); do echo <bandit24-password> $pin; done | nc -q1 localhost 30002 > /tmp/results.txt`, then `grep -v Wrong /tmp/results.txt` to filter out every failed attempt and surface the one real response containing bandit25's password. (`-q1` tells netcat to close shortly after input ends, so it doesn't hang waiting on the socket forever.)", 975),
     ],
     "bandit-25": [
-        ("`man more` -- also try shrinking your terminal window to just a few lines tall before you connect.", 70),
-        ("bandit26's shell isn't bash -- it's set up to display one short file with a pager (`more`) and then immediately exit. On a normal, tall terminal `more` shows the whole file at once and exits before you can do anything. Making your terminal window very short forces `more` to pause partway through with a `--More--` prompt, which is an interactive command prompt of its own.", 650),
+        ("`man more`.", 70),
+        ("bandit26's shell is set up to display one short file with a pager (`more`) and then immediately exit. On a normal, tall terminal `more` shows the whole file at once and exits before you can act -- but `more` pauses with an interactive `--More--` prompt once the file is too long to fit on screen, which you can force by shrinking your terminal window to just a few lines before connecting.", 650),
         ("`grep bandit26 /etc/passwd` (from bandit25) confirms the unusual shell. Shrink your terminal to just a handful of rows, then `ssh bandit26@<host> -p <port>` with bandit25's password -- `more` will pause on `--More--` instead of exiting immediately. From that prompt, pressing `v` launches an editor (vi) on the file being paged, which is a real, escapable program -- continue from there in the next level.", 975),
     ],
     "bandit-26": [
-        ("`man vi` -- specifically its `:set` and `:!`/`:shell` commands, once you're inside the editor from the previous level's `v` escape.", 75),
-        ("Once `v` has opened the paged file in vi, you're in a real, general-purpose text editor -- and like most editors, it has a documented (if power-user) command that will hand you a real login shell, since editors sometimes need to shell out to run external tools.", 675),
+        ("`man vi`.", 75),
+        ("Once `v` has opened the paged file in vi (from the previous level's escape), you're in a real, general-purpose text editor -- and like most editors, it has a documented (if power-user) command for shelling out to run external programs, which can be used to spawn a real login shell.", 675),
         ("From inside vi (reached via `v` at `more`'s `--More--` prompt), type `:set shell=/bin/bash` followed by `:shell` (or simply `:!/bin/bash`) -- this spawns a real, unrestricted bash shell as bandit26. From there, explore the filesystem normally (`ls`, `find`, `cat`) to locate and read the flag file.", 1050),
     ],
     "bandit-27": [
-        ("`man git` -- specifically `git clone`, and that an `ssh://` URL works just like any other git remote.", 75),
-        ("This is a real git repository, reachable the same way any private git repo over SSH would be -- clone it like you would any project, using bandit27's own password when prompted, and look through what gets checked out.", 675),
+        ("`man git-clone`.", 75),
+        ("This is a real git repository, reachable the same way any private git repo over SSH would be -- `git clone` accepts an `ssh://` URL just like any other remote, authenticating the same way a normal SSH login would.", 675),
         ("`git clone ssh://bandit27-git@<host>:<port>/home/bandit27-git/repo` (substituting your instance's real host/port), entering bandit27's password when prompted. Once cloned, `cd repo` and look at the files it checked out (e.g. `cat README.md`) -- the next password is right there in the working tree.", 1050),
     ],
     "bandit-28": [
-        ("`man git-log` -- specifically the `-p` flag, which shows the actual line-by-line changes each commit made, not just commit messages.", 80),
-        ("Git keeps a full history: deleting or editing something in a later commit does NOT remove it from earlier commits, which remain fully readable in the repo's history forever unless deliberately rewritten. If the current file's password looks redacted, an earlier version of that same file likely still has it.", 700),
-        ("Clone the repo (same pattern as the previous level), then run `git log -p` inside it to see every historical change in full, not just the latest state. Scroll (or search) through the diff output for an earlier version of the file that still shows the real password before it was edited out.", 1125),
+        ("`man git-log`.", 80),
+        ("Git keeps a full history: deleting or editing something in a later commit does NOT remove it from earlier commits, which remain fully readable forever unless deliberately rewritten. `git log` has a documented flag for showing the actual line-by-line change each commit made, not just its message.", 700),
+        ("Clone the repo, then run `git log -p` inside it to see every historical change in full, not just the latest state. Scroll (or search) through the diff output for an earlier version of the file that still shows the real password before it was edited out.", 1125),
     ],
     "bandit-29": [
-        ("`man git-branch` -- specifically `git branch -a` to list ALL branches, not just the one you're currently on.", 80),
-        ("A git repository can have multiple branches -- independent lines of development -- and checking out the default branch only shows you ONE of them. The password may only exist on a different branch you haven't looked at yet.", 700),
+        ("`man git-branch`.", 80),
+        ("A git repository can have multiple branches -- independent lines of development -- and checking out the default branch only shows you ONE of them. `git branch` has a documented flag for listing every branch, not just the checked-out one.", 700),
         ("Clone the repo, then `git branch -a` to list every branch (including ones not checked out locally by default). `git checkout <branch-name>` for each one you find and look through its files -- the real password is in a file on a non-default branch.", 1125),
     ],
     "bandit-30": [
-        ("`man git-tag` -- tags mark a specific, named point in a repo's history, separate from branches.", 85),
-        ("Besides commits and branches, git supports tags -- often used to mark releases or other significant points -- which can carry their own message or point at a specific state of the repo that never made it onto any branch's tip.", 750),
+        ("`man git-tag`.", 85),
+        ("Besides commits and branches, git supports tags -- often used to mark releases or other significant points -- which can point at a state of the repo that never made it onto any branch's current tip.", 750),
         ("Clone the repo, then `git tag` to list any tags. `git show <tagname>` displays what that tag points at (and its own message, if any) -- the password is attached to a tag rather than living in any branch's current files.", 1200),
     ],
     "bandit-31": [
-        ("`man git-push` -- and `cat README.md` inside the clone for the exact requirements before you try anything.", 85),
-        ("This level isn't about finding something already in the repo -- it wants you to ADD something and push it back. The README spells out precisely what file, name, and content it's checking for; git won't accept just anything.", 750),
+        ("`man git-push`.", 85),
+        ("This level isn't about finding something already in the repo -- it wants you to ADD something and push it back. Reading the repository's own README first is essential here: it spells out precisely what file, name, and content it's checking for, and git won't accept just anything.", 750),
         ("Clone the repo and `cat README.md` (or similar) for the exact filename and content it demands (in this deployment, a specific short message in a specific filename). Create that exact file, then `git add <file>`, `git commit -m '...'`, and `git push origin master` (or `main`, matching the repo's default branch) -- the push itself, if it satisfies the stated requirement, reveals or returns the next password.", 1200),
     ],
     "bandit-32": [
-        ("`man bash` -- specifically what `$0` means inside a running shell, and how `bash -c '...'` affects it.", 90),
-        ("The uppercase wrapper only transforms LOWERCASE letters before evaluating your input -- anything that isn't a lowercase letter passes through completely untouched. That means special shell syntax made of symbols and digits, rather than letters, survives the transformation exactly as you typed it.", 850),
+        ("`man bash`.", 90),
+        ("The uppercase wrapper only transforms LOWERCASE letters before evaluating your input -- anything that isn't a lowercase letter (digits, symbols, punctuation) passes through completely untouched. Bash's manual documents what a bare `$0` evaluates to, and how that value is affected by how the enclosing shell itself was launched.", 850),
         ("Typing `$0` at the UPPERCASE-shell prompt survives the `tr 'a-z' 'A-Z'` transform untouched (it contains no lowercase letters at all) and gets evaluated as-is. Because this wrapper shell was itself launched via `bash -c '...'`, `$0` inside that context defaults to the literal string `bash` -- so evaluating `$0` spawns a fresh, completely unrestricted bash shell, breaking you out of the uppercase loop entirely.", 1275),
     ],
     "bandit-33": [
-        ("`man find` -- specifically its `-exec` action, and what a 'restricted shell' (rbash) actually restricts.", 90),
-        ("This final shell only allows a couple of harmless-looking tools on its PATH (nothing that can read file contents directly) and blocks you from directly naming a command that contains a `/`. But `-exec` on an ALLOWED command isn't restricted the same way -- whatever that command execs is not something rbash's own restrictions apply to.", 875),
-        ("`find` is one of the few tools available in this restricted shell, and its `-exec` action can launch an arbitrary program of your choosing -- rbash's restrictions apply to what YOU type at the prompt, not to what an allowed program execs on your behalf. Running `find . -exec /bin/sh \\\\; -quit` (the trailing backslash-semicolon terminates the -exec clause) launches a real, unrestricted `/bin/sh` via `find`, sidestepping the restricted shell entirely. From that real shell, explore normally to find the final flag.", 1312),
+        ("`man find`.", 90),
+        ("This final shell only allows a couple of harmless-looking tools on its PATH and blocks you from directly naming a command that contains a `/` -- but that restriction applies to what YOU type at the prompt, not to what an ALLOWED program does internally. `find`'s manual documents an action that launches an arbitrary program of your choosing.", 875),
+        ("`find` is one of the few tools available in this restricted shell, and its `-exec` action can launch an arbitrary program -- rbash's restrictions apply to what you type at the prompt, not to what an allowed program execs on your behalf. Running `find . -exec /bin/sh \\\\; -quit` (the trailing backslash-semicolon terminates the -exec clause) launches a real, unrestricted `/bin/sh` via `find`, sidestepping the restricted shell entirely. From that real shell, explore normally to find the final flag.", 1312),
     ],
 }
 
