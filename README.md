@@ -5,9 +5,33 @@ Part of the **CEI-Labs** ecosystem.
 This repository contains the infrastructure and challenge generation scripts to host a local Capture The Flag (CTF) event using **CTFd**, while leveraging the excellent educational wargames hosted by [OverTheWire](https://overthewire.org).
 
 ## 🎮 Featured Games
-1. **Bandit:** Unix/Linux Basics
-2. **Krypton:** Cryptography
-3. **Natas:** Server-side Web Security
+1. **[Bandit](docs/bandit/):** Unix/Linux Basics
+2. **[Krypton](docs/krypton/):** Cryptography
+3. **[Natas](docs/natas/):** Server-side Web Security
+
+Each game's folder holds three docs:
+- `writeups.md` — complete, step-by-step solutions for every level
+  (instructor answer key, not for participant distribution).
+- `learning-objectives.md` — the real-world skills taught, organized by
+  concept rather than level number.
+- `cheatsheet.md` — a fast-lookup table for instructors walking a room
+  during a live session.
+
+## 📚 Documentation
+
+- [Learning objectives](docs/learning-objectives.md) — index into each
+  track's skills inventory, plus cross-track meta-skills
+- [Instructor cheat sheet](docs/instructor-cheatsheet.md) — index into
+  each track's fast-lookup table
+- [Facilitation runbook](docs/facilitation-runbook.md) — how to run a
+  live event, start to finish
+- [Troubleshooting / known-issues FAQ](docs/troubleshooting-faq.md)
+- [Participant quick-start](docs/participant-quickstart.md) — one-pager
+  for players
+- [Wargame-building playbook](docs/wargame-building-playbook.md) — the
+  reusable methodology behind these tracks, for building the next one
+- [Self-hosted wargames status](docs/self-hosted-wargames-status.md)
+  and [blueprint](docs/self-hosted-wargames-blueprint.md)
 
 ## 🚀 Setup Instructions
 
