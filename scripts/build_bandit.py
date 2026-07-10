@@ -89,7 +89,12 @@ challenges_data = [
         "id": "bandit-04",
         "name": "Bandit 4 -> 5: Human Readable",
         "points": 300,
-        "desc": "**Goal:** Pick the one human-readable file out of several decoys.\n\nLog in as `bandit4`. The next password is in one of the files inside `inhere` -- it's the only one that contains human-readable text.",
+        "desc": (
+            "**Goal:** The password for the next level is stored in one of the files in the `inhere` directory. "
+            "It is the only file that contains human-readable text.\n\n"
+            "**Commands you may need to solve this level:** `ls`, `cd`, `cat`, `file`, `find`\n\n"
+            "**Helpful reading:** [The file command (Wikipedia)](https://en.wikipedia.org/wiki/File_%28command%29)"
+        ),
         "flag": "lrIWWI6bB37kxfiCQZqUdOIYfr6eEeqR"
     },
     {
@@ -309,7 +314,19 @@ HINTS = {
     "bandit-01": ("A leading dash looks like an option to most commands. Reference it as `./-` or `cat -- -` instead.", 10),
     "bandit-02": ("Quote the whole filename: `cat 'spaces in this filename'`.", 15),
     "bandit-03": ("`ls -la inhere` -- dotfiles never show up in a plain `ls`.", 15),
-    "bandit-04": ("`file inhere/-file*` checks every candidate's type in one command instead of opening each by hand.", 20),
+    # bandit-04: SAMPLE for the new 3-tier crawl/walk/run hint format --
+    # a list of (content, cost) tiers instead of a single tuple. Tier 1 is
+    # near-free (a tool pointer, same spirit as OTW's own "Commands you
+    # may need" list); tier 2 costs half the challenge's points for a real
+    # technique explanation; tier 3 costs most of the points for something
+    # close to a full walkthrough, condensed from real internet writeups
+    # (see https://mayadevbe.me/posts/overthewire/bandit/level5/ and
+    # https://sysadmin-central.com/2021/07/08/overthewire-bandit-level-4-solution/).
+    "bandit-04": [
+        ("`man file` -- it identifies a file's actual content type, independent of what it's named.", 5),
+        ("Run `file ./inhere/*` to check every file in the directory in one command. Most will report as generic 'data'; exactly one will report as some form of text.", 150),
+        ("Full method: `cd inhere`, then `file ./*` (or `file -- *` if any names start with a dash) to see every file's real type in one pass -- the decoys are named to look identical, but `file` reads actual bytes, not names. The binary ones will report as 'data'; exactly one will report as ASCII/text. Once you've spotted that filename, `cat` it (quoting or escaping the name if it starts with a dash) to read the password.", 225),
+    ],
     "bandit-05": ("Chain the three properties in one `find`: `find inhere -size 1033c -type f ! -executable`, then `file` whatever it returns.", 20),
     "bandit-06": ("`find / -user bandit7 -group bandit6 -size 33c 2>/dev/null` -- redirect stderr so permission-denied noise doesn't bury the real result.", 25),
     "bandit-07": ("`grep millionth data.txt`.", 25),
@@ -371,11 +388,13 @@ shutdown_on_solve: {"true" if is_final_level else "false"}
 
     hint = HINTS.get(ch["id"])
     if hint:
-        hint_content, hint_cost = hint
-        yaml_content += f"""hints:
-  - content: "{hint_content}"
-    cost: {hint_cost}
-"""
+        # A HINTS entry is either one (content, cost) tuple (legacy,
+        # single-tier) or a list of them (crawl/walk/run, multiple tiers,
+        # cheapest first) -- normalize to a list either way.
+        tiers = hint if isinstance(hint, list) else [hint]
+        yaml_content += "hints:\n"
+        for hint_content, hint_cost in tiers:
+            yaml_content += f'  - content: "{hint_content}"\n    cost: {hint_cost}\n'
 
     file_path = os.path.join(folder_path, "challenge.yml")
     with open(file_path, "w") as f:

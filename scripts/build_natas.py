@@ -120,7 +120,14 @@ challenges_data = [
         "id": "natas-07",
         "name": "Natas 7 -> 8: Local File Inclusion (LFI)",
         "points": 550,
-        "desc": f"**Goal:** Abuse a page-selection parameter to read an arbitrary file.\n\n{TARGET_NOTE} `http://<target-host>:8007/`. Log in as `natas7` using the flag from Natas 6 as your password.\n\nThe page switches between \"Home\" and \"About\" via a URL parameter naming the file to include. Point that parameter at `/etc/natas_webpass/natas8` instead.",
+        "desc": (
+            "**Goal:** Exploit a Local File Inclusion (LFI) vulnerability to read a file the application was "
+            "never meant to serve.\n\n"
+            f"{TARGET_NOTE} `http://<target-host>:8007/`. Log in as `natas7` using the flag from Natas 6 as your password.\n\n"
+            "**Commands you may need to solve this level:** `curl`, browser view-source\n\n"
+            "**Helpful reading:** [Path Traversal / LFI (OWASP)](https://owasp.org/www-community/attacks/Path_Traversal), "
+            "[File inclusion vulnerability (Wikipedia)](https://en.wikipedia.org/wiki/File_inclusion_vulnerability)"
+        ),
         "flag": "8Ps3hDeo6i6vF9M9776QvSAsSgS2abV0"
     },
     {
@@ -187,7 +194,15 @@ HINTS = {
     "natas-04": ("`curl -e 'http://natas5.natas.labs/' http://<target-host>:8004/` -- the exact next-level hostname the Referer needs to claim is shown in the page text.", 25),
     "natas-05": ("Check the `Set-Cookie` header on your first request, then resend the request with that cookie's value changed (commonly a boolean-looking value like 0 flipped to 1).", 30),
     "natas-06": ("Click 'View sourcecode' -- the PHP includes a file from a specific relative path. Request that exact path directly instead of going through the form.", 30),
-    "natas-07": ("Try `http://<target-host>:8007/index.php?page=/etc/natas_webpass/natas8` -- the page parameter is used directly as a filename to include.", 35),
+    # natas-07: SAMPLE for the new 3-tier crawl/walk/run hint format.
+    # Tier 3 condensed from real writeups, e.g.
+    # https://github.com/0xRar/OverTheWire-Natas/blob/main/Natas7.md and
+    # https://learnhacking.io/overthewire-natas-walkthrough-levels-6-10/
+    "natas-07": [
+        ("View the page source -- the site uses a URL parameter to choose which page to show ('Home' vs 'About'). Whatever that parameter's name is, is your way in.", 27),
+        ("The parameter isn't validated at all -- it's used directly as a filename to include. If you control the parameter, you control which file on the server gets read, including files well outside the page's intended folder.", 275),
+        ("The page uses a query parameter (commonly named `page`) to decide which file to include, e.g. `?page=home.php`. Because the application does no validation, replacing that value with an ABSOLUTE path to any file readable by the web server works directly -- try `?page=/etc/natas_webpass/natas8` (no `../` traversal needed at all, since it's already an absolute path, not a relative one).", 412),
+    ],
     "natas-08": ("View source for the encoding function's order of operations, then reverse it step by step in a shell: hex-decode first, then reverse the string, then base64-decode what's left.", 35),
     "natas-09": ("Something like `?needle=;cat+/etc/natas_webpass/natas10` in the query string -- URL-encode the semicolon as %3B if your client mangles the raw character.", 40),
     "natas-10": ("`grep` accepts a second filename argument on its own command line. A needle like `. /etc/natas_webpass/natas11 #` (a lone dot matches every line of the first file, then grep also searches the second filename you tacked on) needs no shell metacharacter at all.", 40),
@@ -227,11 +242,10 @@ shutdown_on_solve: {"true" if is_final_level else "false"}
 
     hint = HINTS.get(ch["id"])
     if hint:
-        hint_content, hint_cost = hint
-        yaml_content += f"""hints:
-  - content: "{hint_content}"
-    cost: {hint_cost}
-"""
+        tiers = hint if isinstance(hint, list) else [hint]
+        yaml_content += "hints:\n"
+        for hint_content, hint_cost in tiers:
+            yaml_content += f'  - content: "{hint_content}"\n    cost: {hint_cost}\n'
 
     file_path = os.path.join(folder_path, "challenge.yml")
     with open(file_path, "w") as f:

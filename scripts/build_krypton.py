@@ -65,7 +65,14 @@ challenges_data = [
         "id": "krypton-02",
         "name": "Krypton 2 -> 3: Caesar Cipher (Unknown Shift)",
         "points": 300,
-        "desc": "**Goal:** Recover a Caesar cipher's shift by observing a known-plaintext encryption.\n\nLog in as `krypton2`. `/krypton/krypton2/krypton3` is encrypted with a Caesar shift derived from `/krypton/krypton2/keyfile.dat` (not human-readable -- don't just `cat` it). Symlink the keyfile into a scratch directory, then run the `encrypt` binary next to it on a known plaintext (a long run of `A`s) to observe the shift it produces, and reverse that shift to read the next password.",
+        "desc": (
+            "**Goal:** The password for level 3 is in the file `krypton3`, encrypted with a Caesar cipher whose "
+            "shift comes from a keyfile you can't read directly -- but you can use the `encrypt` binary next to "
+            "it, which reads that keyfile every time it runs.\n\n"
+            "**Commands you may need to solve this level:** `mktemp`, `ln -s`, `chmod`, `tr`\n\n"
+            "**Helpful reading:** [Known-plaintext attack (Wikipedia)](https://en.wikipedia.org/wiki/Known-plaintext_attack), "
+            "[Caesar cipher (Wikipedia)](https://en.wikipedia.org/wiki/Caesar_cipher)"
+        ),
         "flag": "CAESARISEASY"
     },
     {
@@ -104,7 +111,15 @@ challenges_data = [
 HINTS = {
     "krypton-00": ("`base64 -d` decodes it directly -- there's no cipher here, just an encoding.", 10),
     "krypton-01": ("`tr '[:alpha:]' 'N-ZA-Mn-za-m' < /krypton/krypton1/krypton2` reverses ROT13 in one line.", 15),
-    "krypton-02": ("`ln -s /krypton/krypton2/keyfile.dat /tmp/keyfile.dat && cd /tmp && /krypton/krypton2/encrypt` on a string of `A`s shows you the shift directly in the output.", 20),
+    # krypton-02: SAMPLE for the new 3-tier crawl/walk/run hint format.
+    # Tier 3 condensed from real writeups, e.g.
+    # https://mayadevbe.me/posts/overthewire/krypton/level2/ and
+    # https://medium.com/secttp/overthewire-krypton-level-2-ba52015667d6
+    "krypton-02": [
+        ("`man tr` -- you'll need it to apply the shift once you know it.", 15),
+        ("The `encrypt` binary looks for `keyfile.dat` in your CURRENT directory, not a fixed path. Make a scratch directory, symlink the real keyfile into it, then run `encrypt` on a string you already know the plaintext of (like a long run of `A`s) -- comparing input to output tells you the exact shift.", 150),
+        ("Full method: `mktemp -d` for a scratch directory, `cd` into it, then `ln -s /krypton/krypton2/keyfile.dat` so `encrypt` (which only looks in your current directory) can find it. Run `/krypton/krypton2/encrypt` against a file of your own containing many repeated `A` characters -- since every `A` shifts by the exact same amount, the output tells you precisely which letter `A` became, and that letter's position in the alphabet is the shift (e.g. if `A` becomes `M`, the shift is 12). Once you know the shift, reverse it against `krypton3` with `tr`, e.g. `tr 'A-Za-z' 'N-ZA-Mn-za-m'` for a shift of 13, adjusting the rotation to match what you actually found.", 225),
+    ],
     "krypton-03": ("Count letters with something like `tr -cd 'A-Za-z' < /krypton/krypton3/krypton4 | fold -w1 | sort | uniq -c | sort -rn`, then map the most frequent letters to E, T, A, O, I, N in order.", 20),
     "krypton-04": ("Every 6th character belongs to the same Caesar shift -- extract characters at positions 0,6,12,... as one group, 1,7,13,... as the next, and so on, then solve each group's shift separately.", 25),
     "krypton-05": ("Look for repeated 3+ character substrings in the ciphertext and note the distances between their repeats -- the key length usually divides most of those distances evenly.", 25),
@@ -147,11 +162,10 @@ shutdown_on_solve: {"true" if is_final_level else "false"}
 
     hint = HINTS.get(ch["id"])
     if hint:
-        hint_content, hint_cost = hint
-        yaml_content += f"""hints:
-  - content: "{hint_content}"
-    cost: {hint_cost}
-"""
+        tiers = hint if isinstance(hint, list) else [hint]
+        yaml_content += "hints:\n"
+        for hint_content, hint_cost in tiers:
+            yaml_content += f'  - content: "{hint_content}"\n    cost: {hint_cost}\n'
 
     file_path = os.path.join(folder_path, "challenge.yml")
     with open(file_path, "w") as f:
