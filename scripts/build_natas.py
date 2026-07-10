@@ -169,14 +169,14 @@ challenges_data = [
         "id": "natas-13",
         "name": "Natas 13 -> 14: File Upload Bypass (Magic Bytes)",
         "points": 850,
-        "desc": f"**Goal:** Get a PHP payload past a file-type check based on content, not extension.\n\n{TARGET_NOTE} `http://<target-host>:8013/`. Log in as `natas13` using the flag from Natas 12 as your password.\n\nSame upload flow as the previous level, but the server now checks the file's actual bytes (`exif_imagetype()`). Prepend a real image header (e.g. `GIF89a`) before your PHP payload -- PHP still executes everything from `<?php` onward regardless of what precedes it.",
+        "desc": f"**Goal:** Get a PHP payload past a file-type check based on content, not extension.\n\n{TARGET_NOTE} `http://<target-host>:8013/`. Log in as `natas13` using the flag from Natas 12 as your password.\n\nSame upload flow as the previous level, but the server now checks the file's actual bytes (`exif_imagetype()`) rather than its name or extension.",
         "flag": "L0608Rh6bUNF6M9776QvSAsSgS2abV0M"
     },
     {
         "id": "natas-14",
         "name": "Natas 14 -> 15: SQL Injection (SQLi)",
         "points": 900,
-        "desc": f"**Goal:** Bypass a login form using SQL injection.\n\n{TARGET_NOTE} `http://<target-host>:8014/`. Log in as `natas14` using the flag from Natas 13 as your password.\n\nThis is the final Natas level. The login form builds its SQL query with raw string concatenation. Inject SQL syntax (e.g. `\" OR \"1\"=\"1`) into either field to bypass the check and reveal the final flag.",
+        "desc": f"**Goal:** Bypass a login form using SQL injection.\n\n{TARGET_NOTE} `http://<target-host>:8014/`. Log in as `natas14` using the flag from Natas 13 as your password.\n\nThis is the final Natas level. The login form builds its SQL query with raw string concatenation from your username and password fields.",
         "flag": "A0608Rh6bUNF6M9776QvSAsSgS2abV0M"
     }
 ]

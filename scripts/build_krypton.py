@@ -58,7 +58,7 @@ challenges_data = [
         "id": "krypton-01",
         "name": "Krypton 1 -> 2: ROT13 Substitution Cipher",
         "points": 250,
-        "desc": "**Goal:** Reverse a ROT13 rotation cipher.\n\nLog in as `krypton1`. The next password is in `/krypton/krypton1/krypton2`, encrypted with a simple ROT13 rotation.\n\n*Hint: the `tr` command translates characters directly, e.g. `tr \"[:alpha:]\" \"N-ZA-Mn-za-m\"`.*",
+        "desc": "**Goal:** Reverse a ROT13 rotation cipher.\n\nLog in as `krypton1`. The next password is in `/krypton/krypton1/krypton2`, encrypted with a simple ROT13 rotation.",
         "flag": "ROTTEN"
     },
     {
