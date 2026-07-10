@@ -1,5 +1,15 @@
 # Self-Hosted Wargames Blueprint: Bandit, Krypton, Natas
 
+**⚠️ SUPERSEDED — this is the original planning checklist, kept for
+historical reasoning/context only. It is not an accurate picture of
+final state**: the checkboxes below were never updated as work
+completed, so most of what's marked `[ ]` unchecked here is actually
+done, merged to `main`, and live-tested. For the real current state, see
+[`docs/self-hosted-wargames-status.md`](self-hosted-wargames-status.md)
+in this repo, plus the equivalent status docs in `cei-labs-engine` and
+`cei-labs-net` (cross-linked from that doc) — those were kept up to date
+throughout implementation and are the authoritative source.
+
 **Status:** Planning document, being committed to a working branch now to
 preserve state before implementation starts.
 **Owner repos touched:** `CEI-Labs-Wargames` (primary), `cei-labs-engine`

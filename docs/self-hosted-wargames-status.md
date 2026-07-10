@@ -1,6 +1,8 @@
 # Self-Hosted Wargames: Status (CEI-Labs-Wargames)
 
-**Branch:** `feature/self-hosted-wargames` @ `fb30456` (not merged to `main` @ `d306195`)
+**Status:** Merged to `main` (confirmed via `git merge-base --is-ancestor
+fb30456 main`). Originally written from `feature/self-hosted-wargames` @
+`fb30456` before that branch landed.
 **Related:** [`cei-labs-engine` status](../../cei-labs-engine/docs/self-hosted-wargames-status.md) · [`cei-labs-net` status](../../cei-labs-net/docs/self-hosted-wargames-status.md) · full working checklist: `docs/self-hosted-wargames-blueprint.md`
 
 ## What this is
@@ -112,6 +114,5 @@ confirmed directly (not just diffed against source).
 
 ## Not done at all
 
-- **No PRs opened, nothing merged to `main`.** Everything above is
-  committed and pushed to the feature branch only. Merging is a deliberate
-  separate decision, not bundled into this work.
+Nothing — this is all merged to `main` now (see the status note at the
+top). No PRs were opened; merged directly.
