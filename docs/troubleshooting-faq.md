@@ -95,7 +95,8 @@ orchestrator process mid-event if at all possible.
 actually happens on the target.**
 This did happen at least twice during development (documented and fixed
 — see `cei-labs-engine/docs/hint-tier-persona-findings.md` and the
-verification notes in `CEI-Labs-Wargames/docs/writeups/`), so it's worth
+"Verified live" notes in each track's `writeups.md`, e.g.
+`CEI-Labs-Wargames/docs/bandit/writeups.md`), so it's worth
 taking seriously rather than assuming participant error. If you confirm
 a real mismatch during a live event, note the exact command/output and
 file it the same way — the goal is for the writeups and hints to stay
