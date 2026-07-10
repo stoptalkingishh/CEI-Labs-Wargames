@@ -376,7 +376,7 @@ HINTS = {
     "bandit-01": [
         ("`man cat`.", 10),
         ("Most command-line tools treat a filename starting with `-` as an option flag, not a literal filename, because `-` conventionally introduces flags. `cat`'s manual page documents a standard way to tell it 'everything after this point is a filename, not a flag.'", 75),
-        ("A filename of just `-` gets misread as a flag by `cat`. Reference it unambiguously with `cat -- -` (the `--` tells `cat` to stop parsing flags) or `cat ./-` (a leading path makes it clearly a filename). Either prints the file's contents, which is the flag for this level.", 112),
+("A filename of just `-` gets misread by `cat` -- and not just as a flag: even `cat -- -` (which does stop flag-parsing) still treats a bare `-` argument as a request to read from standard input by long-standing Unix convention, so it will hang waiting for input rather than reading the file. Prefix the filename with a path instead: `cat ./-` makes it unambiguously a real path, not standard input.", 112),
     ],
     "bandit-02": [
         ("`man ls`.", 15),
@@ -536,7 +536,7 @@ HINTS = {
     "bandit-33": [
         ("`man find`.", 90),
         ("This final shell only allows a couple of harmless-looking tools on its PATH and blocks you from directly naming a command that contains a `/` -- but that restriction applies to what YOU type at the prompt, not to what an ALLOWED program does internally. `find`'s manual documents an action that launches an arbitrary program of your choosing.", 875),
-        ("`find` is one of the few tools available in this restricted shell, and its `-exec` action can launch an arbitrary program -- rbash's restrictions apply to what you type at the prompt, not to what an allowed program execs on your behalf. Running `find . -exec /bin/sh \\\\; -quit` (the trailing backslash-semicolon terminates the -exec clause) launches a real, unrestricted `/bin/sh` via `find`, sidestepping the restricted shell entirely. From that real shell, explore normally to find the final flag.", 1312),
+        ("`find` is one of the few tools available in this restricted shell, and its `-exec` action can launch an arbitrary program -- rbash's restrictions apply to what you type at the prompt, not to what an allowed program execs on your behalf. Running `find . -exec /bin/sh \\\\;` (the trailing backslash-semicolon terminates the -exec clause) launches a real, unrestricted `/bin/sh` via `find`, sidestepping the restricted shell entirely. That new shell still inherits the old restricted PATH though -- unlike the rbash you just escaped, this one actually lets you reassign it (`PATH=/usr/bin:/bin` then `export PATH`), after which normal commands like `cat` work again to find the final flag.", 1312),
     ],
 }
 
