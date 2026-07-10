@@ -61,6 +61,12 @@ def vigenere_encrypt(plaintext, key):
     return "".join(out)
 
 
+# ---- "Krypton: Start Here" onboarding challenge (build_krypton.py) -----
+# Same krypton1 account the real level 1 uses, a separate file in its
+# home directory (not /krypton/krypton1, which is level 1's own puzzle
+# content) -- exists purely to exercise the launch controls themselves.
+write("/home/krypton1/welcome.txt", "WELCOME_TO_KRYPTON\n", "krypton1:krypton1", 0o444)
+
 # ---- Level 1: ROT13 -----------------------------------------------------
 mkdir_owned("/krypton/krypton1", "krypton1:krypton1")
 write(

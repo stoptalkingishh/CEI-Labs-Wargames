@@ -25,6 +25,29 @@ INSTANCE_GROUP = "krypton"
 # Define the dataset for Krypton Levels 0 to 6 based on OTW specifications
 challenges_data = [
     {
+        "id": "krypton-start-here",
+        "name": "Krypton: Start Here",
+        "points": 10,
+        "desc": (
+            "**Goal:** Learn the launch controls, then prove you used them.\n\n"
+            "Levels 1-6 in Krypton (level 0 needs no environment at all) share one box, "
+            "launched from a control attached to each of those challenges, right there on "
+            "the challenge itself:\n"
+            "- **Launch Environment** -- starts the box, or reconnects you to one already "
+            "running.\n"
+            "- **Reboot Host** -- restarts it in place if it gets stuck. Same connection "
+            "details afterward.\n"
+            "- **Relaunch Environment** -- destroys and recreates it from scratch. Use this "
+            "if something's broken beyond a reboot; anything you changed inside it is lost.\n"
+            "- **+5 more minutes** -- shows up only once every level in this track is solved "
+            "and a shutdown countdown has started. Extends it if you're not done yet.\n\n"
+            "Click Launch, wait for it to show a host and port, then connect as `krypton1` "
+            "with password `KRYPTONISGREAT` (level 0's own flag) and read `welcome.txt` in "
+            "the home directory. Submit its contents as your flag."
+        ),
+        "flag": "WELCOME_TO_KRYPTON"
+    },
+    {
         "id": "krypton-00",
         "name": "Krypton 0 -> 1: Base64 Decoding",
         "points": 200,
@@ -99,9 +122,10 @@ flags:
 state: visible
 version: "0.1"
 """
-    if i > 0:
+    if ch["id"] != "krypton-00":
         # Level 0 needs no SSH/instance at all -- it's a static string in
-        # the description itself, so it gets no instance mapping.
+        # the description itself, so it gets no instance mapping. Every
+        # other challenge, including krypton-start-here, does.
         yaml_content += f"""instance_type: single-target
 image: {KRYPTON_IMAGE}
 instance_group: {INSTANCE_GROUP}

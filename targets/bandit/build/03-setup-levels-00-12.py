@@ -45,6 +45,12 @@ def mkdir(path, owner, mode=0o755):
 # ---- Level 0: readme in home, plain text ----------------------------------
 write("/home/bandit0/readme", FLAG_00 + "\n", "bandit0:bandit0", 0o644)
 
+# ---- "Bandit: Start Here" onboarding challenge (build_bandit.py) ----------
+# Same bandit0 account as level 0, a separate file so the two challenges
+# don't share an answer -- this one exists purely to exercise the launch
+# controls themselves, not to teach a Linux Basics technique.
+write("/home/bandit0/welcome.txt", "WELCOME_TO_BANDIT\n", "bandit0:bandit0", 0o644)
+
 # ---- Level 1: file named "-" -----------------------------------------------
 write("/home/bandit1/-", FLAG_01 + "\n", "bandit1:bandit1", 0o644)
 

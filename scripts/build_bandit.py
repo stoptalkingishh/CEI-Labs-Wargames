@@ -35,6 +35,29 @@ INSTANCE_GROUP = "bandit"
 # Define the dataset for Bandit Levels 0 to 33
 challenges_data = [
     {
+        "id": "bandit-start-here",
+        "name": "Bandit: Start Here",
+        "points": 10,
+        "desc": (
+            "**Goal:** Learn the launch controls, then prove you used them.\n\n"
+            "Every challenge in Bandit that needs a live environment has a launch control "
+            "attached to it, right here on the challenge itself:\n"
+            "- **Launch Environment** -- starts your box, or reconnects you to one that's "
+            "already running. All 34 Bandit levels share this one box.\n"
+            "- **Reboot Host** -- restarts it in place if it gets stuck. Same connection "
+            "details afterward.\n"
+            "- **Relaunch Environment** -- destroys and recreates it from scratch. Use this "
+            "if something's broken beyond a reboot; anything you changed inside it is lost.\n"
+            "- **+5 more minutes** -- shows up only once you've solved every level in this "
+            "track and a shutdown countdown has started. Extends it if you're not done "
+            "looking around yet.\n\n"
+            "Click Launch, wait for it to show a host and port, then connect as `bandit0` "
+            "with password `bandit0` and read `welcome.txt` in the home directory (not "
+            "`readme` -- that one's level 0's real puzzle). Submit its contents as your flag."
+        ),
+        "flag": "WELCOME_TO_BANDIT"
+    },
+    {
         "id": "bandit-00",
         "name": "Bandit 0 -> 1: The First Step",
         "points": 100,

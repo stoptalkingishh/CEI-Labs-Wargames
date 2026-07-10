@@ -42,6 +42,32 @@ TARGET_NOTE = (
 # Define the dataset for Natas Levels 0 to 14 based on OTW specifications
 challenges_data = [
     {
+        "id": "natas-start-here",
+        "name": "Natas: Start Here",
+        "points": 10,
+        "desc": (
+            "**Goal:** Learn the launch controls, then prove you used them.\n\n"
+            "Natas works differently from Bandit and Krypton: launching gives you a shared "
+            "**attacker workstation**, not a direct connection to a target. Every one of "
+            "Natas's 15 targets is reachable only from inside that workstation -- never "
+            "directly from your own machine. The launch control attached to this (and every "
+            "other Natas) challenge offers:\n"
+            "- **Launch Environment** -- starts your attacker workstation and this track's "
+            "shared target box (all 15 levels share one target, distinguished by port). "
+            "Shows both a noVNC link (a full desktop in your browser) and an SSH connection.\n"
+            "- **Reboot Host** -- restarts your attacker in place if it gets stuck.\n"
+            "- **Relaunch Environment** -- destroys and recreates your whole range (attacker "
+            "and target) from scratch. Use this if something's broken beyond a reboot.\n"
+            "- **+5 more minutes** -- shows up only once every level in this track is solved "
+            "and a shutdown countdown has started.\n\n"
+            "Click Launch, open the attacker workstation (noVNC or SSH, your choice), and "
+            "from inside it browse to `http://<target-host>:8000/welcome.txt` (the same "
+            "target host every Natas level uses, just this one extra file). Submit its "
+            "contents as your flag."
+        ),
+        "flag": "WELCOME_TO_NATAS"
+    },
+    {
         "id": "natas-00",
         "name": "Natas 0 -> 1: View Source",
         "points": 200,
