@@ -89,12 +89,7 @@ challenges_data = [
         "id": "bandit-04",
         "name": "Bandit 4 -> 5: Human Readable",
         "points": 300,
-        "desc": (
-            "**Goal:** The password for the next level is stored in one of the files in the `inhere` directory. "
-            "It is the only file that contains human-readable text.\n\n"
-            "**Commands you may need to solve this level:** `ls`, `cd`, `cat`, `file`, `find`\n\n"
-            "**Helpful reading:** [The file command (Wikipedia)](https://en.wikipedia.org/wiki/File_%28command%29)"
-        ),
+        "desc": "**Goal:** The password for the next level is stored in one of the files in the `inhere` directory. It is the only file that contains human-readable text.",
         "flag": "lrIWWI6bB37kxfiCQZqUdOIYfr6eEeqR"
     },
     {
@@ -302,6 +297,52 @@ challenges_data = [
     }
 ]
 
+# "Commands you may need" + "Helpful reading" shown directly in the
+# description, free -- matching OverTheWire's own real page structure
+# exactly (real OTW pages for these same techniques were used as the
+# source for the command lists and reading links below, provided
+# directly by the user). Distinct from the hints' tier 1, which exists
+# for players mid-challenge who skip the description or want a nudge
+# without leaving the launch flow -- some overlap between the two is
+# intentional, matching how OTW's own reading links are themselves a
+# form of always-visible, free hint.
+EXTRA_INFO = {
+    "bandit-00": (["ssh"], [("Secure Shell (SSH) on Wikipedia", "https://en.wikipedia.org/wiki/Secure_Shell")]),
+    "bandit-01": (["ls", "cat", "find"], [("Advanced Bash-Scripting Guide -- Special Characters", "https://linux.die.net/abs-guide/special-chars.html")]),
+    "bandit-02": (["ls", "cat"], []),
+    "bandit-03": (["ls", "cat"], []),
+    "bandit-04": (["ls", "cat", "file"], [("The file command on Wikipedia", "https://en.wikipedia.org/wiki/File_%28command%29")]),
+    "bandit-05": (["find", "file", "cat"], []),
+    "bandit-06": (["find", "cat"], []),
+    "bandit-07": (["grep"], []),
+    "bandit-08": (["sort", "uniq"], []),
+    "bandit-09": (["strings", "grep"], []),
+    "bandit-10": (["base64"], [("Base64 on Wikipedia", "https://en.wikipedia.org/wiki/Base64")]),
+    "bandit-11": (["tr"], [("ROT13 on Wikipedia", "https://en.wikipedia.org/wiki/ROT13")]),
+    "bandit-12": (["mkdir", "cp", "mv", "file", "xxd", "gunzip", "bunzip2"], [("Hex dump on Wikipedia", "https://en.wikipedia.org/wiki/Hex_dump")]),
+    "bandit-13": (["ssh", "chmod"], [("SSH/OpenSSH/Keys", "https://help.ubuntu.com/community/SSH/OpenSSH/Keys")]),
+    "bandit-14": (["nc"], []),
+    "bandit-15": (["openssl"], [("Transport Layer Security on Wikipedia", "https://en.wikipedia.org/wiki/Transport_Layer_Security")]),
+    "bandit-16": (["nmap", "openssl", "nc"], [("Port scanner on Wikipedia", "https://en.wikipedia.org/wiki/Port_scanner")]),
+    "bandit-17": (["diff"], []),
+    "bandit-18": (["ssh"], []),
+    "bandit-19": (["find"], [("Setuid on Wikipedia", "https://en.wikipedia.org/wiki/Setuid")]),
+    "bandit-20": (["nc", "bash job control (&, fg, jobs)"], []),
+    "bandit-21": (["crontab"], []),
+    "bandit-22": (["crontab", "cat"], []),
+    "bandit-23": (["crontab", "chmod"], []),
+    "bandit-24": (["nc", "bash scripting"], []),
+    "bandit-25": (["more"], []),
+    "bandit-26": (["vi"], []),
+    "bandit-27": (["git"], [("Installing Git", "https://git-scm.com/book/en/v2/Getting-Started-Installing-Git"), ("Git from the Bottom Up", "https://jwiegley.github.io/git-from-the-bottom-up/")]),
+    "bandit-28": (["git"], [("Installing Git", "https://git-scm.com/book/en/v2/Getting-Started-Installing-Git"), ("Git from the Bottom Up", "https://jwiegley.github.io/git-from-the-bottom-up/")]),
+    "bandit-29": (["git"], [("Installing Git", "https://git-scm.com/book/en/v2/Getting-Started-Installing-Git"), ("Git from the Bottom Up", "https://jwiegley.github.io/git-from-the-bottom-up/")]),
+    "bandit-30": (["git"], [("Installing Git", "https://git-scm.com/book/en/v2/Getting-Started-Installing-Git"), ("Git from the Bottom Up", "https://jwiegley.github.io/git-from-the-bottom-up/")]),
+    "bandit-31": (["git"], [("Installing Git", "https://git-scm.com/book/en/v2/Getting-Started-Installing-Git"), ("Git from the Bottom Up", "https://jwiegley.github.io/git-from-the-bottom-up/")]),
+    "bandit-32": (["bash"], []),
+    "bandit-33": (["find", "sh"], []),
+}
+
 # Crawl/walk/run hints per level (not bandit-start-here -- its
 # description is already a full walkthrough). A HINTS entry is either a
 # single (content, cost) tuple (legacy) or a list of up to 3 tuples,
@@ -508,7 +549,18 @@ for i, ch in enumerate(challenges_data):
     folder_path = os.path.join(base_dir, ch["id"])
     os.makedirs(folder_path, exist_ok=True)
 
-    escaped_desc = ch['desc'].replace('\n', '\n  ')
+    full_desc = ch["desc"]
+    extra_info = EXTRA_INFO.get(ch["id"])
+    if extra_info:
+        cmds, reading = extra_info
+        if cmds:
+            cmd_list = ", ".join(f"`{c}`" for c in cmds)
+            full_desc += f"\n\n**Commands you may need to solve this level:** {cmd_list}"
+        if reading:
+            links = "\n".join(f"- [{title}]({url})" for title, url in reading)
+            full_desc += f"\n\n**Helpful reading:**\n{links}"
+
+    escaped_desc = full_desc.replace('\n', '\n  ')
     is_final_level = (i == len(challenges_data) - 1)
     yaml_content = f"""name: "{ch['name']}"
 author: "CEI Labs (self-hosted recreation of OverTheWire's Bandit)"

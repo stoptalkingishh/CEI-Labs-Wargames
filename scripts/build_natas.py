@@ -123,10 +123,7 @@ challenges_data = [
         "desc": (
             "**Goal:** Exploit a Local File Inclusion (LFI) vulnerability to read a file the application was "
             "never meant to serve.\n\n"
-            f"{TARGET_NOTE} `http://<target-host>:8007/`. Log in as `natas7` using the flag from Natas 6 as your password.\n\n"
-            "**Commands you may need to solve this level:** `curl`, browser view-source\n\n"
-            "**Helpful reading:** [Path Traversal / LFI (OWASP)](https://owasp.org/www-community/attacks/Path_Traversal), "
-            "[File inclusion vulnerability (Wikipedia)](https://en.wikipedia.org/wiki/File_inclusion_vulnerability)"
+            f"{TARGET_NOTE} `http://<target-host>:8007/`. Log in as `natas7` using the flag from Natas 6 as your password."
         ),
         "flag": "8Ps3hDeo6i6vF9M9776QvSAsSgS2abV0"
     },
@@ -180,6 +177,27 @@ challenges_data = [
         "flag": "A0608Rh6bUNF6M9776QvSAsSgS2abV0M"
     }
 ]
+
+# "Commands you may need" + "Helpful reading" shown directly in the
+# description, free -- matching OverTheWire's own real page structure
+# (see build_bandit.py's EXTRA_INFO comment for the full rationale).
+EXTRA_INFO = {
+    "natas-00": (["curl", "browser view-source"], []),
+    "natas-01": (["curl", "browser view-source"], []),
+    "natas-02": (["curl"], []),
+    "natas-03": (["curl"], [("Robots exclusion standard on Wikipedia", "https://en.wikipedia.org/wiki/Robots.txt")]),
+    "natas-04": (["curl"], []),
+    "natas-05": (["curl", "browser devtools"], []),
+    "natas-06": (["browser view-source", "curl"], []),
+    "natas-07": (["curl", "browser view-source"], [("File inclusion vulnerability on Wikipedia", "https://en.wikipedia.org/wiki/File_inclusion_vulnerability")]),
+    "natas-08": (["browser view-source", "base64", "xxd"], []),
+    "natas-09": (["browser view-source", "curl"], []),
+    "natas-10": (["browser view-source", "curl"], []),
+    "natas-11": (["browser devtools", "base64", "xxd"], [("XOR cipher on Wikipedia", "https://en.wikipedia.org/wiki/XOR_cipher")]),
+    "natas-12": (["browser view-source", "curl"], []),
+    "natas-13": (["browser view-source", "curl"], []),
+    "natas-14": (["browser view-source"], [("SQL injection on Wikipedia", "https://en.wikipedia.org/wiki/SQL_injection")]),
+}
 
 # One real, technique-specific hint per level (not natas-start-here --
 # its description is already a full walkthrough). See build_bandit.py's
@@ -274,11 +292,23 @@ for i, ch in enumerate(challenges_data):
     os.makedirs(folder_path, exist_ok=True)
 
     is_final_level = (i == len(challenges_data) - 1)
+
+    full_desc = ch["desc"]
+    extra_info = EXTRA_INFO.get(ch["id"])
+    if extra_info:
+        cmds, reading = extra_info
+        if cmds:
+            cmd_list = ", ".join(f"`{c}`" for c in cmds)
+            full_desc += f"\n\n**Commands you may need to solve this level:** {cmd_list}"
+        if reading:
+            links = "\n".join(f"- [{title}]({url})" for title, url in reading)
+            full_desc += f"\n\n**Helpful reading:**\n{links}"
+
     yaml_content = f"""name: "{ch['name']}"
 author: "CEI Labs (self-hosted recreation of OverTheWire's Natas)"
 category: "Web Security"
 description: |
-  {ch['desc'].replace(chr(10), chr(10) + '  ')}
+  {full_desc.replace(chr(10), chr(10) + '  ')}
 value: {ch['points']}
 type: standard
 flags:

@@ -68,10 +68,7 @@ challenges_data = [
         "desc": (
             "**Goal:** The password for level 3 is in the file `krypton3`, encrypted with a Caesar cipher whose "
             "shift comes from a keyfile you can't read directly -- but you can use the `encrypt` binary next to "
-            "it, which reads that keyfile every time it runs.\n\n"
-            "**Commands you may need to solve this level:** `mktemp`, `ln -s`, `chmod`, `tr`\n\n"
-            "**Helpful reading:** [Known-plaintext attack (Wikipedia)](https://en.wikipedia.org/wiki/Known-plaintext_attack), "
-            "[Caesar cipher (Wikipedia)](https://en.wikipedia.org/wiki/Caesar_cipher)"
+            "it, which reads that keyfile every time it runs."
         ),
         "flag": "CAESARISEASY"
     },
@@ -104,6 +101,19 @@ challenges_data = [
         "flag": "LFSRISNOTRANDOM"
     }
 ]
+
+# "Commands you may need" + "Helpful reading" shown directly in the
+# description, free -- matching OverTheWire's own real page structure
+# (see build_bandit.py's EXTRA_INFO comment for the full rationale).
+EXTRA_INFO = {
+    "krypton-00": (["base64"], []),
+    "krypton-01": (["tr"], [("ROT13 on Wikipedia", "https://en.wikipedia.org/wiki/ROT13")]),
+    "krypton-02": (["mktemp", "ln", "chmod", "tr"], [("Known-plaintext attack on Wikipedia", "https://en.wikipedia.org/wiki/Known-plaintext_attack"), ("Caesar cipher on Wikipedia", "https://en.wikipedia.org/wiki/Caesar_cipher")]),
+    "krypton-03": (["tr", "sort", "uniq", "fold"], [("Frequency analysis on Wikipedia", "https://en.wikipedia.org/wiki/Frequency_analysis")]),
+    "krypton-04": (["tr"], [("Vigenere cipher on Wikipedia", "https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher")]),
+    "krypton-05": (["tr"], [("Kasiski examination on Wikipedia", "https://en.wikipedia.org/wiki/Kasiski_examination")]),
+    "krypton-06": (["xxd"], [("Stream cipher on Wikipedia", "https://en.wikipedia.org/wiki/Stream_cipher")]),
+}
 
 # Crawl/walk/run hints per level (not krypton-start-here -- its
 # description is already a full walkthrough). See build_bandit.py's
@@ -159,7 +169,18 @@ for i, ch in enumerate(challenges_data):
     folder_path = os.path.join(base_dir, ch["id"])
     os.makedirs(folder_path, exist_ok=True)
 
-    escaped_desc = ch['desc'].replace('\n', '\n  ')
+    full_desc = ch["desc"]
+    extra_info = EXTRA_INFO.get(ch["id"])
+    if extra_info:
+        cmds, reading = extra_info
+        if cmds:
+            cmd_list = ", ".join(f"`{c}`" for c in cmds)
+            full_desc += f"\n\n**Commands you may need to solve this level:** {cmd_list}"
+        if reading:
+            links = "\n".join(f"- [{title}]({url})" for title, url in reading)
+            full_desc += f"\n\n**Helpful reading:**\n{links}"
+
+    escaped_desc = full_desc.replace('\n', '\n  ')
     is_final_level = (i == len(challenges_data) - 1)
     yaml_content = f"""name: "{ch['name']}"
 author: "CEI Labs (self-hosted recreation of OverTheWire's Krypton)"
