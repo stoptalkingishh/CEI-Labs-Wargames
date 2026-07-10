@@ -43,6 +43,18 @@ for n in range(15):
         check=True,
         stdout=subprocess.DEVNULL,
     )
+    # Security: htpasswd's own default mode (644, root-owned) left every
+    # level's bcrypt hash file world-readable to any other level's MPM-ITK
+    # worker (each vhost's AssignUserID runs as a DIFFERENT natasN user,
+    # but they share the filesystem) -- a player with code execution at
+    # any one level (e.g. the intended natas12/13 upload RCE) could read
+    # every OTHER level's htpasswd file directly, not just the next one
+    # via the intended /etc/natas_webpass leak chain (which is correctly
+    # scoped 640, ownerN:group(N-1) -- see 02-set-webpasswords.sh). Only
+    # this level's own Apache worker (AssignUserID {user} {user}) ever
+    # legitimately needs to read this file, so lock it down to owner-only.
+    subprocess.run(["chown", f"{user}:{user}", htpasswd_path], check=True)
+    os.chmod(htpasswd_path, 0o600)
 
     ports_lines.append(f"Listen {port}\n")
 
