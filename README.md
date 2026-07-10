@@ -30,6 +30,9 @@ Each game's folder holds three docs:
   for players
 - [Wargame-building playbook](docs/wargame-building-playbook.md) — the
   reusable methodology behind these tracks, for building the next one
+- [Required network access](docs/network-access.md) — external sites
+  the challenge hints link to; source of truth for `cei-labs-net`'s
+  firewall allowlist
 - [Self-hosted wargames status](docs/self-hosted-wargames-status.md)
   and [blueprint](docs/self-hosted-wargames-blueprint.md)
 
