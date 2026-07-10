@@ -297,6 +297,50 @@ challenges_data = [
     }
 ]
 
+# One real, technique-specific hint per level (not bandit-start-here --
+# its description is already a full walkthrough). Cost scales roughly
+# with the level's own point value; content must not contain a literal
+# double-quote character (this script builds YAML by hand, not via
+# PyYAML, so the hint text is interpolated straight into a double-quoted
+# YAML scalar below -- use backticks/single quotes for anything that
+# needs quoting).
+HINTS = {
+    "bandit-00": ("Connect with `ssh bandit0@<host> -p <port>`, password `bandit0`, then `cat readme`.", 5),
+    "bandit-01": ("A leading dash looks like an option to most commands. Reference it as `./-` or `cat -- -` instead.", 10),
+    "bandit-02": ("Quote the whole filename: `cat 'spaces in this filename'`.", 15),
+    "bandit-03": ("`ls -la inhere` -- dotfiles never show up in a plain `ls`.", 15),
+    "bandit-04": ("`file inhere/-file*` checks every candidate's type in one command instead of opening each by hand.", 20),
+    "bandit-05": ("Chain the three properties in one `find`: `find inhere -size 1033c -type f ! -executable`, then `file` whatever it returns.", 20),
+    "bandit-06": ("`find / -user bandit7 -group bandit6 -size 33c 2>/dev/null` -- redirect stderr so permission-denied noise doesn't bury the real result.", 25),
+    "bandit-07": ("`grep millionth data.txt`.", 25),
+    "bandit-08": ("`sort data.txt | uniq -u` prints only the lines with no duplicates.", 30),
+    "bandit-09": ("`strings data.txt | grep '^='` filters to the human-readable lines that start with the marker.", 30),
+    "bandit-10": ("`base64 -d data.txt`.", 35),
+    "bandit-11": ("`tr 'A-Za-z' 'N-ZA-Mn-za-m' < data.txt` -- ROT13 is its own inverse.", 35),
+    "bandit-12": ("Copy data.txt somewhere writable, `xxd -r` it back to binary, then run `file` after every decompression step to know what to run next.", 40),
+    "bandit-13": ("`chmod 600 sshkey.private` if SSH complains about permissions, then `ssh -i sshkey.private bandit14@localhost`.", 40),
+    "bandit-14": ("`nc localhost 30000`, then type the current password and press enter.", 45),
+    "bandit-15": ("`openssl s_client -connect localhost:30001` opens the encrypted connection; type the password once it's up.", 45),
+    "bandit-16": ("`nmap -p 31000-32000 localhost` first, to see which port(s) in the range are even open, before trying SSL against each.", 50),
+    "bandit-17": ("`diff passwords.old passwords.new`.", 50),
+    "bandit-18": ("Skip the interactive shell entirely: `ssh bandit18@host -p port cat readme` runs one command over SSH without ever sourcing `.bashrc`.", 55),
+    "bandit-19": ("`./bandit20-do cat /etc/bandit_pass/bandit20` -- quote the whole command as one argument.", 55),
+    "bandit-20": ("Start a listener first (`nc -lvp <port>`) in one session, then trigger the setuid binary with that same port from another.", 60),
+    "bandit-21": ("`cat /etc/cron.d/*`.", 60),
+    "bandit-22": ("`cat /etc/cron.d/*` for the schedule, then `cat` the script path it points to.", 65),
+    "bandit-23": ("Read the cron script closely -- it runs anything matching a glob pattern in a world-writable temp directory. Drop your own script there.", 65),
+    "bandit-24": ("Script the brute force: loop PIN 0000-9999, sending `CURRENT_PASSWORD PIN` to port 30002 each time and checking the response.", 70),
+    "bandit-25": ("`grep bandit26 /etc/passwd` shows the shell. Shrink your terminal small before connecting so its pager can't display everything and drops you to its own prompt.", 70),
+    "bandit-26": ("Most pagers accept a shell-escape from their own command prompt (commonly `!` followed by a shell, e.g. `!/bin/sh`).", 75),
+    "bandit-27": ("`git clone ssh://bandit27-git@<host>:<port>/home/bandit27-git/repo`.", 75),
+    "bandit-28": ("`git log -p` -- the password isn't in the current tree, only in an earlier commit.", 80),
+    "bandit-29": ("`git branch -a`, then `git checkout` each one you find.", 80),
+    "bandit-30": ("`git tag`, then `git show <tagname>`.", 85),
+    "bandit-31": ("`cat README` inside the clone for the exact filename it wants, then `git add`, `git commit`, `git push origin master`.", 85),
+    "bandit-32": ("The wrapper only uppercases what it reads as a command line -- a direct shell invocation via a different mechanism (find a way to spawn `/bin/bash` that bypasses the wrapper reading it) sidesteps it entirely.", 90),
+    "bandit-33": ("Same family of problem as bandit25/26: identify the restricted shell bandit33 lands you in, then break out of it the same way.", 90),
+}
+
 # Generate folder and files relative to the repo root folder dynamically
 script_dir = os.path.dirname(os.path.abspath(__file__))
 base_dir = os.path.abspath(os.path.join(script_dir, "..", "challenges"))
@@ -323,6 +367,14 @@ instance_type: single-target
 image: {BANDIT_IMAGE}
 instance_group: {INSTANCE_GROUP}
 shutdown_on_solve: {"true" if is_final_level else "false"}
+"""
+
+    hint = HINTS.get(ch["id"])
+    if hint:
+        hint_content, hint_cost = hint
+        yaml_content += f"""hints:
+  - content: "{hint_content}"
+    cost: {hint_cost}
 """
 
     file_path = os.path.join(folder_path, "challenge.yml")

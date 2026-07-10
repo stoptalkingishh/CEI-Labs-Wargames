@@ -98,6 +98,19 @@ challenges_data = [
     }
 ]
 
+# One real, technique-specific hint per level (not krypton-start-here --
+# its description is already a full walkthrough). See build_bandit.py's
+# HINTS comment for the quoting constraint (no literal double-quotes).
+HINTS = {
+    "krypton-00": ("`base64 -d` decodes it directly -- there's no cipher here, just an encoding.", 10),
+    "krypton-01": ("`tr '[:alpha:]' 'N-ZA-Mn-za-m' < /krypton/krypton1/krypton2` reverses ROT13 in one line.", 15),
+    "krypton-02": ("`ln -s /krypton/krypton2/keyfile.dat /tmp/keyfile.dat && cd /tmp && /krypton/krypton2/encrypt` on a string of `A`s shows you the shift directly in the output.", 20),
+    "krypton-03": ("Count letters with something like `tr -cd 'A-Za-z' < /krypton/krypton3/krypton4 | fold -w1 | sort | uniq -c | sort -rn`, then map the most frequent letters to E, T, A, O, I, N in order.", 20),
+    "krypton-04": ("Every 6th character belongs to the same Caesar shift -- extract characters at positions 0,6,12,... as one group, 1,7,13,... as the next, and so on, then solve each group's shift separately.", 25),
+    "krypton-05": ("Look for repeated 3+ character substrings in the ciphertext and note the distances between their repeats -- the key length usually divides most of those distances evenly.", 25),
+    "krypton-06": ("Run `/krypton/krypton6/encrypt` on 30+ identical characters (e.g. a string of `A`s) -- since the keystream repeats every 30 characters, the output directly IS the keystream, ready to XOR/subtract against the real ciphertext.", 30),
+}
+
 # Generate folder and files relative to the repo root folder dynamically
 script_dir = os.path.dirname(os.path.abspath(__file__))
 base_dir = os.path.abspath(os.path.join(script_dir, "..", "challenges"))
@@ -130,6 +143,14 @@ version: "0.1"
 image: {KRYPTON_IMAGE}
 instance_group: {INSTANCE_GROUP}
 shutdown_on_solve: {"true" if is_final_level else "false"}
+"""
+
+    hint = HINTS.get(ch["id"])
+    if hint:
+        hint_content, hint_cost = hint
+        yaml_content += f"""hints:
+  - content: "{hint_content}"
+    cost: {hint_cost}
 """
 
     file_path = os.path.join(folder_path, "challenge.yml")
