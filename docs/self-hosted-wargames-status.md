@@ -1,6 +1,6 @@
 # Self-Hosted Wargames: Status (CEI-Labs-Wargames)
 
-**Branch:** `feature/self-hosted-wargames` @ `10e8750` (not merged to `main` @ `d306195`)
+**Branch:** `feature/self-hosted-wargames` @ `fb30456` (not merged to `main` @ `d306195`)
 **Related:** [`cei-labs-engine` status](../../cei-labs-engine/docs/self-hosted-wargames-status.md) · [`cei-labs-net` status](../../cei-labs-net/docs/self-hosted-wargames-status.md) · full working checklist: `docs/self-hosted-wargames-blueprint.md`
 
 ## What this is
@@ -38,6 +38,54 @@ All three are wired into CTFd via `scripts/build_{bandit,krypton,natas}.py`
   the instance down after the delay); network isolation from CTFd/the
   orchestrator; inbound-port discipline (only the intended port reachable
   from outside, checked via direct socket probes).
+
+## Player-experience content pass: hints and free reference material
+
+A real playtest surfaced that the original single-hint-per-level system
+(one hint, one cost) wasn't calibrated the way the user actually wanted,
+and that OverTheWire's own real pages give players real, free direction
+(a "Commands you may need" tool list and a "Helpful reading" links
+section) on every level with no point cost at all. Both are now fixed
+across all 56 real levels (not the 3 onboarding "Start Here" challenges,
+whose descriptions are already full walkthroughs):
+
+- **3-tier hints ("crawl/walk/run"), 168 total.** Tier 1 is a bare
+  manpage name or a single reading link only — no explanation. Tier 2
+  (~50% of the challenge's points) explains the underlying concept and
+  names tier 1's tool/reference explicitly, but stops short of the exact
+  command or payload. Tier 3 (~75%+ of the points, deliberately
+  expensive) is a close-to-complete walkthrough of *why* and *how*,
+  still without the literal flag value. `scripts/build_{bandit,krypton,
+  natas}.py`'s `HINTS` dict holds these; the YAML generator emits a
+  `hints:` block per challenge.
+- **Free "Commands you may need to solve this level" + "Helpful
+  reading"** sections, added to every level's description — Bandit's
+  list was built directly from OverTheWire's own real page content
+  (command lists and reading URLs provided directly by the user);
+  Krypton/Natas reuse the same Wikipedia links already verified during
+  hint authoring. Lives in each script's `EXTRA_INFO` dict, appended
+  uniformly by the generator so the source data stays DRY.
+- **Real bug found and fixed via structured testing:** three
+  descriptions (written before the tier system existed) embedded the
+  exact working technique for free — Krypton 1's full `tr` command,
+  Natas 13's `GIF89a` magic bytes, Natas 14's SQLi payload — which made
+  paying for those levels' tier-3 hints pointless. Found by actually
+  self-testing as three fresh CTFd accounts (novice/intermediate/expert
+  personas, zero prior solves) unlocking every tier live via the real
+  API across 6 representative levels, not by reading source. Full
+  findings: `cei-labs-engine/docs/hint-tier-persona-findings.md`.
+- Also surfaced and fixed, unrelated to content: CTFd's DELETE-request
+  CSRF check requires an explicit `Content-Type: application/json`
+  header even on a bodyless request, or it silently falls through to a
+  form-nonce check that a header-only client never satisfies — this was
+  the real cause of several "403 on delete" incidents earlier in the
+  project that had been written off as minor test noise.
+
+**Verified live, not just written:** full YAML validation sweep across
+all 59 generated `challenge.yml` files after every edit round, synced to
+a running CTFd test instance, checked for zero duplicate/leftover hints
+via the real admin API, and the fixed descriptions' live rendering
+confirmed directly (not just diffed against source).
 
 ## Known open items
 
