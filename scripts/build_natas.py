@@ -238,6 +238,7 @@ target_image: {NATAS_TARGET_IMAGE}
 attacker_image: {NATAS_ATTACKER_IMAGE}
 instance_group: {INSTANCE_GROUP}
 shutdown_on_solve: {"true" if is_final_level else "false"}
+show_launcher: {"true" if ch["id"] == "natas-start-here" else "false"}
 """
 
     hint = HINTS.get(ch["id"])

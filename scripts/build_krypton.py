@@ -158,6 +158,7 @@ version: "0.1"
 image: {KRYPTON_IMAGE}
 instance_group: {INSTANCE_GROUP}
 shutdown_on_solve: {"true" if is_final_level else "false"}
+show_launcher: {"true" if ch["id"] == "krypton-start-here" else "false"}
 """
 
     hint = HINTS.get(ch["id"])

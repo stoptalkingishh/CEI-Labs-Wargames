@@ -384,6 +384,7 @@ instance_type: single-target
 image: {BANDIT_IMAGE}
 instance_group: {INSTANCE_GROUP}
 shutdown_on_solve: {"true" if is_final_level else "false"}
+show_launcher: {"true" if ch["id"] == "bandit-start-here" else "false"}
 """
 
     hint = HINTS.get(ch["id"])
