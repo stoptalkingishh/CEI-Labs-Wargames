@@ -75,7 +75,7 @@ challenges_data = [
         "name": "Krypton 1 -> 2: ROT13 Substitution Cipher",
         "points": 250,
         "desc": "**Goal:** Reverse a ROT13 rotation cipher.\n\nLog in as `krypton1`. The next password is in `/krypton/krypton1/krypton2`, encrypted with a simple ROT13 rotation.",
-        "flag": "ROTTEN"
+        "flag": {"type": "per_team_dynamic_alpha", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton1"}
     },
     {
         "id": "krypton-02",
@@ -101,28 +101,28 @@ challenges_data = [
         "name": "Krypton 3 -> 4: Frequency Analysis",
         "points": 350,
         "desc": "**Goal:** Break a substitution cipher using letter-frequency analysis.\n\nLog in as `krypton3`. `/krypton/krypton3/krypton4` is English text under a simple substitution cipher (each letter always maps to the same other letter). Count letter frequencies and match them against typical English letter frequency to recover the substitution alphabet.\n\n*Hint: E, T, A, O, I, N are the most common letters in English.*",
-        "flag": "BRUTE"
+        "flag": {"type": "per_team_dynamic_alpha", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton3"}
     },
     {
         "id": "krypton-04",
         "name": "Krypton 4 -> 5: Vigenere Cipher (Known Key Length)",
         "points": 400,
         "desc": "**Goal:** Break a Vigenere cipher when the key length is already known.\n\nLog in as `krypton4`. `/krypton/krypton4/krypton5` is a Vigenere cipher with a key exactly 6 letters long (see the README next to it). Split the ciphertext into 6 interleaved groups and solve each independently as its own Caesar shift.",
-        "flag": "CLEARTEXT"
+        "flag": {"type": "per_team_dynamic_alpha", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton4"}
     },
     {
         "id": "krypton-05",
         "name": "Krypton 5 -> 6: Vigenere Cipher (Kasiski Test)",
         "points": 450,
         "desc": "**Goal:** Break a Vigenere cipher when the key length isn't given.\n\nLog in as `krypton5`. `/krypton/krypton5/krypton6` is another Vigenere cipher, but this time you don't know the key length. Use the Kasiski examination (repeating ciphertext patterns) to estimate it -- likely 3, 6, or 9 -- then apply frequency analysis per group to recover the key.",
-        "flag": "RANDOM"
+        "flag": {"type": "per_team_dynamic_alpha", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton5"}
     },
     {
         "id": "krypton-06",
         "name": "Krypton 6 -> 7: Stream Cipher / LFSR",
         "points": 500,
         "desc": "**Goal:** Recover a repeating keystream and use it to decrypt the final password.\n\nLog in as `krypton6`. This is the final Krypton level. `/krypton/krypton6/final` is encrypted with a stream cipher whose keystream repeats every 30 characters -- the `encrypt` binary next to it implements it. Encrypt a long run of identical characters (30+ of them) to read the repeating keystream straight off the output, then use it to decrypt the final flag.",
-        "flag": "LFSRISNOTRANDOM"
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton6"}
     }
 ]
 
