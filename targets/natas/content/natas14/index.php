@@ -16,7 +16,12 @@ if (array_key_exists("username", $_REQUEST) && array_key_exists("password", $_RE
 
     $res = mysql_query($query, $link);
     if ($res !== false && mysql_num_rows($res) > 0) {
-        $msg = "Successful login! The FINAL Natas flag is <tt>A0608Rh6bUNF6M9776QvSAsSgS2abV0M</tt>";
+        // $final_flag is written fresh per team by entrypoint.sh, in a
+        // separate file NOT shown by the highlight_file() view-source
+        // above -- this level's flag can no longer be read via ?source
+        // without solving the SQLi at all.
+        require __DIR__ . "/next_password.php";
+        $msg = "Successful login! The FINAL Natas flag is <tt>" . htmlspecialchars($final_flag) . "</tt>";
     } else {
         $msg = "Access denied!";
     }

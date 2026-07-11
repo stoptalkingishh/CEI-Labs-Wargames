@@ -4,27 +4,22 @@ matching a single internal hostname rather than OTW's real subdomain
 scheme -- this box has no externally resolvable name of its own, it's
 reached only via the range's internal hostname, so port-per-level is the
 practical adaptation; see the blueprint's Phase 4 notes), each with its
-own AssignUserID (MPM-ITK) and HTTP Basic Auth htpasswd file."""
+own AssignUserID (MPM-ITK) and HTTP Basic Auth htpasswd file.
+
+Security: levels 1-14's htpasswd files are placeholder/invalid at build
+time -- entrypoint.sh regenerates them with real per-team secrets at
+container START (see docs/security-audit-status.md). Only level 0's
+password is real here: it's OverTheWire's public well-known bootstrap
+credential, not a secret, so there's nothing to rotate per team."""
 import os
 import subprocess
 
-WEBPASS = {
-    0: "natas0",
-    1: "g9D9cREhslqBKtcA2uVOCe7MbL6WAocT",
-    2: "ZluruAthQk7Q2MqmDeTiUij2ZvWy2mBi",
-    3: "sJIJNW6ucpu6HPZ1ZAyN8VRdTepNnQA4",
-    4: "Z9mAndu1YccU99H73fsu6mptUz2uEAte",
-    5: "iCOgHandNo6eV127665PhSAsgS2abV0M",
-    6: "f94020Bh6bUNF6M9776QvSAsSgS2abV0",
-    7: "7z3hDeo6i6vF9M9776QvSAsSgS2abV0M",
-    8: "8Ps3hDeo6i6vF9M9776QvSAsSgS2abV0",
-    9: "W0608Rh6bUNF6M9776QvSAsSgS2abV0M",
-    10: "n94020Bh6bUNF6M9776QvSAsSgS2abV0",
-    11: "U0608Rh6bUNF6M9776QvSAsSgS2abV0M",
-    12: "ED9020Bh6bUNF6M9776QvSAsSgS2abV0",
-    13: "j0608Rh6bUNF6M9776QvSAsSgS2abV0M",
-    14: "L0608Rh6bUNF6M9776QvSAsSgS2abV0M",
-}
+WEBPASS = {0: "natas0"}
+# levels 1-14 get an invalid, unguessable build-time placeholder --
+# entrypoint.sh overwrites this with a real per-team secret. Never a
+# valid credential on its own (deliberately not a real password shape).
+for _n in range(1, 15):
+    WEBPASS[_n] = "BUILD_TIME_PLACEHOLDER_NOT_A_REAL_PASSWORD"
 
 os.makedirs("/etc/apache2/natas-htpasswd", exist_ok=True)
 os.makedirs("/etc/apache2/sites-available", exist_ok=True)

@@ -30,6 +30,9 @@ function loadData() {
 
 $data = loadData();
 setcookie('data', base64_encode(xor_encrypt(json_encode($data))), 0, '/');
+// $next_password is written fresh per team by entrypoint.sh, in a
+// separate file NOT shown by the highlight_file() view-source above.
+require __DIR__ . "/next_password.php";
 ?>
 <html>
 <head><title>natas11</title></head>
@@ -37,7 +40,7 @@ setcookie('data', base64_encode(xor_encrypt(json_encode($data))), 0, '/');
 <h3>natas11</h3>
 <?php
 if ($data['showpassword'] === 'yes') {
-    echo "<p>The password for natas12 is <tt>ED9020Bh6bUNF6M9776QvSAsSgS2abV0</tt></p>";
+    echo "<p>The password for natas12 is <tt>" . htmlspecialchars($next_password) . "</tt></p>";
 } else {
     echo "<p>Cookies are protected with XOR encryption.</p>";
 }

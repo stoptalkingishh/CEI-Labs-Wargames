@@ -12,11 +12,14 @@ function encodeSecret($secret) {
 // reverse the chain (hex-decode, un-reverse the string, base64-decode)
 // to recover it.
 $encodedSecret = "3d3d77594d523151485a445330306d5344526d594e74455779556b4e5942545a43685751";
+// $next_password is written fresh per team by entrypoint.sh, in a
+// separate file NOT shown by the highlight_file() view-source above.
+require __DIR__ . "/next_password.php";
 
 $result = "";
 if (isset($_POST["secret"])) {
     if (encodeSecret($_POST["secret"]) === $encodedSecret) {
-        $result = "<p>Access granted. The password for natas9 is <tt>W0608Rh6bUNF6M9776QvSAsSgS2abV0M</tt></p>";
+        $result = "<p>Access granted. The password for natas9 is <tt>" . htmlspecialchars($next_password) . "</tt></p>";
     } else {
         $result = "<p>Wrong secret</p>";
     }

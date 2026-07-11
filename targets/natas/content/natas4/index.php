@@ -17,7 +17,7 @@ $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 <h3>natas4</h3>
 <?php
 if ($referer === $expected) {
-    echo "<p>Access granted. The password for natas5 is <tt>iCOgHandNo6eV127665PhSAsgS2abV0M</tt></p>";
+    echo "<p>Access granted. The password for natas5 is <tt>__NATAS5_SECRET__</tt></p>";
 } else {
     echo "<p>Access disallowed. You are visiting from \"" . htmlspecialchars($referer) . "\" while authorized users should come only from \"" . htmlspecialchars($expected) . "\"</p>";
 }

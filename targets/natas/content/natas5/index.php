@@ -9,7 +9,7 @@ if (!isset($_COOKIE["loggedin"])) {
 <h3>natas5</h3>
 <?php
 if (isset($_COOKIE["loggedin"]) && $_COOKIE["loggedin"] == "1") {
-    echo "<p>You are logged in. The password for natas6 is <tt>f94020Bh6bUNF6M9776QvSAsSgS2abV0</tt></p>";
+    echo "<p>You are logged in. The password for natas6 is <tt>__NATAS6_SECRET__</tt></p>";
 } else {
     echo "<p>You are not logged in. Log in to see the password for the next level.</p>";
 }
