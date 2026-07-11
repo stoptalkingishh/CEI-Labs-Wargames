@@ -8,6 +8,22 @@ import os
 # deploy` can find it.
 KRYPTON_IMAGE = "ghcr.io/stoptalkingishh/cei-labs-wargames/krypton-target:latest"
 
+
+def _flags_yaml(flag) -> str:
+    """A challenge's `flag` field is either a plain string (the historical
+    shorthand -- ctfcli treats it as a static, case-sensitive flag) or a
+    dict (per_team_dynamic and any future non-static type) -- ctfcli's
+    _create_flags() POSTs a non-string entry to /api/v1/flags verbatim, so
+    the dict's keys must already match that API's real fields
+    (type/content/data)."""
+    if isinstance(flag, dict):
+        lines = [f"  - type: {flag['type']}\n"]
+        lines.append(f"    content: \"{flag['content']}\"\n")
+        if "data" in flag:
+            lines.append(f"    data: \"{flag['data']}\"\n")
+        return "".join(lines)
+    return f'  - "{flag}"\n'
+
 # All 7 challenges share ONE instance_group -- same "one box, many
 # levels" design as Bandit. Only the final level opts into
 # shutdown_on_solve.
@@ -70,7 +86,15 @@ challenges_data = [
             "shift comes from a keyfile you can't read directly -- but you can use the `encrypt` binary next to "
             "it, which reads that keyfile every time it runs."
         ),
-        "flag": "CAESARISEASY"
+        # Per-team dynamic flag: the orchestrator generates a fresh random
+        # value per team at instance-creation time (env key "krypton2"),
+        # and cei-labs-engine's routes.py persists it for CTFd to validate
+        # against -- no longer an identical hardcoded string every team
+        # gets (see docs/security-audit-status.md). See ctfcli's
+        # _create_flags(): a non-string flags[] entry is POSTed to
+        # /api/v1/flags verbatim, so {"type": ..., "content": ..., "data":
+        # ...} becomes that Flags row directly.
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton2"}
     },
     {
         "id": "krypton-03",
@@ -190,8 +214,7 @@ description: |
 value: {ch['points']}
 type: standard
 flags:
-  - "{ch['flag']}"
-state: visible
+{_flags_yaml(ch['flag'])}state: visible
 version: "0.1"
 """
     if ch["id"] != "krypton-00":

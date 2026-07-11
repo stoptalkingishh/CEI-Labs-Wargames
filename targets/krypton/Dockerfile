@@ -46,9 +46,13 @@ RUN chmod +x /opt/build/*.sh /opt/build/*.py \
 # solves" layout the descriptions already reference.
 COPY --from=builder /tmp/caesar_encrypt /krypton/krypton2/encrypt
 COPY --from=builder /tmp/lfsr_encrypt /krypton/krypton6/encrypt
+# Level 2's keyfile/ciphertext/README are deliberately NOT generated here --
+# they're per-team secrets, generated fresh by entrypoint.sh at container
+# START from $LEVEL_SECRETS (see docs/security-audit-status.md). Only the
+# encrypt binary itself is build-time content. Level 6 is still build-time
+# generated for now -- see docs/self-hosted-wargames-status.md.
 RUN mkdir -p /krypton/krypton2 /krypton/krypton6 \
     && chmod +x /krypton/krypton2/encrypt /krypton/krypton6/encrypt \
-    && /opt/build/04-setup-level2.sh \
     && /opt/build/05-setup-level6.sh \
     && rm -rf /opt/build
 
