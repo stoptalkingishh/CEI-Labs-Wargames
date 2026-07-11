@@ -11,7 +11,11 @@ import os
 import shutil
 import subprocess
 
-FINAL_FLAG = "OdqthX2eZq2fFft2q3B5mJz7eIq3Zk2d"
+# Security: this flag is now a per-team secret generated at container
+# START by entrypoint.sh -- a fixed-length placeholder here, substituted
+# for the real value at container start (see
+# docs/security-audit-status.md).
+FINAL_FLAG = "BANDITPLACEHOLDER33".ljust(32, "Z")
 
 SHELL_PATH = "/home/bandit33/rbash_wrapper.sh"
 BIN_DIR = "/home/bandit33/restricted_bin"

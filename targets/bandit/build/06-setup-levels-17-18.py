@@ -1,11 +1,21 @@
 #!/usr/bin/env python3
-"""Bandit levels 17 (diff) and 18 (.bashrc login trap)."""
+"""Bandit levels 17 (diff) and 18 (.bashrc login trap).
+
+Security: these flags are now per-team secrets generated at container
+START by entrypoint.sh -- a fixed-length placeholder here, substituted
+for the real value at container start (see
+docs/security-audit-status.md)."""
 import os
 import random
 import subprocess
 
-FLAG_17 = "kfBf3eYk5BPBRzwjqutbbfE887SVc5ac"
-FLAG_18 = "IueksS7Ubh8G3DXwAFbnnjJ1XWeqro5r"
+
+def placeholder(n: int) -> str:
+    return f"BANDITPLACEHOLDER{n:02d}".ljust(32, "Z")
+
+
+FLAG_17 = placeholder(17)
+FLAG_18 = placeholder(18)
 
 
 def write(path, content, owner, mode):

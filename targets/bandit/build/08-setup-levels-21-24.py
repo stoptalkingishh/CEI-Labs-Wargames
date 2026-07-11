@@ -6,6 +6,10 @@ import os
 import subprocess
 
 
+def placeholder(n: int) -> str:
+    return f"BANDITPLACEHOLDER{n:02d}".ljust(32, "Z")
+
+
 def chown(path, owner):
     subprocess.run(["chown", owner, path], check=True)
 
@@ -38,15 +42,24 @@ os.chmod("/usr/bin/cronjob_bandit24.sh", 0o755)
 subprocess.run(["cp", "/opt/build/src/cronjob_bandit24.cron", "/etc/cron.d/cronjob_bandit24"], check=True)
 os.chmod("/etc/cron.d/cronjob_bandit24", 0o644)
 
-# /etc/bandit_pass/banditN files for 22-24 -- the cron scripts above read
-# from these directly (not from the login-password chain in
-# 02-set-passwords.sh), matching every other file-based level's
-# permission model: readable only by the level's own user.
+# /etc/bandit_pass/bandit(N+1) holds bandit-N's OWN flag (which is also
+# bandit(N+1)'s login password) -- the cron scripts above read from these
+# directly (not from the login-password chain), matching every other
+# file-based level's permission model: readable only by the level's own
+# user.
+#
+# Security: fixed-length placeholders here -- entrypoint.sh substitutes
+# the real per-team values (and sets bandit22/23/24's actual login
+# passwords to match) at container start (see
+# docs/security-audit-status.md). placeholder(N) always means "bandit-N's
+# own flag" consistently, matching the "banditN" secret-key convention
+# used everywhere else -- NOT the account number the file happens to be
+# named after.
 os.makedirs("/etc/bandit_pass", exist_ok=True)
 level_passwords = {
-    "bandit22": "Yk7oeL4H2E45qp7Z9EaA8F4e8G4Z5Jj7",
-    "bandit23": "jc1udXDznI2mD8tE8Zq2P17ZtGv6z5M0",
-    "bandit24": "UoMYTrfrBFHyQXmg6R1YI7mIfUIna55J",
+    "bandit22": placeholder(21),  # bandit21's flag -> bandit22's password
+    "bandit23": placeholder(22),  # bandit22's flag -> bandit23's password
+    "bandit24": placeholder(23),  # bandit23's flag -> bandit24's password
 }
 for user, password in level_passwords.items():
     path = f"/etc/bandit_pass/{user}"

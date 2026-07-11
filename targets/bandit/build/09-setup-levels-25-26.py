@@ -1,11 +1,21 @@
 #!/usr/bin/env python3
 """Bandit levels 25 (discover bandit26's unusual login shell) and 26
-(actually break out of it and find the next flag)."""
+(actually break out of it and find the next flag).
+
+Security: these flags are now per-team secrets generated at container
+START by entrypoint.sh -- fixed-length placeholders here, substituted
+for the real value at container start (see
+docs/security-audit-status.md)."""
 import os
 import subprocess
 
-FLAG_25 = "5czgV9L3Xx8JPOyU3jO5B9I0A3bM9E3z"
-FLAG_26 = "3ba3118a22e93127a4ed485be72ef5ea"
+
+def placeholder(n: int) -> str:
+    return f"BANDITPLACEHOLDER{n:02d}".ljust(32, "Z")
+
+
+FLAG_25 = placeholder(25)
+FLAG_26 = placeholder(26)
 
 
 def write(path, content, owner, mode):

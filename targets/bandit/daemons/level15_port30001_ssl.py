@@ -1,12 +1,19 @@
 #!/usr/bin/env python3
 """Bandit level 15: same idea as level 14, but over TLS on port 30001.
 Solved with e.g. `openssl s_client -connect localhost:30001 -quiet`, then
-pasting the password."""
+pasting the password.
+
+Security: reads its expected/next passwords from $LEVEL_SECRETS at
+process start -- per-team values, see level14_port30000.py's docstring
+for the full reasoning."""
+import json
+import os
 import socketserver
 import ssl
 
-EXPECTED_PASSWORD = "jN2kgmIXJ6fShzhT2avhotn4Zcka6tnt"
-NEXT_PASSWORD = "JQttfApK4SeyHwDlI9SXGR50qclOAil1"
+_secrets = json.loads(os.environ.get("LEVEL_SECRETS", "{}"))
+EXPECTED_PASSWORD = _secrets.get("bandit14")
+NEXT_PASSWORD = _secrets.get("bandit15")
 CERTFILE = "/opt/bandit-daemons/tls/server.pem"
 
 

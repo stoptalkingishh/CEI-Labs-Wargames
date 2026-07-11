@@ -23,10 +23,15 @@ rm -f /tmp/bandit13-14-key /tmp/bandit13-14-key.pub
 # /etc/bandit_pass/bandit14 -- readable only by bandit14 (and bandit13, who
 # already has the key granting direct access to bandit14 anyway) --
 # contains bandit-13's flag, which is ALSO bandit14's actual login
-# password (set in 02-set-passwords.sh), matching the real level's design
-# where the "next password" file and the account's real password are the
-# same value.
+# password, matching the real level's design where the "next password"
+# file and the account's real password are the same value.
+#
+# Security: a fixed-length placeholder here -- entrypoint.sh substitutes
+# the real per-team value (and sets bandit14's actual login password to
+# match) at container start (see docs/security-audit-status.md). The SSH
+# keypair above is still generated fresh per BUILD (not per team) for
+# now -- a known remaining gap, not yet converted to per-team.
 mkdir -p /etc/bandit_pass
-echo "fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq" > /etc/bandit_pass/bandit14
+echo "BANDITPLACEHOLDER13ZZZZZZZZZZZZZ" > /etc/bandit_pass/bandit14
 chown bandit14:bandit14 /etc/bandit_pass/bandit14
 chmod 400 /etc/bandit_pass/bandit14

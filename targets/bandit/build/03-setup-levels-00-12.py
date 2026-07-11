@@ -1,30 +1,39 @@
 #!/usr/bin/env python3
 """Builds the static file-puzzle artifacts for Bandit levels 0-12.
 Run as root at image build time (needs chown to arbitrary bandit* users).
-Flag values must match scripts/build_bandit.py exactly -- these are what
-CTFd already expects players to submit."""
-import base64
-import codecs
-import gzip
-import bz2
+
+Security: levels 1-12's flags are now per-team secrets generated at
+container START by entrypoint.sh (see docs/security-audit-status.md),
+not identical hardcoded values baked into every build. Levels whose flag
+is written PLAIN into a file (0-9) get a fixed-length 32-char PLACEHOLDER
+here, substituted for the real value by entrypoint.sh at container start
+-- this preserves every level's exact-byte-count/position decoy
+structure (e.g. level 5's 1033-byte requirement, level 6's 33-byte file)
+since the placeholder is exactly the same length the real per-team
+secret will be. Levels 10 (base64), 11 (rot13), 12 (gzip+bz2+hexdump)
+transform the flag before writing, so a placeholder can't just be
+substituted in place -- entrypoint.sh regenerates those 3 files from
+scratch with the real per-team value instead; nothing is written for
+them here."""
 import os
 import random
-import stat
 import subprocess
 
-FLAG_00 = "NH2SXQwcBdpmTEzi3bvBHRW9NXrY9B1b"
-FLAG_01 = "rRGizSaX8Mk1RTb1CNQoXTcYZUR6OUZY"
-FLAG_02 = "aBZ0W5EmUfAf7kHTQeOwd8bauFJ2lEWG"
-FLAG_03 = "2EW7BBsr6aMMoJ2HjW067zg8WNkNzbpm"
-FLAG_04 = "lrIWWI6bB37kxfiCQZqUdOIYfr6eEeqR"
-FLAG_05 = "P4L4vucdmLnm8I7Vl7jG1ApGSfjYKqJU"
-FLAG_06 = "z7WtoNQU2XfjmMtWA8u5rN4vzqu4v99S"
-FLAG_07 = "TESKZC0XvTetK0S9xNwm25STk5iWrBvP"
-FLAG_08 = "EN632PlfYiZbn3PhVK3XOGSlNInNE00t"
-FLAG_09 = "G7w8LIi6J3kTb8O7jPdkOYOsDhmi0n0m"
-FLAG_10 = "6zPeziLdR2RKNdNYFNb6nVCKzphlXHpt"
-FLAG_11 = "JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv"
-FLAG_12 = "wbWdlBxEir4c8X3x5l9m5o5Wv8n9Uj4J"
+
+def placeholder(n: int) -> str:
+    return f"BANDITPLACEHOLDER{n:02d}".ljust(32, "Z")
+
+
+FLAG_00 = placeholder(0)
+FLAG_01 = placeholder(1)
+FLAG_02 = placeholder(2)
+FLAG_03 = placeholder(3)
+FLAG_04 = placeholder(4)
+FLAG_05 = placeholder(5)
+FLAG_06 = placeholder(6)
+FLAG_07 = placeholder(7)
+FLAG_08 = placeholder(8)
+FLAG_09 = placeholder(9)
 
 
 def write(path, content, owner, mode):
@@ -46,9 +55,6 @@ def mkdir(path, owner, mode=0o755):
 write("/home/bandit0/readme", FLAG_00 + "\n", "bandit0:bandit0", 0o644)
 
 # ---- "Bandit: Start Here" onboarding challenge (build_bandit.py) ----------
-# Same bandit0 account as level 0, a separate file so the two challenges
-# don't share an answer -- this one exists purely to exercise the launch
-# controls themselves, not to teach a Linux Basics technique.
 write("/home/bandit0/welcome.txt", "WELCOME_TO_BANDIT\n", "bandit0:bandit0", 0o644)
 
 # ---- Level 1: file named "-" -----------------------------------------------
@@ -158,28 +164,11 @@ marker = b"==========" + FLAG_09.encode() + b"\n"
 content = binary_blob[:2000] + marker + binary_blob[2000:]
 write("/home/bandit9/data.txt", content, "bandit9:bandit9", 0o644)
 
-# ---- Level 10: base64 ------------------------------------------------------
-write(
-    "/home/bandit10/data.txt",
-    base64.b64encode(FLAG_10.encode()) + b"\n",
-    "bandit10:bandit10",
-    0o644,
-)
+# ---- Levels 10 (base64), 11 (rot13), 12 (compressed hexdump) ---------------
+# Deliberately NOT written here -- the flag is transformed before writing,
+# so a simple placeholder substitution can't work. entrypoint.sh
+# regenerates these 3 files from scratch with the real per-team value.
+# Directory/ownership needs nothing pre-created -- write() in
+# entrypoint.sh's Python block handles chown itself, same as here.
 
-# ---- Level 11: rot13 -------------------------------------------------------
-write(
-    "/home/bandit11/data.txt",
-    codecs.encode(FLAG_11, "rot13") + "\n",
-    "bandit11:bandit11",
-    0o644,
-)
-
-# ---- Level 12: hexdump of a file compressed multiple times (gzip -> bzip2) -
-raw = FLAG_12.encode()
-compressed = bz2.compress(gzip.compress(raw))
-hex_lines = subprocess.run(
-    ["xxd", "-"], input=compressed, capture_output=True, check=True
-).stdout
-write("/home/bandit12/data.txt", hex_lines, "bandit12:bandit12", 0o644)
-
-print("Levels 0-12 artifacts written.")
+print("Levels 0-9 artifacts written (placeholders for 1-9; levels 10-12 deferred to entrypoint.sh).")

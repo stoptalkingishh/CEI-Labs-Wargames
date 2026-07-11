@@ -5,12 +5,19 @@ scanning the range (e.g. `nmap -sT -sV --script ssl-enum-ciphers -p
 31000-32000 localhost` or similar) to find the one port that speaks TLS
 and responds correctly. Only this one port (31046, arbitrary) actually
 binds; every other port in the range is simply closed, which is what
-makes the range genuinely scannable rather than a fixed answer."""
+makes the range genuinely scannable rather than a fixed answer.
+
+Security: reads its expected/next passwords from $LEVEL_SECRETS at
+process start -- per-team values, see level14_port30000.py's docstring
+for the full reasoning."""
+import json
+import os
 import socketserver
 import ssl
 
-EXPECTED_PASSWORD = "JQttfApK4SeyHwDlI9SXGR50qclOAil1"
-NEXT_PASSWORD = "VwOSWtCAcEBcCU5TOk540Rh04UvwB1O8"
+_secrets = json.loads(os.environ.get("LEVEL_SECRETS", "{}"))
+EXPECTED_PASSWORD = _secrets.get("bandit15")
+NEXT_PASSWORD = _secrets.get("bandit16")
 CERTFILE = "/opt/bandit-daemons/tls/server.pem"
 PORT = 31046
 

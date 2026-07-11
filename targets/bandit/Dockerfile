@@ -76,15 +76,16 @@ RUN chmod +x /opt/build/*.sh /opt/build/*.py \
     && python3 /opt/build/06-setup-levels-17-18.py \
     && python3 /opt/build/08-setup-levels-21-24.py \
     && python3 /opt/build/09-setup-levels-25-26.py \
-    && python3 /opt/build/10-setup-levels-27-31.py \
     && python3 /opt/build/11-setup-level-32.py \
     && python3 /opt/build/12-setup-level-33.py \
     && rm -rf /opt/build
 
 # Level 19: reads bandit-19's flag (bandit20's password) from this file --
 # readable only by bandit20, exactly the same file-permission convention
-# every other level uses.
-RUN echo "GbKksEFF4yrVs6il55v6gwY5aVje5f0j" > /etc/bandit_pass/bandit20 \
+# every other level uses. A fixed-length placeholder here -- entrypoint.sh
+# substitutes the real per-team value at container start (see
+# docs/security-audit-status.md).
+RUN echo "BANDITPLACEHOLDER19ZZZZZZZZZZZZZ" > /etc/bandit_pass/bandit20 \
     && chown bandit20:bandit20 /etc/bandit_pass/bandit20 \
     && chmod 400 /etc/bandit_pass/bandit20
 
