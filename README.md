@@ -35,6 +35,8 @@ Each game's folder holds three docs:
   firewall allowlist
 - [Self-hosted wargames status](docs/self-hosted-wargames-status.md)
   and [blueprint](docs/self-hosted-wargames-blueprint.md)
+- [Staggered game-stage contract](docs/staggered-game-stages.md) — the
+  Bandit/Krypton/Natas grouping and pre-deployment validation used by Engine
 
 ## 🚀 Setup Instructions
 
@@ -51,6 +53,11 @@ export CTFD_TOKEN="your_admin_token_here"
 chmod +x deploy.sh
 ./deploy.sh
 ```
+
+Deployment generates all three games and runs the read-only stage validator
+before uploading. It must report Bandit 35, Krypton 8, and Natas 16. The event
+administrator then syncs and starts each game independently in Engine; loading
+challenge content does not start a game clock.
 
 ### 2. Self-signed / LAN CTFd instances
 

@@ -29,6 +29,7 @@ echo "[2/4] Generating Challenge Files..."
 python3 scripts/build_bandit.py
 python3 scripts/build_krypton.py
 python3 scripts/build_natas.py
+python3 scripts/validate_game_stages.py
 
 # 3. Connection and Authentication Configuration
 echo "[3/4] Checking CTFd Connection..."
@@ -150,4 +151,3 @@ else
     echo "✅ Deployment Complete! All $challenges_found challenges are synced & live."
 fi
 echo "=========================================="
-
