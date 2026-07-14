@@ -3,7 +3,7 @@
 **Status:** Merged to `main` (confirmed via `git merge-base --is-ancestor
 fb30456 main`). Originally written from `feature/self-hosted-wargames` @
 `fb30456` before that branch landed.
-**Related:** [`cei-labs-engine` status](../../cei-labs-engine/docs/self-hosted-wargames-status.md) · [`cei-labs-net` status](../../cei-labs-net/docs/self-hosted-wargames-status.md) · full working checklist: `docs/self-hosted-wargames-blueprint.md`
+**Related:** [`cei-labs-engine` status](https://github.com/stoptalkingishh/cei-labs-engine/blob/main/docs/self-hosted-wargames-status.md) · [`cei-labs-net` status](https://github.com/stoptalkingishh/cei-labs-net/blob/main/docs/self-hosted-wargames-status.md) · full working checklist: `docs/self-hosted-wargames-blueprint.md`
 
 ## What this is
 
