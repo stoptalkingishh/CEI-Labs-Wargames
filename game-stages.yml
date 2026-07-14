@@ -1,0 +1,23 @@
+schema_version: 1
+stages:
+  - order: 1
+    slug: bandit
+    name: "Bandit — Linux Basics"
+    category: "Linux Basics"
+    challenge_prefix: "bandit-"
+    start_challenge: "bandit-start-here"
+    expected_challenge_count: 35
+  - order: 2
+    slug: krypton
+    name: "Krypton — Cryptography"
+    category: "Cryptography"
+    challenge_prefix: "krypton-"
+    start_challenge: "krypton-start-here"
+    expected_challenge_count: 8
+  - order: 3
+    slug: natas
+    name: "Natas — Web Security"
+    category: "Web Security"
+    challenge_prefix: "natas-"
+    start_challenge: "natas-start-here"
+    expected_challenge_count: 16
