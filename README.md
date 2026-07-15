@@ -48,6 +48,7 @@ Ensure you pass your CTFd scoreboard details as environment variables if running
 ```bash
 export CTFD_URL="https://your-ctfd-scoreboard.com"
 export CTFD_TOKEN="your_admin_token_here"
+export CTFD_SYNC_SECRET="the Engine instance-launcher sync secret"
 
 # This builds all modules (Bandit, Krypton, Natas) and syncs them
 chmod +x deploy.sh
@@ -58,6 +59,37 @@ Deployment generates all three games and runs the read-only stage validator
 before uploading. It must report Bandit 35, Krypton 8, and Natas 16. The event
 administrator then syncs and starts each game independently in Engine; loading
 challenge content does not start a game clock.
+
+The deployment preflight is fail-closed: it requires authenticated CTFd
+inventory access, successful challenge install/sync responses, successful
+instance-launcher mapping sync, and exact totals of 59 challenges, 58 mapped
+environments, and 3 visible launchers. `.ctf/config` is written mode `0600`.
+
+## Validation and immutable releases
+
+Run the same metadata gate used by CI:
+
+```bash
+python3 scripts/build_bandit.py
+python3 scripts/build_krypton.py
+python3 scripts/build_natas.py
+python3 scripts/validate_game_stages.py
+python3 scripts/validate_generated.py --output validation-manifest.json
+```
+
+Before a production release, replace generated image fields with immutable
+`name@sha256:<64-hex-digest>` references and run:
+
+```bash
+python3 scripts/validate_generated.py --release --output release-manifest.json
+```
+
+Release mode rejects `latest`, development tags, and every other floating
+reference. `.github/workflows/validate.yml` runs the normal generation gate
+on pushes and pull requests. The manually dispatched `build-targets.yml`
+workflow requires an immutable Engine base-image digest and publishes SBOM
+and provenance metadata for Bandit, Krypton, and Natas target images. All
+third-party GitHub Actions are pinned to commit SHAs.
 
 ### 2. Self-signed / LAN CTFd instances
 
