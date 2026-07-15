@@ -1,7 +1,8 @@
 #!/bin/bash
 # CEI-Labs-Wargames Deployment Script
 # This script generates all challenge files and uploads them to CTFd non-interactively.
-set -e
+set -Eeuo pipefail
+umask 077
 
 # Prevent glob expansion failures if no directories match
 shopt -s nullglob
@@ -22,6 +23,20 @@ if ! command -v ctf &> /dev/null; then
     echo "   Please install it using: pip install ctfcli" >&2
     exit 1
 fi
+
+if { [ -n "${CTFD_URL:-}" ] && [ -z "${CTFD_TOKEN:-}" ]; } || \
+   { [ -z "${CTFD_URL:-}" ] && [ -n "${CTFD_TOKEN:-}" ]; }; then
+    echo "Error: CTFD_URL and CTFD_TOKEN must be set together." >&2
+    exit 1
+fi
+if [ -z "${CTFD_URL:-}" ] || [ -z "${CTFD_TOKEN:-}" ]; then
+    echo "Error: non-interactive deployment requires CTFD_URL and CTFD_TOKEN." >&2
+    exit 1
+fi
+if [ -z "${CTFD_SYNC_SECRET:-}" ]; then
+    echo "Error: CTFD_SYNC_SECRET is required so launcher mappings cannot be silently skipped." >&2
+    exit 1
+fi
 echo "✓ All dependencies met."
 
 # 2. Challenge File Generation
@@ -30,10 +45,11 @@ python3 scripts/build_bandit.py
 python3 scripts/build_krypton.py
 python3 scripts/build_natas.py
 python3 scripts/validate_game_stages.py
+python3 scripts/validate_generated.py --output deployment-manifest.json
 
 # 3. Connection and Authentication Configuration
 echo "[3/4] Checking CTFd Connection..."
-if [ -n "$CTFD_URL" ] && [ -n "$CTFD_TOKEN" ]; then
+if [ -n "${CTFD_URL:-}" ] && [ -n "${CTFD_TOKEN:-}" ]; then
     echo "Found CTFD environment variables. Configuring ctfcli non-interactively..."
     mkdir -p .ctf
     cat << EOF > .ctf/config
@@ -41,6 +57,7 @@ if [ -n "$CTFD_URL" ] && [ -n "$CTFD_TOKEN" ]; then
 url = $CTFD_URL
 access_token = $CTFD_TOKEN
 EOF
+    chmod 600 .ctf/config
     if [ "${CTFD_INSECURE:-false}" = "true" ]; then
         echo "ssl_verify = false" >> .ctf/config
         echo "⚠️  CTFD_INSECURE=true — TLS certificate verification is disabled."
@@ -48,11 +65,37 @@ EOF
     printf '
 [challenges]
 ' >> .ctf/config
-elif [ ! -d ".ctf" ]; then
-    echo "⚠️  No existing configuration found and CTFD environment variables are empty."
-    echo "   Prompting for interactive initialization..."
-    ctf init
 fi
+
+curl_opts=(--silent --show-error --location)
+if [ "${CTFD_INSECURE:-false}" = "true" ]; then
+    curl_opts+=(--insecure)
+fi
+
+if [ -n "${CTFD_URL:-}" ] && [ -n "${CTFD_TOKEN:-}" ]; then
+    preflight_code=$(curl "${curl_opts[@]}" -o .ctf/preflight-challenges.json -w '%{http_code}' \
+        -H "Authorization: Token ${CTFD_TOKEN}" \
+        "${CTFD_URL}/api/v1/challenges?per_page=100")
+    if [ "$preflight_code" != "200" ]; then
+        echo "Error: CTFd authentication preflight returned HTTP ${preflight_code}." >&2
+        exit 1
+    fi
+fi
+
+challenge_exists() {
+    python3 - "$1" .ctf/preflight-challenges.json <<'PYEOF'
+import json
+import sys
+import yaml
+
+with open(sys.argv[1], encoding="utf-8") as challenge_file:
+    wanted = (yaml.safe_load(challenge_file) or {}).get("name")
+with open(sys.argv[2], encoding="utf-8") as inventory_file:
+    inventory = json.load(inventory_file)
+names = {row.get("name") for row in inventory.get("data", [])}
+raise SystemExit(0 if wanted in names else 1)
+PYEOF
+}
 
 # Pushes a challenge's instance_type/image/instance_group/etc. (if its
 # challenge.yml declares any) into CTFd's instance-launcher plugin, so a
@@ -72,7 +115,7 @@ sync_instance_mapping() {
     fi
 
     local payload
-    payload=$(python3 - "$challenge_yaml" <<'PYEOF' 2>/dev/null || true
+    payload=$(python3 - "$challenge_yaml" <<'PYEOF'
 import json
 import sys
 
@@ -102,7 +145,7 @@ PYEOF
     [ -z "$payload" ] && return 0
 
     local http_code
-    http_code=$(curl -sk -o /dev/null -w '%{http_code}' \
+    http_code=$(curl "${curl_opts[@]}" -o /dev/null -w '%{http_code}' \
         -X POST "${CTFD_URL}/plugins/instance-launcher/admin/mappings/sync" \
         -H "X-Sync-Auth: ${CTFD_SYNC_SECRET}" \
         -H "Content-Type: application/json" \
@@ -111,18 +154,13 @@ PYEOF
     if [ "$http_code" = "200" ]; then
         echo "Synced instance mapping for $(basename "$challenge_dir")"
     else
-        echo "⚠️  Instance mapping sync returned HTTP ${http_code} for $(basename "$challenge_dir")"
+        echo "Error: instance mapping sync returned HTTP ${http_code} for $(basename "$challenge_dir")" >&2
+        return 1
     fi
 }
 
 # 4. Challenge Upload and Sync Loop
 echo "[4/4] Syncing Challenges to CTFd..."
-if [ -z "${CTFD_SYNC_SECRET:-}" ]; then
-    echo "ℹ️  CTFD_SYNC_SECRET not set — challenge content will sync, but no"
-    echo "   'Launch Environment' buttons will be wired up. Set it (the same"
-    echo "   value as cei-labs-engine's plugin_shared_secret Docker secret)"
-    echo "   to enable instance-launcher mapping sync."
-fi
 challenges_found=0
 
 for dir in challenges/*/ ; do
@@ -132,13 +170,14 @@ for dir in challenges/*/ ; do
     echo "----------------------------------------"
     echo "Syncing challenge from: $dir_trimmed"
 
-    # Try syncing first (which updates changes). If it fails because the
-    # challenge doesn't exist yet on the server, install it.
-    if ! ctf challenge sync "$dir_trimmed" 2>/dev/null; then
+    # Decide install versus sync from the authenticated preflight inventory.
+    # A sync failure is now fatal instead of being misclassified as "missing".
+    if challenge_exists "$dir_trimmed/challenge.yml"; then
+        ctf challenge sync "$dir_trimmed"
+        echo "Successfully synced challenge metadata!"
+    else
         echo "Challenge not found on CTFd. Installing challenge as new..."
         ctf challenge install "$dir_trimmed"
-    else
-        echo "Successfully synced challenge metadata!"
     fi
 
     sync_instance_mapping "$dir_trimmed"
@@ -146,7 +185,11 @@ done
 
 echo "=========================================="
 if [ "$challenges_found" -eq 0 ]; then
-    echo "⚠️  Warning: No challenges were found inside the 'challenges/' directory."
+    echo "Error: no challenges were found inside the 'challenges/' directory." >&2
+    exit 1
+elif [ "$challenges_found" -ne 59 ]; then
+    echo "Error: expected 59 challenges, deployed ${challenges_found}." >&2
+    exit 1
 else
     echo "✅ Deployment Complete! All $challenges_found challenges are synced & live."
 fi

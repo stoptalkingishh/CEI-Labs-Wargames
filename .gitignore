@@ -9,6 +9,8 @@ __pycache__/
 
 # Ignore local ctfcli hidden configurations (contains sensitive API tokens!)
 .ctf/
+/deployment-manifest.json
+/validation-manifest.json
 
 # Ignore system-specific files
 .DS_Store

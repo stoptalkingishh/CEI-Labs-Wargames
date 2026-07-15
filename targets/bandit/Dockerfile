@@ -13,6 +13,8 @@
 # is ignored by the Linux kernel, so these must be compiled C), but the
 # compiler itself has no business shipping in the final image -- keeps
 # the "as light as possible" requirement intact.
+ARG BASE_IMAGE=ghcr.io/stoptalkingishh/cei-labs-engine/target-base-linux:latest
+
 FROM debian:12-slim AS builder
 RUN apt-get update && apt-get install -y --no-install-recommends gcc libc6-dev \
     && rm -rf /var/lib/apt/lists/*
@@ -20,7 +22,7 @@ COPY src/level19_setuid.c src/level20_suconnect.c /tmp/
 RUN gcc -O2 -o /tmp/level19_setuid /tmp/level19_setuid.c \
     && gcc -O2 -o /tmp/level20_suconnect /tmp/level20_suconnect.c
 
-FROM ghcr.io/local-test/cei-labs-engine/target-base-linux:dev
+FROM ${BASE_IMAGE}
 
 ARG DEBIAN_FRONTEND=noninteractive
 

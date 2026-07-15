@@ -7,6 +7,8 @@
 # Multi-stage: levels 2 and 6 ship compiled `encrypt` binaries (so the
 # shift/keystream isn't just readable in a script); the compiler itself
 # has no business in the final image.
+ARG BASE_IMAGE=ghcr.io/stoptalkingishh/cei-labs-engine/target-base-linux:latest
+
 FROM debian:12-slim AS builder
 RUN apt-get update && apt-get install -y --no-install-recommends gcc libc6-dev \
     && rm -rf /var/lib/apt/lists/*
@@ -14,7 +16,7 @@ COPY src/caesar_encrypt.c src/lfsr_encrypt.c /tmp/
 RUN gcc -O2 -o /tmp/caesar_encrypt /tmp/caesar_encrypt.c \
     && gcc -O2 -o /tmp/lfsr_encrypt /tmp/lfsr_encrypt.c
 
-FROM ghcr.io/local-test/cei-labs-engine/target-base-linux:dev
+FROM ${BASE_IMAGE}
 
 ARG DEBIAN_FRONTEND=noninteractive
 

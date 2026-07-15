@@ -6,7 +6,10 @@ import os
 # before deploying (`docker build -t ghcr.io/stoptalkingishh/cei-labs-
 # wargames/krypton-target:latest targets/krypton`) so `docker stack
 # deploy` can find it.
-KRYPTON_IMAGE = "ghcr.io/stoptalkingishh/cei-labs-wargames/krypton-target:latest"
+KRYPTON_IMAGE = os.environ.get(
+    "KRYPTON_IMAGE",
+    "ghcr.io/stoptalkingishh/cei-labs-wargames/krypton-target:latest",
+)
 
 
 def _flags_yaml(flag) -> str:

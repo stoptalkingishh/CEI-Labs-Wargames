@@ -23,7 +23,10 @@ def _flags_yaml(flag) -> str:
 # before deploying (`docker build -t ghcr.io/stoptalkingishh/cei-labs-
 # wargames/bandit-target:latest targets/bandit`) so `docker stack deploy`
 # can find it.
-BANDIT_IMAGE = "ghcr.io/stoptalkingishh/cei-labs-wargames/bandit-target:latest"
+BANDIT_IMAGE = os.environ.get(
+    "BANDIT_IMAGE",
+    "ghcr.io/stoptalkingishh/cei-labs-wargames/bandit-target:latest",
+)
 
 # All 34 challenges deliberately share ONE instance_group -- launching any
 # of them creates/reuses the SAME persistent container (see

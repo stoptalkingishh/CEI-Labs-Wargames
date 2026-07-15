@@ -25,8 +25,14 @@ def _flags_yaml(flag) -> str:
 # attacker_image is cei-labs-engine's own extended kali-novnc image (per
 # resolved Decision 2 -- not a new separate image), not something this
 # repo builds.
-NATAS_TARGET_IMAGE = "ghcr.io/stoptalkingishh/cei-labs-wargames/natas-target:latest"
-NATAS_ATTACKER_IMAGE = "ghcr.io/stoptalkingishh/cei-labs-engine/ctf-kali-novnc:latest"
+NATAS_TARGET_IMAGE = os.environ.get(
+    "NATAS_TARGET_IMAGE",
+    "ghcr.io/stoptalkingishh/cei-labs-wargames/natas-target:latest",
+)
+NATAS_ATTACKER_IMAGE = os.environ.get(
+    "NATAS_ATTACKER_IMAGE",
+    "ghcr.io/stoptalkingishh/cei-labs-engine/ctf-kali-novnc:latest",
+)
 
 # All 15 challenges share ONE instance_group -- launching any of them
 # creates/reuses the SAME per-team range (one shared attacker + this

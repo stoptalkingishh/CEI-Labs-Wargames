@@ -12,7 +12,8 @@
 # debian:12-slim), keeping one base-OS family project-wide. This image
 # never starts the base image's sshd -- target-attacker instances have
 # no inbound access at all except from their own range's attacker.
-FROM ghcr.io/local-test/cei-labs-engine/target-base-linux:dev
+ARG BASE_IMAGE=ghcr.io/stoptalkingishh/cei-labs-engine/target-base-linux:latest
+FROM ${BASE_IMAGE}
 
 ARG DEBIAN_FRONTEND=noninteractive
 
