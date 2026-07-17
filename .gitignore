@@ -12,6 +12,11 @@ __pycache__/
 /deployment-manifest.json
 /validation-manifest.json
 
+# Scratch ground-truth state written by scripts/test_staggered_concurrency.py
+# and scripts/test_staggered_smoke.py for scripts/test_export_reconciliation.py
+# to read -- regenerated every run, not meant to be committed.
+scripts/local-ctfd/.state/
+
 # Ignore system-specific files
 .DS_Store
 Thumbs.db

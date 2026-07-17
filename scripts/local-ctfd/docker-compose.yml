@@ -1,0 +1,65 @@
+# scripts/local-ctfd/docker-compose.yml
+#
+# Minimal local CTFd instance for black-box testing this repo's staggered
+# scoring behavior (the wargame-stages CTFd plugin) plus challenge
+# upload/sync (deploy.sh). Deliberately scoped down from cei-labs-engine's
+# full production Docker Swarm stack (docker/stack.yml) — no Traefik, no
+# orchestrator, no TLS, no Swarm secrets. Just CTFd + its DB + Redis,
+# reachable directly on localhost:8000. Not for production use.
+#
+# The CTFd image bakes in the wargame-stages/instance-launcher plugins from
+# cei-labs-engine, so the build context points at that sibling repo. Override
+# CEI_LABS_ENGINE_PATH if your checkout isn't at the default location.
+#
+# Usage:
+#   cd scripts/local-ctfd
+#   CEI_LABS_ENGINE_PATH=/path/to/cei-labs-engine docker compose up -d --build
+#   docker compose down -v   # tear down, including DB volume
+
+services:
+  ctfd-db:
+    image: mariadb:10.11@sha256:be981e4113326ada8d6004174dd09eeaefc03094037f811182a52d4f2e737350
+    environment:
+      MYSQL_DATABASE: ctfd
+      MYSQL_USER: ctfd
+      MYSQL_PASSWORD: local-test-db-password
+      MYSQL_ROOT_PASSWORD: local-test-root-password
+    volumes:
+      - ctfd_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  ctfd-redis:
+    image: redis:7-alpine@sha256:6ab0b6e7381779332f97b8ca76193e45b0756f38d4c0dcda72dbb3c32061ab99
+
+  ctfd:
+    build:
+      context: ${CEI_LABS_ENGINE_PATH:-../../../cei-labs-engine}/docker/ctfd
+    environment:
+      SECRET_KEY: local-test-secret-key-not-for-production
+      DATABASE_URL: mysql+pymysql://ctfd:local-test-db-password@ctfd-db/ctfd
+      REDIS_URL: redis://ctfd-redis:6379
+      UPLOAD_FOLDER: /var/uploads
+      REVERSE_PROXY: "false"
+      WORKERS: "1"
+      # instance-launcher's sync_mapping route falls back to this env var
+      # when no /run/secrets/plugin_shared_secret file is mounted (see
+      # read_secret() in orchestrator_client.py) — no Swarm secrets needed
+      # for this scoped-down local stack.
+      PLUGIN_SHARED_SECRET: local-test-sync-secret
+    ports:
+      - "8000:8000"
+    volumes:
+      - ctfd_uploads:/var/uploads
+    depends_on:
+      ctfd-db:
+        condition: service_healthy
+      ctfd-redis:
+        condition: service_started
+
+volumes:
+  ctfd_db_data:
+  ctfd_uploads:
