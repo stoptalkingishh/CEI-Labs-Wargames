@@ -73,8 +73,17 @@ if [ "${CTFD_INSECURE:-false}" = "true" ]; then
 fi
 
 if [ -n "${CTFD_URL:-}" ] && [ -n "${CTFD_TOKEN:-}" ]; then
+    # CTFd only honors the Authorization header on requests it recognizes as
+    # JSON (see CTFd/utils/initialization's `tokens()` before_request hook,
+    # which gates token lookup on request.mimetype == "application/json").
+    # Without this header the token is silently ignored, --location follows
+    # the resulting redirect to the (HTTP 200) login page, and every
+    # challenge_exists() check below then reads that HTML as an empty
+    # inventory — every challenge takes the "install as new" path even when
+    # it already exists, silently creating duplicates on a second run.
     preflight_code=$(curl "${curl_opts[@]}" -o .ctf/preflight-challenges.json -w '%{http_code}' \
         -H "Authorization: Token ${CTFD_TOKEN}" \
+        -H "Content-Type: application/json" \
         "${CTFD_URL}/api/v1/challenges?per_page=100")
     if [ "$preflight_code" != "200" ]; then
         echo "Error: CTFd authentication preflight returned HTTP ${preflight_code}." >&2
