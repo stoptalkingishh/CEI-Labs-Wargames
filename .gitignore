@@ -1,5 +1,6 @@
-# Ignore the 56 generated CTFd challenge folders
+# Ignore generated CTFd challenge folders and hint-wallet manifests
 challenges/*/
+challenges/*.json
 
 # Ignore Python compilation caches
 __pycache__/

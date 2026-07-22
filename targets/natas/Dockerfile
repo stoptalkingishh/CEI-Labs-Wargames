@@ -72,7 +72,13 @@ RUN useradd -r -M -s /usr/sbin/nologin apache-itk-idle \
     && chown -R apache-itk-idle:apache-itk-idle /var/run/apache2 /var/lock/apache2 /var/log/apache2
 
 COPY build/ /opt/build/
-RUN chmod +x /opt/build/*.sh /opt/build/*.py
+RUN chmod +x /opt/build/*.sh /opt/build/*.py \
+    && mkdir -p /etc/cei-labs/natas-banners \
+    && python3 /opt/build/generate_banners.py /etc/cei-labs/natas-banners \
+    && chown -R root:root /etc/cei-labs/natas-banners \
+    && chmod 755 /etc/cei-labs/natas-banners \
+    && chmod 444 /etc/cei-labs/natas-banners/*.html \
+    && install -o root -g root -m 644 /opt/build/cei-natas-banner.php /opt/cei-natas-banner.php
 
 # Users, per-level webpass files, MariaDB schema/users, Apache vhosts,
 # and PHP content -- see each script's own header comment for what it

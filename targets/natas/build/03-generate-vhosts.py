@@ -57,6 +57,7 @@ for n in range(15):
     ServerName natas{n}.local
     DocumentRoot {docroot}
     AssignUserID {user} {user}
+    php_admin_value auto_prepend_file /opt/cei-natas-banner.php
 
     <Directory {docroot}>
         Options FollowSymLinks

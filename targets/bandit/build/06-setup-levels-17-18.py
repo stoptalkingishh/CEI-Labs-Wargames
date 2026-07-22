@@ -60,6 +60,10 @@ write(
     "    *i*) ;;\n"
     "      *) return;;\n"
     "esac\n\n"
+    'if [ -z "${CEI_BANDIT_BANNER_SHOWN:-}" ]; then\n'
+    '    export CEI_BANDIT_BANNER_SHOWN=1\n'
+    '    cat -- /etc/cei-labs/banners/bandit18\n'
+    'fi\n'
     'echo "This bashrc file has been used to prevent the use of the bash shell for bandit19"\n'
     "exit 0\n",
     "bandit18:bandit18",

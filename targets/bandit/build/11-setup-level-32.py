@@ -25,6 +25,7 @@ SHELL_PATH = "/home/bandit32/uppershell"
 shell_script = (
     "#!/bin/bash\n"
     "exec bash --norc -c '\n"
+    'if [ -z "${CEI_BANDIT_BANNER_SHOWN:-}" ]; then export CEI_BANDIT_BANNER_SHOWN=1; cat -- /etc/cei-labs/banners/bandit32; fi\n'
     'echo "Welcome to the CEI-Labs UPPERCASE shell (bandit32)"\n'
     'echo "Every command you enter is converted to UPPERCASE before it runs."\n'
     "export PATH=/usr/bin:/bin\n"
