@@ -172,8 +172,15 @@ PYEOF
 # generated manifests only after challenge sync has established the server IDs.
 # The token is passed as a header and neither it nor manifest content is logged.
 sync_hint_wallet_bundle() {
+    # Opt-in: the Engine-side plugin this posts to may not be deployed yet,
+    # so an unset secret skips the sync instead of failing every deploy.
+    if [ -z "${HINT_WALLET_SYNC_SECRET:-}" ]; then
+        echo "HINT_WALLET_SYNC_SECRET not set; skipping hint-wallet sync."
+        return 0
+    fi
     [ -n "${CTFD_URL:-}" ] || { echo "CTFD_URL is required for hint wallet sync" >&2; return 1; }
-    [ "${#HINT_WALLET_SYNC_SECRET:-0}" -ge 32 ] || { echo "HINT_WALLET_SYNC_SECRET must be at least 32 characters" >&2; return 1; }
+    local secret="${HINT_WALLET_SYNC_SECRET}"
+    [ "${#secret}" -ge 32 ] || { echo "HINT_WALLET_SYNC_SECRET must be at least 32 characters" >&2; return 1; }
     [[ "${HINT_WALLET_REVISION:-}" =~ ^[1-9][0-9]*$ ]] || { echo "HINT_WALLET_REVISION must be a positive integer" >&2; return 1; }
     local payload
     payload=$(python3 - challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json <<'PYEOF'
