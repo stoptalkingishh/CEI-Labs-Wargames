@@ -1,4 +1,7 @@
 import os
+import json
+
+from hint_economy import managed_tiers
 
 
 def _flags_yaml(flag) -> str:
@@ -229,17 +232,17 @@ EXTRA_INFO = {
 # use single-quote syntax instead).
 HINTS = {
     "natas-00": [
-        ("`man curl`.", 15),
+        ("On the Kali attacker workstation, run `curl --help`.", 15),
         ("Web pages sometimes leave notes for developers directly in the HTML that never show up in the rendered page -- these are HTML comments, marked with `<!--` and `-->`, invisible in a normal browser view but fully readable in the raw source. Both a browser's view-source and `curl` show you the raw HTML.", 100),
         ("`curl http://<target-host>:8000/` (or Ctrl+U in a browser) prints the raw HTML -- look for an HTML comment (`<!-- ... -->`) in it. The password is written directly inside one.", 150),
     ],
     "natas-01": [
-        ("`man curl`.", 15),
+        ("On the Kali attacker workstation, run `curl --help`.", 15),
         ("Right-click/context-menu blocking is implemented in JavaScript that runs inside YOUR browser -- it can only interfere with browser UI, never with how the underlying page content is actually retrieved. A browser's view-source mode, or a command-line HTTP client, both bypass browser-level UI restrictions entirely.", 175),
         ("Bypass the block entirely by not using the browser's right-click menu at all: view-source (`view-source:http://<target-host>:8001/` in the address bar, or Ctrl+U) or a plain `curl http://<target-host>:8001/` both retrieve the exact same HTML the JavaScript is trying to protect -- the password is in an HTML comment, same pattern as the level before.", 187),
     ],
     "natas-02": [
-        ("`man curl`.", 20),
+        ("On the Kali attacker workstation, run `curl --help`.", 20),
         ("The page references an image file living in some subdirectory -- and many simple web servers, if not explicitly configured otherwise, will list the CONTENTS of a directory when no specific file is requested from it. Requesting the directory path itself, rather than a file inside it, is worth trying.", 225),
         ("View the page source to find the image's path (something like `files/pixel.png`), then request the directory itself rather than a specific file inside it, e.g. `curl http://<target-host>:8002/files/` -- if directory listing is enabled, this shows every file in there, including one holding the password.", 337),
     ],
@@ -249,12 +252,12 @@ HINTS = {
         ("`curl http://<target-host>:8003/robots.txt` fetches the standard crawler-exclusion file -- it lists a path the owner didn't want indexed. Request that listed path directly to find the password.", 337),
     ],
     "natas-04": [
-        ("`man curl`.", 25),
+        ("On the Kali attacker workstation, run `curl --help`.", 25),
         ("The page checks the `Referer` header (which browsers normally set automatically to whatever page you clicked a link FROM) against a value it expects but a real visitor could never naturally arrive with. Helpfully, sending the WRONG referer first will show you, in the page's own error message, the exact value it actually wanted -- `curl` has a documented flag for setting a custom Referer header on your next request.", 262),
         ("Send any request first (`curl http://<target-host>:8004/`) and read the error text -- it states the exact Referer value it expects (in this deployment, it's computed from your own request: the same host, one port number higher than the port you're already using). Resend with that: `curl -e '<the-exact-value-shown>' http://<target-host>:8004/` to be granted access and see the password.", 337),
     ],
     "natas-05": [
-        ("`man curl`.", 30),
+        ("On the Kali attacker workstation, run `curl --help`.", 30),
         ("The page decides whether you're 'logged in' purely by reading a cookie value it already trusts completely, with no other verification. Viewing the response headers on your first request (curl's verbose mode shows every header, including any `Set-Cookie`) reveals what cookie it's setting; curl also has a flag for sending back a specific cookie value of your own choosing.", 300),
         ("`curl -v http://<target-host>:8005/` (the `-v` shows response headers, including `Set-Cookie`) reveals a cookie that looks boolean-ish (e.g. `loggedin=0`). Resend the request with that value flipped: `curl -b 'loggedin=1' http://<target-host>:8005/` to be treated as logged in and see the password.", 450),
     ],
@@ -310,6 +313,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 base_dir = os.path.abspath(os.path.join(script_dir, "..", "challenges"))
 os.makedirs(base_dir, exist_ok=True)
 
+assert "man " not in "\n".join(tiers[0][0] for tiers in HINTS.values() if tiers)
 for i, ch in enumerate(challenges_data):
     folder_path = os.path.join(base_dir, ch["id"])
     os.makedirs(folder_path, exist_ok=True)
@@ -345,15 +349,12 @@ shutdown_on_solve: {"true" if is_final_level else "false"}
 show_launcher: {"true" if ch["id"] == "natas-start-here" else "false"}
 """
 
-    hint = HINTS.get(ch["id"])
-    if hint:
-        tiers = hint if isinstance(hint, list) else [hint]
-        yaml_content += "hints:\n"
-        for hint_content, hint_cost in tiers:
-            yaml_content += f'  - content: "{hint_content}"\n    cost: {hint_cost}\n'
+    # Managed by the plugin manifest, never CTFd native hints.
 
     file_path = os.path.join(folder_path, "challenge.yml")
     with open(file_path, "w") as f:
         f.write(yaml_content)
 
 print(f"Successfully generated {len(challenges_data)} Natas challenges inside the '{base_dir}' folder!")
+with open(os.path.join(base_dir, "natas-hint-wallet.json"), "w", encoding="utf-8") as manifest:
+    json.dump({"schema_version": 1, "track": "natas", "entries": [{"name": c["name"], "tiers": [{"tier": n, "cost": cost, "content": text} for n, (text, cost) in enumerate(managed_tiers(c["points"], HINTS[c["id"]]), 1)]} for c in challenges_data if c["id"] in HINTS]}, manifest)

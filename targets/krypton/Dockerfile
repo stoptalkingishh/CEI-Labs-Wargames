@@ -39,9 +39,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY build/ /opt/build/
 RUN chmod +x /opt/build/*.sh /opt/build/*.py \
+    && mkdir -p /etc/cei-labs/banners \
+    && python3 /opt/build/generate_banners.py /etc/cei-labs/banners \
     && /opt/build/01-create-users.sh \
     && /opt/build/02-set-passwords.sh \
     && python3 /opt/build/03-setup-content.py
+RUN printf '%s\n' 'case "$-" in *i*) ;; *) return ;; esac' '[ -n "${CEI_KRYPTON_BANNER_SHOWN:-}" ] && return' 'case "${USER:-}" in krypton[1-6]) ;; *) return ;; esac' 'export CEI_KRYPTON_BANNER_SHOWN=1' 'cat -- "/etc/cei-labs/banners/${USER}"' > /etc/profile.d/cei-krypton-banner.sh \
+ && chmod 644 /etc/profile.d/cei-krypton-banner.sh
 
 # Level 2 and level 6 each get their own copy of the relevant compiled
 # binary, matching the per-level "the tool lives next to the puzzle it

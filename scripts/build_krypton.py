@@ -1,4 +1,7 @@
 import os
+import json
+
+from hint_economy import managed_tiers
 
 # Self-hosted image reference (see docs/self-hosted-wargames-blueprint.md
 # Phase 3's "Wire Krypton into CTFd" task). Not yet published by a CI
@@ -150,7 +153,7 @@ EXTRA_INFO = {
 # command, matching each description's own "Helpful reading" section.
 HINTS = {
     "krypton-00": [
-        ("`man base64`.", 10),
+        ("Run `base64 --help` on the Krypton target.", 10),
         ("Base64 turns arbitrary bytes into a fixed set of readable characters (letters, digits, `+`, `/`, `=` padding). Recognizing that character set -- including the trailing `=` padding -- is the tell that it's Base64, not an actual cipher, and Base64's own tooling has a documented decode flag.", 100),
         ("`echo 'S1JZUFRPTklTR1JFQVQ=' | base64 -d` decodes the string straight back to the plaintext password -- no key, shift, or other secret involved.", 150),
     ],
@@ -180,7 +183,7 @@ HINTS = {
         ("Search the ciphertext for repeated 3-4 character sequences and record the distance between each occurrence; find the greatest common factor across those distances (in this deployment, that points to a key length of 9). Once the key length is known, split into that many interleaved groups exactly as in the previous level, solve each group's Caesar shift via frequency analysis, and reassemble.", 300),
     ],
     "krypton-06": [
-        ("`man xxd`.", 25),
+        ("Run `xxd --help` on the Krypton target.", 25),
         ("The stream cipher combines each plaintext byte with a 'random' keystream byte -- but that keystream turns out to repeat every 30 characters. If you can get the encryption binary to encrypt a LONG run of identical known characters, the relationship between your known input and its output at each position directly reveals the repeating keystream itself, byte for byte.", 225),
         ("Run `/krypton/krypton6/encrypt` on an input of 30+ repeated identical characters (e.g. a long run of `A`s) -- since every plaintext byte is the same known value, the corresponding output bytes reveal the raw keystream directly (compare your known plaintext byte against each output byte, matching whatever operation the cipher uses). Once you have the 30-byte repeating keystream, apply the same relationship between it and `/krypton/krypton6/final` (cycling the keystream every 30 bytes) to recover the final plaintext password.", 337),
     ],
@@ -192,6 +195,7 @@ base_dir = os.path.abspath(os.path.join(script_dir, "..", "challenges"))
 
 os.makedirs(base_dir, exist_ok=True)
 
+assert "man " not in "\n".join(tiers[0][0] for tiers in HINTS.values() if tiers)
 for i, ch in enumerate(challenges_data):
     folder_path = os.path.join(base_dir, ch["id"])
     os.makedirs(folder_path, exist_ok=True)
@@ -231,15 +235,12 @@ shutdown_on_solve: {"true" if is_final_level else "false"}
 show_launcher: {"true" if ch["id"] == "krypton-start-here" else "false"}
 """
 
-    hint = HINTS.get(ch["id"])
-    if hint:
-        tiers = hint if isinstance(hint, list) else [hint]
-        yaml_content += "hints:\n"
-        for hint_content, hint_cost in tiers:
-            yaml_content += f'  - content: "{hint_content}"\n    cost: {hint_cost}\n'
+    # Managed by the plugin manifest, never CTFd native hints.
 
     file_path = os.path.join(folder_path, "challenge.yml")
     with open(file_path, "w") as f:
         f.write(yaml_content)
 
 print(f"Successfully generated {len(challenges_data)} Krypton challenges inside '{base_dir}'!")
+with open(os.path.join(base_dir, "krypton-hint-wallet.json"), "w", encoding="utf-8") as manifest:
+    json.dump({"schema_version": 1, "track": "krypton", "entries": [{"name": c["name"], "tiers": [{"tier": n, "cost": cost, "content": text} for n, (text, cost) in enumerate(managed_tiers(c["points"], HINTS[c["id"]]), 1)]} for c in challenges_data if c["id"] in HINTS]}, manifest)

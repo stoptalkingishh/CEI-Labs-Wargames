@@ -53,6 +53,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     openssh-client \
     netcat-openbsd \
     ncat \
+    nmap \
     socat \
     openssl \
     python3 \
@@ -70,6 +71,9 @@ RUN useradd -r -m -s /usr/sbin/nologin banditd
 COPY build/ /opt/build/
 COPY src/ /opt/build/src/
 RUN chmod +x /opt/build/*.sh /opt/build/*.py \
+    && mkdir -p /etc/cei-labs/banners \
+    && python3 /opt/build/generate_banners.py /etc/cei-labs/banners \
+    && chmod 644 /etc/cei-labs/banners/bandit* \
     && /opt/build/01-create-users.sh \
     && /opt/build/02-set-passwords.sh \
     && python3 /opt/build/03-setup-levels-00-12.py \
@@ -81,6 +85,15 @@ RUN chmod +x /opt/build/*.sh /opt/build/*.py \
     && python3 /opt/build/11-setup-level-32.py \
     && python3 /opt/build/12-setup-level-33.py \
     && rm -rf /opt/build
+RUN printf '%s\n' '# interactive CEI Labs Bandit banner only' \
+ 'case "$-" in *i*) ;; *) return ;; esac' \
+ '[ -n "${CEI_BANDIT_BANNER_SHOWN:-}" ] && return' \
+ 'case "${USER:-}" in bandit*) CEI_BANDIT_LEVEL=${USER#bandit} ;; *) return ;; esac' \
+ 'case "${CEI_BANDIT_LEVEL}" in ""|*[!0-9]*) return ;; esac' \
+ 'export CEI_BANDIT_BANNER_SHOWN=1' \
+ 'cat -- "/etc/cei-labs/banners/${USER}"' \
+ > /etc/profile.d/cei-bandit-banner.sh \
+ && chmod 644 /etc/profile.d/cei-bandit-banner.sh
 
 # Level 19: reads bandit-19's flag (bandit20's password) from this file --
 # readable only by bandit20, exactly the same file-permission convention

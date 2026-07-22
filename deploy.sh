@@ -168,6 +168,35 @@ PYEOF
     fi
 }
 
+# Wallet tiers are deliberately not native CTFd hints.  Upload their local,
+# generated manifests only after challenge sync has established the server IDs.
+# The token is passed as a header and neither it nor manifest content is logged.
+sync_hint_wallet_bundle() {
+    [ -n "${CTFD_URL:-}" ] || { echo "CTFD_URL is required for hint wallet sync" >&2; return 1; }
+    [ "${#HINT_WALLET_SYNC_SECRET:-0}" -ge 32 ] || { echo "HINT_WALLET_SYNC_SECRET must be at least 32 characters" >&2; return 1; }
+    [[ "${HINT_WALLET_REVISION:-}" =~ ^[1-9][0-9]*$ ]] || { echo "HINT_WALLET_REVISION must be a positive integer" >&2; return 1; }
+    local payload
+    payload=$(python3 - challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json <<'PYEOF'
+import hashlib, hmac, json, os, sys
+manifests=[]
+for path in sys.argv[1:]:
+    manifests.append(json.load(open(path, encoding="utf-8")))
+for item in manifests:
+    item["digest"] = hashlib.sha256(json.dumps({k:item[k] for k in ("schema_version","track","entries")}, sort_keys=True, separators=(",",":"), ensure_ascii=False).encode()).hexdigest()
+bundle={"schema_version":1,"revision":int(os.environ["HINT_WALLET_REVISION"]),"manifests":manifests}
+raw=json.dumps(bundle, sort_keys=True, separators=(",",":"), ensure_ascii=False).encode()
+print(hmac.new(os.environ["HINT_WALLET_SYNC_SECRET"].encode(), raw, hashlib.sha256).hexdigest())
+print(json.dumps(bundle, separators=(",",":"), ensure_ascii=False))
+PYEOF
+    ) || return 1
+    local signature="${payload%%$'\n'*}"; payload="${payload#*$'\n'}"
+    local curl_insecure=()
+    [ "${CTFD_INSECURE:-false}" = "true" ] && curl_insecure=(-k)
+    curl --fail --silent --show-error "${curl_insecure[@]}" -X POST "${CTFD_URL}/plugins/hint-wallet/machine/sync" \
+        -H "X-Hint-Wallet-Signature: ${signature}" -H "Content-Type: application/json" -d "$payload" >/dev/null
+    echo "Synced hint-wallet bundle"
+}
+
 # 4. Challenge Upload and Sync Loop
 echo "[4/4] Syncing Challenges to CTFd..."
 challenges_found=0
@@ -191,6 +220,8 @@ for dir in challenges/*/ ; do
 
     sync_instance_mapping "$dir_trimmed"
 done
+
+sync_hint_wallet_bundle
 
 echo "=========================================="
 if [ "$challenges_found" -eq 0 ]; then
