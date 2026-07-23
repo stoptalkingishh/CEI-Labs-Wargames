@@ -193,7 +193,7 @@ for item in manifests:
 bundle={"schema_version":1,"revision":int(os.environ["HINT_WALLET_REVISION"]),"manifests":manifests}
 raw=json.dumps(bundle, sort_keys=True, separators=(",",":"), ensure_ascii=False).encode()
 print(hmac.new(os.environ["HINT_WALLET_SYNC_SECRET"].encode(), raw, hashlib.sha256).hexdigest())
-print(json.dumps(bundle, separators=(",",":"), ensure_ascii=False))
+print(json.dumps(bundle, sort_keys=True, separators=(",",":"), ensure_ascii=False))
 PYEOF
     ) || return 1
     local signature="${payload%%$'\n'*}"; payload="${payload#*$'\n'}"
