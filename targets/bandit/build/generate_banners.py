@@ -52,6 +52,54 @@ ART = {
     33: [" +--+", " |  |->", " +--+"],                        # a door, and out you go
 }
 
+# --- Progressive color, layered on top of the art above -------------------
+#
+# Color is a *supplement*, never load-bearing: it only wraps the ASCII art
+# lines, using the most widely supported basic SGR 8-color codes
+# (ESC[3Xm ... ESC[0m). Every plain-text line (title/account/reconnect/
+# POLICY) stays completely uncolored, and the art itself is byte-for-byte
+# identical whether or not the terminal honors ANSI escapes -- strip the
+# escapes and every level is still fully readable and still distinct from
+# every other level, exactly as before this file gained color support.
+#
+# The palette is a warm/earthy 6-stop ramp (sand -> gold -> rust -> ember ->
+# dusk -> maroon) that shifts gradually as the participant goes deeper into
+# the track, giving Bandit its own identifiable, desert/canyon-toned
+# progression distinct from the other tracks' palettes.
+ESC = "\x1b["
+RESET = ESC + "0m"
+_PALETTE_TIERS = (
+    (33, False),  # sand    - level 0 area
+    (33, True),   # gold
+    (31, False),  # rust
+    (31, True),   # ember
+    (35, False),  # dusk
+    (35, True),   # maroon  - level 33 area
+)
+
+def palette_for(level):
+    """Return the (SGR color, bold) pair for a level's tier on the ramp."""
+    idx = min(level * len(_PALETTE_TIERS) // 34, len(_PALETTE_TIERS) - 1)
+    return _PALETTE_TIERS[idx]
+
+def colorize(text, color, bold):
+    if not text:
+        return text
+    prefix = ESC + ("1;%dm" % color if bold else "%dm" % color)
+    return prefix + text + RESET
+
+_ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
+_ANSI_OPEN_RE = re.compile(r"\x1b\[(?:1;)?3[0-7]m")
+
+def _visible(line):
+    """Line content a viewer actually sees once ANSI codes are stripped."""
+    return _ANSI_RE.sub("", line)
+
+def _ansi_balanced(line):
+    """Every color-open code on this line is matched by a reset, so no
+    color can bleed past the line into whatever the terminal prints next."""
+    return len(_ANSI_OPEN_RE.findall(line)) == line.count(RESET)
+
 def render(level):
     if set(TITLES) != set(range(34)):
         raise ValueError("Bandit banner titles must cover levels 0 through 33")
@@ -59,12 +107,17 @@ def render(level):
         raise ValueError("Bandit banner art must cover levels 0 through 33")
     title = TITLES[level]
     art = ART[level]
-    lines = list(art[:-1]) + [art[-1] + "  CEI Labs Bandit %d: %s" % (level, title)]
+    color, bold = palette_for(level)
+    colored_art = [colorize(line, color, bold) for line in art[:-1]]
+    colored_last = colorize(art[-1], color, bold) + "  CEI Labs Bandit %d: %s" % (level, title)
+    lines = colored_art + [colored_last]
     lines.append("Logged in as bandit%d" % level)
     lines.append("Final level: submit your result; there is no next account." if level == 33 else "Submit this level, then use CTFd launch panel for bandit%d." % (level + 1))
     lines.extend(POLICY)
-    if any(any(ord(ch) > 127 for ch in line) or len(line) > 80 for line in lines):
+    if any(any(ord(ch) > 127 for ch in _visible(line)) or len(_visible(line)) > 80 for line in lines):
         raise ValueError("unsafe banner rendering")
+    if any(not _ansi_balanced(line) for line in lines):
+        raise ValueError("unsafe banner rendering: unbalanced ANSI codes")
     return "\n".join(lines) + "\n"
 
 def generate(root):
