@@ -18,6 +18,7 @@ class BannerTests(unittest.TestCase):
                 text = (Path(root) / ("bandit%d" % level)).read_text(encoding="ascii")
                 self.assertIn("Misuse of this system is prohibited", text)
                 self.assertIn("AI or external tools", text)
+                self.assertIn("assigned challenge environment", text)
                 self.assertLessEqual(max(map(len, text.splitlines())), 80)
 
 if __name__ == "__main__": unittest.main()

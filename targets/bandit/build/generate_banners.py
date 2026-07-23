@@ -8,6 +8,7 @@ TITLES = {
 POLICY = (
     "Authorized CEI Labs training only. Misuse of this system is prohibited.",
     "Do not use AI or external tools/services to cheat or obtain answers.",
+    "Stay within your assigned challenge environment only.",
 )
 
 def render(level):

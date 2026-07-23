@@ -4,7 +4,7 @@ T={0:"View Source",1:"Right-Click Block",2:"Directory Traversal (Files)",3:"Web 
 def main(root):
  root=Path(root)
  for n,title in T.items():
-  text="CEI Labs Natas %d: %s\nAccount: natas%d\nAuthorized CEI Labs training only. Misuse of this system is prohibited.\nDo not use AI or external tools/services to cheat or obtain answers.\n"%(n,title,n)
+  text="CEI Labs Natas %d: %s\nAccount: natas%d\nAuthorized CEI Labs training only. Misuse of this system is prohibited.\nDo not use AI or external tools/services to cheat or obtain answers.\nStay within your assigned challenge environment only.\n"%(n,title,n)
   (root/("natas%d.html"%n)).write_text('<pre class="cei-login-banner">'+escape(text)+'</pre>',"ascii")
 if __name__=="__main__":
  import sys; main(sys.argv[1])
