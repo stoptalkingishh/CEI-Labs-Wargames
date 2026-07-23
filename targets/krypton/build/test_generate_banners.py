@@ -9,7 +9,7 @@ class TestKryptonBanners(unittest.TestCase):
    b.generate(root); files=list(Path(root).iterdir()); self.assertEqual(len(files),6)
    for level in expected:
     text=(Path(root)/("krypton%d"%level)).read_text("ascii")
-    self.assertIn("Misuse of this system is prohibited",text); self.assertIn("AI or external tools",text)
+    self.assertIn("Misuse of this system is prohibited",text); self.assertIn("AI or external tools",text); self.assertIn("assigned challenge environment",text)
     self.assertLessEqual(max(map(len,text.splitlines())),80)
    self.assertIn("no next account",(Path(root)/"krypton6").read_text("ascii"))
 if __name__=="__main__": unittest.main()

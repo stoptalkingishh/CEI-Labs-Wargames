@@ -1,7 +1,7 @@
 from pathlib import Path
 
 TITLES = {1:"ROT13 Substitution Cipher",2:"Caesar Cipher (Unknown Shift)",3:"Frequency Analysis",4:"Vigenere Cipher (Known Key Length)",5:"Vigenere Cipher (Kasiski Test)",6:"Stream Cipher / LFSR"}
-POLICY=("Authorized CEI Labs training only. Misuse of this system is prohibited.","Do not use AI or external tools/services to cheat or obtain answers.")
+POLICY=("Authorized CEI Labs training only. Misuse of this system is prohibited.","Do not use AI or external tools/services to cheat or obtain answers.","Stay within your assigned challenge environment only.")
 def render(level):
     if set(TITLES)!=set(range(1,7)): raise ValueError("Krypton coverage")
     lines=["  .-.-."," ( lock ) CEI Labs Krypton %d: %s"%(level,TITLES[level]),"  `-'-'","Logged in as krypton%d"%level, "Final level: submit your result; there is no next account." if level==6 else "Submit this level, then use CTFd launch panel for krypton%d."%(level+1),*POLICY]

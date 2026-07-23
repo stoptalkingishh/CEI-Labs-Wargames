@@ -8,7 +8,7 @@ class NatasBannerContract(unittest.TestCase):
   with tempfile.TemporaryDirectory() as root:
    b.main(root); files=list(Path(root).glob("*.html")); self.assertEqual(len(files),15)
    for f in files:
-    text=f.read_text("ascii"); self.assertIn('<pre class="cei-login-banner">',text); self.assertNotIn("<script",text.lower()); self.assertIsNone(re.search(r"\son\w+\s*=",text,re.I)); self.assertIn("Misuse of this system is prohibited",text); self.assertIn("AI or external tools",text)
+    text=f.read_text("ascii"); self.assertIn('<pre class="cei-login-banner">',text); self.assertNotIn("<script",text.lower()); self.assertIsNone(re.search(r"\son\w+\s*=",text,re.I)); self.assertIn("Misuse of this system is prohibited",text); self.assertIn("AI or external tools",text); self.assertIn("assigned challenge environment",text)
  def test_server_wiring_contract(self):
   php=(ROOT/"build"/"cei-natas-banner.php").read_text(); vhost=(ROOT/"build"/"03-generate-vhosts.py").read_text(); docker=(ROOT/"Dockerfile").read_text()
   for token in ("$port < 8000 || $port > 8014","/etc/cei-labs/natas-banners","Content-Disposition","text/html","preg_match","static $done") : self.assertIn(token,php)
