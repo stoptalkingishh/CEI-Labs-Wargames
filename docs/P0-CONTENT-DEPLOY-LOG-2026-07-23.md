@@ -127,3 +127,80 @@ irreversible part is step 4, the actual CTFd sync loop.)
 - `deployment-manifest.json` (regenerated, not git-tracked)
 - This log file
 - No changes to any tracked source file in the repo; no commits made.
+
+## 2026-07-23 — Precondition check + staging for the final push (still NOT run)
+
+### Wallet endpoint confirmed NOT live yet (expected)
+
+- `sudo docker service ls` shows `cei-labs_orchestrator` running image `f491cdd86cee`.
+- `sudo docker image inspect f491cdd86cee --format '{{.Created}}'` → `2026-07-22T16:58:34Z`.
+- `cei-labs-engine` PR #13 ("Implement hint-wallet Engine sync/deduct/balance endpoints (P0)") merged as
+  `f4749e83` at `2026-07-23T07:29:46-04:00` (= `2026-07-23T11:29:46Z`) — **after** the running image was
+  built. The orchestrator container currently in the Swarm is confirmed to predate the merge; it does not
+  contain the `/wallet/*` code.
+- Live probe from inside the `cei-labs_ctfd` container (same overlay network,
+  `cei-labs_orchestrator-internal`, orchestrator at `10.0.3.3:8080`):
+  - `GET /healthz` → `200` (orchestrator itself is healthy/reachable).
+  - `GET /wallet/balance/test` → `401 {"error":"unauthorized"}`.
+  - `GET /wallet/nonexistent-xyz-route` and `GET /totally-bogus-route-abc123` → **also** `401
+    {"error":"unauthorized"}`, identical body. Since a genuinely unauthenticated-but-real route and a
+    made-up route return byte-identical responses, this is a blanket "auth required" catch-all on the old
+    build, not route-specific `/wallet/*` logic — consistent with the pre-merge image and with the
+    build-timestamp evidence above. No redeploy has happened; this is expected and not something to fix
+    here.
+
+### Content still current
+
+Re-ran `scripts/build_bandit.py`, `build_krypton.py`, `build_natas.py`, `validate_game_stages.py`,
+`validate_generated.py` on `fix/p0-content-deploy` (clean working tree, HEAD `cdab0c9`). Same result as the
+original dry-run: 35/8/16 challenges generated, validation passed (59 challenges, 58 mappings, 3 launchers),
+`git status` stayed clean throughout (all generated output is gitignored). No drift since the original
+dry-run log above.
+
+### Secrets staged (values not printed/logged/committed)
+
+- `~/cei-labs-credentials.md` — has `CTFD_URL` (from the CTFd section header) and CTFd `API token`.
+- `CTFD_SYNC_SECRET` — `cat /opt/cei-labs/cei-labs-engine/docker/secrets/plugin_shared_secret.txt` (32
+  bytes, file present).
+- `HINT_WALLET_SYNC_SECRET` — **now provisioned** (was missing at the time of the original dry-run above):
+  `cat /opt/cei-labs/cei-labs-engine/docker/secrets/hint_wallet_sync_secret.txt` (65 bytes, satisfies
+  `deploy.sh`'s `>= 32 chars` check).
+- `HINT_WALLET_REVISION` — no prior catalog exists on the Engine side for this box (`wallet_catalog` table
+  is fresh/unpopulated pending the redeploy — `try_accept_catalog()` in
+  `cei-labs-engine/docker/orchestrator/app/store.py` accepts any positive-integer revision when no row
+  exists yet), so **`1`** is the correct first value. Do not reuse `1` on any later resync — the Engine
+  rejects a revision that isn't strictly higher than the last accepted one.
+
+### Ready-to-execute command sequence
+
+Run only after the Swarm stack has been redeployed with `cei-labs-engine` `main` (>= `f4749e83`) **and**
+`GET /wallet/balance/<anything>` from inside the overlay network stops returning the blanket-401 signature
+above (e.g. starts returning a distinct 404/200 for a real vs. bogus wallet id — confirms the new code is
+actually running before spending the one-shot `HINT_WALLET_REVISION=1`):
+
+```bash
+cd /opt/cei-labs/CEI-Labs-Wargames
+git status   # must be clean, still on fix/p0-content-deploy (or main, whichever is deploying)
+
+export CTFD_URL=$(awk -F'— ' '/## CTFd/{print $2}' ~/cei-labs-credentials.md | tr -d '[:space:]')
+export CTFD_TOKEN=$(awk '/API token:/{print $NF}' ~/cei-labs-credentials.md | tr -d '`')
+export CTFD_SYNC_SECRET=$(cat /opt/cei-labs/cei-labs-engine/docker/secrets/plugin_shared_secret.txt)
+export HINT_WALLET_SYNC_SECRET=$(cat /opt/cei-labs/cei-labs-engine/docker/secrets/hint_wallet_sync_secret.txt)
+export HINT_WALLET_REVISION=1
+
+./deploy.sh
+```
+
+(Sanity-check the `CTFD_URL`/`CTFD_TOKEN` extraction once against the actual file layout before relying on
+the `awk` one-liners above — they're a best-effort based on the section format seen during this session;
+if the file format differs, read the two values by hand instead of piping through `awk`.)
+
+Expected outcome per the original diff (unchanged by anything done in this session): 35/59 challenge
+descriptions update, 0 additions/removals/point/category/state changes, plus — new since the original
+dry-run — the hint-wallet bundle now actually syncs instead of no-op'ing (all three tracks' hint-wallet
+manifests uploaded, `Synced hint-wallet bundle` printed), and native CTFd hints on the 56 affected challenges
+are still deleted by `ctf challenge sync` as documented above, with wallet-based hints taking over as their
+replacement per the deliberate migration.
+
+This session made no writes to live CTFd and did not run `deploy.sh`'s sync step. `git status` on
+`CEI-Labs-Wargames` remained clean throughout.
