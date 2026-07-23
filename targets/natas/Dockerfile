@@ -78,7 +78,21 @@ RUN chmod +x /opt/build/*.sh /opt/build/*.py \
     && chown -R root:root /etc/cei-labs/natas-banners \
     && chmod 755 /etc/cei-labs/natas-banners \
     && chmod 444 /etc/cei-labs/natas-banners/*.html \
-    && install -o root -g root -m 644 /opt/build/cei-natas-banner.php /opt/cei-natas-banner.php
+    && mkdir -p /etc/cei-labs/natas-themes \
+    && python3 /opt/build/generate_themes.py /etc/cei-labs/natas-themes \
+    && chown -R root:root /etc/cei-labs/natas-themes \
+    && chmod 755 /etc/cei-labs/natas-themes \
+    && chmod 444 /etc/cei-labs/natas-themes/*.css \
+    && install -o root -g root -m 644 /opt/build/cei-natas-banner.php /opt/cei-natas-banner.php \
+    # Per-level "solved" marker files (see cei-natas-banner.php's
+    # cei_natas_mark_previous_level_solved()): world-writable + sticky,
+    # same pattern as /tmp -- each level runs as a different AssignUserID
+    # identity with no shared group, and these are non-secret empty
+    # boolean flags, not credentials, so 1777 is the pragmatic minimum
+    # rather than wiring a new shared group across every natasN user.
+    && mkdir -p /etc/cei-labs/natas-solve-state \
+    && chown root:root /etc/cei-labs/natas-solve-state \
+    && chmod 1777 /etc/cei-labs/natas-solve-state
 
 # Users, per-level webpass files, MariaDB schema/users, Apache vhosts,
 # and PHP content -- see each script's own header comment for what it
