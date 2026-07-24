@@ -199,9 +199,16 @@ if flag2:
 
     # Random, non-zero, non-human-readable shift byte -- deliberately NOT
     # a plain ASCII digit, so `cat keyfile.dat` doesn't just hand the
-    # shift over.
+    # shift over. 256 isn't evenly divisible by 26, so a single raw byte
+    # would land on shift == 0 (byte % 26 == 0) about 1 in 26 draws,
+    # silently turning the "encrypted" file into plaintext -- reject and
+    # re-draw until we get a byte whose value mod 26 is non-zero, matching
+    # the shift computed in caesar_encrypt.c.
     with open("/dev/urandom", "rb") as f:
-        shift_byte = f.read(1)
+        while True:
+            shift_byte = f.read(1)
+            if shift_byte[0] % 26 != 0:
+                break
     with open("/krypton/krypton2/keyfile.dat", "wb") as f:
         f.write(shift_byte)
 
