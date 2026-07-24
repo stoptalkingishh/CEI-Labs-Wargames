@@ -284,6 +284,36 @@ PYEOF
     echo "Synced hint-wallet bundle"
 }
 
+# Tells cei-labs-engine's wargame-stages plugin to (re)hide every challenge
+# belonging to a game that hasn't started yet. Challenges land from the sync
+# loop above at whatever state ctfcli/CTFd gave them (typically visible) --
+# without this call, newly-deployed or re-synced challenges sit visible
+# under CTFd's Challenges tab until an admin remembers to click "Sync" on
+# the plugin's own admin page. Making this automatic on every deploy closes
+# that gap. Uses the same CTFD_SYNC_SECRET / X-Sync-Auth pattern as
+# sync_instance_mapping above. Fatal on failure -- a deploy that silently
+# leaves challenges visible ahead of schedule is worse than one that stops
+# and says so.
+sync_wargame_stages() {
+    if [ -z "${CTFD_SYNC_SECRET:-}" ]; then
+        return 0
+    fi
+    local sync_auth_header_file http_code
+    sync_auth_header_file=$(write_secret_header "X-Sync-Auth" "${CTFD_SYNC_SECRET}")
+    http_code=$(curl "${curl_opts[@]}" -o /dev/null -w '%{http_code}' \
+        -X POST "${CTFD_URL}/plugins/wargame-stages/machine/reconcile" \
+        --header @"$sync_auth_header_file" \
+        -H "Content-Type: application/json")
+    rm -f -- "$sync_auth_header_file"
+
+    if [ "$http_code" = "200" ]; then
+        echo "Synced wargame-stages hidden-by-default state"
+    else
+        echo "Error: wargame-stages reconcile returned HTTP ${http_code}" >&2
+        return 1
+    fi
+}
+
 # 4. Challenge Upload and Sync Loop
 echo "[4/4] Syncing Challenges to CTFd..."
 challenges_found=0
@@ -309,6 +339,7 @@ for dir in challenges/*/ ; do
 done
 
 sync_hint_wallet_bundle
+sync_wargame_stages
 
 echo "=========================================="
 if [ "$challenges_found" -eq 0 ]; then
