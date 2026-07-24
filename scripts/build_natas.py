@@ -232,79 +232,79 @@ EXTRA_INFO = {
 # use single-quote syntax instead).
 HINTS = {
     "natas-00": [
-        ("On the Kali attacker workstation, run `curl --help`.", 15),
-        ("Web pages sometimes leave notes for developers directly in the HTML that never show up in the rendered page -- these are HTML comments, marked with `<!--` and `-->`, invisible in a normal browser view but fully readable in the raw source. Both a browser's view-source and `curl` show you the raw HTML.", 100),
-        ("`curl http://<target-host>:8000/` (or Ctrl+U in a browser) prints the raw HTML -- look for an HTML comment (`<!-- ... -->`) in it. The password is written directly inside one.", 150),
+        "On the Kali attacker workstation, run `curl --help`.",
+        "Web pages sometimes leave notes for developers directly in the HTML that never show up in the rendered page -- these are HTML comments, marked with `<!--` and `-->`, invisible in a normal browser view but fully readable in the raw source. Both a browser's view-source and `curl` show you the raw HTML.",
+        "`curl http://<target-host>:8000/` (or Ctrl+U in a browser) prints the raw HTML -- look for an HTML comment (`<!-- ... -->`) in it. The password is written directly inside one.",
     ],
     "natas-01": [
-        ("On the Kali attacker workstation, run `curl --help`.", 15),
-        ("Right-click/context-menu blocking is implemented in JavaScript that runs inside YOUR browser -- it can only interfere with browser UI, never with how the underlying page content is actually retrieved. A browser's view-source mode, or a command-line HTTP client, both bypass browser-level UI restrictions entirely.", 175),
-        ("Bypass the block entirely by not using the browser's right-click menu at all: view-source (`view-source:http://<target-host>:8001/` in the address bar, or Ctrl+U) or a plain `curl http://<target-host>:8001/` both retrieve the exact same HTML the JavaScript is trying to protect -- the password is in an HTML comment, same pattern as the level before.", 187),
+        "On the Kali attacker workstation, run `curl --help`.",
+        "Right-click/context-menu blocking is implemented in JavaScript that runs inside YOUR browser -- it can only interfere with browser UI, never with how the underlying page content is actually retrieved. A browser's view-source mode, or a command-line HTTP client, both bypass browser-level UI restrictions entirely.",
+        "Bypass the block entirely by not using the browser's right-click menu at all: view-source (`view-source:http://<target-host>:8001/` in the address bar, or Ctrl+U) or a plain `curl http://<target-host>:8001/` both retrieve the exact same HTML the JavaScript is trying to protect -- the password is in an HTML comment, same pattern as the level before.",
     ],
     "natas-02": [
-        ("On the Kali attacker workstation, run `curl --help`.", 20),
-        ("The page references an image file living in some subdirectory -- and many simple web servers, if not explicitly configured otherwise, will list the CONTENTS of a directory when no specific file is requested from it. Requesting the directory path itself, rather than a file inside it, is worth trying.", 225),
-        ("View the page source to find the image's path (something like `files/pixel.png`), then request the directory itself rather than a specific file inside it, e.g. `curl http://<target-host>:8002/files/` -- if directory listing is enabled, this shows every file in there, including one holding the password.", 337),
+        "On the Kali attacker workstation, run `curl --help`.",
+        "The page references an image file living in some subdirectory -- and many simple web servers, if not explicitly configured otherwise, will list the CONTENTS of a directory when no specific file is requested from it. Requesting the directory path itself, rather than a file inside it, is worth trying.",
+        "View the page source to find the image's path (something like `files/pixel.png`), then request the directory itself rather than a specific file inside it, e.g. `curl http://<target-host>:8002/files/` -- if directory listing is enabled, this shows every file in there, including one holding the password.",
     ],
     "natas-03": [
-        ("[Robots exclusion standard on Wikipedia](https://en.wikipedia.org/wiki/Robots.txt).", 25),
-        ("Search engines respect a specific, standard filename at the root of a website to know which paths NOT to crawl or index -- site owners sometimes misuse this file to 'hide' sensitive paths, not realizing that listing a path there is itself a public announcement of where it is.", 262),
-        ("`curl http://<target-host>:8003/robots.txt` fetches the standard crawler-exclusion file -- it lists a path the owner didn't want indexed. Request that listed path directly to find the password.", 337),
+        "[Robots exclusion standard on Wikipedia](https://en.wikipedia.org/wiki/Robots.txt).",
+        "Search engines respect a specific, standard filename at the root of a website to know which paths NOT to crawl or index -- site owners sometimes misuse this file to 'hide' sensitive paths, not realizing that listing a path there is itself a public announcement of where it is.",
+        "`curl http://<target-host>:8003/robots.txt` fetches the standard crawler-exclusion file -- it lists a path the owner didn't want indexed. Request that listed path directly to find the password.",
     ],
     "natas-04": [
-        ("On the Kali attacker workstation, run `curl --help`.", 25),
-        ("The page checks the `Referer` header (which browsers normally set automatically to whatever page you clicked a link FROM) against a value it expects but a real visitor could never naturally arrive with. Helpfully, sending the WRONG referer first will show you, in the page's own error message, the exact value it actually wanted -- `curl` has a documented flag for setting a custom Referer header on your next request.", 262),
-        ("Send any request first (`curl http://<target-host>:8004/`) and read the error text -- it states the exact Referer value it expects (in this deployment, it's computed from your own request: the same host, one port number higher than the port you're already using). Resend with that: `curl -e '<the-exact-value-shown>' http://<target-host>:8004/` to be granted access and see the password.", 337),
+        "On the Kali attacker workstation, run `curl --help`.",
+        "The page checks the `Referer` header (which browsers normally set automatically to whatever page you clicked a link FROM) against a value it expects but a real visitor could never naturally arrive with. Helpfully, sending the WRONG referer first will show you, in the page's own error message, the exact value it actually wanted -- `curl` has a documented flag for setting a custom Referer header on your next request.",
+        "Send any request first (`curl http://<target-host>:8004/`) and read the error text -- it states the exact Referer value it expects (in this deployment, it's computed from your own request: the same host, one port number higher than the port you're already using). Resend with that: `curl -e '<the-exact-value-shown>' http://<target-host>:8004/` to be granted access and see the password.",
     ],
     "natas-05": [
-        ("On the Kali attacker workstation, run `curl --help`.", 30),
-        ("The page decides whether you're 'logged in' purely by reading a cookie value it already trusts completely, with no other verification. Viewing the response headers on your first request (curl's verbose mode shows every header, including any `Set-Cookie`) reveals what cookie it's setting; curl also has a flag for sending back a specific cookie value of your own choosing.", 300),
-        ("`curl -v http://<target-host>:8005/` (the `-v` shows response headers, including `Set-Cookie`) reveals a cookie that looks boolean-ish (e.g. `loggedin=0`). Resend the request with that value flipped: `curl -b 'loggedin=1' http://<target-host>:8005/` to be treated as logged in and see the password.", 450),
+        "On the Kali attacker workstation, run `curl --help`.",
+        "The page decides whether you're 'logged in' purely by reading a cookie value it already trusts completely, with no other verification. Viewing the response headers on your first request (curl's verbose mode shows every header, including any `Set-Cookie`) reveals what cookie it's setting; curl also has a flag for sending back a specific cookie value of your own choosing.",
+        "`curl -v http://<target-host>:8005/` (the `-v` shows response headers, including `Set-Cookie`) reveals a cookie that looks boolean-ish (e.g. `loggedin=0`). Resend the request with that value flipped: `curl -b 'loggedin=1' http://<target-host>:8005/` to be treated as logged in and see the password.",
     ],
     "natas-06": [
-        ("Click 'View sourcecode'.", 30),
-        ("The form on the page checks a 'secret' value against something the PHP code includes from another file. If you can read that included file's actual source rather than guessing its content, the page's own 'View sourcecode' link tells you exactly where to look.", 300),
-        ("The 'View sourcecode' link shows the PHP, which `include`s a secret from a specific relative file path (e.g. `includes/secret.inc`). Request that exact path directly as a URL (`http://<target-host>:8006/includes/secret.inc`) to read the real secret value in plain text, then submit it in the form to reveal the password.", 450),
+        "Click 'View sourcecode'.",
+        "The form on the page checks a 'secret' value against something the PHP code includes from another file. If you can read that included file's actual source rather than guessing its content, the page's own 'View sourcecode' link tells you exactly where to look.",
+        "The 'View sourcecode' link shows the PHP, which `include`s a secret from a specific relative file path (e.g. `includes/secret.inc`). Request that exact path directly as a URL (`http://<target-host>:8006/includes/secret.inc`) to read the real secret value in plain text, then submit it in the form to reveal the password.",
     ],
     "natas-07": [
-        ("[File inclusion vulnerability on Wikipedia](https://en.wikipedia.org/wiki/File_inclusion_vulnerability).", 27),
-        ("View the page source -- the site uses a URL parameter to choose which page to show ('Home' vs 'About'). If that parameter is used directly as a filename with no validation, you control which file on the server gets read, including files well outside the page's intended folder.", 275),
-        ("The page uses a query parameter (commonly named `page`) to decide which file to include, e.g. `?page=home.php`. Because the application does no validation, replacing that value with an ABSOLUTE path to any file readable by the web server works directly -- try `?page=/etc/natas_webpass/natas8` (no `../` traversal needed at all, since it's already an absolute path, not a relative one).", 412),
+        "[File inclusion vulnerability on Wikipedia](https://en.wikipedia.org/wiki/File_inclusion_vulnerability).",
+        "View the page source -- the site uses a URL parameter to choose which page to show ('Home' vs 'About'). If that parameter is used directly as a filename with no validation, you control which file on the server gets read, including files well outside the page's intended folder.",
+        "The page uses a query parameter (commonly named `page`) to decide which file to include, e.g. `?page=home.php`. Because the application does no validation, replacing that value with an ABSOLUTE path to any file readable by the web server works directly -- try `?page=/etc/natas_webpass/natas8` (no `../` traversal needed at all, since it's already an absolute path, not a relative one).",
     ],
     "natas-08": [
-        ("Click 'View sourcecode'.", 35),
-        ("The page shows an ENCODED secret and checks your input by re-running it through the same encoding function. If you can read the exact sequence of encoding steps in the source, you can apply each step BACKWARDS, in REVERSE order, against the encoded value to recover the original secret.", 350),
-        ("The source shows the encoding as base64-encode, then reverse the string, then hex-encode (`bin2hex(strrev(base64_encode($secret)))`). To undo it, apply the inverse steps in reverse order: hex-decode the shown value first, then reverse that resulting string, then base64-decode what's left -- e.g. in a shell, `echo <encoded> | xxd -r -p | rev | base64 -d`. Submit the result as the secret.", 525),
+        "Click 'View sourcecode'.",
+        "The page shows an ENCODED secret and checks your input by re-running it through the same encoding function. If you can read the exact sequence of encoding steps in the source, you can apply each step BACKWARDS, in REVERSE order, against the encoded value to recover the original secret.",
+        "The source shows the encoding as base64-encode, then reverse the string, then hex-encode (`bin2hex(strrev(base64_encode($secret)))`). To undo it, apply the inverse steps in reverse order: hex-decode the shown value first, then reverse that resulting string, then base64-decode what's left -- e.g. in a shell, `echo <encoded> | xxd -r -p | rev | base64 -d`. Submit the result as the secret.",
     ],
     "natas-09": [
-        ("Click 'View sourcecode'.", 40),
-        ("The source shows your search input is passed straight into a shell command with no sanitization at all -- meaning any shell metacharacter you include (like a semicolon, which separates commands) gets interpreted by the underlying shell, not just treated as search text.", 400),
-        ("Since the input reaches a real shell unsanitized, a needle like `;cat /etc/natas_webpass/natas10` closes off the intended `grep` command with `;` and runs your own `cat` command right after it, in the query string: `?needle=;cat+/etc/natas_webpass/natas10` (URL-encode the semicolon as `%3B` if your client won't send it raw).", 585),
+        "Click 'View sourcecode'.",
+        "The source shows your search input is passed straight into a shell command with no sanitization at all -- meaning any shell metacharacter you include (like a semicolon, which separates commands) gets interpreted by the underlying shell, not just treated as search text.",
+        "Since the input reaches a real shell unsanitized, a needle like `;cat /etc/natas_webpass/natas10` closes off the intended `grep` command with `;` and runs your own `cat` command right after it, in the query string: `?needle=;cat+/etc/natas_webpass/natas10` (URL-encode the semicolon as `%3B` if your client won't send it raw).",
     ],
     "natas-10": [
-        ("Click 'View sourcecode'.", 40),
-        ("The same underlying `grep` command exists as the previous level, but the app now blocks the obvious shell metacharacters. `grep` itself, though, accepts a SECOND filename as a plain command-line argument, searched in addition to the intended file -- worth checking whether that's usable without needing any blocked character at all.", 400),
-        ("A needle of `. /etc/natas_webpass/natas11 #` needs no blocked character at all: the lone `.` is a regex matching every line (so the intended dictionary file's content doesn't matter), the second word is treated by `grep` as an ADDITIONAL file to search (not a shell command), and the trailing ` #` is a shell comment that drops the rest of the real command line (including the app's own hardcoded filename) once it reaches the shell.", 585),
+        "Click 'View sourcecode'.",
+        "The same underlying `grep` command exists as the previous level, but the app now blocks the obvious shell metacharacters. `grep` itself, though, accepts a SECOND filename as a plain command-line argument, searched in addition to the intended file -- worth checking whether that's usable without needing any blocked character at all.",
+        "A needle of `. /etc/natas_webpass/natas11 #` needs no blocked character at all: the lone `.` is a regex matching every line (so the intended dictionary file's content doesn't matter), the second word is treated by `grep` as an ADDITIONAL file to search (not a shell command), and the trailing ` #` is a shell comment that drops the rest of the real command line (including the app's own hardcoded filename) once it reaches the shell.",
     ],
     "natas-11": [
-        ("[XOR cipher on Wikipedia](https://en.wikipedia.org/wiki/XOR_cipher).", 45),
-        ("The cookie holds your preferences, XOR-encrypted with a short key that REPEATS if the data is longer than the key. You don't know the key directly, but you DO know what the default preferences look like when logged out (a fixed JSON structure) -- and XOR has a useful property: if you already know both the plaintext and the resulting ciphertext, XOR-ing them together recovers the key that was used, which you can then reuse to encrypt something new.", 450),
-        ("Base64-decode the default (logged-out) cookie to get the raw XOR-encrypted bytes, then XOR those bytes against the KNOWN default plaintext JSON (the fixed preferences structure the source reveals) to recover the repeating XOR key. Build a new plaintext JSON with `showpassword` changed to `yes`, XOR-encrypt it with that same recovered key, base64-encode the result, and set it as your cookie -- the page will now show you the password.", 675),
+        "[XOR cipher on Wikipedia](https://en.wikipedia.org/wiki/XOR_cipher).",
+        "The cookie holds your preferences, XOR-encrypted with a short key that REPEATS if the data is longer than the key. You don't know the key directly, but you DO know what the default preferences look like when logged out (a fixed JSON structure) -- and XOR has a useful property: if you already know both the plaintext and the resulting ciphertext, XOR-ing them together recovers the key that was used, which you can then reuse to encrypt something new.",
+        "Base64-decode the default (logged-out) cookie to get the raw XOR-encrypted bytes, then XOR those bytes against the KNOWN default plaintext JSON (the fixed preferences structure the source reveals) to recover the repeating XOR key. Build a new plaintext JSON with `showpassword` changed to `yes`, XOR-encrypt it with that same recovered key, base64-encode the result, and set it as your cookie -- the page will now show you the password.",
     ],
     "natas-12": [
-        ("Click 'View sourcecode'.", 45),
-        ("The upload form accepts any file with no real validation of its content or type -- meaning you're not limited to uploading an actual image. A file containing server-side code, once uploaded, sits in a location the web server may execute if you simply request it by its URL afterward.", 450),
-        ("Create a tiny PHP file containing `<?php system($_GET['c']); ?>` (a minimal 'web shell' that runs whatever shell command you pass it), upload it through the form, then note the path it was saved to. Request that uploaded file's URL with a `c` parameter, e.g. `?c=cat+/etc/natas_webpass/natas13`, and the server executes your command and returns the password.", 675),
+        "Click 'View sourcecode'.",
+        "The upload form accepts any file with no real validation of its content or type -- meaning you're not limited to uploading an actual image. A file containing server-side code, once uploaded, sits in a location the web server may execute if you simply request it by its URL afterward.",
+        "Create a tiny PHP file containing `<?php system($_GET['c']); ?>` (a minimal 'web shell' that runs whatever shell command you pass it), upload it through the form, then note the path it was saved to. Request that uploaded file's URL with a `c` parameter, e.g. `?c=cat+/etc/natas_webpass/natas13`, and the server executes your command and returns the password.",
     ],
     "natas-13": [
-        ("Click 'View sourcecode'.", 50),
-        ("The server now inspects the file's actual BYTES (not the filename/extension) to decide if it's really an image, using a function that only looks at the first few bytes for a known 'magic number' signature. Nothing stops a file's very first bytes from being a real image signature while the rest of the file remains valid server-side code.", 500),
-        ("Prepend the literal bytes `GIF89a` (a real GIF file signature) to the very beginning of your PHP web shell from the previous level, before the `<?php` tag. The magic-byte check reads only those first bytes and is satisfied it's a GIF; PHP itself doesn't care what comes before `<?php` in the file, so your shell still executes normally once uploaded and requested with `?c=cat+/etc/natas_webpass/natas14`.", 750),
+        "Click 'View sourcecode'.",
+        "The server now inspects the file's actual BYTES (not the filename/extension) to decide if it's really an image, using a function that only looks at the first few bytes for a known 'magic number' signature. Nothing stops a file's very first bytes from being a real image signature while the rest of the file remains valid server-side code.",
+        "Prepend the literal bytes `GIF89a` (a real GIF file signature) to the very beginning of your PHP web shell from the previous level, before the `<?php` tag. The magic-byte check reads only those first bytes and is satisfied it's a GIF; PHP itself doesn't care what comes before `<?php` in the file, so your shell still executes normally once uploaded and requested with `?c=cat+/etc/natas_webpass/natas14`.",
     ],
     "natas-14": [
-        ("[SQL injection on Wikipedia](https://en.wikipedia.org/wiki/SQL_injection).", 50),
-        ("Click 'View sourcecode' too -- the login query is built by directly gluing your username and password INTO a SQL string with no escaping at all, meaning a quote character you type doesn't stay 'just data.' It can close the string the developer intended and let you add your own SQL logic that the database will actually execute as part of the query. Pay close attention to which quote character the source itself uses to wrap each field.", 500),
-        ("Since the query wraps each field in DOUBLE quotes and concatenates them directly, entering a username like `\\\" OR \\\"1\\\"=\\\"1\\\" -- ` (matching that same double-quote style -- note the trailing space after the double-dash, which comments out whatever the original query intended to add after your input) closes the intended string early, adds an always-true condition, and comments out the rest -- bypassing the password check entirely and logging you in, revealing the final flag.", 750),
+        "[SQL injection on Wikipedia](https://en.wikipedia.org/wiki/SQL_injection).",
+        "Click 'View sourcecode' too -- the login query is built by directly gluing your username and password INTO a SQL string with no escaping at all, meaning a quote character you type doesn't stay 'just data.' It can close the string the developer intended and let you add your own SQL logic that the database will actually execute as part of the query. Pay close attention to which quote character the source itself uses to wrap each field.",
+        "Since the query wraps each field in DOUBLE quotes and concatenates them directly, entering a username like `\\\" OR \\\"1\\\"=\\\"1\\\" -- ` (matching that same double-quote style -- note the trailing space after the double-dash, which comments out whatever the original query intended to add after your input) closes the intended string early, adds an always-true condition, and comments out the rest -- bypassing the password check entirely and logging you in, revealing the final flag.",
     ],
 }
 
@@ -313,7 +313,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 base_dir = os.path.abspath(os.path.join(script_dir, "..", "challenges"))
 os.makedirs(base_dir, exist_ok=True)
 
-assert "man " not in "\n".join(tiers[0][0] for tiers in HINTS.values() if tiers)
+assert "man " not in "\n".join(tiers[0] for tiers in HINTS.values() if tiers)
 for i, ch in enumerate(challenges_data):
     folder_path = os.path.join(base_dir, ch["id"])
     os.makedirs(folder_path, exist_ok=True)
