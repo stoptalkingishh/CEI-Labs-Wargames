@@ -78,10 +78,10 @@ def vigenere_encrypt(plaintext, key):
 flag1 = secrets.get("krypton1")
 if flag1:
     subprocess.run(["chpasswd"], input=f"krypton2:{flag1}\n", text=True, check=True)
-    mkdir_owned("/krypton/krypton1", "krypton1:krypton1")
-    write("/krypton/krypton1/krypton2", rot13(flag1) + "\n", "krypton1:krypton1", 0o440)
+    mkdir_owned("/home/krypton1", "krypton1:krypton1")
+    write("/home/krypton1/krypton2", rot13(flag1) + "\n", "krypton1:krypton1", 0o440)
     write(
-        "/krypton/krypton1/README",
+        "/home/krypton1/README",
         "The password for krypton2 is in the file 'krypton2' in this "
         "directory, rotated by 13 places (ROT13).\n",
         "krypton1:krypton1", 0o444,
@@ -91,7 +91,7 @@ if flag1:
 flag3 = secrets.get("krypton3")
 if flag3:
     subprocess.run(["chpasswd"], input=f"krypton4:{flag3}\n", text=True, check=True)
-    mkdir_owned("/krypton/krypton3", "krypton3:krypton3")
+    mkdir_owned("/home/krypton3", "krypton3:krypton3")
     # Substitution key is fixed (not itself a secret -- frequency analysis
     # works the same regardless of which permutation was used; only the
     # embedded flag word needs to be per-team).
@@ -112,9 +112,9 @@ if flag3:
         f"advance. Keep counting, keep comparing, and remember: the password "
         f"for the next level is {flag3}."
     )
-    write("/krypton/krypton3/krypton4", substitution_encrypt(passage3, sub_key) + "\n", "krypton3:krypton3", 0o440)
+    write("/home/krypton3/krypton4", substitution_encrypt(passage3, sub_key) + "\n", "krypton3:krypton3", 0o440)
     write(
-        "/krypton/krypton3/README",
+        "/home/krypton3/README",
         "The attached file 'krypton4' is intercepted English text encrypted "
         "with a simple substitution cipher (each letter always maps to the "
         "same other letter). Use frequency analysis (E, T, A, O, I, N are "
@@ -127,7 +127,7 @@ if flag3:
 flag4 = secrets.get("krypton4")
 if flag4:
     subprocess.run(["chpasswd"], input=f"krypton5:{flag4}\n", text=True, check=True)
-    mkdir_owned("/krypton/krypton4", "krypton4:krypton4")
+    mkdir_owned("/home/krypton4", "krypton4:krypton4")
     VIGENERE_KEY_4 = "CIPHER"
     passage4 = (
         "Blaise de Vigenere gave his name to a cipher that resisted simple "
@@ -141,9 +141,9 @@ if flag4:
         "six columns, solve each column as its own Caesar shift, and "
         f"recombine to find the password for the next level: {flag4}."
     )
-    write("/krypton/krypton4/krypton5", vigenere_encrypt(passage4, VIGENERE_KEY_4) + "\n", "krypton4:krypton4", 0o440)
+    write("/home/krypton4/krypton5", vigenere_encrypt(passage4, VIGENERE_KEY_4) + "\n", "krypton4:krypton4", 0o440)
     write(
-        "/krypton/krypton4/README",
+        "/home/krypton4/README",
         "The attached file 'krypton5' is intercepted text encrypted with a "
         "Vigenere cipher using a key exactly 6 letters long. Split the "
         "ciphertext into 6 interleaved groups and solve each as its own "
@@ -156,7 +156,7 @@ if flag4:
 flag5 = secrets.get("krypton5")
 if flag5:
     subprocess.run(["chpasswd"], input=f"krypton6:{flag5}\n", text=True, check=True)
-    mkdir_owned("/krypton/krypton5", "krypton5:krypton5")
+    mkdir_owned("/home/krypton5", "krypton5:krypton5")
     VIGENERE_KEY_5 = "OVERTHEWI"
     passage5 = (
         "Long before computers, the Kasiski examination gave cryptanalysts a "
@@ -181,9 +181,9 @@ if flag5:
         "and four letter sequences scattered through this very message, "
         "measure the gaps between them, and the key length becomes clear."
     )
-    write("/krypton/krypton5/krypton6", vigenere_encrypt(passage5, VIGENERE_KEY_5) + "\n", "krypton5:krypton5", 0o440)
+    write("/home/krypton5/krypton6", vigenere_encrypt(passage5, VIGENERE_KEY_5) + "\n", "krypton5:krypton5", 0o440)
     write(
-        "/krypton/krypton5/README",
+        "/home/krypton5/README",
         "The attached file 'krypton6' is intercepted text encrypted with a "
         "Vigenere cipher. This time the key length is NOT given -- use the "
         "Kasiski examination (look for repeated sequences in the ciphertext "
@@ -209,18 +209,18 @@ if flag2:
             shift_byte = f.read(1)
             if shift_byte[0] % 26 != 0:
                 break
-    with open("/krypton/krypton2/keyfile.dat", "wb") as f:
+    with open("/home/krypton2/keyfile.dat", "wb") as f:
         f.write(shift_byte)
 
     proc = subprocess.run(
-        ["./encrypt"], cwd="/krypton/krypton2", input=flag2.encode(),
+        ["./encrypt"], cwd="/home/krypton2", input=flag2.encode(),
         stdout=subprocess.PIPE, check=True,
     )
-    with open("/krypton/krypton2/krypton3", "wb") as f:
+    with open("/home/krypton2/krypton3", "wb") as f:
         f.write(proc.stdout)
 
     write(
-        "/krypton/krypton2/README",
+        "/home/krypton2/README",
         "The password for krypton3 is in the file 'krypton3' in this "
         "directory, encrypted with a Caesar cipher using an unknown shift.\n\n"
         "The shift is derived from 'keyfile.dat' in this directory (not "
@@ -231,11 +231,11 @@ if flag2:
         "krypton2:krypton2", 0o444,
     )
 
-    subprocess.run(["chown", "-R", "krypton2:krypton2", "/krypton/krypton2"], check=True)
-    os.chmod("/krypton/krypton2", 0o750)
-    os.chmod("/krypton/krypton2/keyfile.dat", 0o440)
-    os.chmod("/krypton/krypton2/krypton3", 0o440)
-    os.chmod("/krypton/krypton2/encrypt", 0o550)
+    subprocess.run(["chown", "-R", "krypton2:krypton2", "/home/krypton2"], check=True)
+    os.chmod("/home/krypton2", 0o750)
+    os.chmod("/home/krypton2/keyfile.dat", 0o440)
+    os.chmod("/home/krypton2/krypton3", 0o440)
+    os.chmod("/home/krypton2/encrypt", 0o550)
 
 # ---- Level 6: LFSR stream cipher -> Krypton's own final flag -----------
 # Unlike levels 3/4/5, this flag is the WHOLE ciphertext (not embedded in
@@ -247,18 +247,18 @@ flag6 = secrets.get("krypton6")
 if flag6:
     with open("/dev/urandom", "rb") as f:
         keystream_bytes = f.read(30)
-    with open("/krypton/krypton6/keystream.dat", "wb") as f:
+    with open("/home/krypton6/keystream.dat", "wb") as f:
         f.write(keystream_bytes)
 
     proc = subprocess.run(
-        ["./encrypt"], cwd="/krypton/krypton6", input=flag6.encode(),
+        ["./encrypt"], cwd="/home/krypton6", input=flag6.encode(),
         stdout=subprocess.PIPE, check=True,
     )
-    with open("/krypton/krypton6/final", "wb") as f:
+    with open("/home/krypton6/final", "wb") as f:
         f.write(proc.stdout)
 
     write(
-        "/krypton/krypton6/README",
+        "/home/krypton6/README",
         "The final Krypton flag is in the file 'final' in this directory, "
         "encrypted with a stream cipher whose keystream repeats every 30 "
         "characters (the 'encrypt' binary here implements it).\n\n"
@@ -268,11 +268,11 @@ if flag6:
         "krypton6:krypton6", 0o444,
     )
 
-    subprocess.run(["chown", "-R", "krypton6:krypton6", "/krypton/krypton6"], check=True)
-    os.chmod("/krypton/krypton6", 0o750)
-    os.chmod("/krypton/krypton6/keystream.dat", 0o440)
-    os.chmod("/krypton/krypton6/final", 0o440)
-    os.chmod("/krypton/krypton6/encrypt", 0o550)
+    subprocess.run(["chown", "-R", "krypton6:krypton6", "/home/krypton6"], check=True)
+    os.chmod("/home/krypton6", 0o750)
+    os.chmod("/home/krypton6/keystream.dat", 0o440)
+    os.chmod("/home/krypton6/final", 0o440)
+    os.chmod("/home/krypton6/encrypt", 0o550)
 PYEOF
 else
     echo "WARNING: no LEVEL_SECRETS set -- levels 1-6 will not be playable until content is synced." >&2

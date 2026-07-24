@@ -98,9 +98,11 @@ logic per level:
 
 - `challenges_data`: the list of levels — id, name, points, description,
   flag.
-- `HINTS`: `id -> list of up to 3 (content, cost) tuples`, cheapest
-  first. A single `(content, cost)` tuple (not a list) is treated as a
-  legacy single hint.
+- `HINTS`: `id -> list of exactly 3 hint-text strings`, cheapest/least-
+  revealing first. There is no authored cost field here — every tier's
+  price comes exclusively from `tier_costs(value)`
+  (`scripts/hint_economy.py`), applied by `managed_tiers()` at build time,
+  so a hand-typed cost would never actually be read.
 - `EXTRA_INFO`: `id -> (commands_list, reading_list)`, appended by the
   generator to every description as the free Commands/Reading sections.
 

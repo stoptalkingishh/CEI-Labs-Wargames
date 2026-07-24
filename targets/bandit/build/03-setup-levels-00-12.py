@@ -52,25 +52,43 @@ def mkdir(path, owner, mode=0o755):
 
 
 # ---- Level 0: readme in home, plain text ----------------------------------
-write("/home/bandit0/readme", FLAG_00 + "\n", "bandit0:bandit0", 0o644)
+# Owned bandit1:bandit0, mode 0640 -- mirrors level 6's bandit7:bandit6
+# pattern: bandit1 (owner) can read/write, bandit0 (group) can read, no one
+# else (world) can read at all. bandit0 reads it via the group bit while
+# actually playing the level; nobody who hasn't reached bandit0 can.
+write("/home/bandit0/readme", FLAG_00 + "\n", "bandit1:bandit0", 0o640)
 
 # ---- "Bandit: Start Here" onboarding challenge (build_bandit.py) ----------
 write("/home/bandit0/welcome.txt", "WELCOME_TO_BANDIT\n", "bandit0:bandit0", 0o644)
 
 # ---- Level 1: file named "-" -----------------------------------------------
-write("/home/bandit1/-", FLAG_01 + "\n", "bandit1:bandit1", 0o644)
+write("/home/bandit1/-", FLAG_01 + "\n", "bandit2:bandit1", 0o640)
 
 # ---- Level 2: file with spaces in the name ---------------------------------
 write(
     "/home/bandit2/spaces in this filename",
     FLAG_02 + "\n",
-    "bandit2:bandit2",
-    0o644,
+    "bandit3:bandit2",
+    0o640,
+)
+# a decoy so `cat *` (unquoted glob) doesn't trivially solve the level --
+# the player must still identify and quote the correct filename
+write("/home/bandit2/notes.txt", "nothing here\n", "bandit2:bandit2", 0o644)
+# Count only non-hidden entries: useradd -m always seeds the home dir with
+# dotfiles (.bashrc, .profile, .bash_logout), so a raw os.listdir() count
+# is >1 even with zero decoys -- that would make this assertion a no-op.
+# `*` glob expansion (what a player would naively try) never matches
+# dotfiles either, so this mirrors exactly what `cat *` would see.
+visible_entries = [e for e in os.listdir("/home/bandit2") if not e.startswith(".")]
+assert len(visible_entries) > 1, (
+    "level2 home dir must contain a non-hidden decoy alongside the "
+    "spaces-named file, otherwise `cat *` trivially solves the level "
+    f"(found only: {visible_entries!r})"
 )
 
 # ---- Level 3: hidden file inside inhere/ -----------------------------------
 mkdir("/home/bandit3/inhere", "bandit3:bandit3")
-write("/home/bandit3/inhere/.hidden", FLAG_03 + "\n", "bandit3:bandit3", 0o644)
+write("/home/bandit3/inhere/.hidden", FLAG_03 + "\n", "bandit4:bandit3", 0o640)
 # a couple of non-hidden decoys so `ls` alone isn't enough
 write("/home/bandit3/inhere/notes.txt", "nothing here\n", "bandit3:bandit3", 0o644)
 
@@ -81,7 +99,7 @@ for i in range(10):
     name = f"-file0{i}"
     path = f"/home/bandit4/inhere/{name}"
     if i == readable_index:
-        write(path, FLAG_04 + "\n", "bandit4:bandit4", 0o644)
+        write(path, FLAG_04 + "\n", "bandit5:bandit4", 0o640)
     else:
         # random binary bytes -- `file` reports these as "data", not ASCII text
         write(path, bytes(random.randrange(256) for _ in range(200)), "bandit4:bandit4", 0o644)
@@ -116,7 +134,7 @@ correct_dir = "/home/bandit5/inhere/maybehere13"
 correct_path = f"{correct_dir}/.file2"
 content = (FLAG_05 + "\n").encode()
 content = content + b" " * (1033 - len(content))  # pad to exactly 1033 bytes
-write(correct_path, content, "bandit5:bandit5", 0o644)
+write(correct_path, content, "bandit6:bandit5", 0o640)
 assert os.path.getsize(correct_path) == 1033
 
 # ---- Level 6: somewhere on the server, owned bandit7:bandit6, 33 bytes ----
@@ -142,7 +160,7 @@ for i in range(9000):
         lines.append(f"millionth {FLAG_07}")
     else:
         lines.append(f"{random.choice(words)}{random.randrange(1000)}")
-write("/home/bandit7/data.txt", "\n".join(lines) + "\n", "bandit7:bandit7", 0o644)
+write("/home/bandit7/data.txt", "\n".join(lines) + "\n", "bandit8:bandit7", 0o640)
 
 # ---- Level 8: exactly one unique line in data.txt --------------------------
 random.seed(8)
@@ -155,14 +173,14 @@ lines[unique_pos] = FLAG_08
 random.shuffle(lines)
 # after shuffling, re-verify uniqueness (flag string not equal to any common line by construction)
 assert lines.count(FLAG_08) == 1
-write("/home/bandit8/data.txt", "\n".join(lines) + "\n", "bandit8:bandit8", 0o644)
+write("/home/bandit8/data.txt", "\n".join(lines) + "\n", "bandit9:bandit8", 0o640)
 
 # ---- Level 9: flag preceded by === in a mostly-binary data.txt ------------
 random.seed(9)
 binary_blob = bytes(random.randrange(256) for _ in range(4000))
 marker = b"==========" + FLAG_09.encode() + b"\n"
 content = binary_blob[:2000] + marker + binary_blob[2000:]
-write("/home/bandit9/data.txt", content, "bandit9:bandit9", 0o644)
+write("/home/bandit9/data.txt", content, "bandit10:bandit9", 0o640)
 
 # ---- Levels 10 (base64), 11 (rot13), 12 (compressed hexdump) ---------------
 # Deliberately NOT written here -- the flag is transformed before writing,

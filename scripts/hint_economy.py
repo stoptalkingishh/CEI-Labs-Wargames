@@ -17,8 +17,16 @@ def tier_costs(value: int) -> tuple[int, int, int]:
 
 
 def managed_tiers(value: int, tiers):
-    """Keep authored content while deriving every price from challenge value."""
-    texts = [tier[0] if isinstance(tier, tuple) else tier for tier in tiers]
+    """Pair authored hint text with the formula-derived price for each tier.
+
+    `tiers` is a plain sequence of hint-text strings (one per tier, cheapest
+    first) -- there is no authored cost field anywhere in this economy.
+    Every price is derived exclusively from `tier_costs(value)`, per this
+    module's docstring: production CTFd unlocks these tiers through the
+    hint-wallet plugin, never the global scoreboard, so the only cost that
+    is ever actually enforced is the one computed here.
+    """
+    texts = list(tiers)
     if len(texts) != 3:
         raise ValueError("wallet-managed challenges require exactly three hint tiers")
     return list(zip(texts, tier_costs(value)))
