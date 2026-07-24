@@ -67,6 +67,20 @@ write(
     "bandit2:bandit2",
     0o644,
 )
+# a decoy so `cat *` (unquoted glob) doesn't trivially solve the level --
+# the player must still identify and quote the correct filename
+write("/home/bandit2/notes.txt", "nothing here\n", "bandit2:bandit2", 0o644)
+# Count only non-hidden entries: useradd -m always seeds the home dir with
+# dotfiles (.bashrc, .profile, .bash_logout), so a raw os.listdir() count
+# is >1 even with zero decoys -- that would make this assertion a no-op.
+# `*` glob expansion (what a player would naively try) never matches
+# dotfiles either, so this mirrors exactly what `cat *` would see.
+visible_entries = [e for e in os.listdir("/home/bandit2") if not e.startswith(".")]
+assert len(visible_entries) > 1, (
+    "level2 home dir must contain a non-hidden decoy alongside the "
+    "spaces-named file, otherwise `cat *` trivially solves the level "
+    f"(found only: {visible_entries!r})"
+)
 
 # ---- Level 3: hidden file inside inhere/ -----------------------------------
 mkdir("/home/bandit3/inhere", "bandit3:bandit3")
