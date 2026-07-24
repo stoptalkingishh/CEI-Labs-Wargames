@@ -55,6 +55,10 @@ with open(flag_path, "w", newline="\n") as f:
     f.write(FLAG_32 + "\n")
 subprocess.run(["chown", "-R", "bandit32:bandit32", creds_dir], check=True)
 os.chmod(creds_dir, 0o755)
-os.chmod(flag_path, 0o644)
+# Owned bandit33:bandit32, mode 0640 -- same next-level-owner/current-level-
+# group pattern as every other flag file (mirrors level 6's bandit7:bandit6);
+# overrides the recursive chown above for this one file.
+subprocess.run(["chown", "bandit33:bandit32", flag_path], check=True)
+os.chmod(flag_path, 0o640)
 
 print("Level 32 uppercase-shell artifacts written.")
