@@ -18,10 +18,9 @@
 # secret. If a level's key is missing from $LEVEL_SECRETS (e.g. CTFd
 # content hasn't been synced yet), that level's account is simply left
 # with no usable password and its content stays as an inert placeholder
-# -- a safe failure mode, not a shared-credential one. Known remaining
-# gaps, not yet converted: level 13's SSH keypair (still random per BUILD
-# rather than per team) and levels 20/27-31 (handled separately below /
-# still in progress) -- see docs/security-audit-status.md.
+# -- a safe failure mode, not a shared-credential one. Level 13's SSH
+# keypair (bandit13 -> bandit14) is generated fresh here too, per
+# container/team, same as everything else -- see docs/security-audit-status.md.
 set -e
 
 if [ -n "${LEVEL_SECRETS:-}" ]; then
@@ -81,6 +80,36 @@ for path, (token, key) in CONTENT_SUBS.items():
     with open(path, "wb") as f:
         f.write(content.replace(token.encode(), value.encode()))
 
+# ---- Level 13: bandit13's SSH keypair that logs into bandit14 --
+# generated fresh per container (i.e. per team) here, instead of once at
+# image BUILD time, closing the team-isolation gap noted in
+# docs/security-audit-status.md: every team's image used to bake in the
+# exact same keypair, so any team that reached level 13 could also SSH
+# straight into every OTHER team's bandit14 with it -- not just read its
+# own. Guarded by os.path.exists() on the private key so a Reboot (same
+# container, filesystem not wiped -- see the levels-27-31 comment below)
+# doesn't silently swap out a player's already-downloaded sshkey.private
+# for a new, non-matching key.
+bandit13_key = "/home/bandit13/sshkey.private"
+if not os.path.exists(bandit13_key):
+    tmp_key = "/tmp/bandit13-14-key"
+    subprocess.run(
+        ["ssh-keygen", "-t", "ed25519", "-N", "", "-C", "bandit14-access", "-f", tmp_key],
+        check=True,
+    )
+
+    subprocess.run(["install", "-m", "700", "-o", "bandit13", "-g", "bandit13", "-d", "/home/bandit13/.ssh"], check=True)
+    subprocess.run(["install", "-m", "600", "-o", "bandit13", "-g", "bandit13", tmp_key, bandit13_key], check=True)
+
+    subprocess.run(["install", "-m", "700", "-o", "bandit14", "-g", "bandit14", "-d", "/home/bandit14/.ssh"], check=True)
+    subprocess.run(
+        ["install", "-m", "600", "-o", "bandit14", "-g", "bandit14", f"{tmp_key}.pub", "/home/bandit14/.ssh/authorized_keys"],
+        check=True,
+    )
+
+    os.remove(tmp_key)
+    os.remove(f"{tmp_key}.pub")
+
 # ---- Level 20: suconnect's expected/next passwords, read from a runtime
 # config file instead of compiled into the binary (see
 # src/level20_suconnect.c) -- owned bandit21:bandit21, mode 0400, so it's
@@ -98,19 +127,24 @@ if flag19 and flag20:
 # ---- Levels 10/11/12: flag is transformed, so it's regenerated fresh --
 # (no build-time file exists at all for these 3 -- unlike CONTENT_SUBS
 # above, there's nothing to gate on os.path.exists() for).
+# Owned by the NEXT level's user, group-owned by the current level's user,
+# mode 0640 -- same bandit7:bandit6 pattern as level 6 (and levels 0-9
+# above): the current level's own player reads it via the group bit while
+# solving the level, but it's not world-readable so no one else can skip
+# straight to it.
 flag10 = secrets.get("bandit10")
 if flag10:
     with open("/home/bandit10/data.txt", "wb") as f:
         f.write(base64.b64encode(flag10.encode()) + b"\n")
-    subprocess.run(["chown", "bandit10:bandit10", "/home/bandit10/data.txt"], check=True)
-    os.chmod("/home/bandit10/data.txt", 0o644)
+    subprocess.run(["chown", "bandit11:bandit10", "/home/bandit10/data.txt"], check=True)
+    os.chmod("/home/bandit10/data.txt", 0o640)
 
 flag11 = secrets.get("bandit11")
 if flag11:
     with open("/home/bandit11/data.txt", "w") as f:
         f.write(codecs.encode(flag11, "rot13") + "\n")
-    subprocess.run(["chown", "bandit11:bandit11", "/home/bandit11/data.txt"], check=True)
-    os.chmod("/home/bandit11/data.txt", 0o644)
+    subprocess.run(["chown", "bandit12:bandit11", "/home/bandit11/data.txt"], check=True)
+    os.chmod("/home/bandit11/data.txt", 0o640)
 
 flag12 = secrets.get("bandit12")
 if flag12:
@@ -118,8 +152,8 @@ if flag12:
     hex_lines = subprocess.run(["xxd", "-"], input=compressed, capture_output=True, check=True).stdout
     with open("/home/bandit12/data.txt", "wb") as f:
         f.write(hex_lines)
-    subprocess.run(["chown", "bandit12:bandit12", "/home/bandit12/data.txt"], check=True)
-    os.chmod("/home/bandit12/data.txt", 0o644)
+    subprocess.run(["chown", "bandit13:bandit12", "/home/bandit12/data.txt"], check=True)
+    os.chmod("/home/bandit12/data.txt", 0o640)
 
 # ---- Levels 27-31: five git-shell service accounts, each serving one
 # bare repo whose history/branches/tags/hooks hide the next level's
