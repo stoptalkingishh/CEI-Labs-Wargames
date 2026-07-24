@@ -171,11 +171,60 @@ PYEOF
 # Wallet tiers are deliberately not native CTFd hints.  Upload their local,
 # generated manifests only after challenge sync has established the server IDs.
 # The token is passed as a header and neither it nor manifest content is logged.
+#
+# IMPORTANT: "ctf challenge sync" (called in the loop above, for every
+# already-existing challenge) unconditionally DELETES that challenge's
+# existing native CTFd hints and only recreates them if challenge.yml
+# declares a "hints:" key. None of the generated challenge.yml files do --
+# hint content lives solely in the challenges/*-hint-wallet.json manifests
+# synced here. So if there IS wallet-bundle content to sync but this step
+# gets silently skipped, every native hint on the live instance is wiped
+# with nothing to replace it. See docs/P0-CONTENT-DEPLOY-LOG-2026-07-23.md.
 sync_hint_wallet_bundle() {
-    # Opt-in: the Engine-side plugin this posts to may not be deployed yet,
-    # so an unset secret skips the sync instead of failing every deploy.
+    local wallet_files=(challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json)
+
+    # Determine whether there is actually any hint-wallet content that a sync
+    # would push. A missing file or a manifest with zero "entries" means this
+    # genuinely is a hint-less deploy (nothing for "ctf challenge sync" above
+    # to have clobbered a replacement for), so opting out is safe. Non-empty
+    # content changes the calculus below.
+    local has_content
+    has_content=$(python3 - "${wallet_files[@]}" <<'PYEOF'
+import json
+import sys
+
+found = False
+for path in sys.argv[1:]:
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        continue
+    if data.get("entries"):
+        found = True
+        break
+print("1" if found else "0")
+PYEOF
+    ) || { echo "Error: failed to inspect hint-wallet manifests for content." >&2; return 1; }
+
+    # Opt-in secret: the Engine-side plugin this posts to may not be deployed
+    # yet. An unset secret is only a safe, silent opt-out when there is no
+    # wallet content to sync in the first place. If there IS content, the
+    # unconditional native-hint deletion above means silently skipping here
+    # would wipe live hints with no replacement -- hard-fail instead.
     if [ -z "${HINT_WALLET_SYNC_SECRET:-}" ]; then
-        echo "HINT_WALLET_SYNC_SECRET not set; skipping hint-wallet sync."
+        if [ "$has_content" = "1" ]; then
+            echo "❌ FATAL: hint-wallet bundle content exists (${wallet_files[*]}) but HINT_WALLET_SYNC_SECRET is not set." >&2
+            echo "   'ctf challenge sync' unconditionally deletes each challenge's native CTFd hints and only" >&2
+            echo "   recreates them if challenge.yml declares a 'hints:' key (none do here -- hint content now" >&2
+            echo "   lives in the hint-wallet bundle). Skipping this sync would silently wipe every hint on the" >&2
+            echo "   live CTFd instance with nothing to replace them. Refusing to proceed." >&2
+            echo "   Provision HINT_WALLET_SYNC_SECRET (and HINT_WALLET_REVISION) before rerunning. If this is" >&2
+            echo "   genuinely meant to be a hint-less deploy, remove/empty the challenges/*-hint-wallet.json" >&2
+            echo "   manifests first so this check can tell the two cases apart." >&2
+            return 1
+        fi
+        echo "HINT_WALLET_SYNC_SECRET not set and no hint-wallet content to sync; skipping hint-wallet sync."
         return 0
     fi
     [ -n "${CTFD_URL:-}" ] || { echo "CTFD_URL is required for hint wallet sync" >&2; return 1; }
