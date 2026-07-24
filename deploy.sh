@@ -72,6 +72,29 @@ if [ "${CTFD_INSECURE:-false}" = "true" ]; then
     curl_opts+=(--insecure)
 fi
 
+# Secret HTTP headers (CTFD_TOKEN, CTFD_SYNC_SECRET, ...) must never be handed
+# to curl as a literal argv value: while curl is running, any other user on
+# the same box can read its full command line via `ps aux` / `/proc/<pid>/cmdline`.
+# Instead we write "Header-Name: value" to a private temp file and pass it as
+# `curl --header @file`, so the secret only ever touches disk (mode 0600,
+# under a mode 0700 dir, cleaned up on exit/error via trap) — never argv.
+secret_headers_dir=""
+cleanup_secret_headers() {
+    if [ -n "$secret_headers_dir" ] && [ -d "$secret_headers_dir" ]; then
+        rm -rf -- "$secret_headers_dir"
+    fi
+}
+trap cleanup_secret_headers EXIT
+secret_headers_dir=$(mktemp -d)
+
+write_secret_header() {
+    # Usage: write_secret_header "Header-Name" "value"; prints the temp file path.
+    local header_name="$1" header_value="$2" header_file
+    header_file=$(mktemp "${secret_headers_dir}/header.XXXXXX")
+    printf '%s: %s\n' "$header_name" "$header_value" > "$header_file"
+    printf '%s' "$header_file"
+}
+
 if [ -n "${CTFD_URL:-}" ] && [ -n "${CTFD_TOKEN:-}" ]; then
     # CTFd only honors the Authorization header on requests it recognizes as
     # JSON (see CTFd/utils/initialization's `tokens()` before_request hook,
@@ -81,10 +104,12 @@ if [ -n "${CTFD_URL:-}" ] && [ -n "${CTFD_TOKEN:-}" ]; then
     # challenge_exists() check below then reads that HTML as an empty
     # inventory — every challenge takes the "install as new" path even when
     # it already exists, silently creating duplicates on a second run.
+    auth_header_file=$(write_secret_header "Authorization" "Token ${CTFD_TOKEN}")
     preflight_code=$(curl "${curl_opts[@]}" -o .ctf/preflight-challenges.json -w '%{http_code}' \
-        -H "Authorization: Token ${CTFD_TOKEN}" \
+        --header @"$auth_header_file" \
         -H "Content-Type: application/json" \
         "${CTFD_URL}/api/v1/challenges?per_page=100")
+    rm -f -- "$auth_header_file"
     if [ "$preflight_code" != "200" ]; then
         echo "Error: CTFd authentication preflight returned HTTP ${preflight_code}." >&2
         exit 1
@@ -153,12 +178,14 @@ PYEOF
 
     [ -z "$payload" ] && return 0
 
-    local http_code
+    local sync_auth_header_file http_code
+    sync_auth_header_file=$(write_secret_header "X-Sync-Auth" "${CTFD_SYNC_SECRET}")
     http_code=$(curl "${curl_opts[@]}" -o /dev/null -w '%{http_code}' \
         -X POST "${CTFD_URL}/plugins/instance-launcher/admin/mappings/sync" \
-        -H "X-Sync-Auth: ${CTFD_SYNC_SECRET}" \
+        --header @"$sync_auth_header_file" \
         -H "Content-Type: application/json" \
         -d "$payload")
+    rm -f -- "$sync_auth_header_file"
 
     if [ "$http_code" = "200" ]; then
         echo "Synced instance mapping for $(basename "$challenge_dir")"
@@ -170,7 +197,8 @@ PYEOF
 
 # Wallet tiers are deliberately not native CTFd hints.  Upload their local,
 # generated manifests only after challenge sync has established the server IDs.
-# The token is passed as a header and neither it nor manifest content is logged.
+# The signature is passed as a header (via write_secret_header, never argv)
+# and neither it nor manifest content is logged.
 #
 # IMPORTANT: "ctf challenge sync" (called in the loop above, for every
 # already-existing challenge) unconditionally DELETES that challenge's
@@ -248,8 +276,11 @@ PYEOF
     local signature="${payload%%$'\n'*}"; payload="${payload#*$'\n'}"
     local curl_insecure=()
     [ "${CTFD_INSECURE:-false}" = "true" ] && curl_insecure=(-k)
+    local signature_header_file
+    signature_header_file=$(write_secret_header "X-Hint-Wallet-Signature" "$signature")
     curl --fail --silent --show-error "${curl_insecure[@]}" -X POST "${CTFD_URL}/plugins/hint-wallet/machine/sync" \
-        -H "X-Hint-Wallet-Signature: ${signature}" -H "Content-Type: application/json" -d "$payload" >/dev/null
+        --header @"$signature_header_file" -H "Content-Type: application/json" -d "$payload" >/dev/null
+    rm -f -- "$signature_header_file"
     echo "Synced hint-wallet bundle"
 }
 
