@@ -50,15 +50,15 @@ RUN printf '%s\n' 'case "$-" in *i*) ;; *) return ;; esac' '[ -n "${CEI_KRYPTON_
 # Level 2 and level 6 each get their own copy of the relevant compiled
 # binary, matching the per-level "the tool lives next to the puzzle it
 # solves" layout the descriptions already reference.
-COPY --from=builder /tmp/caesar_encrypt /krypton/krypton2/encrypt
-COPY --from=builder /tmp/lfsr_encrypt /krypton/krypton6/encrypt
+COPY --from=builder /tmp/caesar_encrypt /home/krypton2/encrypt
+COPY --from=builder /tmp/lfsr_encrypt /home/krypton6/encrypt
 # Level 2 and level 6's keyfile/keystream/ciphertext/README are
 # deliberately NOT generated here -- they're per-team secrets, generated
 # fresh by entrypoint.sh at container START from $LEVEL_SECRETS (see
 # docs/security-audit-status.md). Only the encrypt binaries themselves
 # are build-time content.
-RUN mkdir -p /krypton/krypton2 /krypton/krypton6 \
-    && chmod +x /krypton/krypton2/encrypt /krypton/krypton6/encrypt \
+RUN mkdir -p /home/krypton2 /home/krypton6 \
+    && chmod +x /home/krypton2/encrypt /home/krypton6/encrypt \
     && rm -rf /opt/build
 
 COPY entrypoint.sh /entrypoint.sh

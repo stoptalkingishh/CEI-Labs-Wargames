@@ -36,10 +36,15 @@ new_lines = list(lines)
 new_lines[changed_index] = FLAG_17
 new_content = "\n".join(new_lines) + "\n"
 write("/home/bandit17/passwords.old", old_content, "bandit17:bandit17", 0o644)
-write("/home/bandit17/passwords.new", new_content, "bandit17:bandit17", 0o644)
+# passwords.new actually carries FLAG_17 -- owned by the next level's user
+# (bandit18), group-owned by bandit17, mode 0640, same pattern as every
+# other level's flag file (mirrors level 6's bandit7:bandit6).
+# passwords.old has no secret in it, so it's left world-unreadable-by-
+# virtue-of-the-locked-down-home-dir only, same as any other non-flag file.
+write("/home/bandit17/passwords.new", new_content, "bandit18:bandit17", 0o640)
 
 # ---- Level 18: readme readable via non-interactive SSH only ---------------
-write("/home/bandit18/readme", FLAG_18 + "\n", "bandit18:bandit18", 0o644)
+write("/home/bandit18/readme", FLAG_18 + "\n", "bandit19:bandit18", 0o640)
 # Real bandit18's actual .bashrc: an interactive-shell guard (the same
 # `case $- in *i*) ;; *) return;; esac` pattern Debian's own default
 # .bashrc uses) followed by an unconditional logout trap. The guard is
