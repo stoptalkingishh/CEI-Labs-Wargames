@@ -34,14 +34,19 @@ transforms, TCP/TLS daemons, SUID binaries, a randomized brute-force
 PIN, and all 5 git mechanisms) — see the commit history in this repo and
 `cei-labs-engine` for full details per phase.
 
-**Known remaining gap, explicitly not silently left undocumented**:
-Bandit level 13's SSH keypair (used to reach bandit14 without a
-password) is still generated fresh per BUILD, not per TEAM —
-bandit14's actual password/webpass file content IS per-team now, so the
-primary collusion/leakage risk (sharing a flag/password) is closed, but
-teams on the same image build still share the same SSH key file itself,
-which is a smaller residual exposure than what this fix originally
-targeted. Worth a follow-up pass if fully closing it is wanted.
+**Formerly a known remaining gap, now closed**: Bandit level 13's SSH
+keypair (used to reach bandit14 without a password) used to be generated
+once per image BUILD, not per TEAM, so every team on the same image
+build shared the literal same private key — any team that reached level
+13 could also SSH straight into every OTHER team's bandit14 with it, a
+team-isolation break independent of the per-team flag work above. Fixed
+by moving the `ssh-keygen` call (and the wiring that drops the private
+key into bandit13's home dir and installs the public key into
+bandit14's `authorized_keys`) out of `targets/bandit/build/04-setup-level-13.sh`
+and into `targets/bandit/entrypoint.sh`, so it now runs fresh per
+container/team at start, the same way every other per-team secret is
+generated. Guarded so a Reboot of the same container doesn't rotate the
+key out from under a player who already downloaded it.
 
 **Incidental finding, fixed along the way** (not part of the original
 audit, but discovered and closed during the Natas phase): several

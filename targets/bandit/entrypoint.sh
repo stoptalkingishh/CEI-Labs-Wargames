@@ -18,10 +18,9 @@
 # secret. If a level's key is missing from $LEVEL_SECRETS (e.g. CTFd
 # content hasn't been synced yet), that level's account is simply left
 # with no usable password and its content stays as an inert placeholder
-# -- a safe failure mode, not a shared-credential one. Known remaining
-# gaps, not yet converted: level 13's SSH keypair (still random per BUILD
-# rather than per team) and levels 20/27-31 (handled separately below /
-# still in progress) -- see docs/security-audit-status.md.
+# -- a safe failure mode, not a shared-credential one. Level 13's SSH
+# keypair (bandit13 -> bandit14) is generated fresh here too, per
+# container/team, same as everything else -- see docs/security-audit-status.md.
 set -e
 
 if [ -n "${LEVEL_SECRETS:-}" ]; then
@@ -80,6 +79,36 @@ for path, (token, key) in CONTENT_SUBS.items():
         content = f.read()
     with open(path, "wb") as f:
         f.write(content.replace(token.encode(), value.encode()))
+
+# ---- Level 13: bandit13's SSH keypair that logs into bandit14 --
+# generated fresh per container (i.e. per team) here, instead of once at
+# image BUILD time, closing the team-isolation gap noted in
+# docs/security-audit-status.md: every team's image used to bake in the
+# exact same keypair, so any team that reached level 13 could also SSH
+# straight into every OTHER team's bandit14 with it -- not just read its
+# own. Guarded by os.path.exists() on the private key so a Reboot (same
+# container, filesystem not wiped -- see the levels-27-31 comment below)
+# doesn't silently swap out a player's already-downloaded sshkey.private
+# for a new, non-matching key.
+bandit13_key = "/home/bandit13/sshkey.private"
+if not os.path.exists(bandit13_key):
+    tmp_key = "/tmp/bandit13-14-key"
+    subprocess.run(
+        ["ssh-keygen", "-t", "ed25519", "-N", "", "-C", "bandit14-access", "-f", tmp_key],
+        check=True,
+    )
+
+    subprocess.run(["install", "-m", "700", "-o", "bandit13", "-g", "bandit13", "-d", "/home/bandit13/.ssh"], check=True)
+    subprocess.run(["install", "-m", "600", "-o", "bandit13", "-g", "bandit13", tmp_key, bandit13_key], check=True)
+
+    subprocess.run(["install", "-m", "700", "-o", "bandit14", "-g", "bandit14", "-d", "/home/bandit14/.ssh"], check=True)
+    subprocess.run(
+        ["install", "-m", "600", "-o", "bandit14", "-g", "bandit14", f"{tmp_key}.pub", "/home/bandit14/.ssh/authorized_keys"],
+        check=True,
+    )
+
+    os.remove(tmp_key)
+    os.remove(f"{tmp_key}.pub")
 
 # ---- Level 20: suconnect's expected/next passwords, read from a runtime
 # config file instead of compiled into the binary (see
