@@ -31,7 +31,7 @@ def write(path, content, owner, mode):
 # /etc/passwd (already world-readable by default) and noticing bandit26's
 # shell field isn't /bin/bash -- that's prep for level 26, not something
 # this level's own flag-discovery depends on. ----------------------------
-write("/home/bandit25/readme", FLAG_25 + "\n", "bandit25:bandit25", 0o644)
+write("/home/bandit25/readme", FLAG_25 + "\n", "bandit26:bandit25", 0o640)
 
 # ---- Level 26: bandit26's login shell pages this file, then exits.
 # Short enough that a normal-size terminal shows it all without pausing
@@ -60,6 +60,8 @@ mkdir_path = "/home/bandit26/.hidden_dir"
 os.makedirs(mkdir_path, exist_ok=True)
 subprocess.run(["chown", "bandit26:bandit26", mkdir_path], check=True)
 os.chmod(mkdir_path, 0o755)
-write(f"{mkdir_path}/flag_26", FLAG_26 + "\n", "bandit26:bandit26", 0o644)
+# Owned bandit27:bandit26, mode 0640 -- same next-level-owner/current-level-
+# group pattern as every other flag file (mirrors level 6's bandit7:bandit6).
+write(f"{mkdir_path}/flag_26", FLAG_26 + "\n", "bandit27:bandit26", 0o640)
 
 print("Levels 25-26 artifacts written.")
