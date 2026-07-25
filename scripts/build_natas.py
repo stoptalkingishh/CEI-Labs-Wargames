@@ -247,7 +247,7 @@ HINTS = {
         "View the page source to find the image's path (something like `files/pixel.png`), then request the directory itself rather than a specific file inside it, e.g. `curl http://<target-host>:8002/files/` -- if directory listing is enabled, this shows every file in there, including one holding the password.",
     ],
     "natas-03": [
-        "[Robots exclusion standard on Wikipedia](https://en.wikipedia.org/wiki/Robots.txt).",
+        "Robots exclusion standard on Wikipedia.",
         "Search engines respect a specific, standard filename at the root of a website to know which paths NOT to crawl or index -- site owners sometimes misuse this file to 'hide' sensitive paths, not realizing that listing a path there is itself a public announcement of where it is.",
         "`curl http://<target-host>:8003/robots.txt` fetches the standard crawler-exclusion file -- it lists a path the owner didn't want indexed. Request that listed path directly to find the password.",
     ],
@@ -267,7 +267,7 @@ HINTS = {
         "The 'View sourcecode' link shows the PHP, which `include`s a secret from a specific relative file path (e.g. `includes/secret.inc`). Request that exact path directly as a URL (`http://<target-host>:8006/includes/secret.inc`) to read the real secret value in plain text, then submit it in the form to reveal the password.",
     ],
     "natas-07": [
-        "[File inclusion vulnerability on Wikipedia](https://en.wikipedia.org/wiki/File_inclusion_vulnerability).",
+        "File inclusion vulnerability on Wikipedia.",
         "View the page source -- the site uses a URL parameter to choose which page to show ('Home' vs 'About'). If that parameter is used directly as a filename with no validation, you control which file on the server gets read, including files well outside the page's intended folder.",
         "The page uses a query parameter (commonly named `page`) to decide which file to include, e.g. `?page=home.php`. Because the application does no validation, replacing that value with an ABSOLUTE path to any file readable by the web server works directly -- try `?page=/etc/natas_webpass/natas8` (no `../` traversal needed at all, since it's already an absolute path, not a relative one).",
     ],
@@ -287,7 +287,7 @@ HINTS = {
         "A needle of `. /etc/natas_webpass/natas11 #` needs no blocked character at all: the lone `.` is a regex matching every line (so the intended dictionary file's content doesn't matter), the second word is treated by `grep` as an ADDITIONAL file to search (not a shell command), and the trailing ` #` is a shell comment that drops the rest of the real command line (including the app's own hardcoded filename) once it reaches the shell.",
     ],
     "natas-11": [
-        "[XOR cipher on Wikipedia](https://en.wikipedia.org/wiki/XOR_cipher).",
+        "XOR cipher on Wikipedia.",
         "The cookie holds your preferences, XOR-encrypted with a short key that REPEATS if the data is longer than the key. You don't know the key directly, but you DO know what the default preferences look like when logged out (a fixed JSON structure) -- and XOR has a useful property: if you already know both the plaintext and the resulting ciphertext, XOR-ing them together recovers the key that was used, which you can then reuse to encrypt something new.",
         "Base64-decode the default (logged-out) cookie to get the raw XOR-encrypted bytes, then XOR those bytes against the KNOWN default plaintext JSON (the fixed preferences structure the source reveals) to recover the repeating XOR key. Build a new plaintext JSON with `showpassword` changed to `yes`, XOR-encrypt it with that same recovered key, base64-encode the result, and set it as your cookie -- the page will now show you the password.",
     ],
@@ -302,7 +302,7 @@ HINTS = {
         "Prepend the literal bytes `GIF89a` (a real GIF file signature) to the very beginning of your PHP web shell from the previous level, before the `<?php` tag. The magic-byte check reads only those first bytes and is satisfied it's a GIF; PHP itself doesn't care what comes before `<?php` in the file, so your shell still executes normally once uploaded and requested with `?c=cat+/etc/natas_webpass/natas14`.",
     ],
     "natas-14": [
-        "[SQL injection on Wikipedia](https://en.wikipedia.org/wiki/SQL_injection).",
+        "SQL injection on Wikipedia.",
         "Click 'View sourcecode' too -- the login query is built by directly gluing your username and password INTO a SQL string with no escaping at all, meaning a quote character you type doesn't stay 'just data.' It can close the string the developer intended and let you add your own SQL logic that the database will actually execute as part of the query. Pay close attention to which quote character the source itself uses to wrap each field.",
         "Since the query wraps each field in DOUBLE quotes and concatenates them directly, entering a username like `\\\" OR \\\"1\\\"=\\\"1\\\" -- ` (matching that same double-quote style -- note the trailing space after the double-dash, which comments out whatever the original query intended to add after your input) closes the intended string early, adds an always-true condition, and comments out the rest -- bypassing the password check entirely and logging you in, revealing the final flag.",
     ],
@@ -328,7 +328,12 @@ for i, ch in enumerate(challenges_data):
             cmd_list = ", ".join(f"`{c}`" for c in cmds)
             full_desc += f"\n\n**Commands you may need to solve this level:** {cmd_list}"
         if reading:
-            links = "\n".join(f"- [{title}]({url})" for title, url in reading)
+            # No live links: the venue network runs with no internet access
+            # (see docs/offline-dependency-audit.md and
+            # cei-labs-event#8/live-hint-links-offline-gap), so these are
+            # rendered as plain reference titles rather than clickable
+            # [title](url) markdown links, which would be dead at the venue.
+            links = "\n".join(f"- {title}" for title, url in reading)
             full_desc += f"\n\n**Helpful reading:**\n{links}"
 
     yaml_content = f"""name: "{ch['name']}"
