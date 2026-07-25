@@ -106,7 +106,7 @@ challenges_data = [
         "id": "bandit-03",
         "name": "Bandit 3 -> 4: Hidden in Plain Sight",
         "points": 250,
-        "desc": "**Goal:** Find a hidden (dotfile) password.\n\nLog in as `bandit3`. The next password is hidden inside the `inhere` directory -- you'll need to show hidden files to find it.",
+        "desc": "**Goal:** Recover the password from the `inhere` directory.\n\nLog in as `bandit3`. The next password is in a file inside the `inhere` directory in your home folder -- but it doesn't show up in an ordinary listing. Work out how to reveal it (the hints walk you through it if you get stuck).",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit3"}
     },
     {
