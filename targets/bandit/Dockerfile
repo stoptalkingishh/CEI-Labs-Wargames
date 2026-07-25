@@ -95,6 +95,16 @@ RUN printf '%s\n' '# interactive CEI Labs Bandit banner only' \
  > /etc/profile.d/cei-bandit-banner.sh \
  && chmod 644 /etc/profile.d/cei-bandit-banner.sh
 
+# Restore classic (pre-coreutils-8.25) ls output: literal filenames, no
+# automatic shell-quoting. Level 2 ("spaces in this filename") is a lesson
+# in quoting/escaping a filename YOURSELF; modern ls printing the name
+# already single-quoted hands that answer over for free (see
+# cei-labs-event docs/bandit2-ls-quoting-gap). Login shells only -- the
+# port-listener daemons run non-login and are unaffected.
+RUN printf '%s\n' 'export QUOTING_STYLE=literal' \
+ > /etc/profile.d/cei-bandit-quoting.sh \
+ && chmod 644 /etc/profile.d/cei-bandit-quoting.sh
+
 # Level 19: reads bandit-19's flag (bandit20's password) from this file --
 # readable only by bandit20, exactly the same file-permission convention
 # every other level uses. A fixed-length placeholder here -- entrypoint.sh
