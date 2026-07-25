@@ -422,7 +422,7 @@ HINTS = {
     "bandit-05": [
         "`find --help`.",
         "Start at `inhere`. `find` searches subdirectories recursively and can chain tests: `-type f` keeps regular files, `-size 1033c` means exactly 1033 bytes (`c` is bytes), and `! -executable` excludes executable files. Use `file` afterward to check the remaining candidate's content type.",
-        "Run `find inhere -type f -size 1033c ! -executable` to apply the path, regular-file, size, and non-executable criteria together. Run `file` on each returned path to confirm which is human-readable, then use `cat` on that selected path to read and submit the password. `find --help` documents these predicates and `file --help` explains the content-type check.",
+        "Run `find inhere -type f -size 1033c ! -executable -exec file '{}' \\; | grep -i ascii` to apply the path, regular-file, size, and non-executable criteria together, run `file` on every surviving candidate, and keep only the human-readable one -- all in one command. `cat` the path it prints to read and submit the password. `find --help` documents these predicates and `file --help` explains the content-type check.",
     ],
     "bandit-06": [
         "`find --help`.",
