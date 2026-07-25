@@ -73,7 +73,7 @@ challenges_data = [
         "id": "krypton-00",
         "name": "Krypton 0 -> 1: Base64 Decoding",
         "points": 200,
-        "desc": "**Goal:** Decode a Base64-encoded password.\n\nThis level needs no environment at all -- the following string encodes the password for level 1 in Base64:\n\n`S1JZUFRPTklTR1JFQVQ=`\n\nDecode it (e.g. with the `base64 -d` command) to find the flag.",
+        "desc": "**Goal:** Decode a Base64-encoded password.\n\nThis level needs no environment at all -- the following string encodes the password for level 1 in Base64:\n\n`S1JZUFRPTklTR1JFQVQ=`\n\nDecode it to find the flag.",
         "flag": "KRYPTONISGREAT"
     },
     {
