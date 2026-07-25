@@ -118,14 +118,24 @@ RUN echo "BANDITPLACEHOLDER19ZZZZZZZZZZZZZ" > /etc/bandit_pass/bandit20 \
 # down to bandit20 internally via getpwnam()+setuid(); see the comment
 # in src/level19_setuid.c for why setuid-bandit20-directly doesn't
 # actually work here (confirmed by live testing, not assumed).
+#
+# Group bandit19 + mode 4750 (NOT world-executable): level19_setuid.c does
+# not check its caller -- it unconditionally becomes bandit20 and runs
+# system(argv[1]). At 4755 root:root, the public bandit0 account could run
+# it directly and skip straight to level 20. Restricting execute to
+# bandit19's group closes that; the intended level-19 solve (run as
+# bandit19) is unaffected.
 COPY --from=builder /tmp/level19_setuid /home/bandit19/bandit20-do
-RUN chown root:root /home/bandit19/bandit20-do \
-    && chmod 4755 /home/bandit19/bandit20-do
+RUN chown root:bandit19 /home/bandit19/bandit20-do \
+    && chmod 4750 /home/bandit19/bandit20-do
 
 # Level 20: SUID binary owned by bandit21, sitting in bandit20's home.
+# Same reasoning as bandit20-do above: restrict execute to bandit20's group
+# as defense-in-depth (using it still requires bandit20's password over the
+# socket, so this alone isn't the trivial skip bandit20-do was).
 COPY --from=builder /tmp/level20_suconnect /home/bandit20/suconnect
-RUN chown bandit21:bandit21 /home/bandit20/suconnect \
-    && chmod 4755 /home/bandit20/suconnect
+RUN chown bandit21:bandit20 /home/bandit20/suconnect \
+    && chmod 4750 /home/bandit20/suconnect
 
 COPY daemons/ /opt/bandit-daemons/
 RUN chown -R banditd:banditd /opt/bandit-daemons \
