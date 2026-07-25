@@ -669,19 +669,21 @@ def _validate_bandit_content() -> None:
             _require(package in dockerfile_text, f"{challenge_id} expects missing package {package}")
         value = next(challenge["points"] for challenge in challenges_data if challenge["id"] == challenge_id)
         _require(len(tiers) == 3, f"{challenge_id} must have exactly three managed hint tiers")
-        # Real invariant check on the costs managed_tiers() actually
-        # produces (strictly increasing, and never more than the
-        # challenge's own point value) -- NOT a comparison of tier_costs()
-        # against itself, which can never fail regardless of what either
-        # function does.
+        # Real invariant check on the percents managed_tiers() actually
+        # produces (strictly increasing, cumulative percent-of-value, never
+        # reaching 100%) -- NOT a comparison of tier_costs() against itself,
+        # which can never fail regardless of what either function does.
+        # These are cumulative percentages of the challenge's own point
+        # value (see hint_economy.py), not additive currency amounts, so
+        # they are never summed against `value`.
         costs = [cost for _, cost in managed_tiers(value, tiers)]
         _require(
             len(costs) == 3 and costs[0] < costs[1] < costs[2],
             f"{challenge_id} managed hint costs must be strictly increasing across tiers",
         )
         _require(
-            sum(costs) <= value,
-            f"{challenge_id} managed hint costs exceed the challenge's own point value",
+            costs[-1] < 100,
+            f"{challenge_id} managed hint cost must leave a nonzero percentage of the challenge's value on solve",
         )
 
     challenge_ids = {challenge["id"] for challenge in challenges_data}
