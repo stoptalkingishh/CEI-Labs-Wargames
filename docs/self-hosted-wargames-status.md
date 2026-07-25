@@ -19,7 +19,7 @@ them entirely.
 | Track | Levels | Target image | Deployment model |
 | :--- | :--- | :--- | :--- |
 | Bandit | 34 (0-33) | `targets/bandit/` | `single-target`, one persistent SSH box, shared `instance_group: bandit` |
-| Krypton | 7 (0-6) | `targets/krypton/` | `single-target`, same pattern; level 0 needs no instance at all |
+| Krypton | 7 (0-6) | `targets/krypton/` | `single-target`, same pattern; every level including 0 has a real account/instance now (see cei-labs-event#17) |
 | Natas | 15 (0-14) | `targets/natas/` | `target-attacker`, one range (kali-novnc attacker + LAMP target) per team, shared `instance_group: natas` |
 
 All three are wired into CTFd via `scripts/build_{bandit,krypton,natas}.py`

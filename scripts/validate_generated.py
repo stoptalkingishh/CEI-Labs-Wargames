@@ -11,7 +11,13 @@ import yaml
 
 
 EXPECTED_CHALLENGES = 59
-EXPECTED_MAPPINGS = 58
+# krypton-00 used to be the one challenge with no instance_type mapping
+# at all (its puzzle was a static string in the CTFd description, no
+# login needed -- see docs/security-audit-status.md and
+# cei-labs-event#17). It now has a real krypton0 account on the same
+# shared Krypton box as every other level in that track, so all 59
+# challenges get a mapping.
+EXPECTED_MAPPINGS = 59
 EXPECTED_LAUNCHERS = 3
 VALID_INSTANCE_TYPES = {"web-app", "single-target", "target-attacker"}
 IMAGE_FIELDS = ("image", "target_image", "attacker_image")

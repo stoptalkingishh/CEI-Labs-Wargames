@@ -463,6 +463,19 @@ launching `krypton-01` through the real `/plugins/instance-launcher/launch`
 endpoint produced a genuine container whose ROT13 ciphertext decrypted
 correctly over an actual SSH session.
 
+**Update (see cei-labs-event#17):** the "level 0 needs no SSH/instance at
+all" design above was later revisited. It meant `krypton-00`'s flag was a
+static string baked into the CTFd description, identical for every team
+-- the one exception to the per-team-dynamic-flag guarantee the rest of
+this catalog was built to provide (see docs/security-audit-status.md and
+docs/challenge-inventory.md's own finding on this). `krypton-00` now has
+a real `krypton0` account on the same shared box as levels 1-6, with a
+per-team Base64 secret written into its home directory by
+`entrypoint.sh` at container start, same mechanism as every other level.
+`krypton0`'s login password is fixed and publicly known (`krypton0`,
+matching Bandit's own `bandit0` front door), since it's the entry point
+with no prior level to chain a password from.
+
 ## Phase 4 — Natas Self-Hosted LAMP Target + Kali Attacker (15 levels, one web server + one shared attacker per team)
 
 ### 4a. Target image — the LAMP stack itself

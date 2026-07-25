@@ -12,6 +12,7 @@ from pathlib import Path
 import re
 
 TITLES = {
+    0: "Base64 Decoding",
     1: "ROT13 Substitution Cipher",
     2: "Caesar Cipher (Unknown Shift)",
     3: "Frequency Analysis",
@@ -30,6 +31,7 @@ POLICY = (
 # is where render() appends the "CEI Labs Krypton N: Title" text, so keep
 # last lines short to stay well under the 80-char safety limit.
 ART = {
+    0: ["  V0VMQ09NRQ==", "     base64 -d", "  ???????? -> plaintext"],   # encoded string decoding to plaintext
     1: ["  A B C D ...", "  | | | |  (shift 13)", "  N O P Q ..."],       # letter->letter rotation map
     2: ["   .--?--.", "  <  shift  >>--", "   `--?--'"],                  # a dial with the shift unknown
     3: ["  #", "  # #   #", "  # # # # #", "  E T A O I N ."],            # a letter-frequency histogram
@@ -44,9 +46,12 @@ ART = {
 # Krypton starts icy blue (a fresh, still-legible cipher) and cools
 # further into cyan before crossing into magenta/violet by the final
 # LFSR level, reading as "the cipher gets colder and stranger" the
-# deeper you go, distinct from either sibling track at a glance.
+# deeper you go, distinct from either sibling track at a glance. Level 0
+# sits one step before the ramp even starts -- plain white, since Base64
+# isn't really a cipher at all (no key/shift/secret), just an encoding.
 _RESET = "\x1b[0m"
 COLOR = {
+    0: "\x1b[37m",     # plain white
     1: "\x1b[34m",     # blue
     2: "\x1b[36m",     # cyan
     3: "\x1b[36;1m",   # bright cyan
@@ -63,12 +68,12 @@ def _visible_len(line):
 
 
 def render(level):
-    if set(TITLES) != set(range(1, 7)):
+    if set(TITLES) != set(range(0, 7)):
         raise ValueError("Krypton coverage")
-    if set(ART) != set(range(1, 7)):
-        raise ValueError("Krypton banner art must cover levels 1 through 6")
-    if set(COLOR) != set(range(1, 7)):
-        raise ValueError("Krypton banner color must cover levels 1 through 6")
+    if set(ART) != set(range(0, 7)):
+        raise ValueError("Krypton banner art must cover levels 0 through 6")
+    if set(COLOR) != set(range(0, 7)):
+        raise ValueError("Krypton banner color must cover levels 0 through 6")
     title = TITLES[level]
     art = ART[level]
     color = COLOR[level]
@@ -91,7 +96,7 @@ def render(level):
 
 def generate(root):
     root = Path(root)
-    for level in range(1, 7):
+    for level in range(0, 7):
         (root / ("krypton%d" % level)).write_text(render(level), encoding="ascii")
 
 

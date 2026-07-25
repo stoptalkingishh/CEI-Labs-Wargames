@@ -40,9 +40,12 @@ INSTANCE_GROUP = "krypton"
 # the challenge view by cei-labs-engine's instance-launcher plugin, not
 # written into these descriptions, since the port is only known once an
 # instance actually exists. See the "Krypton: Start Here" challenge for
-# how that control works. All levels 1-6 connect as a Linux user named
-# after the level (`krypton1`, `krypton2`, ...) using the previous level's
-# flag as that account's password.
+# how that control works. All levels 0-6 connect as a Linux user named
+# after the level (`krypton0`, `krypton1`, ...) using the previous level's
+# flag as that account's password -- except `krypton0` itself, which has
+# no previous level to chain from and uses a fixed, publicly-known
+# password instead (`krypton0`, matching Bandit's own `bandit0` front
+# door; see targets/krypton/build/02-set-passwords.sh).
 
 # Define the dataset for Krypton Levels 0 to 6 based on OTW specifications
 challenges_data = [
@@ -52,9 +55,8 @@ challenges_data = [
         "points": 10,
         "desc": (
             "**Goal:** Learn the launch controls, then prove you used them.\n\n"
-            "Levels 1-6 in Krypton (level 0 needs no environment at all) share one box, "
-            "launched from a control attached to each of those challenges, right there on "
-            "the challenge itself:\n"
+            "Levels 0-6 in Krypton share one box, launched from a control attached to each "
+            "of those challenges, right there on the challenge itself:\n"
             "- **Launch Environment** -- starts the box, or reconnects you to one already "
             "running.\n"
             "- **Reboot Host** -- restarts it in place if it gets stuck. Same connection "
@@ -63,8 +65,9 @@ challenges_data = [
             "if something's broken beyond a reboot; anything you changed inside it is lost.\n"
             "- **+5 more minutes** -- shows up only once every level in this track is solved "
             "and a shutdown countdown has started. Extends it if you're not done yet.\n\n"
-            "Click Launch, wait for it to show a host and port, then connect as `krypton1` "
-            "with password `KRYPTONISGREAT` (level 0's own flag) and read `welcome.txt` in "
+            "Click Launch, wait for it to show a host and port, then connect as `krypton0` "
+            "with password `krypton0` (the fixed, publicly-known entry password for Krypton "
+            "-- same idea as Bandit's own `bandit0`/`bandit0`) and read `welcome.txt` in "
             "the home directory. Submit its contents as your flag."
         ),
         "flag": "WELCOME_TO_KRYPTON"
@@ -73,8 +76,15 @@ challenges_data = [
         "id": "krypton-00",
         "name": "Krypton 0 -> 1: Base64 Decoding",
         "points": 200,
-        "desc": "**Goal:** Decode a Base64-encoded password.\n\nThis level needs no environment at all -- the following string encodes the password for level 1 in Base64:\n\n`S1JZUFRPTklTR1JFQVQ=`\n\nDecode it to find the flag.",
-        "flag": "KRYPTONISGREAT"
+        "desc": (
+            "**Goal:** Decode a Base64-encoded password.\n\n"
+            "Click Launch, wait for it to show a host and port, then connect as `krypton0` "
+            "with password `krypton0` (the fixed, publicly-known entry password for Krypton "
+            "-- same idea as Bandit's own `bandit0`/`bandit0`). Your home directory contains "
+            "`encoded.txt`, a Base64-encoded string. Decode it to find the password for "
+            "krypton1."
+        ),
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton0"}
     },
     {
         "id": "krypton-01",
@@ -153,9 +163,9 @@ EXTRA_INFO = {
 # command, matching each description's own "Helpful reading" section.
 HINTS = {
     "krypton-00": [
-        "Run `base64 --help` on the Krypton target.",
-        "Base64 turns arbitrary bytes into a fixed set of readable characters (letters, digits, `+`, `/`, `=` padding). Recognizing that character set -- including the trailing `=` padding -- is the tell that it's Base64, not an actual cipher, and Base64's own tooling has a documented decode flag.",
-        "`echo 'S1JZUFRPTklTR1JFQVQ=' | base64 -d` decodes the string straight back to the plaintext password -- no key, shift, or other secret involved.",
+        "Log in as `krypton0` with password `krypton0` (the fixed, publicly-known entry password), then run `base64 --help` on the Krypton target.",
+        "Your home directory has a file called `encoded.txt`. Base64 turns arbitrary bytes into a fixed set of readable characters (letters, digits, `+`, `/`, `=` padding). Recognizing that character set -- including the trailing `=` padding -- is the tell that it's Base64, not an actual cipher, and Base64's own tooling has a documented decode flag.",
+        "`base64 -d ~/encoded.txt` (or `cat ~/encoded.txt | base64 -d`) decodes the file straight back to the plaintext password for krypton1 -- no key, shift, or other secret involved.",
     ],
     "krypton-01": [
         "ROT13 on Wikipedia.",
@@ -193,27 +203,22 @@ HINTS = {
 def _progression_note(challenge_id: str) -> str:
     """Return the common, current-instance account-transition instruction.
     Mirrors build_bandit.py's _progression_note -- see that function's
-    docstring/comment for the full rationale. Krypton's numbering is
-    offset from Bandit's: level 0 (`krypton-00`) is a pure Base64 decode
-    with no environment/account of its own (see build/01-create-users.sh
-    -- there is no krypton0 user), so it gets a variant note pointing at
-    `krypton1` without claiming a "current account"."""
+    docstring/comment for the full rationale. Krypton's account chain now
+    runs the full 0-6 range, same shape as Bandit's: `krypton-00` used to
+    be a pure Base64 decode with no environment/account of its own (see
+    build/01-create-users.sh's history and cei-labs-event#17), but it now
+    has a real `krypton0` account like every other level, so it falls
+    through to the same generic progression note the other non-final
+    levels use -- no more special-casing needed here."""
     if challenge_id == "krypton-start-here":
         return (
             "\n\n**Next challenge:** After submitting this flag, begin Krypton 0 -> 1: "
-            "Base64 Decoding. That level needs no environment -- decode the Base64 "
-            "string given in its own description to find the password for `krypton1`."
+            "Base64 Decoding. Connect as `krypton0` (password `krypton0`, the fixed "
+            "public entry password) and decode the Base64 string in your home "
+            "directory to find the password for `krypton1`."
         )
 
     level = int(challenge_id.rsplit("-", 1)[1])
-
-    if level == 0:
-        return (
-            "\n\n**Account progression:** This level needs no login of its own. After "
-            "recovering and submitting this password, connect to the current host and "
-            "port shown by the launch panel as `krypton1`, using the recovered "
-            "password, before starting the next level."
-        )
 
     if level == 6:
         return (
@@ -255,7 +260,7 @@ def _render_description(challenge: dict) -> str:
 
 def _validate_krypton_content() -> None:
     """Keep help guidance and account transitions aligned with this curriculum.
-    In particular, this guarantees every level 1-6 states which account
+    In particular, this guarantees every level 0-6 states which account
     it's working as and which account to switch to next -- generated
     here instead of hand-typed per description, so a gap like krypton-02
     previously shipping with no login instruction at all can't recur."""
@@ -273,9 +278,7 @@ def _validate_krypton_content() -> None:
         challenge_id = f"krypton-{level:02d}"
         _require(challenge_id in challenge_ids, f"missing {challenge_id}")
         note = _progression_note(challenge_id)
-        if level == 0:
-            _require("`krypton1`" in note, f"{challenge_id} omits the next account")
-        elif level == 6:
+        if level == 6:
             _require("`krypton6`" in note, f"{challenge_id} omits its current account")
             _require("no further account switch is required" in note, f"{challenge_id} omits completion guidance")
         else:
@@ -315,11 +318,12 @@ flags:
 {_flags_yaml(ch['flag'])}state: visible
 version: "0.1"
 """
-    if ch["id"] != "krypton-00":
-        # Level 0 needs no SSH/instance at all -- it's a static string in
-        # the description itself, so it gets no instance mapping. Every
-        # other challenge, including krypton-start-here, does.
-        yaml_content += f"""instance_type: single-target
+    # Every Krypton challenge, including krypton-00 and krypton-start-here,
+    # gets an instance mapping -- krypton-00 used to be excluded (its
+    # puzzle was a static string in the description itself, no login
+    # needed), but now that it has a real krypton0 account on the same
+    # shared box as every other level, it needs the mapping too.
+    yaml_content += f"""instance_type: single-target
 image: {KRYPTON_IMAGE}
 instance_group: {INSTANCE_GROUP}
 shutdown_on_solve: {"true" if is_final_level else "false"}

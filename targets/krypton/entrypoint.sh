@@ -2,7 +2,7 @@
 # No background daemons for Krypton (all 7 levels are pure crypto
 # puzzles, nothing needs a listening service beyond sshd itself).
 #
-# Levels 1-5's content/passwords ARE generated here, at container START,
+# Levels 0-5's content/passwords ARE generated here, at container START,
 # from per-team secrets in $LEVEL_SECRETS (a JSON blob the orchestrator
 # injects -- see cei-labs-engine's instance_types.py
 # generate_track_secrets()/generate_alpha_track_secrets()). This is what
@@ -12,18 +12,26 @@
 # secret_keys) since their flag gets embedded inside a passage that's
 # itself ROT13/substitution/Vigenere-encrypted -- those ciphers only
 # transform letters, so a normal token's digits/-/_ would pass through
-# unencrypted and visibly stand out. krypton1's password (level 0's
-# flag) and level 6's content are still build-time/static for now -- see
-# docs/security-audit-status.md and docs/self-hosted-wargames-status.md
-# for what's converted so far. Any level missing its key in
-# $LEVEL_SECRETS is simply left with no usable password/content -- a
-# locked account or a build-time-placeholder-free directory is a safe
-# failure mode, not a shared-credential one, so this does not refuse to
-# start the whole box over it.
+# unencrypted and visibly stand out. Level 0 uses a normal (non-alpha)
+# secret_keys entry, same reasoning as levels 2/6: Base64 encodes every
+# byte uniformly regardless of character class, so there's no
+# alpha-only constraint to satisfy. krypton0 used to have no account or
+# per-team content at all -- its puzzle was a static string embedded
+# directly in the CTFd description, and krypton1's password was that
+# same static string (see docs/security-audit-status.md and
+# cei-labs-event#17 for that history); both are now generated here like
+# every other level. Level 6's content is still build-time/static for
+# now -- see docs/security-audit-status.md and
+# docs/self-hosted-wargames-status.md for what's converted so far. Any
+# level missing its key in $LEVEL_SECRETS is simply left with no usable
+# password/content -- a locked account or a build-time-placeholder-free
+# directory is a safe failure mode, not a shared-credential one, so this
+# does not refuse to start the whole box over it.
 set -e
 
 if [ -n "${LEVEL_SECRETS:-}" ]; then
     python3 - <<'PYEOF'
+import base64
 import json
 import os
 import string
@@ -73,6 +81,23 @@ def vigenere_encrypt(plaintext, key):
             out.append(ch)
     return "".join(out)
 
+
+# ---- Level 0: Base64 -> krypton1's password -----------------------------
+flag0 = secrets.get("krypton0")
+if flag0:
+    subprocess.run(["chpasswd"], input=f"krypton1:{flag0}\n", text=True, check=True)
+    mkdir_owned("/home/krypton0", "krypton0:krypton0")
+    write(
+        "/home/krypton0/encoded.txt",
+        base64.b64encode(flag0.encode()).decode() + "\n",
+        "krypton0:krypton0", 0o440,
+    )
+    write(
+        "/home/krypton0/README",
+        "The file 'encoded.txt' in this directory contains the password for "
+        "krypton1, encoded in Base64.\n",
+        "krypton0:krypton0", 0o444,
+    )
 
 # ---- Level 1: ROT13 -> krypton2's password -----------------------------
 flag1 = secrets.get("krypton1")

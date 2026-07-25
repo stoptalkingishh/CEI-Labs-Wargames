@@ -56,6 +56,17 @@ readable via their own `?source` view-source feature, without solving
 anything — closed by moving those values into a separate runtime-written
 include file the main page never dumps via `highlight_file()`.
 
+**Found after this "all 4 phases complete" note was written, now also
+closed (cei-labs-event#17):** `krypton-00` was a genuine exception to the
+per-team-unique-flag guarantee above — it had no `instance_type`/target
+account at all, so its 200-point flag was a fixed Base64 string baked
+directly into the CTFd description, identical for every team (see
+`docs/challenge-inventory.md`'s finding). It now has a real `krypton0`
+account on the same shared Krypton box as levels 1-6, with a per-team
+Base64 secret written into its home directory by `entrypoint.sh` at
+container start, closing the last remaining static-flag gap outside the
+three low-stakes onboarding tutorials.
+
 ## Not done
 
 Content generation is fully converted. **Syncing the real 56-level
