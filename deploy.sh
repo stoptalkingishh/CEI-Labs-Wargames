@@ -104,11 +104,22 @@ if [ -n "${CTFD_URL:-}" ] && [ -n "${CTFD_TOKEN:-}" ]; then
     # challenge_exists() check below then reads that HTML as an empty
     # inventory — every challenge takes the "install as new" path even when
     # it already exists, silently creating duplicates on a second run.
+    # `view=admin` is required so this preflight also sees challenges in the
+    # "hidden"/"locked" state. CTFd's /api/v1/challenges endpoint filters
+    # those out unconditionally unless the caller is an admin AND passes
+    # view=admin -- an admin token alone is not enough (see
+    # CTFd/api/v1/challenges.py ChallengeList.get(): `admin_view = is_admin()
+    # and request.args.get("view") == "admin"`, which feeds
+    # get_all_challenges(admin=admin_view)). Without this, every
+    # already-installed-but-hidden challenge (e.g. because the wargame-stages
+    # plugin hides everything until a stage starts) looks "not found" below,
+    # deploy.sh tries to install it fresh, and CTFd's name-uniqueness check
+    # fails the run on the first such challenge. See cei-labs-event#30.
     auth_header_file=$(write_secret_header "Authorization" "Token ${CTFD_TOKEN}")
     preflight_code=$(curl "${curl_opts[@]}" -o .ctf/preflight-challenges.json -w '%{http_code}' \
         --header @"$auth_header_file" \
         -H "Content-Type: application/json" \
-        "${CTFD_URL}/api/v1/challenges?per_page=100")
+        "${CTFD_URL}/api/v1/challenges?per_page=100&view=admin")
     rm -f -- "$auth_header_file"
     if [ "$preflight_code" != "200" ]; then
         echo "Error: CTFd authentication preflight returned HTTP ${preflight_code}." >&2
