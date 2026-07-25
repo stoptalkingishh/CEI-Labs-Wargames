@@ -490,7 +490,7 @@ HINTS = {
         "`ssh bandit18@<host> -p <port> cat readme` appends a command directly to the SSH invocation -- SSH runs just that one command non-interactively over the connection and returns its output, entirely bypassing the interactive-shell startup (and therefore `.bashrc`) that would otherwise log you out immediately.",
     ],
     "bandit-19": [
-        "[Setuid on Wikipedia](https://en.wikipedia.org/wiki/Setuid).",
+        "Setuid on Wikipedia.",
         "A setuid binary runs with the FILE OWNER's permissions, not the permissions of whoever launched it -- meaning if a more-privileged account owns this binary, running it lets you act with THAT account's privileges for as long as it's running. Running an unfamiliar binary with no arguments often prints a usage message telling you how it expects to be invoked.",
         "Run the setuid binary in bandit19's home directory with no arguments to see its usage message -- it expects a command to run with elevated privilege. Passing it something like `./bandit20-do cat /etc/bandit_pass/bandit20` (quoted as one argument if needed) runs that `cat` as the binary's owner, printing bandit20's password directly.",
     ],
@@ -611,7 +611,7 @@ APPROVED_TIER_ONE = {
     "bandit-16": ("`nmap --help`.", "nmap"),
     "bandit-17": ("`diff --help`.", "diffutils"),
     "bandit-18": ("`ssh -h`.", "openssh-client"),
-    "bandit-19": ("[Setuid on Wikipedia](https://en.wikipedia.org/wiki/Setuid).", None),
+    "bandit-19": ("Setuid on Wikipedia.", None),
     "bandit-20": ("`nc -h`.", "netcat-openbsd"),
     "bandit-21": ("`crontab -h`.", "cron"),
     "bandit-22": ("`crontab -h`.", "cron"),
@@ -643,7 +643,12 @@ def _render_description(challenge: dict) -> str:
             cmd_list = ", ".join(f"`{command}`" for command in cmds)
             full_desc += f"\n\n**Commands you may need to solve this level:** {cmd_list}"
         if reading:
-            links = "\n".join(f"- [{title}]({url})" for title, url in reading)
+            # No live links: the venue network runs with no internet access
+            # (see docs/offline-dependency-audit.md and
+            # cei-labs-event#8/live-hint-links-offline-gap), so these are
+            # rendered as plain reference titles rather than clickable
+            # [title](url) markdown links, which would be dead at the venue.
+            links = "\n".join(f"- {title}" for title, url in reading)
             full_desc += f"\n\n**Helpful reading:**\n{links}"
     return full_desc + _progression_note(challenge["id"])
 

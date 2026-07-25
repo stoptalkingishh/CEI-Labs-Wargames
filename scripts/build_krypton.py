@@ -158,27 +158,27 @@ HINTS = {
         "`echo 'S1JZUFRPTklTR1JFQVQ=' | base64 -d` decodes the string straight back to the plaintext password -- no key, shift, or other secret involved.",
     ],
     "krypton-01": [
-        "[ROT13 on Wikipedia](https://en.wikipedia.org/wiki/ROT13).",
+        "ROT13 on Wikipedia.",
         "ROT13 shifts every letter 13 positions through the alphabet, wrapping at the end. Since the alphabet has 26 letters, shifting by 13 twice returns you to the start -- meaning the SAME transformation both encrypts and decrypts. `tr` can perform an arbitrary letter-for-letter substitution given two character ranges.",
         "Log in as `krypton1`, then `tr '[:alpha:]' 'N-ZA-Mn-za-m' < /home/krypton1/krypton2` maps every letter 13 positions ahead (wrapping past Z to A) -- applying this once to the ciphertext reverses the ROT13 and reveals the password.",
     ],
     "krypton-02": [
-        "[Known-plaintext attack on Wikipedia](https://en.wikipedia.org/wiki/Known-plaintext_attack).",
+        "Known-plaintext attack on Wikipedia.",
         "The `encrypt` binary looks for `keyfile.dat` in your CURRENT directory, not a fixed path, and will encrypt any plaintext you give it using that key. If you feed it text whose plaintext you already know, comparing your known input against its output reveals exactly what the cipher did to it.",
         "`mktemp -d` for a scratch directory, `cd` into it, then `ln -s /home/krypton2/keyfile.dat` so `encrypt` (which only looks in your current directory) can find it. Run `/home/krypton2/encrypt` against a file of your own containing many repeated `A` characters -- since every `A` shifts by the exact same amount, the output tells you precisely which letter `A` became, and that letter's position in the alphabet is the shift (e.g. if `A` becomes `M`, the shift is 12). Once you know the shift, reverse it against `krypton3` with `tr`, e.g. `tr 'A-Za-z' 'N-ZA-Mn-za-m'` for a shift of 13, adjusting the rotation to match what you actually found.",
     ],
     "krypton-03": [
-        "[Frequency analysis on Wikipedia](https://en.wikipedia.org/wiki/Frequency_analysis).",
+        "Frequency analysis on Wikipedia.",
         "In normal English text, letters don't appear equally often -- E, T, A, O, I, N are consistently the most common. If a substitution cipher always maps the same plaintext letter to the same ciphertext letter, counting ciphertext letter frequencies and matching the ranking against known English frequency order recovers the substitution alphabet, one letter at a time. The extra intercepted files (`found1`, `found2`, `found3`) were encrypted with the SAME key, so combining them gives more data for the same statistics.",
         "Combine the ciphertext with the extra intercepted files and count letter frequency: `cat /home/krypton3/found1 /home/krypton3/found2 /home/krypton3/found3 /home/krypton3/krypton4 | tr -cd 'A-Za-z' | tr 'a-z' 'A-Z' | fold -w1 | sort | uniq -c | sort -rn`. Map the most frequent output letter to E, next to T, and so on down the standard English frequency order (E T A O I N ...), then apply that substitution with `tr` against `krypton4` to reveal the password. Some letters may need manual correction/guessing once partial words start appearing.",
     ],
     "krypton-04": [
-        "[Vigenere cipher on Wikipedia](https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher).",
+        "Vigenere cipher on Wikipedia.",
         "A Vigenere cipher with a 6-letter key actually applies 6 DIFFERENT Caesar shifts in rotation -- character 1 uses shift A, character 2 uses shift B, ..., character 7 goes back to shift A, and so on. Pulling out every 6th character starting from each of the 6 starting positions produces 6 groups, each encrypted with just ONE consistent shift -- solvable the same way as a normal Caesar cipher.",
         "Split the ciphertext into 6 interleaved groups (characters at positions 0, 6, 12, ... form group 1; positions 1, 7, 13, ... form group 2; and so on). Run frequency analysis (same technique as the previous level) on EACH group independently to find its own Caesar shift, then reassemble the 6 recovered shifts back into their original character positions to read the full plaintext password.",
     ],
     "krypton-05": [
-        "[Kasiski examination on Wikipedia](https://en.wikipedia.org/wiki/Kasiski_examination).",
+        "Kasiski examination on Wikipedia.",
         "Look for repeated 3+ character substrings appearing more than once in the ciphertext, and note the DISTANCE (in characters) between each repeat. The true key length usually divides most of these distances evenly, since a repeated plaintext fragment only produces identical ciphertext when it lines up with the same position in the repeating key.",
         "Search the ciphertext for repeated 3-4 character sequences and record the distance between each occurrence; find the greatest common factor across those distances (in this deployment, that points to a key length of 9). Once the key length is known, split into that many interleaved groups exactly as in the previous level, solve each group's Caesar shift via frequency analysis, and reassemble.",
     ],
@@ -243,7 +243,12 @@ def _render_description(challenge: dict) -> str:
             cmd_list = ", ".join(f"`{command}`" for command in cmds)
             full_desc += f"\n\n**Commands you may need to solve this level:** {cmd_list}"
         if reading:
-            links = "\n".join(f"- [{title}]({url})" for title, url in reading)
+            # No live links: the venue network runs with no internet access
+            # (see docs/offline-dependency-audit.md and
+            # cei-labs-event#8/live-hint-links-offline-gap), so these are
+            # rendered as plain reference titles rather than clickable
+            # [title](url) markdown links, which would be dead at the venue.
+            links = "\n".join(f"- {title}" for title, url in reading)
             full_desc += f"\n\n**Helpful reading:**\n{links}"
     return full_desc + _progression_note(challenge["id"])
 
