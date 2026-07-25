@@ -37,29 +37,31 @@ its own.
 
 ## A real finding surfaced while building this table
 
-**Four levels use a static, non-per-team flag, not the per-team dynamic
-flags the rest of the catalog uses**, despite `docs/security-audit-status.md`
-describing the static-flags fix as "all 4 phases complete":
+**Three levels use a static, non-per-team flag, not the per-team dynamic
+flags the rest of the catalog uses.** (Originally four — `krypton-00` was
+the fourth; see "Resolved" below.)
 
 | Level | Points | Flag | Why |
 | :--- | ---: | :--- | :--- |
 | `bandit-start-here` | 10 | `WELCOME_TO_BANDIT` | Onboarding tutorial ("prove you used the launch controls") — no scored content |
 | `krypton-start-here` | 10 | `WELCOME_TO_KRYPTON` | Same |
 | `natas-start-here` | 10 | `WELCOME_TO_NATAS` | Same |
-| `krypton-00` | 200 | `KRYPTONISGREAT` | **Not a tutorial — a real, scored, 200-point challenge.** Has no `instance_type`/target image at all: the ciphertext is embedded directly in the challenge description text (Base64 of a fixed string), so there's no per-team infrastructure to scope a dynamic flag to. Confirmed intentional — `docs/self-hosted-wargames-status.md` explicitly notes "level 0 needs no instance at all." |
 
 The three 10-point tutorials are low-stakes by design and a static flag
-there is defensible. `krypton-00` is different: it's real scored content
-(200 points, same as `bandit-02`/`natas-00`) with an identical flag for
-every team, which is the exact collusion/leakage risk the other 55 levels'
-dynamic-flag work was built to close — it's just structurally exempt
-because the challenge has no live per-team system to derive a flag from.
-That's a legitimate design constraint, not an oversight, but it was never
-written down as a deliberate exception anywhere before this table. Worth
-either an explicit accepted-risk note (recommended — this is genuinely
-fine given the mechanic) or reworking `krypton-00` to embed a per-team
-value in its description text (e.g. templated Base64 unique per team),
-if full flag-uniqueness coverage is wanted for all 59 levels rather than 58.
+there is defensible.
+
+**Resolved (cei-labs-event#17):** `krypton-00` used to be the exception
+to that "low-stakes only" rule — a real, scored, 200-point challenge
+(same as `bandit-02`/`natas-00`) with an identical flag for every team,
+the exact collusion/leakage risk the other levels' dynamic-flag work was
+built to close, because it had no live per-team system to derive a flag
+from (no `instance_type`, no target account — the ciphertext was a fixed
+Base64 string embedded directly in the description text). It now has a
+real `krypton0` account on the same shared Krypton box as levels 1-6,
+with a per-team Base64 secret written into its home directory by
+`entrypoint.sh` at container start — the same per-team-dynamic mechanism
+every other level uses. All 59 challenges now have per-team-unique
+flags.
 
 ### bandit (35 levels)
 
@@ -110,7 +112,7 @@ default 120 min), not a manual reset button.
 
 | ID | Points | Flag source | Instance type | Reset/teardown | Hints (cost) | Expected solve path |
 | :--- | ---: | :--- | :--- | :--- | :--- | :--- |
-| `krypton-00` | 200 | `KRYPTONISGREAT` (static — see finding above) | **none — no instance, self-contained puzzle** | n/a | 3 (20/40/60) | Decode a Base64-encoded password given directly in the description. |
+| `krypton-00` | 200 | `per_team_dynamic` (fixed no longer — see cei-labs-event#17) | `single-target` | idle-timeout | 3 (20/40/60) | Log in as `krypton0` (fixed public password `krypton0`) and decode a per-team Base64-encoded string in the home directory. |
 | `krypton-01` | 250 | `per_team_dynamic_alpha` | `single-target` | idle-timeout | 3 (25/50/75) | Reverse a ROT13 rotation cipher. |
 | `krypton-02` | 300 | `per_team_dynamic` | `single-target` | idle-timeout | 3 (30/60/90) | Decrypt a Caesar cipher of unknown shift. |
 | `krypton-03` | 350 | `per_team_dynamic_alpha` | `single-target` | idle-timeout | 3 (35/70/105) | Break a substitution cipher using letter-frequency analysis. |
@@ -119,8 +121,9 @@ default 120 min), not a manual reset button.
 | `krypton-06` | 500 | `per_team_dynamic` | `single-target` | **auto on solve** | 3 (50/100/150) | Recover a repeating keystream and use it to decrypt the final password. |
 | `krypton-start-here` | 10 | `WELCOME_TO_KRYPTON` (static — see finding above) | `single-target` | idle-timeout | 0 | Learn the launch controls, then prove you used them. |
 
-Dependencies: `targets/krypton/` image (all levels except `krypton-00`,
-which needs no target at all), `instance_group: krypton`.
+Dependencies: `targets/krypton/` image (all 8 levels including
+`krypton-00`, which now has its own `krypton0` account like every other
+level), `instance_group: krypton`.
 
 ### natas (16 levels)
 

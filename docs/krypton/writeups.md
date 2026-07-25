@@ -3,28 +3,34 @@
 Complete, step-by-step solutions for all 7 Krypton levels. Instructor
 answer key — not for participant distribution.
 
-Levels 1–6 connect via SSH to the host/port shown on that challenge's
-launch panel (all 6 share one persistent box — see "Krypton: Start
+Levels 0–6 connect via SSH to the host/port shown on that challenge's
+launch panel (all 7 share one persistent box — see "Krypton: Start
 Here"), logging in as the account named after the level, using the
-previous level's flag as that account's password. Level 0 needs no
-connection at all.
+previous level's flag as that account's password -- except level 0,
+whose password is the fixed, publicly-known literal string `krypton0`
+(there's no level -1 to chain from; same idea as Bandit's own `bandit0`
+front door). Example values below are illustrative only -- real
+deployments generate a fresh per-team secret for every level via
+`entrypoint.sh`, so a live team's actual passwords/flags will differ
+from what's shown here.
 
 ---
 
 ### Krypton 0 → 1: Base64 Decoding
-**Goal:** Decode a Base64 string given directly in the description --
-`S1JZUFRPTklTR1JFQVQ=`.
+**Goal:** Log in as `krypton0` and decode a Base64 string found in the
+home directory.
 ```
-echo 'S1JZUFRPTklTR1JFQVQ=' | base64 -d
+ssh krypton0@<host> -p <port>    # password: krypton0
+base64 -d ~/encoded.txt
 ```
-**Result:** `KRYPTONISGREAT`
+**Result:** `KRYPTONISGREAT` (example -- per-team in a live deployment)
 
 ---
 
 ### Krypton 1 → 2: ROT13 Substitution Cipher
 **Goal:** Reverse a ROT13 rotation.
 ```
-ssh krypton1@<host> -p <port>    # password: KRYPTONISGREAT
+ssh krypton1@<host> -p <port>    # password: KRYPTONISGREAT (from level 0)
 tr '[:alpha:]' 'N-ZA-Mn-za-m' < /krypton/krypton1/krypton2
 ```
 **Result:** `ROTTEN`
