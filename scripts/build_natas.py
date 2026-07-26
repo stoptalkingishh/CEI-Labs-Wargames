@@ -89,17 +89,15 @@ challenges_data = [
             "and target) from scratch. Use this if something's broken beyond a reboot.\n"
             "- **+5 more minutes** -- shows up only once every level in this track is solved "
             "and a shutdown countdown has started.\n\n"
-            "Click Launch, open the attacker workstation (noVNC or SSH, your choice), and "
-            "from inside it browse to `http://<target-host>:8000/welcome.txt`, replacing "
-            "`<target-host>` with the exact value shown next to **Target** in the launch "
-            "panel below (NOT the **Host** field further up -- that one is only for "
-            "connecting *to* the attacker itself over SSH, not for reaching the target). "
-            "The browser will prompt for a login -- this is the target's own HTTP Basic "
-            "Auth (a completely separate login from the attacker workstation's own "
-            "Username/password fields above): use `natas0` for both username and password. "
-            "Submit the file's contents as your flag."
+            "Click Launch, then open the attacker workstation using the **noVNC** link "
+            "specifically (not SSH this time -- SSH gives you a text-only shell with no "
+            "desktop, and what you need to read next is only visible on the desktop "
+            "itself). The moment the desktop loads, its wallpaper already has your answer "
+            "on it -- no file to go read, no login to figure out. The small line directly "
+            "under the large NATAS logo (not the logo itself, and not the smaller \"CEI "
+            "LABS\" line below that) is your flag -- copy it word for word, spaces included."
         ),
-        "flag": "WELCOME_TO_NATAS"
+        "flag": "WELCOME TO NATAS"
     },
     {
         "id": "natas-00",
