@@ -94,6 +94,9 @@ challenges_data = [
             "`<target-host>` with the exact value shown next to **Target** in the launch "
             "panel below (NOT the **Host** field further up -- that one is only for "
             "connecting *to* the attacker itself over SSH, not for reaching the target). "
+            "The browser will prompt for a login -- this is the target's own HTTP Basic "
+            "Auth (a completely separate login from the attacker workstation's own "
+            "Username/password fields above): use `natas0` for both username and password. "
             "Submit the file's contents as your flag."
         ),
         "flag": "WELCOME_TO_NATAS"
