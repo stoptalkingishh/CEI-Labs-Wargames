@@ -47,7 +47,31 @@ INSTANCE_GROUP = "krypton"
 # password instead (`krypton0`, matching Bandit's own `bandit0` front
 # door; see targets/krypton/build/02-set-passwords.sh).
 
-# Define the dataset for Krypton Levels 0 to 6 based on OTW specifications
+# Shown once, in krypton-start-here only -- identical wording to Bandit's
+# own SSH_CONNECT_GUIDE (scripts/build_bandit.py) since it's the same
+# underlying connection mechanism for both tracks, just duplicated rather
+# than imported since neither build script otherwise depends on the
+# other. Every app name here is plain text, deliberately not a clickable
+# link -- see build_bandit.py's SSH_CONNECT_GUIDE comment for why.
+SSH_CONNECT_GUIDE = (
+    "**Connecting via SSH:** Once launched, the panel below shows a Host and Port. "
+    "Every level in this track connects the same way: `ssh <username>@<host> -p <port>`, "
+    "then enter the password when prompted. How you run that command depends on your "
+    "own device -- most players will be on Windows, which is covered below, but every "
+    "common platform works:\n"
+    "- **Windows 10/11:** Open PowerShell (search for it in the Start menu) -- `ssh` is "
+    "already built in, no install needed.\n"
+    "- **macOS:** Open Terminal (Spotlight search -> \"Terminal\") -- `ssh` is already "
+    "built in.\n"
+    "- **Linux:** Open your terminal emulator of choice -- `ssh` is already built in on "
+    "virtually every distribution.\n"
+    "- **iOS (iPhone/iPad):** No built-in terminal. Install a free SSH client app first, "
+    "e.g. Termius, from the App Store.\n"
+    "- **Android:** No built-in terminal either. Install a free SSH client app first, "
+    "e.g. Termius or Termux, from the Play Store."
+)
+
+# Define the dataset for Krypton Levels 0 to 6 based on OverTheWire specifications
 challenges_data = [
     {
         "id": "krypton-start-here",
@@ -65,7 +89,8 @@ challenges_data = [
             "if something's broken beyond a reboot; anything you changed inside it is lost.\n"
             "- **+5 more minutes** -- shows up only once every level in this track is solved "
             "and a shutdown countdown has started. Extends it if you're not done yet.\n\n"
-            "Click Launch, wait for it to show a host and port, then connect as `krypton0` "
+            + SSH_CONNECT_GUIDE +
+            "\n\nClick Launch, wait for it to show a Host and Port, then connect as `krypton0` "
             "with password `krypton0` (the fixed, publicly-known entry password for Krypton "
             "-- same idea as Bandit's own `bandit0`/`bandit0`) and read `welcome.txt` in "
             "the home directory. Submit its contents as your flag."
