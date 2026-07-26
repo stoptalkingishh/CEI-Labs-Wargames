@@ -56,6 +56,32 @@ INSTANCE_GROUP = "bandit"
 # password, so that pairing is stated once here rather than in every
 # description below.
 
+# Shown once, in bandit-start-here only -- every later level assumes the
+# player already knows how to open a terminal and run `ssh`, so repeating
+# this per-level would just be noise. Every app name here is plain text,
+# deliberately not a clickable link: this venue's network has no internet
+# access during the event (see docs/offline-dependency-audit.md, the same
+# reason EXTRA_INFO's own reading-material links are plain titles, not
+# URLs) -- a player installs an app on their own device beforehand, over
+# their own connection, not from inside the venue.
+SSH_CONNECT_GUIDE = (
+    "**Connecting via SSH:** Once launched, the panel below shows a Host and Port. "
+    "Every level in this track connects the same way: `ssh <username>@<host> -p <port>`, "
+    "then enter the password when prompted. How you run that command depends on your "
+    "own device -- most players will be on Windows, which is covered below, but every "
+    "common platform works:\n"
+    "- **Windows 10/11:** Open PowerShell (search for it in the Start menu) -- `ssh` is "
+    "already built in, no install needed.\n"
+    "- **macOS:** Open Terminal (Spotlight search -> \"Terminal\") -- `ssh` is already "
+    "built in.\n"
+    "- **Linux:** Open your terminal emulator of choice -- `ssh` is already built in on "
+    "virtually every distribution.\n"
+    "- **iOS (iPhone/iPad):** No built-in terminal. Install a free SSH client app first, "
+    "e.g. Termius, from the App Store.\n"
+    "- **Android:** No built-in terminal either. Install a free SSH client app first, "
+    "e.g. Termius or Termux, from the Play Store."
+)
+
 # Define the dataset for Bandit Levels 0 to 33
 challenges_data = [
     {
@@ -75,7 +101,8 @@ challenges_data = [
             "- **+5 more minutes** -- shows up only once you've solved every level in this "
             "track and a shutdown countdown has started. Extends it if you're not done "
             "looking around yet.\n\n"
-            "Click Launch, wait for it to show a host and port, then connect as `bandit0` "
+            + SSH_CONNECT_GUIDE +
+            "\n\nClick Launch, wait for it to show a Host and Port, then connect as `bandit0` "
             "with password `bandit0` and read `welcome.txt` in the home directory (not "
             "`readme` -- that one's level 0's real puzzle). Submit its contents as your flag."
         ),
