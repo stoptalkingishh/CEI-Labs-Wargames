@@ -32,8 +32,8 @@ POLICY = (
 # last lines short to stay well under the 80-char safety limit.
 ART = {
     0: ["  V0VMQ09NRQ==", "     base64 -d", "  ???????? -> plaintext"],   # encoded string decoding to plaintext
-    1: ["  A B C D ...", "  | | | |  (shift 13)", "  N O P Q ..."],       # letter->letter rotation map
-    2: ["   .--?--.", "  <  shift  >>--", "   `--?--'"],                  # a dial with the shift unknown
+    1: ["  A B C D ...", "  | | | |  (shift 13)", "  N O P Q ..."],       # letter->letter rotation map, shift known
+    2: ["  A -> ?", "  B -> ?   shift unknown", "  C -> ?"],              # same mapping, offset withheld
     3: ["  #", "  # #   #", "  # # # # #", "  E T A O I N ."],            # a letter-frequency histogram
     4: ["  C I P H E R", "  | | | | | |", "  ? ? ? ? ? ?  (key=6)"],      # a fixed-width Vigenere key grid
     5: ["  ...KEY...KEY...", "      ^-------^", "      gap -> key length"],  # Kasiski repeat-distance find
