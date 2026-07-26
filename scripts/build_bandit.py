@@ -103,10 +103,14 @@ challenges_data = [
             "looking around yet.\n\n"
             + SSH_CONNECT_GUIDE +
             "\n\nClick Launch, wait for it to show a Host and Port, then connect as `bandit0` "
-            "with password `bandit0` and read `welcome.txt` in the home directory (not "
-            "`readme` -- that one's level 0's real puzzle). Submit its contents as your flag."
+            "with password `bandit0`. The moment you log in, a banner prints automatically -- "
+            "no file to go read, it's already on your screen. Its last three lines are an "
+            "acceptable-use notice; the middle one is about not using AI or outside "
+            "tools/services to cheat. Copy that exact line, word for word (punctuation "
+            "included), and submit it as your flag -- proof you actually read it, not just "
+            "that you connected."
         ),
-        "flag": "WELCOME_TO_BANDIT"
+        "flag": "Do not use AI or external tools/services to cheat or obtain answers."
     },
     {
         "id": "bandit-00",
