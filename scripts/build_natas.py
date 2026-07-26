@@ -62,7 +62,10 @@ INSTANCE_GROUP = "natas"
 TARGET_NOTE = (
     "Everything below happens from inside your attacker workstation, not "
     "your own machine -- open it via noVNC or SSH from this challenge's "
-    "launch panel first, then reach the target from there at"
+    "launch panel first. From inside the attacker, replace `<target-host>` "
+    "below with the exact value shown next to **Target** in that same "
+    "panel (NOT the **Host** field further up, which is only for "
+    "connecting *to* the attacker itself over SSH) -- reach the target at"
 )
 
 # Define the dataset for Natas Levels 0 to 14 based on OTW specifications
@@ -87,9 +90,11 @@ challenges_data = [
             "- **+5 more minutes** -- shows up only once every level in this track is solved "
             "and a shutdown countdown has started.\n\n"
             "Click Launch, open the attacker workstation (noVNC or SSH, your choice), and "
-            "from inside it browse to `http://<target-host>:8000/welcome.txt` (the same "
-            "target host every Natas level uses, just this one extra file). Submit its "
-            "contents as your flag."
+            "from inside it browse to `http://<target-host>:8000/welcome.txt`, replacing "
+            "`<target-host>` with the exact value shown next to **Target** in the launch "
+            "panel below (NOT the **Host** field further up -- that one is only for "
+            "connecting *to* the attacker itself over SSH, not for reaching the target). "
+            "Submit the file's contents as your flag."
         ),
         "flag": "WELCOME_TO_NATAS"
     },
