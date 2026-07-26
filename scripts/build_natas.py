@@ -241,8 +241,8 @@ EXTRA_INFO = {
 HINTS = {
     'natas-00': [
         'On the Kali attacker workstation, run `curl --help`.',
-        "Web pages sometimes leave notes for developers directly in the HTML that never show up in the rendered page -- these are HTML comments, marked with `<!--` and `-->`, invisible in a normal browser view but fully readable in the raw source. Both a browser's view-source and `curl` show you the raw HTML.",
-        '`curl http://<target-host>:8000/` (or Ctrl+U in a browser) prints the raw HTML -- look for an HTML comment (`<!-- ... -->`) in it. The password is written directly inside one.\n\nIllustrative example only -- your real value will differ:\n```\n$ curl http://<target-host>:8000/\n<html>\n<!-- The password for natas1 is <the next password> -->\n</html>\n```',
+        "Every page a browser shows you starts life as plain text HTML the server sends over -- the browser parses that text and renders it into what you see, and rendering HIDES a lot of the original text along the way. `<!-- like this -->` HTML comments are valid markup: the browser parses right past them without ever displaying their contents, the same way it hides `<script>` tags or CSS rules instead of printing them on the page. Developers use comments to leave themselves notes -- reminders, TODOs, sometimes something more sensitive -- specifically because they're invisible in the rendered page. The only way to see one is to skip the rendering step and read the raw text the server actually sent, which is exactly what a browser's view-source mode and a command-line tool like `curl` both do.",
+        '`curl http://<target-host>:8000/` (or Ctrl+U in a browser) prints that raw HTML -- look for an HTML comment (`<!-- ... -->`) in it. The password is written directly inside one.\n\nIllustrative example only -- your real value will differ:\n```\n$ curl http://<target-host>:8000/\n<html>\n<!-- The password for natas1 is <the next password> -->\n</html>\n```',
     ],
     'natas-01': [
         'On the Kali attacker workstation, run `curl --help`.',
