@@ -16,40 +16,40 @@ POLICY = (
 # each entry is where render() appends the "CEI Labs Bandit N: Title" text,
 # so keep last lines short to stay well under the 80-char safety limit.
 ART = {
-    0: ["   o", "  /|\\", "  / \\"],                       # first steps, on your feet
-    1: ["- - - -", "   X", "- - - -"],                      # a dashed line, hopes broken
-    2: ["[ ][ ][ ]", "[ ]   [ ]", "[ ][ ][ ]"],              # a grid with spaces missing
-    3: [". . . . .", ". .(o). .", ". . . . ."],              # an eye hidden among dots
-    4: [" o", "/|\\ [===]", "/ \\"],                         # a person reading a book
-    5: ["    |", "   /|", " ~~~~~~~"],                       # a needle in a haystack
-    6: ["|=|=|=|", "|=|=|=|  ,O__", "|=|=|=|  \\_|"],        # a rack under a magnifier
-    7: [" ___________", "| w w w www |", "|___________|"],   # a page full of words
-    8: [". . . . .", ".  *  . .", ". . . . ."],              # one star among many dots
-    9: [" \\|/", "  o", " /|\\"],                            # a puppet with strings up top
-    10: ["0101 1010", " -> base ->", "  16  8  2"],           # number bases
-    11: [" [A] <-> [B]", " [C] <-> [D]"],                     # letters swapped
-    12: [" [ [ [ ] ] ]", "  [ [ ] ]", "   [ ]"],              # nested boxes, doll in a doll
-    13: [" .--.", "( () )====", " `--'"],                     # a key
-    14: ["  -=[", "      \\__[ PORT ]"],                      # a plug meeting a port
-    15: ["  .--.", " /    \\", "|--[]--|"],                   # a padlock
-    16: [" .-''-.", "( .  * )", " `-..-'"],                   # a radar sweep
-    17: ["[ A ]   [ B ]", "  |   !=   |", "  +---------+"],   # two files diffed
-    18: ["  .--.", " ( () ) ---->", "  `--'"],                # a shell, arrow slipping past
-    19: ["     _|^", "   _|", " _|"],                         # stairs climbing up
-    20: ["  )))", " ))))", "   |"],                           # an antenna listening
-    21: ["   _12_", "  9  |  3", "   `-6-'"],                 # a clock face
-    22: ["  _12_   ,_,", " 9  | 3 (o.o)", "  `-6-'  ) ("],    # a clock with a bug nearby
-    23: ["  _12_  |code", " 9  |3  |code", "  `-6-' |code"],  # a clock beside a script
-    24: ["[1][2][3]", "[4][5][6] *?*", "[7][8][9]"],          # a numeric keypad
-    25: ["  .--.", " ( )( )  o", "  `--'  /|\\"],             # a cracked shell, figure out
-    26: ["+--//--+", "|  TUI  |", "+-------+"],               # a cracked text-mode window
-    27: ["  o", "  |\\--> o", "  o"],                         # a commit cloned onward
-    28: [" o---o---o---o", "  c1  c2  c3"],                   # commits strung on a line
-    29: ["     o--o", "    /", " o-o--o--o"],                 # a branch splitting off
-    30: ["  _____", " /     \\--o", " \\_____/  v1.0"],       # a tag on a commit
-    31: ["  .-~~-.", " (      )", "  `-..-'", "    ^"],       # pushing up to the cloud
-    32: ["  .--.", " ( () ) overridden", "  `--' -> new"],    # a shell, swapped for another
-    33: [" +--+", " |  |->", " +--+"],                        # a door, and out you go
+    0: ["   o", "  /|\\ ->", "  / \\"],                      # first steps, moving forward
+    1: ["- - - -", "   X", "- - - -"],                       # a dashed line, hopes broken
+    2: ["[ ][ ][ ]", "[ ]   [ ]", "[ ][ ][ ]"],               # a grid with spaces missing
+    3: [". . . . .", ". .(o). .", ". . . . ."],               # an eye hidden among dots
+    4: [" _______", "| A B C |", "|_______|"],                # plainly readable text in a box
+    5: ["    |", "   /|", " ~~~~~~~"],                        # a needle in a haystack
+    6: ["|=|=|=|", "|=|=|=|  ,O__", "|=|=|=|  \\_|"],         # a rack under a magnifier
+    7: [" _____________", "| w w [W] w w |", "|_____________|"],  # one word singled out of many
+    8: [". . . . .", ".  *  . .", ". . . . ."],               # one star among many dots
+    9: ["  | | |", "   \\|/", "    o"],                       # a puppet, strings still attached
+    10: ["0101 1010", " -> base ->", "  16  8  2"],            # number bases
+    11: [" [A] <-> [B]", " [C] <-> [D]"],                      # letters swapped
+    12: [" [ [ [ ] ] ]", "  [ [ ] ]", "   [ ]"],               # nested boxes, doll in a doll
+    13: [" .--.", "( () )====", " `--'"],                      # a key
+    14: [" 1234", "    \\_", "     ->[PORT]"],                 # a value handed off into a port
+    15: ["  .--.", " /    \\", "|--[]--|"],                    # a padlock
+    16: ["[22][80][443]", "  ^---scan-->"],                    # sweeping across a row of ports
+    17: ["[ A ]   [ B ]", "  |   !=   |", "  +---------+"],    # two files diffed
+    18: [" [rbash]", "    |", "  --X-->  sh"],                 # breaking out past a restricted shell
+    19: ["   __#", " _|", "_|   suid->root"],                  # climbing a suid step to root
+    20: ["  )))", " )))) <-data", "   |"],                     # an antenna catching a connection
+    21: ["   _12_", "  9  |  3", "   `-6-'"],                  # a clock face
+    22: ["  _12_   ,_,", " 9  | 3 (o.o)", "  `-6-'  ) ("],     # a clock with a bug nearby
+    23: ["  _12_  |code", " 9  |3  |code", "  `-6-' |code"],   # a clock beside a script
+    24: ["[1][2][3]", "[4][5][6] *?*", "[7][8][9]"],           # a numeric keypad
+    25: [" [rbash]", "   X X", "  --->  sh"],                  # the restricted shell cracked open
+    26: ["+--//--+", "|  TUI  |", "+-------+"],                # a cracked text-mode window
+    27: ["  o", "  |\\--> o", "  o"],                          # a commit cloned onward
+    28: [" o---o---o---o", "  c1  c2  c3"],                    # commits strung on a line
+    29: ["     o--o", "    /", " o-o--o--o"],                  # a branch splitting off
+    30: ["  _____", " /     \\--o", " \\_____/  v1.0"],        # a tag on a commit
+    31: ["  .-~~-.", " (      )", "  `-..-'", "    ^"],        # pushing up to the cloud
+    32: ["$SHELL: old", "   -> override ->", "$SHELL: new"],   # the shell variable swapped out
+    33: [" +--+", " |  |->", " +--+"],                         # a door, and out you go
 }
 
 # --- Progressive color, layered on top of the art above -------------------
