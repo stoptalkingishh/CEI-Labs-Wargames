@@ -289,9 +289,18 @@ PYEOF
     [ "${CTFD_INSECURE:-false}" = "true" ] && curl_insecure=(-k)
     local signature_header_file
     signature_header_file=$(write_secret_header "X-Hint-Wallet-Signature" "$signature")
+    # Payload goes through a temp file + `-d @file`, not inline `-d "$payload"`:
+    # the bundle is easily tens of KB (three tracks' worth of tiered hints),
+    # and passing it as a literal argv entry hits the OS command-line length
+    # limit on Windows/Git Bash (fine on Linux's much larger ARG_MAX, but
+    # confirmed failing here with "Argument list too long"). Same technique
+    # already used for the signature header just above.
+    local payload_file
+    payload_file=$(mktemp)
+    printf '%s' "$payload" > "$payload_file"
     curl --fail --silent --show-error "${curl_insecure[@]}" -X POST "${CTFD_URL}/plugins/hint-wallet/machine/sync" \
-        --header @"$signature_header_file" -H "Content-Type: application/json" -d "$payload" >/dev/null
-    rm -f -- "$signature_header_file"
+        --header @"$signature_header_file" -H "Content-Type: application/json" -d @"$payload_file" >/dev/null
+    rm -f -- "$signature_header_file" "$payload_file"
     echo "Synced hint-wallet bundle"
 }
 
