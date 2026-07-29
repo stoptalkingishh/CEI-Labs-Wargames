@@ -16,7 +16,7 @@ opening tier 3 costs 85% of the value (not 10+50+85), leaving 15%.
 
 # Cumulative percent-of-value cost for opening tier 1/2/3 (fully opening all
 # three hints leaves 100 - 85 = 15% of the challenge's value on a solve).
-TIER_PERCENTS = (10, 50, 85)
+TIER_PERCENTS = (20, 50, 85)
 
 
 def tier_costs(value: int) -> tuple:
