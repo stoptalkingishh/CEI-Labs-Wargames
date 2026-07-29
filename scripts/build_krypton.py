@@ -145,14 +145,14 @@ challenges_data = [
         "id": "krypton-03",
         "name": "Krypton 3 -> 4: Frequency Analysis",
         "points": 350,
-        "desc": "**Goal:** Break a substitution cipher using letter-frequency analysis.\n\n`/home/krypton3/krypton4` is English text under a simple substitution cipher (each letter always maps to the same other letter). Count letter frequencies and match them against typical English letter frequency to recover the substitution alphabet.\n\n*Hint: E, T, A, O, I, N are the most common letters in English.*",
+        "desc": "**Goal:** Break a substitution cipher using letter-frequency analysis.\n\n`/home/krypton3/krypton4` is English text under a simple substitution cipher (each letter always maps to the same other letter). The `found1`, `found2`, and `found3` samples use the same alphabet. Combine them, count letter frequencies, and use word patterns to refine the mapping.\n\n*Hint: E, T, A, O, I, N are the most common letters in English.*",
         "flag": {"type": "per_team_dynamic_alpha", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton3"}
     },
     {
         "id": "krypton-04",
         "name": "Krypton 4 -> 5: Vigenere Cipher (Known Key Length)",
         "points": 400,
-        "desc": "**Goal:** Break a Vigenere cipher when the key length is already known.\n\n`/home/krypton4/krypton5` is a Vigenere cipher with a key exactly 6 letters long (see the README next to it). Split the ciphertext into 6 interleaved groups and solve each independently as its own Caesar shift.",
+        "desc": "**Goal:** Break a Vigenere cipher when the key length is already known.\n\n`/home/krypton4/krypton5` is a Vigenere cipher with a key exactly 6 letters long (see the README next to it). Split the ciphertext LETTERS into 6 interleaved groups (spaces and punctuation do not advance the key) and solve each independently as its own Caesar shift.",
         "flag": {"type": "per_team_dynamic_alpha", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton4"}
     },
     {
@@ -177,11 +177,11 @@ challenges_data = [
 EXTRA_INFO = {
     "krypton-00": (["base64"], []),
     "krypton-01": (["tr"], [("ROT13 on Wikipedia", "https://en.wikipedia.org/wiki/ROT13")]),
-    "krypton-02": (["mktemp", "ln", "chmod", "tr"], [("Known-plaintext attack on Wikipedia", "https://en.wikipedia.org/wiki/Known-plaintext_attack"), ("Caesar cipher on Wikipedia", "https://en.wikipedia.org/wiki/Caesar_cipher")]),
-    "krypton-03": (["tr", "sort", "uniq", "fold"], [("Frequency analysis on Wikipedia", "https://en.wikipedia.org/wiki/Frequency_analysis")]),
-    "krypton-04": (["tr"], [("Vigenere cipher on Wikipedia", "https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher")]),
-    "krypton-05": (["tr"], [("Kasiski examination on Wikipedia", "https://en.wikipedia.org/wiki/Kasiski_examination")]),
-    "krypton-06": (["xxd"], [("Stream cipher on Wikipedia", "https://en.wikipedia.org/wiki/Stream_cipher")]),
+    "krypton-02": (["mktemp", "ln", "krypton-tools rotate"], [("Known-plaintext attack on Wikipedia", "https://en.wikipedia.org/wiki/Known-plaintext_attack"), ("Caesar cipher on Wikipedia", "https://en.wikipedia.org/wiki/Caesar_cipher")]),
+    "krypton-03": (["krypton-tools freq", "tr"], [("Frequency analysis on Wikipedia", "https://en.wikipedia.org/wiki/Frequency_analysis")]),
+    "krypton-04": (["krypton-tools columns", "krypton-tools vigenere-key", "krypton-tools vigenere-decrypt"], [("Vigenere cipher on Wikipedia", "https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher")]),
+    "krypton-05": (["krypton-tools kasiski", "krypton-tools vigenere-key", "krypton-tools vigenere-decrypt"], [("Kasiski examination on Wikipedia", "https://en.wikipedia.org/wiki/Kasiski_examination")]),
+    "krypton-06": (["krypton-tools stream-decrypt", "xxd"], [("Stream cipher on Wikipedia", "https://en.wikipedia.org/wiki/Stream_cipher")]),
 }
 
 # Crawl/walk/run hints per level (not krypton-start-here -- its
@@ -203,28 +203,28 @@ HINTS = {
     ],
     'krypton-02': [
         "There's an `encrypt` program here that will encrypt anything you give it using some fixed shift. If you already knew exactly what you fed it as input, and could see exactly what came out, would that tell you the shift directly?",
-        "The `encrypt` binary looks for its key file in your CURRENT directory rather than a fixed path, and will happily encrypt any input you hand it. If you feed it text you already know the content of, many repeated identical letters, say, comparing your known input against its output reveals exactly how far each letter shifted, which is the cipher's key.",
-        "Symlink the keyfile into a scratch directory so `encrypt` can find it, then feed it a file of repeated `A`s -- the output shows exactly what `A` became, revealing the shift. Reverse that shift against the real ciphertext with `tr`.\n\nIllustrative example only -- your real shift/value will differ:\n```\n$ ln -s /home/krypton2/keyfile.dat\n$ echo AAAAAAAAAA > probe.txt\n$ /home/krypton2/encrypt probe.txt\nMMMMMMMMMM\n$ tr 'A-Za-z' 'N-ZA-Mn-za-m' < /home/krypton2/krypton3\n<the next password>\n```",
+        "The `encrypt` binary looks for its key file in your CURRENT directory and reads plaintext from standard input, NOT from a filename argument. Make a scratch directory, symlink the key file there, and pipe or redirect known text into the program. If `A` becomes `M`, for example, the encryption shift is +12 because A is position 0 and M is position 12.",
+        "Use these commands exactly. The output letter reveals the random shift; convert that letter to its zero-based position (`A=0`, `B=1`, ..., `Z=25`) and give the NEGATIVE value to the installed rotation helper.\n\nIllustrative example -- your observed letter and shift will differ:\n```\n$ work=$(mktemp -d)\n$ cd \"$work\"\n$ ln -s /home/krypton2/keyfile.dat\n$ printf 'AAAAAAAAAA' | /home/krypton2/encrypt\nMMMMMMMMMM\n$ krypton-tools rotate -12 /home/krypton2/krypton3\n<the next password>\n```\nDo not run `encrypt probe.txt`: this binary reads stdin and would wait for input instead of reading that file.",
     ],
     'krypton-03': [
         "This cipher substitutes one letter for another consistently throughout the text -- but English text itself isn't random: some letters show up far more often than others. Could counting how often each letter appears in the ciphertext hint at what it actually stands for?",
         "In normal English, letters like E, T, A, O, I, N appear consistently more often than the rest. If a substitution cipher always maps the same plaintext letter to the same ciphertext letter, counting ciphertext letter frequencies and matching that ranking against the known English frequency order recovers the substitution, one letter at a time. The extra intercepted files given alongside this one were encrypted with the same key, so combining them gives more data to count from.",
-        "Combine all the files and count letter frequency, then map the most common ciphertext letters onto the most common English letters (E, T, A, O, I, N...).\n\nIllustrative example only -- your real ranking/value will differ:\n```\n$ cat found1 found2 found3 krypton4 | tr -cd 'A-Za-z' | tr 'a-z' 'A-Z' | fold -w1 | sort | uniq -c | sort -rn\n 812 Q\n$ tr 'QXVJ...' 'ETAO...' < /home/krypton3/krypton4\n<the next password, possibly needing manual touch-ups>\n```",
+        "Combine all the files and count letter frequency, then map the most common ciphertext letters onto the most common English letters (E, T, A, O, I, N...).\n\nIllustrative example only -- your real ranking/value will differ:\n```\n$ krypton-tools freq found1 found2 found3 krypton4\nletter count percent\n     Q   812  12.70\n$ tr 'QXVJ...' 'ETAO...' < /home/krypton3/krypton4\n<the next password, possibly needing manual touch-ups>\n```",
     ],
     'krypton-04': [
         "This cipher uses a repeating multi-letter key rather than a single shift, meaning it's really several different Caesar shifts applied in rotation. If you knew the key's length, could you split the ciphertext into that many separate groups, each one shifted by just a single, consistent amount?",
         "A Vigenere cipher with a 6-letter key applies 6 different shifts in rotation: character 1 uses shift A, character 2 uses shift B, and so on, cycling back to shift A every 6th character. Pulling out every 6th character starting from each of the 6 positions produces 6 separate groups, each one encrypted with only a single, consistent shift, solvable the same way as an ordinary Caesar cipher, one group at a time.",
-        "Split into 6 interleaved groups (positions 0, 6, 12... form group 1, and so on), frequency-analyze each independently, then reassemble.\n\nIllustrative example only (a small Python-style sketch of the grouping step, not the full solve):\n```\nciphertext = open('krypton5').read().strip()\ngroups = ['' for _ in range(6)]\nfor i, c in enumerate(ciphertext):\n    groups[i % 6] += c\n# frequency-analyze each of the 6 groups independently, then reassemble\n```",
+        "Split the LETTERS into 6 interleaved groups; spaces and punctuation do not consume a key character. Frequency-analyze each group independently, then reassemble.\n\nThe installed helper performs the easy-to-get-wrong grouping step. If comparing six frequency tables by hand stalls, its scorer tries all 26 Caesar shifts per column, prints the candidate key, and shows a preview you can judge as English:\n```\n$ krypton-tools columns 6 /home/krypton4/krypton5 | less\n$ krypton-tools vigenere-key 6 /home/krypton4/krypton5\ncandidate-key=......\npreview:\n...\n$ krypton-tools vigenere-decrypt <candidate-key> /home/krypton4/krypton5\n```",
     ],
     'krypton-05': [
         "This time you're not told the key length up front. Repeated chunks of plaintext, if they happen to line up with the same position in a REPEATING key, produce identical repeated chunks of ciphertext too -- could the DISTANCE between repeated ciphertext fragments hint at how long that key actually is?",
         "Look for repeated 3+ character sequences appearing more than once in the ciphertext, and note the distance, in characters, between each repeat. The true key length usually divides most of those distances evenly, since a repeated plaintext fragment only produces matching ciphertext when it lines up with the same key position both times. Once you know the key length, the rest is the same interleaved-grouping technique as before.",
-        "Find repeated substrings and their distances; the greatest common factor across distances reveals the key length (here, 9). Split into 9 groups, solve each with frequency analysis, and reassemble.\n\nIllustrative example only -- your real distances/value will differ:\n```\nrepeated substring 'QXR' found at positions 12 and 93 -- distance 81\nrepeated substring 'MZP' found at positions 40 and 121 -- distance 81\ngcd(81, 81, ...) = 9  -- key length is likely 9\n```",
+        "Find repeated substrings and their distances; a common factor across several distances suggests the key length (here, 9). Split into 9 groups, solve each with frequency analysis, and reassemble.\n\nThe installed helper reports evidence rather than silently choosing a key. Prefer factors supported by several gaps; an incidental repeat can make the raw GCD equal 1. Then score and decrypt with the candidate length:\n```\n$ krypton-tools kasiski /home/krypton5/krypton6\n...\ncandidate-length-support=3:... 9:...\n$ krypton-tools vigenere-key 9 /home/krypton5/krypton6\n$ krypton-tools vigenere-decrypt <candidate-key> /home/krypton5/krypton6\n```",
     ],
     'krypton-06': [
         "This cipher combines each byte of plaintext with a byte from what's supposed to be a random keystream, except that keystream turns out to repeat after a fixed number of characters. If you already knew a long, predictable stretch of plaintext, could feeding it through the cipher directly reveal that repeating keystream?",
         "Feeding the encryption program a long run of identical, known characters (since every input byte is the same known value) means the corresponding output bytes reveal the raw keystream itself, byte for byte, wherever the relationship between a known plaintext byte and its output byte can be reversed. Once you've recovered the full repeating keystream (30 bytes long here), applying that same relationship to the real ciphertext, cycling the keystream every 30 bytes, recovers the final plaintext.",
-        "Encrypt 30+ repeated known characters to recover the keystream byte-by-byte, then apply it (cycling every 30 bytes) to the final ciphertext.\n\nIllustrative example only -- your real keystream/value will differ:\n```\n$ yes A | head -c 40 | /home/krypton6/encrypt | xxd\n00000000: 4f2a 9c11 ...  O*..\n<derive the 30-byte repeating keystream from this, then apply it to final>\n```",
+        "Create 60 known `A` characters, encrypt them, then give the known input, its encrypted output, and the real ciphertext to the installed helper. It derives the repeating additive shifts and applies them to `final`:\n```\n$ python3 -c 'print(\"A\" * 60, end=\"\")' > known.txt\n$ /home/krypton6/encrypt < known.txt > encrypted.txt\n$ krypton-tools stream-decrypt known.txt encrypted.txt /home/krypton6/final\n<the final flag>\n```",
     ],
 }
 

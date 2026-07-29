@@ -137,14 +137,42 @@ if flag3:
         f"advance. Keep counting, keep comparing, and remember: the password "
         f"for the next level is {flag3}."
     )
+    practice_passages = [
+        (
+            "When analysts compare a secret message with ordinary English, "
+            "they begin with patterns rather than guesses. Short words, "
+            "repeated pairs, and common endings provide useful checks after "
+            "the first frequency mapping has been attempted."
+        ),
+        (
+            "A substitution alphabet changes the symbols but preserves word "
+            "lengths and punctuation. That surviving structure is valuable: "
+            "a three letter word appearing many times may be the, and a "
+            "single letter word is usually a or i."
+        ),
+        (
+            "Frequency analysis improves with more ciphertext. Combining "
+            "several messages encrypted under the same alphabet produces a "
+            "larger sample and makes the normal shape of English easier to "
+            "recognize."
+        ),
+    ]
+    for index, plaintext in enumerate(practice_passages, 1):
+        write(
+            f"/home/krypton3/found{index}",
+            substitution_encrypt(plaintext, sub_key) + "\n",
+            "krypton3:krypton3", 0o440,
+        )
     write("/home/krypton3/krypton4", substitution_encrypt(passage3, sub_key) + "\n", "krypton3:krypton3", 0o440)
     write(
         "/home/krypton3/README",
         "The attached file 'krypton4' is intercepted English text encrypted "
         "with a simple substitution cipher (each letter always maps to the "
-        "same other letter). Use frequency analysis (E, T, A, O, I, N are "
-        "the most common letters in English) to recover the plaintext and "
-        "find the password for krypton4.\n",
+        "same other letter). The files found1, found2, and found3 use that "
+        "same substitution and provide a larger sample. Run "
+        "'krypton-tools freq found1 found2 found3 krypton4', then use the "
+        "word patterns to refine your mapping and find the password for "
+        "krypton4.\n",
         "krypton3:krypton3", 0o444,
     )
 
@@ -171,9 +199,11 @@ if flag4:
         "/home/krypton4/README",
         "The attached file 'krypton5' is intercepted text encrypted with a "
         "Vigenere cipher using a key exactly 6 letters long. Split the "
-        "ciphertext into 6 interleaved groups and solve each as its own "
-        "Caesar shift to recover the plaintext and the password for "
-        "krypton5.\n",
+        "LETTERS (not spaces or punctuation) into 6 interleaved groups and "
+        "solve each as its own Caesar shift. Start with "
+        "'krypton-tools columns 6 krypton5'; if manual frequency matching "
+        "stalls, 'krypton-tools vigenere-key 6 krypton5' scores all 26 "
+        "shifts in each column and shows a plaintext preview.\n",
         "krypton4:krypton4", 0o444,
     )
 
@@ -213,7 +243,9 @@ if flag5:
         "Vigenere cipher. This time the key length is NOT given -- use the "
         "Kasiski examination (look for repeated sequences in the ciphertext "
         "and measure the distances between them) to recover it, most likely "
-        "3, 6, or 9 letters, then solve column by column as usual.\n",
+        "3, 6, or 9 letters, then solve column by column as usual. Start "
+        "with 'krypton-tools kasiski krypton6', then test a candidate with "
+        "'krypton-tools vigenere-key LENGTH krypton6'.\n",
         "krypton5:krypton5", 0o444,
     )
 
@@ -250,9 +282,9 @@ if flag2:
         "directory, encrypted with a Caesar cipher using an unknown shift.\n\n"
         "The shift is derived from 'keyfile.dat' in this directory (not "
         "human-readable -- don't just cat it). Symlink it into a scratch "
-        "directory, then use the 'encrypt' binary here on a known plaintext "
-        "(like a long string of 'A's) to observe the shift empirically, and "
-        "reverse it to decrypt krypton3.\n",
+        "directory, then PIPE a known plaintext into the 'encrypt' binary "
+        "(it reads stdin, not a filename argument). Observe the shift and "
+        "reverse it with 'krypton-tools rotate -SHIFT krypton3'.\n",
         "krypton2:krypton2", 0o444,
     )
 
@@ -289,7 +321,8 @@ if flag6:
         "characters (the 'encrypt' binary here implements it).\n\n"
         "Encrypt a long run of identical letters (e.g. 30+ 'A's) with "
         "'encrypt' to read the repeating keystream directly off the "
-        "output, then use it to decrypt 'final'.\n",
+        "output. Save the known input and output, then run "
+        "'krypton-tools stream-decrypt known.txt encrypted.txt final'.\n",
         "krypton6:krypton6", 0o444,
     )
 

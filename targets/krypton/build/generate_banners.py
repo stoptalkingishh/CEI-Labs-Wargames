@@ -83,6 +83,7 @@ def render(level):
     colored_art.append(color + art[-1] + _RESET + "  CEI Labs Krypton %d: %s" % (level, title))
     lines = colored_art
     lines.append("Logged in as krypton%d" % level)
+    lines.append("Player tools: krypton-tools --help")
     lines.append(
         "Final level: submit your result; there is no next account."
         if level == 6

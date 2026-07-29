@@ -1,5 +1,6 @@
 import os
 import json
+import re
 
 from hint_economy import managed_tiers
 
@@ -34,7 +35,7 @@ NATAS_TARGET_IMAGE = os.environ.get(
 )
 NATAS_ATTACKER_IMAGE = os.environ.get(
     "NATAS_ATTACKER_IMAGE",
-    "ghcr.io/stoptalkingishh/cei-labs-engine/ctf-kali-novnc:latest",
+    "ghcr.io/stoptalkingishh/cei-labs-wargames/natas-attacker:latest",
 )
 
 # All 15 challenges share ONE instance_group -- launching any of them
@@ -280,7 +281,7 @@ HINTS = {
     'natas-08': [
         "The page shows a secret in ENCODED form and checks whatever you type against the same encoding applied to your input. If you can see the exact steps used to encode it, what would running those same steps backward, in reverse order, do to the encoded value?",
         "Click 'View sourcecode' to see the encoding function used: base64-encode, then reverse the string, then hex-encode. Each of those steps has an exact inverse (hex-decode, reverse again, base64-decode), and undoing a chain of operations means applying the inverses in the OPPOSITE order they were originally applied -- last step first.",
-        "Hex-decode the shown value first, then reverse that resulting string, then base64-decode what's left.\n\nIllustrative example only -- your real encoded value/secret will differ:\n```\n$ echo 3q2+7w== | xxd -r -p | rev | base64 -d\n<the real secret value>\n```\nSubmit the result as the secret.",
+        "Hex-decode the shown value first, then reverse that resulting string, then base64-decode what's left. All three commands are installed on the Natas attacker; run `natas-help` if you need the tool list. This level's encoded value is fixed, so the command below is directly runnable:\n```\n$ echo 3d3d77594d523151485a445330306d5344526d594e74455779556b4e5942545a43685751 | xxd -r -p | rev | base64 -d\n<the decoded form secret>\n```\nSubmit the decoded result as the secret.",
     ],
     'natas-09': [
         "The page runs a search over a word list based on text you type in -- and 'runs a search' on the server usually means some underlying program is actually being executed to do that searching. What happens if the text you type isn't just treated as a search term, but as part of the actual command line?",
@@ -295,7 +296,7 @@ HINTS = {
     'natas-11': [
         "Your preferences are stored in a cookie, but this time it's encrypted, not plain text. Encryption hides content from someone who doesn't have the key -- but does it hide content from someone who already knows exactly what the original, unencrypted version looks like?",
         "The cookie is XOR-encrypted with a short key that repeats across the data. XOR has a very specific, useful property: if you know both the plaintext and the resulting ciphertext, XOR-ing them together recovers the key that produced that ciphertext. You don't know the key directly, but you DO know what the DEFAULT, logged-out preferences look like (a fixed JSON structure the source reveals), which gives you a known plaintext to work from.",
-        "Base64-decode the default cookie to get the raw XOR-encrypted bytes, then XOR those bytes against the known default plaintext JSON to recover the repeating key. Build a new plaintext JSON with `showpassword` changed to `yes`, XOR-encrypt it with that recovered key, base64-encode the result, and set it as your cookie.\n\nIllustrative example only (sketch of the recovery, not the full script):\n```\nknown_plaintext = b'{ showpassword=no, bgcolor=#ffffff }'\nciphertext = base64.b64decode(default_cookie)\nkey = bytes(c ^ p for c, p in zip(ciphertext, known_plaintext))\n# reuse key to XOR-encrypt a new showpassword=yes JSON, then base64 it back into the cookie\n```",
+        "Base64-decode the default cookie to get the raw XOR-encrypted bytes, then XOR those bytes against the exact known default JSON to recover the repeating key. Build a new JSON value with `showpassword` changed to `yes`, XOR-encrypt it with that recovered key, base64-encode it, URL-encode it, and set it as your `data` cookie.\n\nPaste your current `data` cookie into this offline helper:\n```python\nimport base64\nimport urllib.parse\n\ncookie = urllib.parse.unquote(input('data cookie: ').strip())\nciphertext = base64.b64decode(cookie)\nknown = b'{\"showpassword\":\"no\",\"bgcolor\":\"#ffffff\"}'\nstream = bytes(c ^ p for c, p in zip(ciphertext, known))\nperiod = next(\n    n for n in range(1, len(stream) + 1)\n    if all(stream[i] == stream[i % n] for i in range(len(stream)))\n)\nkey = stream[:period]\nwanted = b'{\"showpassword\":\"yes\",\"bgcolor\":\"#ffffff\"}'\nforged = bytes(b ^ key[i % len(key)] for i, b in enumerate(wanted))\nprint(urllib.parse.quote(base64.b64encode(forged).decode(), safe=''))\n```",
     ],
     'natas-12': [
         "The page lets you upload a file. It probably expects an image -- but does it actually check that what you upload IS an image, or only that it looks like one from the outside?",
@@ -314,6 +315,40 @@ HINTS = {
     ],
 }
 
+HINT_TITLES = (
+    "Step 1 — Notice",
+    "Step 2 — Understand",
+    "Step 3 — Try it",
+)
+
+
+def _curl_auth_note(challenge_id: str) -> str:
+    """Return a copy/pasteable reminder for Natas's HTTP Basic Auth.
+
+    Browser logins can hide this detail by caching credentials. Command-line
+    requests cannot: an otherwise-correct exploit just receives a 401 unless
+    curl is given the current level's username and password.
+    """
+    level = int(challenge_id.rsplit("-", 1)[1])
+    password = "natas0" if level == 0 else f"<flag from Natas {level - 1}>"
+    return (
+        f"**Authenticate every curl request:** use "
+        f"`curl -u 'natas{level}:{password}' ...`. A bare curl request will "
+        "receive `401 Unauthorized` before it reaches the level."
+    )
+
+
+def _render_hint(challenge_id: str, tier_number: int, content: str) -> str:
+    """Add a readable tier heading and make every shell example executable."""
+    level = int(challenge_id.rsplit("-", 1)[1])
+    password = "natas0" if level == 0 else f"<flag from Natas {level - 1}>"
+    authenticated = re.sub(
+        r"(?m)^(\$ )curl ",
+        rf"\1curl -u 'natas{level}:{password}' ",
+        content,
+    )
+    return f"### {HINT_TITLES[tier_number - 1]}\n\n{_curl_auth_note(challenge_id)}\n\n{authenticated}"
+
 # Generate folder and files
 script_dir = os.path.dirname(os.path.abspath(__file__))
 base_dir = os.path.abspath(os.path.join(script_dir, "..", "challenges"))
@@ -327,6 +362,8 @@ for i, ch in enumerate(challenges_data):
     is_final_level = (i == len(challenges_data) - 1)
 
     full_desc = ch["desc"]
+    if ch["id"].startswith("natas-") and ch["id"] != "natas-start-here":
+        full_desc += f"\n\n{_curl_auth_note(ch['id'])}"
     extra_info = EXTRA_INFO.get(ch["id"])
     if extra_info:
         cmds, reading = extra_info
@@ -368,4 +405,27 @@ show_launcher: {"true" if ch["id"] == "natas-start-here" else "false"}
 
 print(f"Successfully generated {len(challenges_data)} Natas challenges inside the '{base_dir}' folder!")
 with open(os.path.join(base_dir, "natas-hint-wallet.json"), "w", encoding="utf-8") as manifest:
-    json.dump({"schema_version": 1, "track": "natas", "entries": [{"name": c["name"], "tiers": [{"tier": n, "cost": cost, "content": text} for n, (text, cost) in enumerate(managed_tiers(c["points"], HINTS[c["id"]]), 1)]} for c in challenges_data if c["id"] in HINTS]}, manifest)
+    json.dump(
+        {
+            "schema_version": 1,
+            "track": "natas",
+            "entries": [
+                {
+                    "name": c["name"],
+                    "tiers": [
+                        {
+                            "tier": n,
+                            "cost": cost,
+                            "content": _render_hint(c["id"], n, text),
+                        }
+                        for n, (text, cost) in enumerate(
+                            managed_tiers(c["points"], HINTS[c["id"]]), 1
+                        )
+                    ],
+                }
+                for c in challenges_data
+                if c["id"] in HINTS
+            ],
+        },
+        manifest,
+    )

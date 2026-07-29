@@ -10,21 +10,19 @@ from pathlib import Path
 import yaml
 
 
-EXPECTED_CHALLENGES = 65
-# krypton-00 used to be the one challenge with no instance_type mapping
-# at all (its puzzle was a static string in the CTFd description, no
-# login needed -- see docs/security-audit-status.md and
-# cei-labs-event#17). It now has a real krypton0 account on the same
-# shared Krypton box as every other level in that track, so all 59
-# Bandit/Krypton/Natas challenges get a mapping. The 6 "AI Copilot Setup"
-# challenges (scripts/build_agent.py) are deliberately excluded -- there is
-# no per-team Docker instance for that track at all (the "target" is the
-# player's own laptop), so EXPECTED_MAPPINGS stays at 59, not 65.
-EXPECTED_MAPPINGS = 59
-EXPECTED_LAUNCHERS = 4
+STAGES_FILE = Path("game-stages.yml")
 VALID_INSTANCE_TYPES = {"web-app", "single-target", "target-attacker"}
 IMAGE_FIELDS = ("image", "target_image", "attacker_image")
 DIGEST_REF = re.compile(r"^[^\s@]+@sha256:[0-9a-f]{64}$")
+
+
+def expected_counts() -> tuple[int, int]:
+    """Return generated challenge and launcher counts from staged-game config."""
+    data = yaml.safe_load(STAGES_FILE.read_text(encoding="utf-8")) or {}
+    stages = data.get("stages") or []
+    challenge_count = sum(int(stage["expected_challenge_count"]) for stage in stages)
+    launcher_count = sum(1 for stage in stages if stage.get("start_challenge"))
+    return challenge_count, launcher_count
 
 
 def main() -> int:
@@ -35,14 +33,15 @@ def main() -> int:
 
     root = Path("challenges")
     files = sorted(root.glob("*/challenge.yml"))
+    expected_challenges, expected_launchers = expected_counts()
     errors: list[str] = []
     rows: list[dict] = []
     names: set[str] = set()
     mappings = 0
     launchers = 0
 
-    if len(files) != EXPECTED_CHALLENGES:
-        errors.append(f"expected {EXPECTED_CHALLENGES} challenge files, found {len(files)}")
+    if len(files) != expected_challenges:
+        errors.append(f"expected {expected_challenges} challenge files, found {len(files)}")
 
     for path in files:
         try:
@@ -95,14 +94,16 @@ def main() -> int:
             "sha256": hashlib.sha256(raw).hexdigest(),
         })
 
-    if mappings != EXPECTED_MAPPINGS:
-        errors.append(f"expected {EXPECTED_MAPPINGS} instance mappings, found {mappings}")
-    if launchers != EXPECTED_LAUNCHERS:
-        errors.append(f"expected {EXPECTED_LAUNCHERS} start-here launchers, found {launchers}")
+    if mappings != expected_challenges:
+        errors.append(f"expected {expected_challenges} instance mappings, found {mappings}")
+    if launchers != expected_launchers:
+        errors.append(f"expected {expected_launchers} start-here launchers, found {launchers}")
 
     manifest = {
         "passed": not errors,
         "release_mode": args.release,
+        "expected_challenge_count": expected_challenges,
+        "expected_launcher_count": expected_launchers,
         "challenge_count": len(files),
         "mapping_count": mappings,
         "launcher_count": launchers,

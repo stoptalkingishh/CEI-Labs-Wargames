@@ -12,6 +12,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home.php';
 <a href="index.php?page=home.php">Home</a> -
 <a href="index.php?page=about.php">About</a> -
 <a href="index.php?viewsource">View sourcecode</a>
+<!-- hint: the password for natas8 is stored in /etc/natas_webpass/natas8 -->
 <hr>
 <?php include($page); ?>
 </body>
