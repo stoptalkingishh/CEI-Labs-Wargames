@@ -19,10 +19,18 @@ from hint_economy import managed_tiers
 
 # Deliberately NOT one of the game-stages.yml wave-gated tracks (see that
 # file and scripts/validate_game_stages.py): those exist to hide/reveal
-# shared per-team boxes in timed waves, which doesn't apply here -- there is
-# no shared box, and setting up your own AI copilot is useful at any point
-# in the event, not gated behind a wave opening. This track is visible from
-# the start.
+# shared per-team boxes in timed waves, which doesn't apply here since there
+# is no shared box. Visibility for this track is instead controlled directly
+# below via RELEASE_STATE, a plain manual on/off switch -- not a timed wave.
+#
+# Defaults to "hidden": the organizer releases this track by choice, on
+# their own schedule, not automatically alongside deploy. To release it:
+#   1. Change RELEASE_STATE below to "visible".
+#   2. Re-run `python3 scripts/build_agent.py` and redeploy/resync
+#      (`ctf challenge sync challenges/cei-agent-*` or a full deploy.sh run).
+# Or, without touching this repo at all: toggle each challenge's visibility
+# directly in the CTFd admin UI (Challenges -> select -> Hidden/Visible).
+RELEASE_STATE = "hidden"
 
 FLAG_START_HERE = (
     "CEI Labs Agent is a permitted exception to the 'no AI or outside "
@@ -229,7 +237,7 @@ value: {ch['points']}
 type: standard
 flags:
   - "{ch['flag']}"
-{files_yaml}state: visible
+{files_yaml}state: {RELEASE_STATE}
 version: "0.1"
 """
     file_path = os.path.join(folder_path, "challenge.yml")
