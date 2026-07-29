@@ -12,8 +12,10 @@ This repository contains the infrastructure and challenge generation scripts to 
    a free, local AI coaching assistant for the three tracks above (see
    `scripts/build_agent.py`). Unlike the three tracks above, this one has no
    per-team Docker instance and isn't part of the staged/wave-gated rollout
-   below -- it's always visible, since setting up your own copilot is useful
-   at any point in the event.
+   below. It ships **hidden by default** (`RELEASE_STATE` in
+   `scripts/build_agent.py`) -- the organizer releases it manually, on their
+   own schedule, once ready (see that script's header comment for the two
+   ways to flip it visible).
 
 Each game's folder holds three docs:
 - `writeups.md` — complete, step-by-step solutions for every level
