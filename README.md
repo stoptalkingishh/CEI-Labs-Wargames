@@ -8,6 +8,12 @@ This repository contains the infrastructure and challenge generation scripts to 
 1. **[Bandit](docs/bandit/):** Unix/Linux Basics
 2. **[Krypton](docs/krypton/):** Cryptography
 3. **[Natas](docs/natas/):** Server-side Web Security
+4. **AI Copilot Setup:** set up [CEI Labs Agent](https://github.com/Judgernaut777/CEI-Labs-Agent),
+   a free, local AI coaching assistant for the three tracks above (see
+   `scripts/build_agent.py`). Unlike the three tracks above, this one has no
+   per-team Docker instance and isn't part of the staged/wave-gated rollout
+   below -- it's always visible, since setting up your own copilot is useful
+   at any point in the event.
 
 Each game's folder holds three docs:
 - `writeups.md` — complete, step-by-step solutions for every level
@@ -50,20 +56,22 @@ export CTFD_URL="https://your-ctfd-scoreboard.com"
 export CTFD_TOKEN="your_admin_token_here"
 export CTFD_SYNC_SECRET="the Engine instance-launcher sync secret"
 
-# This builds all modules (Bandit, Krypton, Natas) and syncs them
+# This builds all modules (Bandit, Krypton, Natas, AI Copilot Setup) and syncs them
 chmod +x deploy.sh
 ./deploy.sh
 ```
 
-Deployment generates all three games and runs the read-only stage validator
-before uploading. It must report Bandit 35, Krypton 8, and Natas 16. The event
-administrator then syncs and starts each game independently in Engine; loading
-challenge content does not start a game clock.
+Deployment generates all four tracks and runs the read-only stage validator
+before uploading. It must report Bandit 35, Krypton 8, and Natas 16 (the
+staged/wave-gated games); AI Copilot Setup's 6 challenges aren't part of
+that staging and are validated separately by `validate_generated.py`. The
+event administrator then syncs and starts each staged game independently in
+Engine; loading challenge content does not start a game clock.
 
 The deployment preflight is fail-closed: it requires authenticated CTFd
 inventory access, successful challenge install/sync responses, successful
-instance-launcher mapping sync, and exact totals of 59 challenges, 58 mapped
-environments, and 3 visible launchers. `.ctf/config` is written mode `0600`.
+instance-launcher mapping sync, and exact totals of 65 challenges, 59 mapped
+environments, and 4 visible launchers. `.ctf/config` is written mode `0600`.
 
 ## Validation and immutable releases
 
@@ -73,6 +81,7 @@ Run the same metadata gate used by CI:
 python3 scripts/build_bandit.py
 python3 scripts/build_krypton.py
 python3 scripts/build_natas.py
+python3 scripts/build_agent.py
 python3 scripts/validate_game_stages.py
 python3 scripts/validate_generated.py --output validation-manifest.json
 ```
