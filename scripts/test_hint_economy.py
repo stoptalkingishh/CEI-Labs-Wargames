@@ -7,9 +7,9 @@ except ModuleNotFoundError:
 
 
 class HintEconomyTests(unittest.TestCase):
-    def test_tier_costs_is_the_fixed_10_50_85_percent_schedule(self):
+    def test_tier_costs_is_the_fixed_20_50_85_percent_schedule(self):
         for value in [100, 150, 200, 3200]:
-            self.assertEqual(tier_costs(value), (10, 50, 85))
+            self.assertEqual(tier_costs(value), (20, 50, 85))
 
     def test_tier_costs_rejects_non_positive_or_non_int_value(self):
         for bad in (0, -1, 1.5, "100"):
@@ -25,7 +25,7 @@ class HintEconomyTests(unittest.TestCase):
 
     def test_managed_tiers_pairs_text_with_percent(self):
         result = managed_tiers(100, ["nudge", "bigger nudge", "answer"])
-        self.assertEqual(result, [("nudge", 10), ("bigger nudge", 50), ("answer", 85)])
+        self.assertEqual(result, [("nudge", 20), ("bigger nudge", 50), ("answer", 85)])
 
     def test_managed_tiers_requires_exactly_three_hint_texts(self):
         with self.assertRaises(ValueError):
