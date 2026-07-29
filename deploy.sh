@@ -44,6 +44,7 @@ echo "[2/4] Generating Challenge Files..."
 python3 scripts/build_bandit.py
 python3 scripts/build_krypton.py
 python3 scripts/build_natas.py
+python3 scripts/build_agent.py
 python3 scripts/validate_game_stages.py
 python3 scripts/validate_generated.py --output deployment-manifest.json
 
@@ -220,7 +221,7 @@ PYEOF
 # gets silently skipped, every native hint on the live instance is wiped
 # with nothing to replace it. See docs/P0-CONTENT-DEPLOY-LOG-2026-07-23.md.
 sync_hint_wallet_bundle() {
-    local wallet_files=(challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json)
+    local wallet_files=(challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json challenges/agent-hint-wallet.json)
 
     # Determine whether there is actually any hint-wallet content that a sync
     # would push. A missing file or a manifest with zero "entries" means this
@@ -271,7 +272,7 @@ PYEOF
     [ "${#secret}" -ge 32 ] || { echo "HINT_WALLET_SYNC_SECRET must be at least 32 characters" >&2; return 1; }
     [[ "${HINT_WALLET_REVISION:-}" =~ ^[1-9][0-9]*$ ]] || { echo "HINT_WALLET_REVISION must be a positive integer" >&2; return 1; }
     local payload
-    payload=$(python3 - challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json <<'PYEOF'
+    payload=$(python3 - challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json challenges/agent-hint-wallet.json <<'PYEOF'
 import hashlib, hmac, json, os, sys
 manifests=[]
 for path in sys.argv[1:]:
@@ -365,8 +366,8 @@ echo "=========================================="
 if [ "$challenges_found" -eq 0 ]; then
     echo "Error: no challenges were found inside the 'challenges/' directory." >&2
     exit 1
-elif [ "$challenges_found" -ne 59 ]; then
-    echo "Error: expected 59 challenges, deployed ${challenges_found}." >&2
+elif [ "$challenges_found" -ne 65 ]; then
+    echo "Error: expected 65 challenges, deployed ${challenges_found}." >&2
     exit 1
 else
     echo "✅ Deployment Complete! All $challenges_found challenges are synced & live."

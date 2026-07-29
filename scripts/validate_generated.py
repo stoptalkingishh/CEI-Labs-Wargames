@@ -10,15 +10,18 @@ from pathlib import Path
 import yaml
 
 
-EXPECTED_CHALLENGES = 59
+EXPECTED_CHALLENGES = 65
 # krypton-00 used to be the one challenge with no instance_type mapping
 # at all (its puzzle was a static string in the CTFd description, no
 # login needed -- see docs/security-audit-status.md and
 # cei-labs-event#17). It now has a real krypton0 account on the same
 # shared Krypton box as every other level in that track, so all 59
-# challenges get a mapping.
+# Bandit/Krypton/Natas challenges get a mapping. The 6 "AI Copilot Setup"
+# challenges (scripts/build_agent.py) are deliberately excluded -- there is
+# no per-team Docker instance for that track at all (the "target" is the
+# player's own laptop), so EXPECTED_MAPPINGS stays at 59, not 65.
 EXPECTED_MAPPINGS = 59
-EXPECTED_LAUNCHERS = 3
+EXPECTED_LAUNCHERS = 4
 VALID_INSTANCE_TYPES = {"web-app", "single-target", "target-attacker"}
 IMAGE_FIELDS = ("image", "target_image", "attacker_image")
 DIGEST_REF = re.compile(r"^[^\s@]+@sha256:[0-9a-f]{64}$")
