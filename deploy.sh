@@ -221,7 +221,14 @@ PYEOF
 # gets silently skipped, every native hint on the live instance is wiped
 # with nothing to replace it. See docs/P0-CONTENT-DEPLOY-LOG-2026-07-23.md.
 sync_hint_wallet_bundle() {
-    local wallet_files=(challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json challenges/agent-hint-wallet.json)
+    # NOTE: challenges/agent-hint-wallet.json (AI Copilot Setup's hints) is
+    # deliberately NOT included here yet. cei-labs-engine's orchestrator
+    # (docker/orchestrator/app/wallet.py) hard-validates the bundle to
+    # EXACTLY the 3 tracks {bandit, krypton, natas} and rejects a 4th with
+    # HTTP 400 (incomplete_tracks) -- see REQUIRED_TRACKS there. Add it back
+    # here once that validation is updated to accept "agent" too (and the
+    # orchestrator image is rebuilt/redeployed with that change).
+    local wallet_files=(challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json)
 
     # Determine whether there is actually any hint-wallet content that a sync
     # would push. A missing file or a manifest with zero "entries" means this
@@ -272,7 +279,7 @@ PYEOF
     [ "${#secret}" -ge 32 ] || { echo "HINT_WALLET_SYNC_SECRET must be at least 32 characters" >&2; return 1; }
     [[ "${HINT_WALLET_REVISION:-}" =~ ^[1-9][0-9]*$ ]] || { echo "HINT_WALLET_REVISION must be a positive integer" >&2; return 1; }
     local payload
-    payload=$(python3 - challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json challenges/agent-hint-wallet.json <<'PYEOF'
+    payload=$(python3 - challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json <<'PYEOF'
 import hashlib, hmac, json, os, sys
 manifests=[]
 for path in sys.argv[1:]:
