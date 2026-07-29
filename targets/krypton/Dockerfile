@@ -32,13 +32,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     bsdextrautils \
     coreutils \
     binutils \
+    less \
     vim \
     nano \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 COPY build/ /opt/build/
+COPY src/krypton_tools.py /usr/local/bin/krypton-tools
 RUN chmod +x /opt/build/*.sh /opt/build/*.py \
+    && chmod 755 /usr/local/bin/krypton-tools \
     && mkdir -p /etc/cei-labs/banners \
     && python3 /opt/build/generate_banners.py /etc/cei-labs/banners \
     && /opt/build/01-create-users.sh \

@@ -9,6 +9,16 @@ record.
 ## [Unreleased]
 
 ### Added
+- Human-playability support for Krypton: an offline `krypton-tools`
+  command for frequency counts, Caesar rotation, Vigenere column
+  splitting, and Kasiski evidence; the missing level-3 `found1`-`found3`
+  samples; and an in-login pointer to the toolkit.
+- A Natas attacker workstation image with the tools players need for the
+  middle and late levels, including `xxd`, `rev`, `jq`, Python requests,
+  `file`, and `natas-help`.
+- Progressive Natas hint rendering with clear Step 1/2/3 headings,
+  an HTTP Basic Auth reminder on every tier, and authenticated,
+  copy-pasteable `curl` examples.
 - `docs/challenge-inventory.md`: the full 59-level structured inventory
   (ID, points, flag source, instance type, reset method, dependencies,
   hints, expected solve path) the production-readiness tracker's §3 P0
@@ -18,6 +28,26 @@ record.
   because it has no per-team instance to scope a dynamic flag to — see
   that doc for the full explanation and a recommended accepted-risk
   write-up.
+
+### Fixed
+- Krypton Vigenere guidance now groups letters exactly as the cipher does;
+  spaces and punctuation no longer shift the suggested columns.
+- Krypton level-2 and later hints now match the deployed command-line
+  behavior and point players at local analysis helpers.
+- Natas level 7 restores the intended page-source hint for the local file
+  inclusion path.
+- Natas level 8 now gives a valid hex decode/reverse/base64 pipeline using
+  tools installed in the attacker image.
+- Natas level 11 now uses the exact JSON plaintext for the XOR cookie and
+  includes a complete offline forging helper.
+- Krypton instructor writeups now use the deployed `/home/kryptonN`
+  paths instead of nonexistent `/krypton/kryptonN` paths.
+
+### Deployment notes
+- The Natas generator now references
+  `ghcr.io/stoptalkingishh/cei-labs-wargames/natas-attacker:latest`.
+  Publish that attacker image to GHCR before relying on the generated
+  deployment manifests outside the local Docker test environment.
 
 ## Milestones before this file existed
 
