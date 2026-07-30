@@ -29,6 +29,7 @@ import base64
 import bz2
 import codecs
 import gzip
+import hashlib
 import json
 import os
 import subprocess
@@ -81,34 +82,48 @@ for path, (token, key) in CONTENT_SUBS.items():
         f.write(content.replace(token.encode(), value.encode()))
 
 # ---- Level 13: bandit13's SSH keypair that logs into bandit14 --
-# generated fresh per container (i.e. per team) here, instead of once at
-# image BUILD time, closing the team-isolation gap noted in
+# generated per container (i.e. per team) here, instead of once at image
+# BUILD time, closing the team-isolation gap noted in
 # docs/security-audit-status.md: every team's image used to bake in the
 # exact same keypair, so any team that reached level 13 could also SSH
 # straight into every OTHER team's bandit14 with it -- not just read its
-# own. Guarded by os.path.exists() on the private key so a Reboot (same
-# container, filesystem not wiped -- see the levels-27-31 comment below)
-# doesn't silently swap out a player's already-downloaded sshkey.private
-# for a new, non-matching key.
-bandit13_key = "/home/bandit13/sshkey.private"
-if not os.path.exists(bandit13_key):
-    tmp_key = "/tmp/bandit13-14-key"
-    subprocess.run(
-        ["ssh-keygen", "-t", "ed25519", "-N", "", "-C", "bandit14-access", "-f", tmp_key],
-        check=True,
-    )
+# own.
+#
+# This USED to be `ssh-keygen` from /dev/urandom, guarded by
+# os.path.exists() on the private key on the (false) assumption that a
+# "Reboot" restarts the SAME container without wiping its filesystem.
+# It doesn't: cei-labs-engine's restart_service()/force_update() is a
+# Swarm rolling task replacement -- "no state carried over inside the
+# container itself" per its own docstring -- so every real reboot got a
+# fresh filesystem, the exists() check always failed, and a brand new
+# keypair was silently minted each time, orphaning any sshkey.private a
+# player had already downloaded (confirmed: rebuilding this image and
+# recreating the container with identical LEVEL_SECRETS produced a
+# different key every time). Deriving the key from bandit13's own
+# stable per-team secret instead makes it reproducible across reboots,
+# still unique per team, and needs no filesystem-persistence assumption
+# at all.
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+from cryptography.hazmat.primitives.serialization import Encoding, PrivateFormat, PublicFormat, NoEncryption
+
+bandit13_secret = secrets.get("bandit13")
+if bandit13_secret:
+    seed = hashlib.sha256(f"{bandit13_secret}:bandit13-ssh-keypair".encode()).digest()
+    keypair = Ed25519PrivateKey.from_private_bytes(seed)
+    private_pem = keypair.private_bytes(Encoding.PEM, PrivateFormat.OpenSSH, NoEncryption())
+    public_line = keypair.public_key().public_bytes(Encoding.OpenSSH, PublicFormat.OpenSSH) + b" bandit14-access\n"
 
     subprocess.run(["install", "-m", "700", "-o", "bandit13", "-g", "bandit13", "-d", "/home/bandit13/.ssh"], check=True)
-    subprocess.run(["install", "-m", "600", "-o", "bandit13", "-g", "bandit13", tmp_key, bandit13_key], check=True)
+    with open("/home/bandit13/sshkey.private", "wb") as f:
+        f.write(private_pem)
+    subprocess.run(["chown", "bandit13:bandit13", "/home/bandit13/sshkey.private"], check=True)
+    os.chmod("/home/bandit13/sshkey.private", 0o600)
 
     subprocess.run(["install", "-m", "700", "-o", "bandit14", "-g", "bandit14", "-d", "/home/bandit14/.ssh"], check=True)
-    subprocess.run(
-        ["install", "-m", "600", "-o", "bandit14", "-g", "bandit14", f"{tmp_key}.pub", "/home/bandit14/.ssh/authorized_keys"],
-        check=True,
-    )
-
-    os.remove(tmp_key)
-    os.remove(f"{tmp_key}.pub")
+    with open("/home/bandit14/.ssh/authorized_keys", "wb") as f:
+        f.write(public_line)
+    subprocess.run(["chown", "bandit14:bandit14", "/home/bandit14/.ssh/authorized_keys"], check=True)
+    os.chmod("/home/bandit14/.ssh/authorized_keys", 0o600)
 
 # ---- Level 20: suconnect's expected/next passwords, read from a runtime
 # config file instead of compiled into the binary (see
@@ -159,12 +174,16 @@ if flag12:
 # bare repo whose history/branches/tags/hooks hide the next level's
 # password -- moved here from a Dockerfile-build-time script entirely
 # (docs/security-audit-status.md), since each team needs its own
-# distinct repo content. Skips entirely if bandit27-git already exists --
-# a Reboot (not a full Relaunch) restarts this SAME container without
-# wiping its filesystem, and the secrets are stable for a container's
-# whole lifetime, so redoing this on every restart would be redundant
-# (useradd on an already-existing user would also just error under `set
-# -e`, which this guard avoids needing to handle piecemeal).
+# distinct repo content. Skips entirely if bandit27-git already exists,
+# which in practice only ever happens within a single container's own
+# lifetime (a real cei-labs-engine "Reboot" is a Swarm task replacement
+# -- a fresh filesystem every time, see the level-13 comment above --
+# so this guard is pure same-process idempotency, not a cross-reboot
+# persistence mechanism). The FLAG content itself (git_flag below) is
+# unaffected either way since it's re-derived from the same stable
+# LEVEL_SECRETS on every run (useradd on an already-existing user would
+# also just error under `set -e`, which this guard avoids needing to
+# handle piecemeal).
 import pwd
 
 try:

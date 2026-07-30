@@ -52,6 +52,26 @@ record.
   solves. Both are now derived deterministically from the stable
   per-team secret (SHA-256 counter mode), so they're stable across
   restarts and still unique per team.
+- Bandit level 13's SSH keypair (the one used to log into bandit14) no
+  longer gets regenerated on every reboot. It was `ssh-keygen`'d from
+  `/dev/urandom` and guarded by an `os.path.exists()` check on the
+  false assumption that a reboot restarts the same container without
+  wiping its filesystem -- `cei-labs-engine`'s reboot is actually a
+  Swarm task replacement with a fresh filesystem every time, so the
+  guard never held in production and every reboot silently minted a
+  new keypair, orphaning any `sshkey.private` a player had already
+  downloaded. Confirmed via a real container recreate before and after
+  the fix (identical key material after; a pre-recreate downloaded key
+  still authenticated afterward once fixed). Derived deterministically
+  from bandit13's own per-team secret instead (SHA-256 seed into
+  `cryptography`'s Ed25519 key generation), same pattern as the Krypton
+  fix below. Also corrected a matching but lower-severity comment on
+  the levels-27-31 git-repo setup that made the same false assumption
+  -- the actual flag values there were never affected since they're
+  re-derived from `LEVEL_SECRETS` on every run regardless.
+- Audited Natas for the same class of bug (any per-boot randomness not
+  derived from `LEVEL_SECRETS`); found none -- every Natas secret
+  already comes straight from the stable per-team blob.
 
 ### Deployment notes
 - The Natas generator now references
