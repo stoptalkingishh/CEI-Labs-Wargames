@@ -32,12 +32,38 @@ set -e
 if [ -n "${LEVEL_SECRETS:-}" ]; then
     python3 - <<'PYEOF'
 import base64
+import hashlib
 import json
 import os
 import string
 import subprocess
 
 secrets = json.loads(os.environ.get("LEVEL_SECRETS", "{}"))
+
+
+def deterministic_bytes(seed, n):
+    """Stable, per-team pseudorandom bytes derived from `seed` (a stable
+    LEVEL_SECRETS value) via SHA-256 counter mode -- NOT /dev/urandom.
+
+    Levels 2 and 6 used to draw their Caesar shift / LFSR keystream from
+    /dev/urandom at container start, so every restart (a reboot, a health
+    -check-triggered recreate, a timed-out/hung container coming back up)
+    silently baked a NEW shift/keystream into krypton3/final even though
+    the underlying per-team flag in LEVEL_SECRETS never changed -- any
+    ciphertext, keyfile.dat, or keystream.dat a player had already pulled
+    off the box stopped matching what was now being served, so their
+    in-progress crypto work (and, for players who'd cached a value client
+    -side, an already-"solved" answer) silently broke. Seeding from the
+    stable per-team secret instead makes shift/keystream reproducible
+    across restarts while remaining unique per team and, since SHA-256 is
+    one-way, no easier for a player to reverse than the old random draw.
+    """
+    out = b""
+    counter = 0
+    while len(out) < n:
+        out += hashlib.sha256(f"{seed}:{counter}".encode()).digest()
+        counter += 1
+    return out[:n]
 
 
 def write(path, content, owner, mode=0o440):
@@ -254,18 +280,16 @@ flag2 = secrets.get("krypton2")
 if flag2:
     subprocess.run(["chpasswd"], input=f"krypton3:{flag2}\n", text=True, check=True)
 
-    # Random, non-zero, non-human-readable shift byte -- deliberately NOT
-    # a plain ASCII digit, so `cat keyfile.dat` doesn't just hand the
-    # shift over. 256 isn't evenly divisible by 26, so a single raw byte
-    # would land on shift == 0 (byte % 26 == 0) about 1 in 26 draws,
-    # silently turning the "encrypted" file into plaintext -- reject and
-    # re-draw until we get a byte whose value mod 26 is non-zero, matching
-    # the shift computed in caesar_encrypt.c.
-    with open("/dev/urandom", "rb") as f:
-        while True:
-            shift_byte = f.read(1)
-            if shift_byte[0] % 26 != 0:
-                break
+    # Non-zero, non-human-readable shift byte -- deliberately NOT a plain
+    # ASCII digit, so `cat keyfile.dat` doesn't just hand the shift over.
+    # 256 isn't evenly divisible by 26, so a single raw byte would land on
+    # shift == 0 (byte % 26 == 0) about 1 in 26 draws, silently turning the
+    # "encrypted" file into plaintext -- reject and take the next
+    # deterministic byte until one whose value mod 26 is non-zero, matching
+    # the shift computed in caesar_encrypt.c. Derived from flag2 (stable
+    # across restarts), not /dev/urandom -- see deterministic_bytes().
+    candidate_bytes = deterministic_bytes(f"{flag2}:krypton2-shift", 64)
+    shift_byte = next(bytes([b]) for b in candidate_bytes if b % 26 != 0)
     with open("/home/krypton2/keyfile.dat", "wb") as f:
         f.write(shift_byte)
 
@@ -302,8 +326,9 @@ if flag2:
 # (non-alpha-only) secret is fine here, same reasoning as level 2.
 flag6 = secrets.get("krypton6")
 if flag6:
-    with open("/dev/urandom", "rb") as f:
-        keystream_bytes = f.read(30)
+    # Derived from flag6 (stable across restarts), not /dev/urandom -- see
+    # deterministic_bytes().
+    keystream_bytes = deterministic_bytes(f"{flag6}:krypton6-keystream", 30)
     with open("/home/krypton6/keystream.dat", "wb") as f:
         f.write(keystream_bytes)
 

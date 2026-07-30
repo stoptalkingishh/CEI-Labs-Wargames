@@ -42,6 +42,16 @@ record.
   includes a complete offline forging helper.
 - Krypton instructor writeups now use the deployed `/home/kryptonN`
   paths instead of nonexistent `/krypton/kryptonN` paths.
+- Krypton levels 2 and 6 (`entrypoint.sh`) no longer draw their Caesar
+  shift / LFSR keystream from `/dev/urandom` on every container start.
+  A reboot, health-check-triggered recreate, or hung-container recovery
+  regenerated fresh key material each time even though the per-team
+  flag in `LEVEL_SECRETS` never changed, so `keyfile.dat`/`keystream.dat`
+  and the encrypted `krypton3`/`final` files silently stopped matching
+  whatever a player had already pulled off the box, breaking in-progress
+  solves. Both are now derived deterministically from the stable
+  per-team secret (SHA-256 counter mode), so they're stable across
+  restarts and still unique per team.
 
 ### Deployment notes
 - The Natas generator now references
