@@ -22,6 +22,7 @@ jobs:
       - run: python scripts/build_bandit.py
       - run: python scripts/build_krypton.py
       - run: python scripts/build_natas.py
+      - run: python scripts/build_agent.py
       - run: python scripts/validate_game_stages.py
       - run: python scripts/validate_generated.py --output validation-manifest.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

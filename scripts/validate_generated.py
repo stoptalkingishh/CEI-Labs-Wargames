@@ -15,14 +15,41 @@ VALID_INSTANCE_TYPES = {"web-app", "single-target", "target-attacker"}
 IMAGE_FIELDS = ("image", "target_image", "attacker_image")
 DIGEST_REF = re.compile(r"^[^\s@]+@sha256:[0-9a-f]{64}$")
 
+# Tracks that are deliberately NOT in game-stages.yml (see
+# validate_game_stages.py's hardcoded "exactly 3 stages" check) because
+# they have no per-team instance to wave-gate/hide-reveal at all -- the
+# AI Copilot Setup track's "target" is the player's own laptop, not a
+# Docker instance, so it also contributes 0 instance mappings. A prior
+# fix (scripts/build_agent.py's introduction) here derived
+# expected_challenges/expected_launchers purely from game-stages.yml's
+# sum, which silently broke deploy.sh the moment build_agent.py's
+# challenges existed (59 expected vs 65 generated) and also conflated
+# "expected instance mappings" with "expected total challenges" (see
+# main()'s mappings check below) -- those are different numbers
+# specifically because this track has zero mappings. Keeping this
+# track's counts explicit here, rather than folding it back into
+# game-stages.yml, preserves the original reason it's excluded from
+# that file.
+UNSTAGED_TRACK_CHALLENGE_COUNT = 6  # scripts/build_agent.py
+UNSTAGED_TRACK_LAUNCHER_COUNT = 1  # cei-agent-start-here
 
-def expected_counts() -> tuple[int, int]:
-    """Return generated challenge and launcher counts from staged-game config."""
+
+def expected_counts() -> tuple[int, int, int]:
+    """Return (expected_mappings, expected_total_challenges, expected_total_launchers).
+
+    expected_mappings/launcher-from-stages come from game-stages.yml (the
+    wave-gated Bandit/Krypton/Natas tracks); the totals additionally
+    include the deliberately-unstaged tracks above.
+    """
     data = yaml.safe_load(STAGES_FILE.read_text(encoding="utf-8")) or {}
     stages = data.get("stages") or []
-    challenge_count = sum(int(stage["expected_challenge_count"]) for stage in stages)
-    launcher_count = sum(1 for stage in stages if stage.get("start_challenge"))
-    return challenge_count, launcher_count
+    staged_challenge_count = sum(int(stage["expected_challenge_count"]) for stage in stages)
+    staged_launcher_count = sum(1 for stage in stages if stage.get("start_challenge"))
+    return (
+        staged_challenge_count,
+        staged_challenge_count + UNSTAGED_TRACK_CHALLENGE_COUNT,
+        staged_launcher_count + UNSTAGED_TRACK_LAUNCHER_COUNT,
+    )
 
 
 def main() -> int:
@@ -33,7 +60,7 @@ def main() -> int:
 
     root = Path("challenges")
     files = sorted(root.glob("*/challenge.yml"))
-    expected_challenges, expected_launchers = expected_counts()
+    expected_mappings, expected_challenges, expected_launchers = expected_counts()
     errors: list[str] = []
     rows: list[dict] = []
     names: set[str] = set()
@@ -94,8 +121,8 @@ def main() -> int:
             "sha256": hashlib.sha256(raw).hexdigest(),
         })
 
-    if mappings != expected_challenges:
-        errors.append(f"expected {expected_challenges} instance mappings, found {mappings}")
+    if mappings != expected_mappings:
+        errors.append(f"expected {expected_mappings} instance mappings, found {mappings}")
     if launchers != expected_launchers:
         errors.append(f"expected {expected_launchers} start-here launchers, found {launchers}")
 
