@@ -9,6 +9,25 @@ record.
 ## [Unreleased]
 
 ### Added
+- `docs/wargame-themes.md`: documents each track's adopted narrative theme
+  (Bandit: an outlaw breaking into a guarded compound; Krypton: a hidden
+  world transmitting encoded signals; Natas: "Satan" spelled backwards, a
+  mirrored/inverted digital underworld) and the reusable prompt used to
+  generate all per-level ASCII art from it. Explicitly notes these are
+  CEI Labs' own adopted themes, not documented OverTheWire canon.
+- Natas login banners now include ASCII art (all 15 levels) -- previously
+  plain title/policy text only. Wired into the existing
+  `<pre class="cei-login-banner">` HTML block via `cei-natas-banner.php`.
+
+### Changed
+- Bandit (34 levels) and Krypton (7 levels) login banner ASCII art
+  reworked to draw only on the track's overall theme and the level's
+  title, never the level's actual technique/command/vulnerability --
+  the previous art (e.g. a literal base64 string for Krypton's Base64
+  Decoding, a literal ROT13 shift-map for its substitution cipher level)
+  doubled as a mechanical hint. All three tracks' art now follows one
+  reusable generation prompt (see `docs/wargame-themes.md`).
+
 - Human-playability support for Krypton: an offline `krypton-tools`
   command for frequency counts, Caesar rotation, Vigenere column
   splitting, and Kasiski evidence; the missing level-3 `found1`-`found3`

@@ -26,18 +26,23 @@ POLICY = (
     "Stay within your assigned challenge environment only.",
 )
 
-# Small, readable, title-themed ASCII art per level -- same 2-4 short line
-# scale as the previous shared lock-icon art. The last line of each entry
-# is where render() appends the "CEI Labs Krypton N: Title" text, so keep
-# last lines short to stay well under the 80-char safety limit.
+# Small, title-themed ASCII art per level, built around Krypton's adopted
+# track theme (see docs/wargame-themes.md): a distant, hidden world
+# transmitting encoded signals across space, growing stranger and more
+# alien the deeper you go. Each piece draws ONLY on that theme plus the
+# level's own (already player-visible) title -- deliberately NOT on the
+# level's actual cipher/technique, so the art itself never hints at how
+# to solve anything. The last line of each entry is where render()
+# appends the "CEI Labs Krypton N: Title" text, so keep last lines short
+# to stay well under the 80-char safety limit.
 ART = {
-    0: ["  V0VMQ09NRQ==", "     base64 -d", "  ???????? -> plaintext"],   # encoded string decoding to plaintext
-    1: ["  A B C D ...", "  | | | |  (shift 13)", "  N O P Q ..."],       # letter->letter rotation map, shift known
-    2: ["  A -> ?", "  B -> ?   shift unknown", "  C -> ?"],              # same mapping, offset withheld
-    3: ["  #", "  # #   #", "  # # # # #", "  E T A O I N ."],            # a letter-frequency histogram
-    4: ["  C I P H E R", "  | | | | | |", "  ? ? ? ? ? ?  (key=6)"],      # a fixed-width Vigenere key grid
-    5: ["  ...KEY...KEY...", "      ^-------^", "      gap -> key length"],  # Kasiski repeat-distance find
-    6: ["  1 0 1 1 0 1 ->[XOR]", "        ^________|", "  (keystream repeats)"],  # LFSR feedback register
+    0: ["    .-.", "   ( (.) )  << signal", "    `-'"],                  # a dish, first faint signal received
+    1: ["   \\ | /", "   -- O --  spinning", "   / | \\"],               # a dial turning under the stars
+    2: ["   \\ | /", "   -- ? --  half-turned", "   / | \\"],            # the same dial, shadowed, offset unknown
+    3: ["   .  .   .", "  .   .  .  .", " ------------  spectrum"],      # a wavering signal spectrum
+    4: ["  (( (( (( ))", "   ((  core  ))", "  (( (( (( ))"],           # a ringed array, pulsing in sequence
+    5: ["  (((( (( ((", "  ((( deeper ((((", "  (( (((( (("],          # the array, dimmer, more rings
+    6: ["   *", "    \\_/\\_/\\_", "   endless loop"],                  # a distant star, endlessly pulsing
 }
 
 # Progressive cool-to-deep palette, basic 8-color SGR only. Deliberately
