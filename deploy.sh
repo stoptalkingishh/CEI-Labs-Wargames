@@ -278,8 +278,23 @@ PYEOF
     local secret="${HINT_WALLET_SYNC_SECRET}"
     [ "${#secret}" -ge 32 ] || { echo "HINT_WALLET_SYNC_SECRET must be at least 32 characters" >&2; return 1; }
     [[ "${HINT_WALLET_REVISION:-}" =~ ^[1-9][0-9]*$ ]] || { echo "HINT_WALLET_REVISION must be a positive integer" >&2; return 1; }
-    local payload
-    payload=$(python3 - challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json <<'PYEOF'
+    # The payload (easily tens of KB -- three tracks' worth of tiered hints)
+    # used to round-trip through a shell variable: printed by Python, captured
+    # via $(...) command substitution, split on the first newline, then
+    # written back out with printf. Confirmed on Windows/Git Bash that this
+    # silently DROPS BYTES somewhere in that stdout-capture round-trip --
+    # the file that then got signed-and-sent no longer matched what the
+    # signature (computed in-process over the same bytes) was actually
+    # generated from, so the orchestrator's HMAC check correctly rejected it
+    # as invalid_signature every time, with no indication of *why*. Python
+    # now writes the signature and payload straight to their own files in
+    # binary mode -- no stdout, no shell variable, no text-mode translation
+    # of any kind for the large payload to go through.
+    local payload_file signature_file
+    payload_file=$(mktemp)
+    signature_file=$(mktemp)
+    HINT_WALLET_PAYLOAD_FILE="$payload_file" HINT_WALLET_SIGNATURE_FILE="$signature_file" \
+        python3 - challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json <<'PYEOF'
 import hashlib, hmac, json, os, sys
 manifests=[]
 for path in sys.argv[1:]:
@@ -288,27 +303,25 @@ for item in manifests:
     item["digest"] = hashlib.sha256(json.dumps({k:item[k] for k in ("schema_version","track","entries")}, sort_keys=True, separators=(",",":"), ensure_ascii=False).encode()).hexdigest()
 bundle={"schema_version":1,"revision":int(os.environ["HINT_WALLET_REVISION"]),"manifests":manifests}
 raw=json.dumps(bundle, sort_keys=True, separators=(",",":"), ensure_ascii=False).encode()
-print(hmac.new(os.environ["HINT_WALLET_SYNC_SECRET"].encode(), raw, hashlib.sha256).hexdigest())
-print(json.dumps(bundle, sort_keys=True, separators=(",",":"), ensure_ascii=False))
+signature=hmac.new(os.environ["HINT_WALLET_SYNC_SECRET"].encode(), raw, hashlib.sha256).hexdigest()
+with open(os.environ["HINT_WALLET_PAYLOAD_FILE"], "wb") as f:
+    f.write(raw)
+with open(os.environ["HINT_WALLET_SIGNATURE_FILE"], "wb") as f:
+    f.write(signature.encode("ascii"))
 PYEOF
-    ) || return 1
-    local signature="${payload%%$'\n'*}"; payload="${payload#*$'\n'}"
+    if [ $? -ne 0 ]; then
+        rm -f -- "$payload_file" "$signature_file"
+        return 1
+    fi
+    local signature
+    signature=$(cat "$signature_file")
     local curl_insecure=()
     [ "${CTFD_INSECURE:-false}" = "true" ] && curl_insecure=(-k)
     local signature_header_file
     signature_header_file=$(write_secret_header "X-Hint-Wallet-Signature" "$signature")
-    # Payload goes through a temp file + `-d @file`, not inline `-d "$payload"`:
-    # the bundle is easily tens of KB (three tracks' worth of tiered hints),
-    # and passing it as a literal argv entry hits the OS command-line length
-    # limit on Windows/Git Bash (fine on Linux's much larger ARG_MAX, but
-    # confirmed failing here with "Argument list too long"). Same technique
-    # already used for the signature header just above.
-    local payload_file
-    payload_file=$(mktemp)
-    printf '%s' "$payload" > "$payload_file"
     curl --fail --silent --show-error "${curl_insecure[@]}" -X POST "${CTFD_URL}/plugins/hint-wallet/machine/sync" \
         --header @"$signature_header_file" -H "Content-Type: application/json" -d @"$payload_file" >/dev/null
-    rm -f -- "$signature_header_file" "$payload_file"
+    rm -f -- "$signature_header_file" "$payload_file" "$signature_file"
     echo "Synced hint-wallet bundle"
 }
 
