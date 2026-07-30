@@ -58,6 +58,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     openssl \
     python3 \
     python3-minimal \
+    python3-cryptography \
     vim \
     nano \
     && apt-get clean \
