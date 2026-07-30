@@ -47,7 +47,10 @@ class BannerTests(unittest.TestCase):
     def test_art_is_themed_to_title(self):
         # Judgment-call spot checks -- just confirm a few levels' art contains
         # a recognizable token tying it back to the title theme, so we don't
-        # regress to one generic shape reused everywhere.
+        # regress to one generic shape reused everywhere. These check the
+        # track's own outlaw-narrative motifs (see docs/wargame-themes.md),
+        # not the level's actual technique -- the art must never hint at how
+        # to solve anything.
         clock_level = 21  # "Cron Jobs"
         clock_art = "\n".join(mod.ART[clock_level])
         self.assertTrue(

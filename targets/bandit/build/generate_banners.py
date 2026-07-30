@@ -11,45 +11,51 @@ POLICY = (
     "Stay within your assigned challenge environment only.",
 )
 
-# Small, readable, title-themed ASCII art per level. Kept to the same scale
-# (2-4 short lines) as the previous generic cat-face art; the last line of
-# each entry is where render() appends the "CEI Labs Bandit N: Title" text,
-# so keep last lines short to stay well under the 80-char safety limit.
+# Small, title-themed ASCII art per level, built around Bandit's adopted
+# track theme (see docs/wargame-themes.md): you're an outlaw breaking into
+# a guarded compound, moving room to room, picking locks, slipping past
+# guards, stealing what's hidden deeper inside as you go -- ending in an
+# escape at the final level. Each piece draws ONLY on that theme plus the
+# level's own (already player-visible) title -- deliberately NOT on the
+# level's actual technique/command/vulnerability, so the art itself never
+# hints at how to solve anything. The last line of each entry is where
+# render() appends the "CEI Labs Bandit N: Title" text, so keep last
+# lines short to stay well under the 80-char safety limit.
 ART = {
-    0: ["   o", "  /|\\ ->", "  / \\"],                      # first steps, moving forward
-    1: ["- - - -", "   X", "- - - -"],                       # a dashed line, hopes broken
-    2: ["[ ][ ][ ]", "[ ]   [ ]", "[ ][ ][ ]"],               # a grid with spaces missing
-    3: [". . . . .", ". .(o). .", ". . . . ."],               # an eye hidden among dots
-    4: [" _______", "| A B C |", "|_______|"],                # plainly readable text in a box
-    5: ["    |", "   /|", " ~~~~~~~"],                        # a needle in a haystack
-    6: ["|=|=|=|", "|=|=|=|  ,O__", "|=|=|=|  \\_|"],         # a rack under a magnifier
-    7: [" _____________", "| w w [W] w w |", "|_____________|"],  # one word singled out of many
-    8: [". . . . .", ".  *  . .", ". . . . ."],               # one star among many dots
-    9: ["  | | |", "   \\|/", "    o"],                       # a puppet, strings still attached
-    10: ["0101 1010", " -> base ->", "  16  8  2"],            # number bases
-    11: [" [A] <-> [B]", " [C] <-> [D]"],                      # letters swapped
-    12: [" [ [ [ ] ] ]", "  [ [ ] ]", "   [ ]"],               # nested boxes, doll in a doll
-    13: [" .--.", "( () )====", " `--'"],                      # a key
-    14: [" 1234", "    \\_", "     ->[PORT]"],                 # a value handed off into a port
-    15: ["  .--.", " /    \\", "|--[]--|"],                    # a padlock
-    16: ["[22][80][443]", "  ^---scan-->"],                    # sweeping across a row of ports
-    17: ["[ A ]   [ B ]", "  |   !=   |", "  +---------+"],    # two files diffed
-    18: [" [rbash]", "    |", "  --X-->  sh"],                 # breaking out past a restricted shell
-    19: ["   __#", " _|", "_|   suid->root"],                  # climbing a suid step to root
-    20: ["  )))", " )))) <-data", "   |"],                     # an antenna catching a connection
-    21: ["   _12_", "  9  |  3", "   `-6-'"],                  # a clock face
-    22: ["  _12_   ,_,", " 9  | 3 (o.o)", "  `-6-'  ) ("],     # a clock with a bug nearby
-    23: ["  _12_  |code", " 9  |3  |code", "  `-6-' |code"],   # a clock beside a script
-    24: ["[1][2][3]", "[4][5][6] *?*", "[7][8][9]"],           # a numeric keypad
-    25: [" [rbash]", "   X X", "  --->  sh"],                  # the restricted shell cracked open
-    26: ["+--//--+", "|  TUI  |", "+-------+"],                # a cracked text-mode window
-    27: ["  o", "  |\\--> o", "  o"],                          # a commit cloned onward
-    28: [" o---o---o---o", "  c1  c2  c3"],                    # commits strung on a line
-    29: ["     o--o", "    /", " o-o--o--o"],                  # a branch splitting off
-    30: ["  _____", " /     \\--o", " \\_____/  v1.0"],        # a tag on a commit
-    31: ["  .-~~-.", " (      )", "  `-..-'", "    ^"],        # pushing up to the cloud
-    32: ["$SHELL: old", "   -> override ->", "$SHELL: new"],   # the shell variable swapped out
-    33: [" +--+", " |  |->", " +--+"],                         # a door, and out you go
+    0: ["   .---.", "   | o | -->", "   '---'"],                    # stepping through the outer gate
+    1: ["   .-------.", "   |   X   |", "   '-------'"],            # a dead end, hopes dashed
+    2: ["  |  |     |  |", "  |  | o   |  |", "  |  |     |  |"],   # slipping through a narrow gap
+    3: ["  [#][#][#]", "  [#][o][#]", "  [#][#][#]"],               # blending among the crates
+    4: ["   ,-------.", "   | note   |", "   |  o     |", "   `-------'"],  # reading by torchlight
+    5: ["  ~~~~~~~~~~", "  ~~~ | ~~~~", "  ~~~~~~~~~~"],            # searching the haystack
+    6: ["  [=][=][=]", "  [=][=][=]  o", "  [=][=][=]"],            # combing a row of cabinets
+    7: ["  wwwwwwwwwwwww", "  ww[W]wwwwwwww", "  wwwwwwwwwwwww"],   # one word among countless
+    8: ["  ooooooooo", "  oo[*]oooo", "  ooooooooo"],               # a single glint among many
+    9: ["    \\|/", "     o", "    /|\\"],                          # tangled up, working free
+    10: ["   ####", "   #  # o", "   ####"],                        # a carved tablet, studied closely
+    11: ["  [A]<->[B]", "      o", "   swapped"],                   # switching one thing for another
+    12: ["  [ [ [ o ] ] ]", "   [ [ ] ]", "    [ ]"],                # a chest inside a chest
+    13: ["   .--.", "  ( () )==o", "   `--'"],                      # an ornate key, held up
+    14: ["   o -->", "   [ ]  <-hatch"],                            # a note passed through a hatch
+    15: ["    .--.", "   /    \\", "  |--[]--| o"],                 # a sealed vault door
+    16: ["  [ ][ ][ ]", "   o  scan-->"],                           # sweeping past a row of doors
+    17: ["   [A]  [B]", "     o  <->"],                             # weighing two things side by side
+    18: ["  |||||", "  ||| o -->", "  |||||"],                      # slipping past the bars
+    19: ["    ^", "   /|", "  o |"],                                # climbing to a higher ledge
+    20: ["  )))", "  ))) o", "   |"],                                # a whisper through the wall
+    21: ["   _12_", "  9  o  3", "   `-6-'"],                       # watching the bell tower
+    22: ["   _12_   ,_,", "  9  o 3 (o.o)", "   `-6-'"],            # the bell tower, something's off
+    23: ["   _12_  |~~~", "  9  o 3 |~~~", "   `-6-' |~~~"],        # leaving a note on the gears
+    24: ["  [1][2][3]", "  [4][5][6] o", "  [7][8][9]"],            # working through a locked dial
+    25: ["  |||||", "  ||X|| o-->", "  |||||"],                     # breaking through the cell door
+    26: ["  +--//--+", "  | o  //|", "  +-------+"],                # out through a cracked window
+    27: ["   o", "   |\\--> o", "   o"],                            # a path copied and followed onward
+    28: ["  o---o---o", "   stack  o"],                             # stones stacked one on the last
+    29: ["      o--o", "     /", "  o-o--o--o"],                    # the path splits in two
+    30: ["   _____", "  /     \\--o", "  \\_____/"],                # a marker tied to a stone
+    31: ["   .-~~-.", "  (  o   )", "   `-..-'", "     ^"],         # sending a loaded cart onward
+    32: ["  [cloak A]", "      o", "  [cloak B]"],                  # one disguise traded for another
+    33: ["  +--+", "  |o |->", "  +--+"],                           # out through the wall, free
 }
 
 # --- Progressive color, layered on top of the art above -------------------

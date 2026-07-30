@@ -23,14 +23,18 @@ class TestKryptonBanners(unittest.TestCase):
   arts=[tuple(b.ART[level]) for level in range(0,7)]
   self.assertEqual(len(arts),len(set(arts)),"every level's art must be visually distinct")
  def test_art_is_thematically_relevant(self):
-  # spot-check a few levels for a keyword tying the art to its actual title
-  self.assertTrue(any("base64" in line.lower() or "==" in line for line in b.ART[0]))
-  self.assertTrue(any("shift" in line.lower() or "13" in line for line in b.ART[1]))
-  self.assertTrue(any("shift" in line.lower() or "?" in line for line in b.ART[2]))
-  self.assertTrue(any("e" in line.lower() and "t" in line.lower() for line in b.ART[3]))
-  self.assertTrue(any("key" in line.lower() for line in b.ART[4]))
-  self.assertTrue(any("key" in line.lower() for line in b.ART[5]))
-  self.assertTrue(any("xor" in line.lower() or "1" in line or "0" in line for line in b.ART[6]))
+  # spot-check a few levels for a keyword tying the art to the track's
+  # adopted narrative theme (see docs/wargame-themes.md: a hidden world
+  # transmitting signals, growing stranger the deeper you go) -- NOT to
+  # the level's actual cipher/technique, since the art must never hint at
+  # how to solve anything.
+  self.assertTrue(any("signal" in line.lower() for line in b.ART[0]))
+  self.assertTrue(any("spinning" in line.lower() for line in b.ART[1]))
+  self.assertTrue(any("?" in line for line in b.ART[2]))
+  self.assertTrue(any("spectrum" in line.lower() for line in b.ART[3]))
+  self.assertTrue(any("(" in line for line in b.ART[4]))
+  self.assertTrue(any("deeper" in line.lower() for line in b.ART[5]))
+  self.assertTrue(any("loop" in line.lower() for line in b.ART[6]))
  def test_color_is_progressive_and_distinct_per_level(self):
   self.assertEqual(set(b.COLOR),set(range(0,7)))
   colors=[b.COLOR[level] for level in range(0,7)]
