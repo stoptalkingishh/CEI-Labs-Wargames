@@ -6,7 +6,7 @@ Per-level art drawn against the prompts in [`wargame-story.md`](wargame-story.md
 
 All pieces obey the shared constraints in `wargame-story.md`: single-width characters only, <= 80 columns per line, and no written text -- the art depicts, it never labels. Rendering depends on the viewer's font; these use box-drawing and block-element glyphs, so a font with poor coverage will show gaps.
 
-Natas pieces carry a depth gauge down the left edge (filled above, marker at this floor, empty below) so each still reads as one floor deeper into the descent.
+Each track carries a recurring anchor so a piece reads as belonging to its track at a glance: Bandit the starlit sky and ground line, Krypton the listening dish, Natas a depth gauge down the left edge (filled above, marker at this floor, empty below).
 
 ## Bandit -- "The Vault at Dryrock"
 
@@ -170,9 +170,9 @@ Natas pieces carry a depth gauge down the left edge (filled above, marker at thi
 ▌    ▐   ◀────▶   ▌    ▐
 ▙▄▄▄▄▟            ▙▄▄▄▄▟
 
-                 ○
-                /|\
-                / \
+               ○  ◈
+              /|\
+              / \
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -252,12 +252,12 @@ Natas pieces carry a depth gauge down the left edge (filled above, marker at thi
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-┌─────────────┐      ┌─────────────┐
-│ ─────────── │      │ ─────────── │
-│ ─────────── │      │ ─────────── │
-│ ───◈─────── │      │ ─────────── │
-│ ─────────── │      │ ─────────── │
-└─────────────┘      └─────────────┘
+┌─────────────┐          ┌─────────────┐
+│ ─────────── │          │ ─────────── │
+│ ─────────── │          │ ─────────── │
+│ ───◈─────── │    ╭─╮   │ ─────────── │
+│ ─────────── │    ╰─╯   │ ─────────── │
+└─────────────┘          └─────────────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -302,17 +302,17 @@ Natas pieces carry a depth gauge down the left edge (filled above, marker at thi
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-  ▄▄▄▄▄
- ███████
-█████████
- ▀▀▀◍▀▀▀
-▛▀▀▀▀▀▀▀▀▜
-▌   12   ▐
-▌   ◷    ▐
-▌   6    ▐
-▙▄▄▄▄▄▄▄▄▟
-█████████
-█████████
+        ▄▄▄▄▄
+       ███████
+      █████████
+       ▀▀▀◍▀▀▀
+      ▛▀▀▀▀▀▀▀▀▜
+      ▌   12   ▐
+      ▌   ◷    ▐     ▄ ▄ ▄ ▄
+      ▌   6    ▐    ▄████████▄
+      ▙▄▄▄▄▄▄▄▄▟    █   ◉    █
+      █████████     ▀████████▀
+      █████████      ▀ ▀ ▀ ▀
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -326,11 +326,11 @@ Natas pieces carry a depth gauge down the left edge (filled above, marker at thi
        ▀▀▀◍▀▀▀
       ▛▀▀▀▀▀▀▀▀▜
       ▌   12   ▐
-      ▌   ◷    ▐
-      ▌   6    ▐
-      ▙▄▄▄▄▄▄▄▄▟      ✗
-      █████████     ▚ ▚
-      █████████       ▚
+      ▌   ◷    ▐     ▄ ▄ ▄ ▄
+      ▌   6    ▐    ▄████████▄
+      ▙▄▄▄▄▄▄▄▄▟    █   ◉    █
+      █████████     ▀████████▀
+      █████████      ▀ ▀   ▀
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -339,11 +339,11 @@ Natas pieces carry a depth gauge down the left edge (filled above, marker at thi
 ```
   ✦        ·          ✧         ·        ✦        ·
         ▄▄▄▄▄
-       ███████
-      █████████
-       ▀▀▀◍▀▀▀
-      ▛▀▀▀▀▀▀▀▀▜
-      ▌   12   ▐
+       ███████       ▄ ▄ ▄ ▄
+      █████████     ▄████████▄
+       ▀▀▀◍▀▀▀      █   ◉    █
+      ▛▀▀▀▀▀▀▀▀▜    ▀████████▀
+      ▌   12   ▐     ▀ ▀ ▀ ▀
       ▌   ◷    ▐
       ▌   6    ▐    ▕▔▔▔▔▔▔▔▏
       ▙▄▄▄▄▄▄▄▄▟    ▕ ───── ▏
@@ -461,11 +461,16 @@ Natas pieces carry a depth gauge down the left edge (filled above, marker at thi
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-      ▛▀▀▀▀▀▀▀▀▀▜
-      ▌       ▨ ▐
- ○    ▌         ▐
-/|\   ▌         ▐   ◀── ▨
-/ \   ▙▄▄▄▄▄▄▄▄▄▟
+      ▛▀▀▀▀▀▀▀▀▀▀▀▀▀▜
+      ▌    ┌───┐    ▐
+      ▌    │ ◉ │    ▐
+      ▌    └───┘    ▐
+      ▌      ✗      ▐
+      ▙▄▄▄▄▄▄▄▄▄▄▄▄▄▟
+             ▲
+ ○         ┌───┐
+/|\        │ ◉ │
+/ \        └───┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -487,77 +492,77 @@ Natas pieces carry a depth gauge down the left edge (filled above, marker at thi
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-      ╲   ▁▁▁▁▁   ╱
-       ╲ ▕     ▏ ╱    ≈≈≈    ▨▧▨▧▩▨
-        ▕▔▔▔▔▔▔▔▏     ≈≈≈≈   ▧▩▨▧▨▩
-         ▔▔▔█▔▔▔      ≈≈≈    ▨▧▩▨▧▨
-            █
+    ╲   ▁▁▁▁▁   ╱
+     ╲ ▕     ▏ ╱    ≈≈≈    ▨▧▨▧▩▨
+      ▕▔▔▔▔▔▔▔▏     ≈≈≈≈   ▧▩▨▧▨▩
+       ▔▔▔█▔▔▔      ≈≈≈    ▨▧▩▨▧▨
+          █
 ```
 
 ### krypton1: ROT13 Substitution Cipher
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-               ╲  │  ╱   ↻
-                ╲ │ ╱
-             ───────◉─────
-                ╱ │ ╲
-               ╱  │  ╲
+           ╲  │  ╱   ↻
+            ╲ │ ╱
+╲▁▁▁╱    ───────◉─────
+ ▕ ▏        ╱ │ ╲
+  █        ╱  │  ╲
 ```
 
 ### krypton2: Caesar Cipher (Unknown Shift)
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-               ╲  ┊  ╱   ↻ ?
-                ╲ ┊ ╱
-             ┄┄┄┄┄──◉─────
-                ╱ ┊ ╲
-               ╱  ┊  ╲
+           ╲  ┊  ╱   ↻ ?
+            ╲ ┊ ╱
+╲▁▁▁╱    ┄┄┄┄┄──◉─────
+ ▕ ▏        ╱ ┊ ╲
+  █        ╱  ┊  ╲
 ```
 
 ### krypton3: Frequency Analysis
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-   │
-   │              ▉
-   │        ▉     ▉  ▉
-   │     ▉  ▉  ▉  ▉  ▉     ▉
-   │  ▉  ▉  ▉  ▉  ▉  ▉  ▉  ▉  ▉
-   └──────────────────────────────────────
+        │
+        │              ▉
+        │        ▉     ▉  ▉
+╲▁▁▁╱   │     ▉  ▉  ▉  ▉  ▉     ▉
+ ▕ ▏    │  ▉  ▉  ▉  ▉  ▉  ▉  ▉  ▉  ▉
+  █     └──────────────────────────────────
 ```
 
 ### krypton4: Vigenere Cipher (Known Key Length)
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-    ▟▀▀▙   ▟▀▀▙   ▟▀▀▙   ▟▀▀▙   ▟▀▀▙
-   ╱    ╲ ╱    ╲ ╱    ╲ ╱    ╲ ╱    ╲
-  ╱      V      V      V      V      ╲
-  ├──────┼──────┼──────┼──────┼───────┤
-  ◀─────▶◀─────▶◀─────▶◀─────▶◀──────▶
+         ▟▀▀▙   ▟▀▀▙   ▟▀▀▙   ▟▀▀▙   ▟▀▀▙
+        ╱    ╲ ╱    ╲ ╱    ╲ ╱    ╲ ╱    ╲
+╲▁▁▁╱         V      V      V      V
+ ▕ ▏    ├──────┼──────┼──────┼──────┼─────┤
+  █     ◀─────▶◀─────▶◀─────▶◀─────▶◀────▶
 ```
 
 ### krypton5: Vigenere Cipher (Kasiski Test)
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-  ░░░ ███ ░░░░ ░░░ ███ ░░░ ░░░ ███ ░░░
-      └─────────────┘     └─────────┘
-      ◀─────────────▶     ◀─────────▶
+╲▁▁▁╱   ░░░ ███ ░░░░ ░░░ ███ ░░░ ░░░ ███ ░░░
+ ▕ ▏        └─────────────┘     └─────────┘
+  █         ◀─────────────▶     ◀─────────▶
 ```
 
 ### krypton6: Stream Cipher / LFSR
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-    ┌─────────────┐
-    │             │
-    ▼    ┌─┬─┬─┬─┬─┬─┬─┐
-    ▲    │░│█│░│█│█│░│█│
-    │    └─┴─┴─┴─┴─┴─┴─┘
-    └───────────────────┘
+            ┌─────────────┐
+            │             │
+            ▼    ┌─┬─┬─┬─┬─┬─┬─┐
+╲▁▁▁╱       ▲    │░│█│░│█│█│░│█│
+ ▕ ▏        │    └─┴─┴─┴─┴─┴─┴─┘
+  █         └───────────────────┘
 ```
 
 ## Natas -- "Into the Mirror"
@@ -600,9 +605,9 @@ Natas pieces carry a depth gauge down the left edge (filled above, marker at thi
 
 ```
 █    ┌───┐       ┌───┐       ┌───┐       ┌ ─ ┐
-░   ┌┘   └───┐  ┌┘   └───┐  ┌┘   └───┐  ┌     ─ ─┐
-░   │        │  │        │  │        │       ▨
-░   └────────┘  └────────┘  └────────┘  └ ─ ─  ─ ┘
+░   ┌┘   └───┐  ┌┘   └───┐  ┌┘   └───┐  ┌┘   └ ─ ┐
+░   │        │  │        │  │        │  ╎   ▨    ╎
+░   └────────┘  └────────┘  └────────┘  └ ─  ─  ─┘
 ```
 
 ### natas3: Web Crawlers (Robots.txt)
@@ -641,11 +646,12 @@ Natas pieces carry a depth gauge down the left edge (filled above, marker at thi
 
 ```
 ▓   ▨▨▨▨▨▨▨▨▨▨▨▨▨▨▨▨▨▨▨▨
-▓   ▨▨▨▨▨▨╲
-█   ▨▨▨▨▨▨ ╲ ┌──────┐
-░            │      │
-░            └───┬──┘
-░                ▼
+▓   ▨▨▨▨▨▨▨▨▨▨▨▨▨╲▨▨▨▨▨▨
+▓   ▨▨▨▨▨▨▨▨▨▨▨▨▨ ╲
+█               ┌──────┐
+░               │      │
+░               └───┬──┘
+░                   ▼
 ```
 
 ### natas7: Local File Inclusion (LFI)
@@ -693,14 +699,16 @@ Natas pieces carry a depth gauge down the left edge (filled above, marker at thi
 ### natas11: XOR Encryption Bypass
 
 ```
-▓     ╲                       ╱
-▓      ╲                    ╱
-▓        ╲                ╱
-▓          ╲            ╱
-▓            ╲        ╱
-▓              ╲    ╱
-█                ◉
-░              ╱    ╲
+▓     ╲                   ╱
+▓      ╲                ╱
+▓       ╲            ╱
+▓        ╲        ╱
+▓         ╲    ╱
+▓           ◉
+▓         ╱    ╲
+█        ╱        ╲
+░       ╱            ╲
+░      ╱                ╲
 ```
 
 ### natas12: Arbitrary File Upload (Web Shell)
