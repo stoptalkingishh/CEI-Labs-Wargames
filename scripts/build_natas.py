@@ -223,7 +223,7 @@ EXTRA_INFO = {
     "natas-05": (["curl", "browser devtools"], []),
     "natas-06": (["browser view-source", "curl"], []),
     "natas-07": (["curl", "browser view-source"], [("File inclusion vulnerability on Wikipedia", "https://en.wikipedia.org/wiki/File_inclusion_vulnerability")]),
-    "natas-08": (["browser view-source", "base64", "xxd"], []),
+    "natas-08": (["browser view-source", "base64", "xxd", "rev"], []),
     "natas-09": (["browser view-source", "curl"], []),
     "natas-10": (["browser view-source", "curl"], []),
     "natas-11": (["browser devtools", "base64", "xxd", "python3"], [("XOR cipher on Wikipedia", "https://en.wikipedia.org/wiki/XOR_cipher")]),
