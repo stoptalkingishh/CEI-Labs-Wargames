@@ -8,6 +8,14 @@ record.
 
 ## [Unreleased]
 
+### Added
+- `docs/wargame-story.md`: a simple on-theme story for each track
+  ("The Vault at Dryrock" for Bandit, "Signal from the Dark" for
+  Krypton, "Into the Mirror" for Natas), broken into the same beats the
+  storyboard mechanic already visualizes, plus a per-level generation
+  prompt grounded in that beat and the level's public title. Level
+  titles are pulled from the generators themselves so they can't drift.
+
 ### Fixed
 - Bandit's storyboard corridor (34 levels in one 38-char strip) made
   adjacent levels differ by only one character shifting one position --

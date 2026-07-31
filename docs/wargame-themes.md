@@ -7,6 +7,10 @@ used for hints: see "Storyboard mechanic" below for how that's enforced
 structurally, not just by convention. The AI Copilot Setup track is
 explicitly excluded -- it has no theme and none of this applies to it.
 
+The narrative each track's storyboard follows -- plus a per-level
+generation prompt grounded in it -- lives in
+[`wargame-story.md`](wargame-story.md).
+
 ## Storyboard mechanic
 
 Earlier iterations tried to hand-invent a small standalone picture for
