@@ -33,42 +33,38 @@ POLICY = (
     "Stay within your assigned challenge environment only.",
 )
 
-# Small, title-themed ASCII art per level, built around Krypton's adopted
-# track theme (see docs/wargame-themes.md): a distant, hidden world
-# transmitting encoded signals across space, growing stranger and more
-# alien the deeper you go. Each piece draws on that theme, the level's
-# own (already player-visible) title, and the general shape of what kind
-# of cipher/technique is involved (a dial rotating, a repeating pattern,
-# a feedback loop) -- but never any actual instructional text/labels
-# naming the specific technique, key, or steps to solve it; a player may
-# recognize "this is some kind of rotation/repetition/feedback thing"
-# from the shapes, never read an answer off the banner. The last line of
-# each entry is where render() appends the "CEI Labs Krypton N: Title"
-# text, so keep last lines short to stay well under the 80-char limit.
-#
-# A fixed, track-wide frame (a starfield with an incoming wave-train) is
-# prepended to every level's core art below -- taller banners are fine
-# since SSH clients scroll, and 1080p terminals aren't width/height
-# constrained the way the 80-col line limit is. The frame is only added
-# at the TOP, never the bottom, so it never risks pushing the title line
-# (appended to the core art's last line) past 80 characters.
+# Storyboard, not standalone scenes: rather than each level inventing its
+# own isolated picture (which kept reading as noise -- see PR history),
+# every banner is one frame of a single continuous signal traveling
+# further from the receiving dish. A fixed "establishing shot" frame (a
+# starfield with an incoming wave-train) tops every banner, identical
+# across the whole track on purpose -- it's the recurring backdrop, not
+# the part that changes. Underneath it, a transmission strip shows how
+# far the signal has traveled: '-' = distance already crossed, 'o' = the
+# signal's current position (this level), '.' = distance still ahead,
+# unreached. The strip's shape is what makes each banner genuinely
+# distinct -- structurally guaranteed, not hand-invented per level -- and
+# reading the whole set in order shows the signal traveling steadily
+# deeper into unknown space from level 0 to level 6. This also means no
+# level's art can ever leak a hint: it only encodes "how far along you
+# are," nothing about any specific cipher/technique.
 _FRAME_TOP = (
     "     ★        .          ☆          .        ★",
     "  .     ★          .          ☆          .",
     "  ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈",
 )
 
-_CORE = {
-    0: ["  [ %#&@ ]  -->  [ ==== ]", "         << signal"],             # scrambled block resolving -- an encode/decode swap
-    1: ["   \\ | /", "   -- O --  spinning", "   / | \\"],               # a dial turning under the stars -- a rotation
-    2: ["   \\ | /", "   -- ? --  half-turned", "   / | \\"],            # the same dial, shadowed, offset unknown -- rotation by an unknown amount
-    3: ["   |     ##", "   |  #  ## #", "   | ## ## ##", "   +-----------  spectrum"],  # bars of uneven height -- a frequency spectrum
-    4: ["  [AA][AA][AA][AA]", "  (( (( (( ))", "   ((  core  ))", "  (( (( (( ))"],  # a short repeating tile -- a fixed-length repeating pattern
-    5: ["  [xxx]......[xxx]", "   |<-- gap -->|", "  ((( deeper ((((", "  (( (((( (("],  # two matching marks with a measured gap -- a repeat-distance search
-    6: ["  [1][0][1][1]<-.", "   ^____________|", "   *", "    \\_/\\_/\\_", "   endless loop"],  # a register chain feeding back into itself
-}
+def _transmission(level, total_levels=7, width=40):
+    pos = round(level * (width - 1) / (total_levels - 1))
+    return "  [" + "".join("-" if i < pos else ("o" if i == pos else ".") for i in range(width)) + "]"
 
-ART = {level: list(_FRAME_TOP) + list(core) for level, core in _CORE.items()}
+# The transmission strip is deliberately NOT the art's last line --
+# render() appends the title to the last line, and the strip (44 chars)
+# plus the longest title would exceed 80 columns. This short trailing
+# line carries the title instead, and doubles as "the signal continues".
+_TAIL = "  ~>"
+
+ART = {level: list(_FRAME_TOP) + [_transmission(level), _TAIL] for level in range(7)}
 
 # Progressive cool-to-deep palette, basic 8-color SGR only. Deliberately
 # NOT the warm (red/orange/yellow) ramp Bandit uses and NOT plain green

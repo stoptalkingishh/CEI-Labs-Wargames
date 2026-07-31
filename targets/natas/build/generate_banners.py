@@ -14,50 +14,26 @@ T={0:"View Source",1:"Right-Click Block",2:"Directory Traversal (Files)",3:"Web 
 
 COLOR = {n: _themes._hue_to_hex(_themes._progression_hue(n)) for n in range(15)}
 
-# Small, title-themed ASCII art per level, built around Natas's adopted
-# track theme (see docs/wargame-themes.md): "Natas" is "Satan" spelled
-# backwards -- a mirrored, upside-down digital underworld where the
-# ordinary logic of the web gets inverted and manipulated, the same
-# visual language as the attacker workstation's desktop wallpaper
-# (cei-labs-engine's natas-wallpaper.svg: NATAS reflecting into SATAN).
-# Each piece draws ONLY on that theme plus the level's own (already
-# player-visible) title, and the general shape of the vulnerability
-# class involved (a layer hidden beneath the surface, a path climbing
-# outside its box, two things crossed together) -- but never any actual
-# instructional text/labels naming the specific payload, parameter, or
-# steps to solve it. Unicode is allowed (single-width BMP glyphs only, so
-# it stays consistent with the 80-column width check); HTML-escaped
-# before use, same as the rest of the banner text. main() additionally
-# wraps the art block (only) in a <span> using this level's own hue from
-# generate_themes.py, so the banner's color matches the page's already-
-# established per-level color identity.
-#
-# Every level's core art is reflected below a waterline -- literally
-# mirroring the track's own theme (NATAS/SATAN, the reflected wallpaper)
-# and giving each banner more visual height, since taller banners are
-# fine here: SSH clients scroll and 1080p screens aren't height-limited
-# the way the 80-col line width is.
-_WATERLINE = "  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
+# Storyboard, not standalone scenes: rather than each level inventing its
+# own isolated picture (which kept reading as noise -- see PR history),
+# every banner is one frame of a single continuous descent into Natas's
+# adopted track theme (see docs/wargame-themes.md): "Natas" is "Satan"
+# spelled backwards -- a mirrored, upside-down digital underworld. A
+# vertical shaft shows how deep the player has descended: 'x' = a level
+# already passed through, 'o' = the level they're on right now (this
+# level), '.' = depths still ahead, unreached. The shaft's shape is what
+# makes each banner genuinely distinct -- structurally guaranteed, not
+# hand-invented per level -- and reading the whole set in order shows a
+# steady descent from the surface (natas0) to the depths (natas14),
+# reinforced by generate_themes.py's own cool-to-hot color progression
+# (COLOR above) applied to this same art via main()'s <span>. This also
+# means no level's art can ever leak a hint: it only encodes "how deep
+# you are," nothing about any specific vulnerability.
+def _shaft(level, total=15):
+    rows = ["  [%s]" % ("x" if i < level else ("o" if i == level else ".")) for i in range(total)]
+    return ["  surface"] + rows + ["  depths"]
 
-_CORE = {
-    0: ["  [ page ]", "  <!--   -->", "  .-----.", "  | text |", "  '--v--'", "   txet"],  # a layer hidden beneath the page -- a mirror, text reflecting reversed
-    1: ["    [ menu ]", "       X", "      o"],                            # a hand reaching, the menu denied
-    2: ["  [/][/][..]-->", "  [^][^][v]", "  door door door"],              # a path climbing up levels -- a row of doors, one upside down
-    3: ["    /|\\", "   --*--  web", "    \\|/"],                          # a crawler on a mirrored web
-    4: ["   o", "  /|\\  letter", "  / \\  (mirrored)"],                   # a messenger with a mirrored letter
-    5: ["  ( o o )", "  ( o X )  jar", "  `-----'"],                       # a jar, one cookie cracked open
-    6: ["  ~~~~~~~~", "  ~~[ ]~~  rug", "     |"],                        # a trapdoor beneath the rug
-    7: ["  [box]<--[../../file]", "  [D][D][D]", "   \\  |  /", "    [ ]"],  # a path reaching outside its box -- doors folding into one another
-    8: ["   .--.", "  ( () )", "   `--'", "  (mirrored)"],                # a locked box, reflecting its own key
-    9: ["   o", "  /|\\  ...", "  / \\"],                                 # a puppet, an extra word slipped in
-    10: ["   o", "  /|\\ -->[ ]", "  / \\"],                              # the same puppet, past a watchful guard
-    11: ["  \\   /", "   \\ /", "    X", "   / \\"],                      # two mirrored beams crossing
-    12: ["   o", "  /|\\  [==>", "  / \\   slot"],                        # a parcel slipped through a slot
-    13: ["  [ parcel ]", "     (o)", "   false seal"],                    # the same parcel, wearing a false seal
-    14: ["  [=======]", "  [=cracked=]", "  [=======]"],                  # a vault of records, cracked open
-}
-
-ART = {n: core + [_WATERLINE] + list(reversed(core)) for n, core in _CORE.items()}
+ART = {n: _shaft(n) for n in range(15)}
 
 
 def render(n, title):

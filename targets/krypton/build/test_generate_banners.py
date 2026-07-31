@@ -24,21 +24,24 @@ class TestKryptonBanners(unittest.TestCase):
  def test_art_is_distinct_per_level(self):
   arts=[tuple(b.ART[level]) for level in range(0,7)]
   self.assertEqual(len(arts),len(set(arts)),"every level's art must be visually distinct")
- def test_art_is_thematically_relevant(self):
-  # spot-check a few levels for a keyword tying the art to the track's
-  # adopted narrative theme (see docs/wargame-themes.md: a hidden world
-  # transmitting signals, growing stranger the deeper you go) and/or the
-  # general shape of the level's cipher family (rotation, repetition,
-  # feedback) -- depicting what KIND of thing is going on is fine; no
-  # actual instructional text/labels naming the specific technique,
-  # key, or solving steps is ever written.
-  self.assertTrue(any("signal" in line.lower() for line in b.ART[0]))
-  self.assertTrue(any("spinning" in line.lower() for line in b.ART[1]))
-  self.assertTrue(any("?" in line for line in b.ART[2]))
-  self.assertTrue(any("spectrum" in line.lower() for line in b.ART[3]))
-  self.assertTrue(any("(" in line for line in b.ART[4]))
-  self.assertTrue(any("deeper" in line.lower() for line in b.ART[5]))
-  self.assertTrue(any("loop" in line.lower() for line in b.ART[6]))
+ def test_art_is_a_storyboard_of_progress(self):
+  # Each banner's art is a fixed "establishing shot" frame (the same
+  # across the whole track on purpose) plus a transmission strip that
+  # shows the signal's actual distance traveled: '-' = distance already
+  # crossed, 'o' = the signal's current position (this level), '.' =
+  # distance still ahead, unreached. This is what makes each banner
+  # genuinely distinct -- and reading the whole set in order tells one
+  # continuous story -- without ever hand-inventing (and risking a hint
+  # in) a scene per level.
+  for level in range(0,7):
+   strip=b.ART[level][-2]
+   self.assertEqual(strip.count("o"),1,"krypton%d: must show exactly one current position"%level)
+   self.assertEqual(len(strip),44,"krypton%d: transmission strip length must stay constant"%level)
+  positions=[b.ART[level][-2].index("o") for level in range(0,7)]
+  self.assertEqual(positions,sorted(positions),"signal position must move steadily deeper with level")
+  self.assertLess(positions[0],positions[-1],"signal must travel further by the final level")
+  frames={tuple(b.ART[level][:3]) for level in range(0,7)}
+  self.assertEqual(len(frames),1,"the establishing-shot frame must be identical across the track")
  def test_color_is_progressive_and_distinct_per_level(self):
   self.assertEqual(set(b.COLOR),set(range(0,7)))
   colors=[b.COLOR[level] for level in range(0,7)]

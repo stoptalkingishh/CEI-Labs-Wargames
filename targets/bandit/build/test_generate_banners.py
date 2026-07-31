@@ -44,37 +44,24 @@ class BannerTests(unittest.TestCase):
             )
             seen_art[level] = art_text
 
-    def test_art_is_themed_to_title(self):
-        # Judgment-call spot checks -- just confirm a few levels' art contains
-        # a recognizable token tying it back to the title theme, so we don't
-        # regress to one generic shape reused everywhere. These check the
-        # track's own outlaw-narrative motifs (see docs/wargame-themes.md),
-        # not the level's actual technique -- the art must never hint at how
-        # to solve anything.
-        clock_level = 21  # "Cron Jobs"
-        clock_art = "\n".join(mod.ART[clock_level])
-        self.assertTrue(
-            "12" in clock_art and "6" in clock_art,
-            "expected a clock face (12/6) for the Cron Jobs banner",
-        )
-
-        needle_level = 5  # "The Needle"
-        self.assertTrue(
-            any("~" in line for line in mod.ART[needle_level]),
-            "expected a haystack (~~~) for The Needle banner",
-        )
-
-        matryoshka_level = 12  # "Matryoshka"
-        self.assertTrue(
-            any(line.count("[") >= 3 for line in mod.ART[matryoshka_level]),
-            "expected nested brackets for the Matryoshka banner",
-        )
-
-        escape_level = 33  # "Final Escape"
-        self.assertTrue(
-            any("+--+" in line or "->" in line for line in mod.ART[escape_level]),
-            "expected a door/exit motif for the Final Escape banner",
-        )
+    def test_art_is_a_storyboard_of_progress(self):
+        # Each banner's art is a fixed "establishing shot" frame (the same
+        # across the whole track on purpose) plus a corridor strip that
+        # shows the outlaw's actual progress: 'x' = a room already passed,
+        # 'o' = the current room (this level), '.' = rooms still ahead.
+        # This is what makes each banner genuinely distinct -- and reading
+        # the whole set in order tells one continuous story -- without
+        # ever hand-inventing (and risking a hint in) a scene per level.
+        for level in range(34):
+            strip = mod.ART[level][-2]
+            self.assertEqual(strip.count("x"), level, "bandit%d: wrong number of passed rooms" % level)
+            self.assertEqual(strip.count("o"), 1, "bandit%d: must show exactly one current room" % level)
+            self.assertEqual(strip.count("."), 33 - level, "bandit%d: wrong number of rooms ahead" % level)
+            self.assertEqual(len(strip), 38, "bandit%d: corridor strip length must stay constant" % level)
+        # the frame above the strip is identical across every level --
+        # confirms it's a shared establishing shot, not per-level content
+        frames = {tuple(mod.ART[level][:3]) for level in range(34)}
+        self.assertEqual(len(frames), 1, "the establishing-shot frame must be identical across the track")
 
     def test_color_is_well_formed_and_always_resets(self):
         # Every SGR color-open code must be closed with a reset on the same

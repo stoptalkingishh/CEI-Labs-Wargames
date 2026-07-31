@@ -9,6 +9,16 @@ record.
 ## [Unreleased]
 
 ### Changed
+- Login banner art redesigned around a storyboard mechanic instead of a
+  standalone per-level scene: each banner is now a fixed track-wide
+  establishing-shot frame plus a programmatically generated progress
+  strip (`x`/`-` = ground covered, `o` = this level's position, `.` =
+  ground ahead) -- Bandit's is a corridor of rooms, Krypton's is a
+  transmission distance from the dish, Natas's is a depth shaft.
+  Distinctness across all 56 banners is now structurally guaranteed
+  (the strip's shape always differs) instead of hand-invented per level,
+  which had repeatedly produced unreadable symbol combinations. See
+  `docs/wargame-themes.md`'s "Storyboard mechanic" section.
 - Login banners now allow Unicode (box-drawing/block-element/dingbat
   glyphs, restricted to single-width BMP characters so the 80-column
   width check stays meaningful) instead of 7-bit-ASCII-only; frames and

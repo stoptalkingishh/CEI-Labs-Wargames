@@ -20,69 +20,37 @@ POLICY = (
     "Stay within your assigned challenge environment only.",
 )
 
-# Small, title-themed ASCII art per level, built around Bandit's adopted
-# track theme (see docs/wargame-themes.md): you're an outlaw breaking into
-# a guarded compound, moving room to room, picking locks, slipping past
-# guards, stealing what's hidden deeper inside as you go -- ending in an
-# escape at the final level. Each piece draws on that theme, the level's
-# own (already player-visible) title, and the general shape of the
-# technique involved (a marked tile among plain ones, a repeated/branching
-# path, a dial with unknown digits) -- but never any actual instructional
-# text/labels naming the specific command, flag, or steps to solve it.
-# The last line of each entry is where render() appends the "CEI Labs
-# Bandit N: Title" text, so keep last lines short to stay well under the
-# 80-char safety limit.
-#
-# A fixed, track-wide frame (starlit night over the compound's outer wall)
-# is prepended to every level's core art below -- taller banners are fine
-# since SSH clients scroll, and 1080p terminals aren't width/height
-# constrained the way the 80-col line limit is. The frame is only added
-# at the TOP, never the bottom, so it never risks pushing the title line
-# (appended to the core art's last line) past 80 characters.
+# Storyboard, not standalone scenes: rather than each level inventing its
+# own isolated picture (which kept reading as noise -- see PR history),
+# every banner is one frame of a single continuous journey through the
+# compound. A fixed "establishing shot" frame (starlit wall) tops every
+# banner, identical across the whole track on purpose -- it's the
+# recurring backdrop, not the part that changes. Underneath it, a
+# corridor strip shows the outlaw's actual progress: 'x' = a room
+# already passed through (and looted, per the track's theme), 'o' = the
+# room they're in right now (this level), '.' = rooms still ahead,
+# unknown. The strip's shape is what makes each banner genuinely
+# distinct -- structurally guaranteed, not hand-invented per level -- and
+# reading the whole set in order shows the same figure moving steadily
+# from the outer wall (level 0) to the escape (level 33). This also means
+# no level's art can ever leak a hint: it only encodes "how far along
+# you are," nothing about any specific technique.
 _FRAME_TOP = (
     "   ✦      .        ✧         .       ✦",
-    "  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙",
-    "  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓",
+    "  █  █  █  █  █  █  █  █  █  █  █  █  █",
+    "  ████████████████████████████████████",
 )
 
-_CORE = {
-    0: ["   .---.", "   | o | -->", "   '---'"],                    # stepping through the outer gate
-    1: ["  [-][ ][ ][ ]", "      ^picked", "   .-------.", "   |   X   |", "   '-------'"],  # a marked tile among plain ones -- a dead end, hopes dashed
-    2: ["  [ A    B ]", "   <--joined-->", "  |  |     |  |", "  |  | o   |  |", "  |  |     |  |"],  # two halves bridged into one -- slipping through a narrow gap
-    3: ["  [#][#][#]", "  [#][o][#]", "  [#][#][#]"],               # blending among the crates
-    4: ["   ,-------.", "   | note   |", "   |  o     |", "   `-------'"],  # reading by torchlight
-    5: ["  ~~~~~~~~~~", "  ~~~ | ~~~~", "  ~~~~~~~~~~"],            # searching the haystack
-    6: ["  [=][=][=]", "  [=][=][=]  o", "  [=][=][=]"],            # combing a row of cabinets
-    7: ["  1 2 3 ... (n) ...", "        ^counted", "  wwwwwwwwwwwww", "  ww[W]wwwwwwww", "  wwwwwwwwwwwww"],  # a counted position in a long list -- one word among countless
-    8: ["  ooooooooo", "  oo[*]oooo", "  ooooooooo"],               # a single glint among many
-    9: ["    \\|/", "     o", "    /|\\"],                          # tangled up, working free
-    10: ["  [#$%@] --> [====]", "   ####", "   #  # o", "   ####"],  # a scrambled block resolving -- a carved tablet, studied closely
-    11: ["  [A]<->[B]", "      o", "   swapped"],                   # switching one thing for another
-    12: ["  [ [ [ o ] ] ]", "   [ [ ] ]", "    [ ]"],                # a chest inside a chest
-    13: ["   .--.", "  ( () )==>[ o ]", "   `--'"],                 # an ornate key, held up to a waiting lock
-    14: ["   o -->", "   [ ]  <-hatch"],                            # a note passed through a hatch
-    15: ["    .--.", "   /    \\", "  |--[]--| o"],                 # a sealed vault door
-    16: ["  [ ][ ][ ]", "   o  scan-->"],                           # sweeping past a row of doors
-    17: ["   [A]  [B]", "     o  <->"],                             # weighing two things side by side
-    18: ["  |||||", "  ||| o -->", "  |||||"],                      # slipping past the bars
-    19: ["    ^", "   /|", "  o |"],                                # climbing to a higher ledge
-    20: ["  )))", "  ))) o", "   |"],                                # a whisper through the wall
-    21: ["   _12_", "  9  o  3", "   `-6-'"],                       # watching the bell tower
-    22: ["   _12_   ,_,", "  9  o 3 (o.o)", "   `-6-'"],            # the bell tower, something's off
-    23: ["   _12_  |~~~", "  9  o 3 |~~~", "   `-6-' |~~~"],        # leaving a note on the gears
-    24: ["  [1][2][3]", "  [4][5][6] o", "  [7][8][9]"],            # working through a locked dial
-    25: ["  |||||", "  ||X|| o-->", "  |||||"],                     # breaking through the cell door
-    26: ["  +--//--+", "  | o  //|", "  +-------+"],                # out through a cracked window
-    27: ["   o---o---o", "        \\", "         o"],                # a copied trail branching onward
-    28: ["  o---o---o", "   stack  o"],                             # stones stacked one on the last
-    29: ["      o--o", "     /", "  o-o--o--o"],                    # the path splits in two
-    30: ["   _____", "  /     \\--o", "  \\_____/"],                # a marker tied to a stone
-    31: ["   .-~~-.", "  (  o   )", "   `-..-'", "     ^"],         # sending a loaded cart onward
-    32: ["  [cloak A]", "      o", "  [cloak B]"],                  # one disguise traded for another
-    33: ["  +--+", "  |o |->", "  +--+"],                           # out through the wall, free
-}
+def _corridor(level, total=34):
+    return "  [" + "".join("x" if i < level else ("o" if i == level else ".") for i in range(total)) + "]"
 
-ART = {level: list(_FRAME_TOP) + list(core) for level, core in _CORE.items()}
+# The corridor strip is deliberately NOT the art's last line -- render()
+# appends the title to the last line, and the strip (38 chars) plus the
+# longest title would exceed 80 columns. This short trailing arrow line
+# carries the title instead, and doubles as "the journey continues".
+_TAIL = "  -->"
+
+ART = {level: list(_FRAME_TOP) + [_corridor(level), _TAIL] for level in range(34)}
 
 # --- Progressive color, layered on top of the art above -------------------
 #
