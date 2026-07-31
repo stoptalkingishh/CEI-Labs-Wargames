@@ -23,6 +23,7 @@ if (isset($_POST['submit']) && isset($_FILES['uploadedfile'])) {
 <head><title>natas12</title></head>
 <body>
 <h3>natas12</h3>
+<!-- hint: the password for natas13 is stored in /etc/natas_webpass/natas13 -->
 <form enctype="multipart/form-data" method="post">
 <input type="hidden" name="MAX_FILE_SIZE" value="1000000">
 Choose a JPEG to upload (max 1000KB): <input name="uploadedfile" type="file"><br>
