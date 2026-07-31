@@ -11,13 +11,15 @@ Each banner is one frame of a continuous journey through the track (see
 `docs/wargame-themes.md`'s "Storyboard mechanic" section): a fixed
 establishing-shot frame, plus a progress strip using `x`/`-` for ground
 already covered, `o` for exactly where this level is, and `.` for ground still
-ahead. Reading a whole track top to bottom shows one continuous story.
+ahead. Bandit additionally chunks its 34 levels into 6 visibly distinct
+chapters (different bracket style each) plus a within-chapter position strip,
+so adjacent levels stay visually distinct even within the same chapter.
 
 ## Bandit
 
 ### Track theme
 
-You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. The corridor strip below each banner follows this figure's progress from the outer wall (level 0), room by room, to an escape at the final level (33).
+You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. The compound is chunked into 6 chapters (outer wall to escape); the boxed row shows which chapter you're in, and "in this room" shows exact position within it.
 
 ### bandit0: The First Step
 
@@ -25,7 +27,10 @@ You are an outlaw breaking into a guarded compound: moving room to room, picking
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [o.................................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |>OO<| |    | |    | |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [o....]
   -->  CEI Labs Bandit 0: The First Step
 Logged in as bandit0
 Submit this level, then use CTFd launch panel for bandit1.
@@ -40,7 +45,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xo................................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |>OO<| |    | |    | |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xo...]
   -->  CEI Labs Bandit 1: Dashed Hopes
 Logged in as bandit1
 Submit this level, then use CTFd launch panel for bandit2.
@@ -55,7 +63,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxo...............................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |>OO<| |    | |    | |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxo..]
   -->  CEI Labs Bandit 2: Spaces in Places
 Logged in as bandit2
 Submit this level, then use CTFd launch panel for bandit3.
@@ -70,7 +81,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxo..............................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |>OO<| |    | |    | |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxo.]
   -->  CEI Labs Bandit 3: Hidden in Plain Sight
 Logged in as bandit3
 Submit this level, then use CTFd launch panel for bandit4.
@@ -85,7 +99,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxo.............................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |>OO<| |    | |    | |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxxo]
   -->  CEI Labs Bandit 4: Human Readable
 Logged in as bandit4
 Submit this level, then use CTFd launch panel for bandit5.
@@ -100,7 +117,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxo............................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |>OO<| |    | |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [o.....]
   -->  CEI Labs Bandit 5: The Needle
 Logged in as bandit5
 Submit this level, then use CTFd launch panel for bandit6.
@@ -115,7 +135,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxo...........................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |>OO<| |    | |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xo....]
   -->  CEI Labs Bandit 6: Server Search
 Logged in as bandit6
 Submit this level, then use CTFd launch panel for bandit7.
@@ -130,7 +153,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxo..........................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |>OO<| |    | |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxo...]
   -->  CEI Labs Bandit 7: The Millionth Word
 Logged in as bandit7
 Submit this level, then use CTFd launch panel for bandit8.
@@ -145,7 +171,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxo.........................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |>OO<| |    | |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxo..]
   -->  CEI Labs Bandit 8: The Only One
 Logged in as bandit8
 Submit this level, then use CTFd launch panel for bandit9.
@@ -160,7 +189,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxo........................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |>OO<| |    | |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxxo.]
   -->  CEI Labs Bandit 9: Strings Attached
 Logged in as bandit9
 Submit this level, then use CTFd launch panel for bandit10.
@@ -175,7 +207,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxo.......................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |>OO<| |    | |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxxxo]
   -->  CEI Labs Bandit 10: Base Operations
 Logged in as bandit10
 Submit this level, then use CTFd launch panel for bandit11.
@@ -190,7 +225,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxo......................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |>OO<| |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [o.....]
   -->  CEI Labs Bandit 11: Substitution
 Logged in as bandit11
 Submit this level, then use CTFd launch panel for bandit12.
@@ -205,7 +243,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxo.....................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |>OO<| |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xo....]
   -->  CEI Labs Bandit 12: Matryoshka
 Logged in as bandit12
 Submit this level, then use CTFd launch panel for bandit13.
@@ -220,7 +261,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxo....................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |>OO<| |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxo...]
   -->  CEI Labs Bandit 13: Private Keys
 Logged in as bandit13
 Submit this level, then use CTFd launch panel for bandit14.
@@ -235,7 +279,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxo...................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |>OO<| |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxo..]
   -->  CEI Labs Bandit 14: Port Submission
 Logged in as bandit14
 Submit this level, then use CTFd launch panel for bandit15.
@@ -250,7 +297,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxo..................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |>OO<| |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxxo.]
   -->  CEI Labs Bandit 15: SSL Encryption
 Logged in as bandit15
 Submit this level, then use CTFd launch panel for bandit16.
@@ -265,7 +315,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxo.................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |>OO<| |    | |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxxxo]
   -->  CEI Labs Bandit 16: SSL Port Scan
 Logged in as bandit16
 Submit this level, then use CTFd launch panel for bandit17.
@@ -280,7 +333,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxo................]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |>OO<| |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [o....]
   -->  CEI Labs Bandit 17: File Comparisons
 Logged in as bandit17
 Submit this level, then use CTFd launch panel for bandit18.
@@ -295,7 +351,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxo...............]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |>OO<| |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xo...]
   -->  CEI Labs Bandit 18: Shell Bypass
 Logged in as bandit18
 Submit this level, then use CTFd launch panel for bandit19.
@@ -310,7 +369,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxo..............]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |>OO<| |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxo..]
   -->  CEI Labs Bandit 19: SUID Escalation
 Logged in as bandit19
 Submit this level, then use CTFd launch panel for bandit20.
@@ -325,7 +387,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxo.............]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |>OO<| |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxo.]
   -->  CEI Labs Bandit 20: Port Listener Connection
 Logged in as bandit20
 Submit this level, then use CTFd launch panel for bandit21.
@@ -340,7 +405,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxxo............]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |>OO<| |    | |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxxo]
   -->  CEI Labs Bandit 21: Cron Jobs
 Logged in as bandit21
 Submit this level, then use CTFd launch panel for bandit22.
@@ -355,7 +423,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxxxo...........]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |XXXX| |>OO<| |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [o.....]
   -->  CEI Labs Bandit 22: Cron Debugging
 Logged in as bandit22
 Submit this level, then use CTFd launch panel for bandit23.
@@ -370,7 +441,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxxxxo..........]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |XXXX| |>OO<| |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xo....]
   -->  CEI Labs Bandit 23: Cron Scripting
 Logged in as bandit23
 Submit this level, then use CTFd launch panel for bandit24.
@@ -385,7 +459,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxxxxxo.........]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |XXXX| |>OO<| |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxo...]
   -->  CEI Labs Bandit 24: PIN Brute Force
 Logged in as bandit24
 Submit this level, then use CTFd launch panel for bandit25.
@@ -400,7 +477,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxxxxxxo........]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |XXXX| |>OO<| |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxo..]
   -->  CEI Labs Bandit 25: Shell Breakout
 Logged in as bandit25
 Submit this level, then use CTFd launch panel for bandit26.
@@ -415,7 +495,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxxxxxxxo.......]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |XXXX| |>OO<| |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxxo.]
   -->  CEI Labs Bandit 26: Text UI Breakout
 Logged in as bandit26
 Submit this level, then use CTFd launch panel for bandit27.
@@ -430,7 +513,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxxxxxxxxo......]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |XXXX| |>OO<| |    |
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxxxo]
   -->  CEI Labs Bandit 27: Git Clone
 Logged in as bandit27
 Submit this level, then use CTFd launch panel for bandit28.
@@ -445,7 +531,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxxxxxxxxxo.....]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |XXXX| |XXXX| |>OO<|
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [o.....]
   -->  CEI Labs Bandit 28: Git Commits
 Logged in as bandit28
 Submit this level, then use CTFd launch panel for bandit29.
@@ -460,7 +549,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxxxxxxxxxxo....]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |XXXX| |XXXX| |>OO<|
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xo....]
   -->  CEI Labs Bandit 29: Git Branches
 Logged in as bandit29
 Submit this level, then use CTFd launch panel for bandit30.
@@ -475,7 +567,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxo...]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |XXXX| |XXXX| |>OO<|
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxo...]
   -->  CEI Labs Bandit 30: Git Tags
 Logged in as bandit30
 Submit this level, then use CTFd launch panel for bandit31.
@@ -490,7 +585,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxo..]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |XXXX| |XXXX| |>OO<|
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxo..]
   -->  CEI Labs Bandit 31: Git Push
 Logged in as bandit31
 Submit this level, then use CTFd launch panel for bandit32.
@@ -505,7 +603,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxo.]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |XXXX| |XXXX| |>OO<|
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxxo.]
   -->  CEI Labs Bandit 32: Shell Overrides
 Logged in as bandit32
 Submit this level, then use CTFd launch panel for bandit33.
@@ -520,7 +621,10 @@ Stay within your assigned challenge environment only.
    ✦      .        ✧         .       ✦
   █  █  █  █  █  █  █  █  █  █  █  █  █
   ████████████████████████████████████
-  [xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxo]
+  .----. +----+ /----\ #----# ~----~ >----<
+  |XXXX| |XXXX| |XXXX| |XXXX| |XXXX| |>OO<|
+  .----. +----+ /----\ #----# ~----~ >----<
+  in this room: [xxxxxo]
   -->  CEI Labs Bandit 33: Final Escape
 Logged in as bandit33
 Final level: submit your result; there is no next account.

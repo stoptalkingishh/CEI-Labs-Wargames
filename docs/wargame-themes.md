@@ -27,14 +27,26 @@ journey through the whole track, built from two parts:
    height-constrained the way the 80-column line width is.
 2. **A progress strip**, using the same three-symbol grammar in every
    track: `x`/`-` = ground already covered, `o` = exactly where this
-   level is right now, `.` = ground still ahead, unreached. Bandit's is
-   a horizontal corridor of rooms; Krypton's is a horizontal
-   transmission distance from the receiving dish; Natas's is a vertical
-   descent shaft. The strip is generated programmatically from the level
-   number, not hand-authored -- so distinctness across all 56 banners is
-   structurally guaranteed, and reading the whole set in order shows one
-   continuous story (a figure moving deeper into the compound; a signal
+   level is right now, `.` = ground still ahead, unreached. Krypton's is
+   a horizontal transmission distance from the receiving dish; Natas's
+   is a vertical descent shaft (each level gets its own row, so adjacent
+   levels are already visually far apart). The strip is generated
+   programmatically from the level number, not hand-authored -- so
+   distinctness across all 56 banners is structurally guaranteed, and
+   reading the whole set in order shows one continuous story (a signal
    traveling further into space; a steady descent into the underworld).
+
+   Bandit needed one more step: squeezing all 34 levels into a single
+   38-character strip meant adjacent levels differed by only one
+   character shifting one position -- imperceptible at a glance, since
+   that really is almost the same amount of progress (confirmed the hard
+   way: bandit16/17/18 looked identical side by side). Fixed by chunking
+   the compound into 6 chapters, each with its own bracket style
+   (`.-.`/`+-+`/`/-\`/`#-#`/`~-~`/`>-<`) so moving between chapters is an
+   obvious shape change, plus a smaller "position within this room"
+   strip so even two levels sharing a chapter (e.g. bandit17/18) are
+   still visibly distinct from each other, not just from levels in other
+   chapters.
 
 Because the strip only ever encodes "how far along you are," it cannot
 leak a hint about any specific technique -- there is nothing per-level to

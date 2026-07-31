@@ -25,32 +25,73 @@ POLICY = (
 # every banner is one frame of a single continuous journey through the
 # compound. A fixed "establishing shot" frame (starlit wall) tops every
 # banner, identical across the whole track on purpose -- it's the
-# recurring backdrop, not the part that changes. Underneath it, a
-# corridor strip shows the outlaw's actual progress: 'x' = a room
-# already passed through (and looted, per the track's theme), 'o' = the
-# room they're in right now (this level), '.' = rooms still ahead,
-# unknown. The strip's shape is what makes each banner genuinely
-# distinct -- structurally guaranteed, not hand-invented per level -- and
-# reading the whole set in order shows the same figure moving steadily
-# from the outer wall (level 0) to the escape (level 33). This also means
-# no level's art can ever leak a hint: it only encodes "how far along
-# you are," nothing about any specific technique.
+# recurring backdrop, not the part that changes. This also means no
+# level's art can ever leak a hint: nothing below is hand-invented per
+# level, it only ever encodes "how far along you are."
+#
+# A single 34-cell strip (one cell per level) was tried first, but
+# adjacent levels then differ by only one character shifting one
+# position -- imperceptible at a glance, since that's genuinely almost
+# the same amount of progress. Fixed by chunking the compound into 6
+# visibly distinct chapters (each with its own bracket style, so
+# passing between chapters is an obvious shape change), plus a smaller
+# strip showing exact position *within* the current chapter -- so even
+# two levels in the same chapter (e.g. bandit17/18) are still visibly
+# different from each other, not just from levels in other chapters.
 _FRAME_TOP = (
     "   ✦      .        ✧         .       ✦",
     "  █  █  █  █  █  █  █  █  █  █  █  █  █",
     "  ████████████████████████████████████",
 )
 
-def _corridor(level, total=34):
-    return "  [" + "".join("x" if i < level else ("o" if i == level else ".") for i in range(total)) + "]"
+_CHAPTER_CORNERS = (".-.", "+-+", "/-\\", "#-#", "~-~", ">-<")
 
-# The corridor strip is deliberately NOT the art's last line -- render()
-# appends the title to the last line, and the strip (38 chars) plus the
-# longest title would exceed 80 columns. This short trailing arrow line
-# carries the title instead, and doubles as "the journey continues".
+def _chapter_bounds(total=34, chapters=len(_CHAPTER_CORNERS)):
+    bounds = []
+    start = 0
+    for c in range(chapters):
+        end = (c + 1) * total // chapters
+        bounds.append((start, end))
+        start = end
+    return bounds
+
+def _chapter_index(level, bounds):
+    """The chapter whose (start, end) actually contains this level --
+    derived from the same bounds used to draw the chapter row, rather
+    than a separate formula, so the two can never disagree at an edge."""
+    for idx, (start, end) in enumerate(bounds):
+        if start <= level < end:
+            return idx
+    return len(bounds) - 1
+
+def _chapter_rows(level, total=34):
+    bounds = _chapter_bounds(total)
+    idx = _chapter_index(level, bounds)
+    start, end = bounds[idx]
+    top, mid, bot = [], [], []
+    for c, (left, dash, right) in enumerate(_CHAPTER_CORNERS):
+        if c < idx:
+            fill = "XXXX"
+        elif c == idx:
+            fill = ">OO<"
+        else:
+            fill = "    "
+        top.append(left + dash * 4 + right)
+        mid.append("|" + fill + "|")
+        bot.append(left + dash * 4 + right)
+    within = "".join("x" if i < level - start else ("o" if i == level - start else ".") for i in range(end - start))
+    return [
+        "  " + " ".join(top),
+        "  " + " ".join(mid),
+        "  " + " ".join(bot),
+        "  in this room: [" + within + "]",
+    ]
+
+# render() appends the title to the art's last line; the trailing line
+# below stays short so that never risks exceeding 80 columns.
 _TAIL = "  -->"
 
-ART = {level: list(_FRAME_TOP) + [_corridor(level), _TAIL] for level in range(34)}
+ART = {level: list(_FRAME_TOP) + _chapter_rows(level) + [_TAIL] for level in range(34)}
 
 # --- Progressive color, layered on top of the art above -------------------
 #

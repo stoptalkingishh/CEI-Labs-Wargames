@@ -8,6 +8,15 @@ record.
 
 ## [Unreleased]
 
+### Fixed
+- Bandit's storyboard corridor (34 levels in one 38-char strip) made
+  adjacent levels differ by only one character shifting one position --
+  imperceptible at a glance (confirmed directly: bandit16/17/18 looked
+  identical side by side). Chunked into 6 visibly distinct chapters
+  (each with its own bracket style), plus a within-chapter position
+  strip, so every level -- including same-chapter neighbors -- is now
+  visibly distinct and the art is bigger besides.
+
 ### Changed
 - Login banner art redesigned around a storyboard mechanic instead of a
   standalone per-level scene: each banner is now a fixed track-wide

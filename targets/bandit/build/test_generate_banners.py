@@ -46,22 +46,31 @@ class BannerTests(unittest.TestCase):
 
     def test_art_is_a_storyboard_of_progress(self):
         # Each banner's art is a fixed "establishing shot" frame (the same
-        # across the whole track on purpose) plus a corridor strip that
-        # shows the outlaw's actual progress: 'x' = a room already passed,
-        # 'o' = the current room (this level), '.' = rooms still ahead.
-        # This is what makes each banner genuinely distinct -- and reading
-        # the whole set in order tells one continuous story -- without
-        # ever hand-inventing (and risking a hint in) a scene per level.
+        # across the whole track on purpose), a 6-chapter room-box row
+        # showing which chapter of the compound the player is in, and a
+        # within-chapter strip showing exact position inside it. This is
+        # what makes each banner genuinely distinct from EVERY other
+        # level -- including its immediate neighbors, not just levels far
+        # away in the track -- without ever hand-inventing (and risking a
+        # hint in) a scene per level.
+        bounds = mod._chapter_bounds()
         for level in range(34):
-            strip = mod.ART[level][-2]
-            self.assertEqual(strip.count("x"), level, "bandit%d: wrong number of passed rooms" % level)
-            self.assertEqual(strip.count("o"), 1, "bandit%d: must show exactly one current room" % level)
-            self.assertEqual(strip.count("."), 33 - level, "bandit%d: wrong number of rooms ahead" % level)
-            self.assertEqual(len(strip), 38, "bandit%d: corridor strip length must stay constant" % level)
-        # the frame above the strip is identical across every level --
+            idx = mod._chapter_index(level, bounds)
+            start, end = bounds[idx]
+            mid_row = mod.ART[level][4]
+            self.assertEqual(mid_row.count("XXXX"), idx, "bandit%d: wrong number of cleared chapters" % level)
+            self.assertEqual(mid_row.count(">OO<"), 1, "bandit%d: must show exactly one current chapter" % level)
+            within = mod.ART[level][6].split("[", 1)[1].rsplit("]", 1)[0]
+            self.assertEqual(within.count("x"), level - start, "bandit%d: wrong position within its chapter" % level)
+            self.assertEqual(within.count("o"), 1, "bandit%d: must show exactly one position within its chapter" % level)
+        # the frame above the chapter row is identical across every level --
         # confirms it's a shared establishing shot, not per-level content
         frames = {tuple(mod.ART[level][:3]) for level in range(34)}
         self.assertEqual(len(frames), 1, "the establishing-shot frame must be identical across the track")
+        # even two levels sharing the same chapter (e.g. 17 and 18, both in
+        # chapter 3) must still be visually distinct from each other
+        art_blocks = ["\n".join(mod.ART[level]) for level in range(34)]
+        self.assertEqual(len(art_blocks), len(set(art_blocks)), "every level's full art block must be distinct")
 
     def test_color_is_well_formed_and_always_resets(self):
         # Every SGR color-open code must be closed with a reset on the same
