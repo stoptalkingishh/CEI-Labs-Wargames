@@ -9,6 +9,12 @@ record.
 ## [Unreleased]
 
 ### Added
+- `docs/wargame-story-art.md`: per-level art drawn against each prompt
+  in `wargame-story.md` -- 56 pieces, one per level. Explicitly a
+  proposal: nothing in it is wired into any Dockerfile or banner
+  generator, and the shipped banners remain the programmatic
+  storyboard. All pieces are purely pictorial (no written labels), stay
+  within 80 columns, and name no command, tool, payload, or step.
 - `docs/wargame-story.md`: a simple on-theme story for each track
   ("The Vault at Dryrock" for Bandit, "Signal from the Dark" for
   Krypton, "Into the Mirror" for Natas), broken into the same beats the
