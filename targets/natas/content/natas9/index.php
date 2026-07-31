@@ -17,6 +17,7 @@ if (array_key_exists("needle", $_REQUEST)) {
 <body>
 <h3>natas9</h3>
 <p><a href="?source">View sourcecode</a></p>
+<!-- hint: the password for natas10 is stored in /etc/natas_webpass/natas10 -->
 <form method="get">
 <input type="text" name="needle">
 <input type="submit" value="Search">
