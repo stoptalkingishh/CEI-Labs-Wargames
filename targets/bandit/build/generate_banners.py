@@ -44,16 +44,30 @@ _FRAME_TOP = (
     "  ████████████████████████████████████",
 )
 
-_CHAPTER_CORNERS = (".-.", "+-+", "/-\\", "#-#", "~-~", ">-<")
+_CHAPTER_CORNERS = (".-.", "+-+", "/-\\", "#-#", "~-~", ":-:", "*-*", ">-<")
+
+# Chapter boundaries follow the track's own content clusters, NOT an even
+# numeric split of 34. An even split cut straight through related runs --
+# it put Cron Jobs in one chapter and Cron Debugging/Scripting in the
+# next, and split the git levels across two chapters -- so a chapter
+# change landed in the middle of the same material. These bounds are
+# explicit so a boundary always falls where the material actually
+# changes. See docs/wargame-story.md for the narrative each maps to.
+_CHAPTER_BOUNDS = (
+    (0, 5),    # Over the Wall     - first steps inside
+    (5, 11),   # The Storeyard     - searching for anything useful
+    (11, 17),  # The Inner Halls   - keys, hatches, doors
+    (17, 21),  # The Guardroom     - borrowing authority
+    (21, 24),  # The Bell Tower    - everything on a schedule
+    (24, 27),  # The Locked Wing   - rooms built to hold you
+    (27, 32),  # The Archive       - the record room and its history
+    (32, 34),  # The Escape        - out through the far wall
+)
 
 def _chapter_bounds(total=34, chapters=len(_CHAPTER_CORNERS)):
-    bounds = []
-    start = 0
-    for c in range(chapters):
-        end = (c + 1) * total // chapters
-        bounds.append((start, end))
-        start = end
-    return bounds
+    if _CHAPTER_BOUNDS[-1][1] != total or len(_CHAPTER_BOUNDS) != chapters:
+        raise ValueError("chapter bounds must cover all %d levels in %d chapters" % (total, chapters))
+    return list(_CHAPTER_BOUNDS)
 
 def _chapter_index(level, bounds):
     """The chapter whose (start, end) actually contains this level --

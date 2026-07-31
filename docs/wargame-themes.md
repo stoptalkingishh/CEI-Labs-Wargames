@@ -45,12 +45,19 @@ journey through the whole track, built from two parts:
    character shifting one position -- imperceptible at a glance, since
    that really is almost the same amount of progress (confirmed the hard
    way: bandit16/17/18 looked identical side by side). Fixed by chunking
-   the compound into 6 chapters, each with its own bracket style
-   (`.-.`/`+-+`/`/-\`/`#-#`/`~-~`/`>-<`) so moving between chapters is an
-   obvious shape change, plus a smaller "position within this room"
-   strip so even two levels sharing a chapter (e.g. bandit17/18) are
-   still visibly distinct from each other, not just from levels in other
-   chapters.
+   the compound into 8 chapters, each with its own bracket style, so
+   moving between chapters is an obvious shape change, plus a smaller
+   "position within this room" strip so even two levels sharing a
+   chapter (e.g. bandit17/18) are still visibly distinct from each
+   other, not just from levels in other chapters.
+
+   Those 8 chapter boundaries are hand-set in `_CHAPTER_BOUNDS` to
+   follow the track's own content clusters, *not* an even numeric split
+   of 34. An even split cut through related runs -- it put Cron Jobs in
+   one chapter and Cron Debugging/Scripting in the next, and split the
+   git levels across two -- so a chapter change landed mid-material.
+   The explicit bounds keep each run whole; a unit test guards that they
+   stay contiguous, non-empty, and cover every level exactly once.
 
 Because the strip only ever encodes "how far along you are," it cannot
 leak a hint about any specific technique -- there is nothing per-level to

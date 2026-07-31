@@ -13,10 +13,21 @@ record.
   ("The Vault at Dryrock" for Bandit, "Signal from the Dark" for
   Krypton, "Into the Mirror" for Natas), broken into the same beats the
   storyboard mechanic already visualizes, plus a per-level generation
-  prompt grounded in that beat and the level's public title. Level
-  titles are pulled from the generators themselves so they can't drift.
+  prompt grounded in that beat and the level's public title. Every one
+  of the 56 levels has its own distinct beat. Shared prompt constraints
+  are stated once rather than repeated per level, and level titles and
+  chapter bounds are pulled from the generators so they can't drift.
+  Chapter/beat names are internal design vocabulary -- deliberately not
+  printed in the banners players see.
+- Test guarding that Bandit's now hand-maintained `_CHAPTER_BOUNDS`
+  stay contiguous, non-empty, and cover every level exactly once.
 
 ### Fixed
+- Bandit's chapter boundaries came from an even 34/6 split, which cut
+  through related level runs -- Cron Jobs landed in a different chapter
+  than Cron Debugging/Scripting, and the git levels straddled two. Now
+  8 explicit chapters aligned to the track's actual content clusters,
+  so a chapter change always lands where the material changes.
 - Bandit's storyboard corridor (34 levels in one 38-char strip) made
   adjacent levels differ by only one character shifting one position --
   imperceptible at a glance (confirmed directly: bandit16/17/18 looked

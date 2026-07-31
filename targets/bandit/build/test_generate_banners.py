@@ -44,9 +44,25 @@ class BannerTests(unittest.TestCase):
             )
             seen_art[level] = art_text
 
+    def test_chapter_bounds_are_contiguous_and_complete(self):
+        # _CHAPTER_BOUNDS is hand-maintained (it follows content clusters,
+        # not a formula), so guard the invariants a formula used to give
+        # for free: every level lands in exactly one chapter, chapters
+        # butt up against each other with no gap or overlap, none are
+        # empty, and there's one bracket style per chapter.
+        bounds = mod._chapter_bounds()
+        self.assertEqual(len(bounds), len(mod._CHAPTER_CORNERS))
+        self.assertEqual(bounds[0][0], 0)
+        self.assertEqual(bounds[-1][1], 34)
+        for (start, end), (next_start, _) in zip(bounds, bounds[1:]):
+            self.assertLess(start, end, "chapter (%d, %d) is empty" % (start, end))
+            self.assertEqual(end, next_start, "gap or overlap at chapter boundary %d" % end)
+        covered = [level for start, end in bounds for level in range(start, end)]
+        self.assertEqual(covered, list(range(34)), "chapters must cover every level exactly once")
+
     def test_art_is_a_storyboard_of_progress(self):
         # Each banner's art is a fixed "establishing shot" frame (the same
-        # across the whole track on purpose), a 6-chapter room-box row
+        # across the whole track on purpose), a chapter room-box row
         # showing which chapter of the compound the player is in, and a
         # within-chapter strip showing exact position inside it. This is
         # what makes each banner genuinely distinct from EVERY other
