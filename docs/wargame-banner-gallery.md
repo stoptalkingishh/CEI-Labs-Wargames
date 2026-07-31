@@ -1,9 +1,11 @@
 # CEI Labs Wargame Login Banners
 
-Every per-level ASCII art banner across Bandit, Krypton, and Natas, shown as it
-would appear captured from a real SSH session (Bandit/Krypton) or the Natas web
-login page's rendered `<pre>` block (Natas). ANSI color codes are stripped here
-for markdown readability; in a real terminal Bandit/Krypton render in color.
+Every per-level ASCII/Unicode art banner across Bandit, Krypton, and Natas,
+shown as it would appear captured from a real SSH session (Bandit/Krypton) or
+the Natas web login page's rendered `<pre>` block (Natas). ANSI color codes are
+stripped here for markdown readability; in a real terminal/browser all three
+tracks render in color (Bandit/Krypton via ANSI SGR, Natas via CSS matching its
+existing per-level hue progression), and Unicode glyphs render as shown.
 
 Each entry is preceded by the exact prompt used to generate that piece of art
 (the shared template from `docs/wargame-themes.md`, filled in with the track's
@@ -19,11 +21,13 @@ You are an outlaw breaking into a guarded compound: moving room to room, picking
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "The First Step"
@@ -33,13 +37,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
    .---.
    | o | -->
    '---'  CEI Labs Bandit 0: The First Step
@@ -54,11 +58,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Dashed Hopes"
@@ -68,13 +74,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   [-][ ][ ][ ]
       ^picked
    .-------.
@@ -91,11 +97,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Spaces in Places"
@@ -105,13 +113,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   [ A    B ]
    <--joined-->
   |  |     |  |
@@ -128,11 +136,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Hidden in Plain Sight"
@@ -142,13 +152,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   [#][#][#]
   [#][o][#]
   [#][#][#]  CEI Labs Bandit 3: Hidden in Plain Sight
@@ -163,11 +173,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Human Readable"
@@ -177,13 +189,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
    ,-------.
    | note   |
    |  o     |
@@ -199,11 +211,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "The Needle"
@@ -213,13 +227,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   ~~~~~~~~~~
   ~~~ | ~~~~
   ~~~~~~~~~~  CEI Labs Bandit 5: The Needle
@@ -234,11 +248,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Server Search"
@@ -248,13 +264,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   [=][=][=]
   [=][=][=]  o
   [=][=][=]  CEI Labs Bandit 6: Server Search
@@ -269,11 +285,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "The Millionth Word"
@@ -283,13 +301,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   1 2 3 ... (n) ...
         ^counted
   wwwwwwwwwwwww
@@ -306,11 +324,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "The Only One"
@@ -320,13 +340,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   ooooooooo
   oo[*]oooo
   ooooooooo  CEI Labs Bandit 8: The Only One
@@ -341,11 +361,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Strings Attached"
@@ -355,13 +377,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
     \|/
      o
     /|\  CEI Labs Bandit 9: Strings Attached
@@ -376,11 +398,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Base Operations"
@@ -390,13 +414,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   [#$%@] --> [====]
    ####
    #  # o
@@ -412,11 +436,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Substitution"
@@ -426,13 +452,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   [A]<->[B]
       o
    swapped  CEI Labs Bandit 11: Substitution
@@ -447,11 +473,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Matryoshka"
@@ -461,13 +489,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   [ [ [ o ] ] ]
    [ [ ] ]
     [ ]  CEI Labs Bandit 12: Matryoshka
@@ -482,11 +510,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Private Keys"
@@ -496,13 +526,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
    .--.
   ( () )==>[ o ]
    `--'  CEI Labs Bandit 13: Private Keys
@@ -517,11 +547,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Port Submission"
@@ -531,13 +563,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
    o -->
    [ ]  <-hatch  CEI Labs Bandit 14: Port Submission
 Logged in as bandit14
@@ -551,11 +583,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "SSL Encryption"
@@ -565,13 +599,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
     .--.
    /    \
   |--[]--| o  CEI Labs Bandit 15: SSL Encryption
@@ -586,11 +620,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "SSL Port Scan"
@@ -600,13 +636,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   [ ][ ][ ]
    o  scan-->  CEI Labs Bandit 16: SSL Port Scan
 Logged in as bandit16
@@ -620,11 +656,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "File Comparisons"
@@ -634,13 +672,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
    [A]  [B]
      o  <->  CEI Labs Bandit 17: File Comparisons
 Logged in as bandit17
@@ -654,11 +692,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Shell Bypass"
@@ -668,13 +708,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   |||||
   ||| o -->
   |||||  CEI Labs Bandit 18: Shell Bypass
@@ -689,11 +729,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "SUID Escalation"
@@ -703,13 +745,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
     ^
    /|
   o |  CEI Labs Bandit 19: SUID Escalation
@@ -724,11 +766,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Port Listener Connection"
@@ -738,13 +782,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   )))
   ))) o
    |  CEI Labs Bandit 20: Port Listener Connection
@@ -759,11 +803,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Cron Jobs"
@@ -773,13 +819,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
    _12_
   9  o  3
    `-6-'  CEI Labs Bandit 21: Cron Jobs
@@ -794,11 +840,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Cron Debugging"
@@ -808,13 +856,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
    _12_   ,_,
   9  o 3 (o.o)
    `-6-'  CEI Labs Bandit 22: Cron Debugging
@@ -829,11 +877,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Cron Scripting"
@@ -843,13 +893,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
    _12_  |~~~
   9  o 3 |~~~
    `-6-' |~~~  CEI Labs Bandit 23: Cron Scripting
@@ -864,11 +914,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "PIN Brute Force"
@@ -878,13 +930,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   [1][2][3]
   [4][5][6] o
   [7][8][9]  CEI Labs Bandit 24: PIN Brute Force
@@ -899,11 +951,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Shell Breakout"
@@ -913,13 +967,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   |||||
   ||X|| o-->
   |||||  CEI Labs Bandit 25: Shell Breakout
@@ -934,11 +988,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Text UI Breakout"
@@ -948,13 +1004,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   +--//--+
   | o  //|
   +-------+  CEI Labs Bandit 26: Text UI Breakout
@@ -969,11 +1025,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Git Clone"
@@ -983,13 +1041,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
    o---o---o
         \
          o  CEI Labs Bandit 27: Git Clone
@@ -1004,11 +1062,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Git Commits"
@@ -1018,13 +1078,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   o---o---o
    stack  o  CEI Labs Bandit 28: Git Commits
 Logged in as bandit28
@@ -1038,11 +1098,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Git Branches"
@@ -1052,13 +1114,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
       o--o
      /
   o-o--o--o  CEI Labs Bandit 29: Git Branches
@@ -1073,11 +1135,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Git Tags"
@@ -1087,13 +1151,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
    _____
   /     \--o
   \_____/  CEI Labs Bandit 30: Git Tags
@@ -1108,11 +1172,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Git Push"
@@ -1122,13 +1188,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
    .-~~-.
   (  o   )
    `-..-'
@@ -1144,11 +1210,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Shell Overrides"
@@ -1158,13 +1226,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   [cloak A]
       o
   [cloak B]  CEI Labs Bandit 32: Shell Overrides
@@ -1179,11 +1247,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: You are an outlaw breaking into a guarded compound: moving room to room, picking locks, slipping past guards, and stealing what's hidden deeper inside as you go. Per-level art follows this figure's progress from the outer wall (level 0) through increasingly deep rooms to an escape at the final level (33).
 This piece is for the question titled: "Final Escape"
@@ -1193,13 +1263,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-   *      .        *         .       *
-  _/\__/\__/\__/\__/\__/\__/\__/\__/\_
- ||__||__||__||__||__||__||__||__||__||
+   ✦      .        ✧         .       ✦
+  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙
+  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓
   +--+
   |o |->
   +--+  CEI Labs Bandit 33: Final Escape
@@ -1220,11 +1290,13 @@ Krypton is a distant, hidden world (Greek kryptos = "hidden") transmitting encod
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: Krypton is a distant, hidden world (Greek kryptos = "hidden") transmitting encoded signals across space. Each level is a signal that must be decoded, growing stranger and more alien-seeming the deeper you go.
 This piece is for the question titled: "Base64 Decoding"
@@ -1234,13 +1306,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-     *        .          *          .        *
-  .     *          .          *          .
-  - - - - - - - - - - - - - - - - - - - - - -
+     ★        .          ☆          .        ★
+  .     ★          .          ☆          .
+  ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈
   [ %#&@ ]  -->  [ ==== ]
          << signal  CEI Labs Krypton 0: Base64 Decoding
 Logged in as krypton0
@@ -1255,11 +1327,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: Krypton is a distant, hidden world (Greek kryptos = "hidden") transmitting encoded signals across space. Each level is a signal that must be decoded, growing stranger and more alien-seeming the deeper you go.
 This piece is for the question titled: "ROT13 Substitution Cipher"
@@ -1269,13 +1343,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-     *        .          *          .        *
-  .     *          .          *          .
-  - - - - - - - - - - - - - - - - - - - - - -
+     ★        .          ☆          .        ★
+  .     ★          .          ☆          .
+  ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈
    \ | /
    -- O --  spinning
    / | \  CEI Labs Krypton 1: ROT13 Substitution Cipher
@@ -1291,11 +1365,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: Krypton is a distant, hidden world (Greek kryptos = "hidden") transmitting encoded signals across space. Each level is a signal that must be decoded, growing stranger and more alien-seeming the deeper you go.
 This piece is for the question titled: "Caesar Cipher (Unknown Shift)"
@@ -1305,13 +1381,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-     *        .          *          .        *
-  .     *          .          *          .
-  - - - - - - - - - - - - - - - - - - - - - -
+     ★        .          ☆          .        ★
+  .     ★          .          ☆          .
+  ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈
    \ | /
    -- ? --  half-turned
    / | \  CEI Labs Krypton 2: Caesar Cipher (Unknown Shift)
@@ -1327,11 +1403,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: Krypton is a distant, hidden world (Greek kryptos = "hidden") transmitting encoded signals across space. Each level is a signal that must be decoded, growing stranger and more alien-seeming the deeper you go.
 This piece is for the question titled: "Frequency Analysis"
@@ -1341,13 +1419,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-     *        .          *          .        *
-  .     *          .          *          .
-  - - - - - - - - - - - - - - - - - - - - - -
+     ★        .          ☆          .        ★
+  .     ★          .          ☆          .
+  ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈
    |     ##
    |  #  ## #
    | ## ## ##
@@ -1364,11 +1442,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: Krypton is a distant, hidden world (Greek kryptos = "hidden") transmitting encoded signals across space. Each level is a signal that must be decoded, growing stranger and more alien-seeming the deeper you go.
 This piece is for the question titled: "Vigenere Cipher (Known Key Length)"
@@ -1378,13 +1458,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-     *        .          *          .        *
-  .     *          .          *          .
-  - - - - - - - - - - - - - - - - - - - - - -
+     ★        .          ☆          .        ★
+  .     ★          .          ☆          .
+  ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈
   [AA][AA][AA][AA]
   (( (( (( ))
    ((  core  ))
@@ -1401,11 +1481,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: Krypton is a distant, hidden world (Greek kryptos = "hidden") transmitting encoded signals across space. Each level is a signal that must be decoded, growing stranger and more alien-seeming the deeper you go.
 This piece is for the question titled: "Vigenere Cipher (Kasiski Test)"
@@ -1415,13 +1497,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-     *        .          *          .        *
-  .     *          .          *          .
-  - - - - - - - - - - - - - - - - - - - - - -
+     ★        .          ☆          .        ★
+  .     ★          .          ☆          .
+  ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈
   [xxx]......[xxx]
    |<-- gap -->|
   ((( deeper ((((
@@ -1438,11 +1520,13 @@ Stay within your assigned challenge environment only.
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
 Overall track theme: Krypton is a distant, hidden world (Greek kryptos = "hidden") transmitting encoded signals across space. Each level is a signal that must be decoded, growing stranger and more alien-seeming the deeper you go.
 This piece is for the question titled: "Stream Cipher / LFSR"
@@ -1452,13 +1536,13 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
 **SSH capture:**
 ```
-     *        .          *          .        *
-  .     *          .          *          .
-  - - - - - - - - - - - - - - - - - - - - - -
+     ★        .          ☆          .        ★
+  .     ★          .          ☆          .
+  ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈
   [1][0][1][1]<-.
    ^____________|
    *
@@ -1476,19 +1560,21 @@ Stay within your assigned challenge environment only.
 
 ### Track theme
 
-"Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+"Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 
-### natas0: View Source
+### natas0: View Source (color: #3791be)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "View Source"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1496,9 +1582,9 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
   [ page ]
   <!--   -->
@@ -1506,7 +1592,7 @@ needed to solve it. Output only the ASCII art, nothing else.
   | text |
   '--v--'
    txet
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
    txet
   '--v--'
   | text |
@@ -1520,17 +1606,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas1: Right-Click Block
+### natas1: Right-Click Block (color: #37b4be)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "Right-Click Block"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1538,14 +1626,14 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
     [ menu ]
        X
       o
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
       o
        X
     [ menu ]
@@ -1556,17 +1644,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas2: Directory Traversal (Files)
+### natas2: Directory Traversal (Files) (color: #37bea4)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "Directory Traversal (Files)"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1574,14 +1664,14 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
   [/][/][..]-->
   [^][^][v]
   door door door
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
   door door door
   [^][^][v]
   [/][/][..]-->
@@ -1592,17 +1682,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas3: Web Crawlers (Robots.txt)
+### natas3: Web Crawlers (Robots.txt) (color: #37be81)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "Web Crawlers (Robots.txt)"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1610,14 +1702,14 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
     /|\
    --*--  web
     \|/
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
     \|/
    --*--  web
     /|\
@@ -1628,17 +1720,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas4: Referer Spoofing
+### natas4: Referer Spoofing (color: #37be5e)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "Referer Spoofing"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1646,14 +1740,14 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
    o
   /|\  letter
   / \  (mirrored)
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
   / \  (mirrored)
   /|\  letter
    o
@@ -1664,17 +1758,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas5: Cookie Manipulation
+### natas5: Cookie Manipulation (color: #37be3a)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "Cookie Manipulation"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1682,14 +1778,14 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
   ( o o )
   ( o X )  jar
   `-----'
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
   `-----'
   ( o X )  jar
   ( o o )
@@ -1700,17 +1796,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas6: Hidden Inclusion Files
+### natas6: Hidden Inclusion Files (color: #57be37)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "Hidden Inclusion Files"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1718,14 +1816,14 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
   ~~~~~~~~
   ~~[ ]~~  rug
      |
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
      |
   ~~[ ]~~  rug
   ~~~~~~~~
@@ -1736,17 +1834,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas7: Local File Inclusion (LFI)
+### natas7: Local File Inclusion (LFI) (color: #7abe37)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "Local File Inclusion (LFI)"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1754,15 +1854,15 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
   [box]<--[../../file]
   [D][D][D]
    \  |  /
     [ ]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
     [ ]
    \  |  /
   [D][D][D]
@@ -1774,17 +1874,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas8: Reversing Crypto Schemes
+### natas8: Reversing Crypto Schemes (color: #9ebe37)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "Reversing Crypto Schemes"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1792,15 +1894,15 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
    .--.
   ( () )
    `--'
   (mirrored)
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
   (mirrored)
    `--'
   ( () )
@@ -1812,17 +1914,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas9: Command Injection I
+### natas9: Command Injection I (color: #bebb37)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "Command Injection I"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1830,14 +1934,14 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
    o
   /|\  ...
   / \
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
   / \
   /|\  ...
    o
@@ -1848,17 +1952,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas10: Command Injection II (Sanitization Bypass)
+### natas10: Command Injection II (Sanitization Bypass) (color: #be9737)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "Command Injection II (Sanitization Bypass)"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1866,14 +1972,14 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
    o
   /|\ -->[ ]
   / \
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
   / \
   /|\ -->[ ]
    o
@@ -1884,17 +1990,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas11: XOR Encryption Bypass
+### natas11: XOR Encryption Bypass (color: #be7437)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "XOR Encryption Bypass"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1902,15 +2010,15 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
   \   /
    \ /
     X
    / \
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
    / \
     X
    \ /
@@ -1922,17 +2030,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas12: Arbitrary File Upload (Web Shell)
+### natas12: Arbitrary File Upload (Web Shell) (color: #be5137)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "Arbitrary File Upload (Web Shell)"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1940,14 +2050,14 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
    o
   /|\  [==>
   / \   slot
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
   / \   slot
   /|\  [==>
    o
@@ -1958,17 +2068,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas13: File Upload Bypass (Magic Bytes)
+### natas13: File Upload Bypass (Magic Bytes) (color: #be3741)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "File Upload Bypass (Magic Bytes)"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -1976,14 +2088,14 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
   [ parcel ]
      (o)
    false seal
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
    false seal
      (o)
   [ parcel ]
@@ -1994,17 +2106,19 @@ Do not use AI or external tools/services to cheat or obtain answers.
 Stay within your assigned challenge environment only.
 ```
 
-### natas14: SQL Injection (SQLi)
+### natas14: SQL Injection (SQLi) (color: #be3764)
 
 **Prompt used:**
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
-no copyrighted characters or logos. There is no hard line-count cap.
+Output constraints: each line <=80 single-width characters (box-drawing,
+block-element, and dingbat glyphs are fine; no emoji, no CJK-width
+characters -- one character must equal one terminal column), no
+profanity, no real-world hate symbols, no copyrighted characters or
+logos. There is no hard line-count cap.
 
-Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper.
+Overall track theme: "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down digital underworld where the ordinary logic of the web gets inverted and manipulated -- the same mirrored visual language as the attacker workstation's desktop wallpaper. Banner art color follows the page's own cool-blue-to-hot-magenta per-level hue progression.
 This piece is for the question titled: "SQL Injection (SQLi)"
 
 Draw from the overall track theme's imagery/setting, the mood of the
@@ -2012,14 +2126,14 @@ title, and the general nature of the question (what kind of technique or
 vulnerability is involved) -- visual depictions of what kind of thing is
 going on are fine. Do NOT write any actual instructional text/words that
 explain, name, or spell out the specific command, tool, payload, or step
-needed to solve it. Output only the ASCII art, nothing else.
+needed to solve it. Output only the art, nothing else.
 ```
-**Rendered banner (`<pre class="cei-login-banner">` block):**
+**Rendered banner (`<pre class="cei-login-banner">` block, art colorized in browser):**
 ```
   [=======]
   [=cracked=]
   [=======]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
   [=======]
   [=cracked=]
   [=======]

@@ -1,4 +1,13 @@
-"""Build-time, ASCII-only Bandit banners. Output is data, never shell code."""
+"""Build-time Bandit banners. Output is data, never shell code.
+
+Unicode (box-drawing, block-element, and dingbat glyphs) is allowed, but
+restricted to single-width BMP characters only -- no emoji, no CJK-width
+characters -- so one Python character always equals one terminal column
+and the existing 80-column width check stays meaningful. Banners are
+streamed to the client verbatim via `cat` (see the Dockerfile's
+/etc/profile.d hook), so whatever bytes are written here reach the
+player's terminal unmodified; rendering then depends on THEIR client
+supporting UTF-8, unlike plain ASCII which is universal."""
 from pathlib import Path
 import re
 
@@ -31,9 +40,9 @@ POLICY = (
 # at the TOP, never the bottom, so it never risks pushing the title line
 # (appended to the core art's last line) past 80 characters.
 _FRAME_TOP = (
-    "   *      .        *         .       *",
-    "  _/\\__/\\__/\\__/\\__/\\__/\\__/\\__/\\__/\\_",
-    " ||__||__||__||__||__||__||__||__||__||",
+    "   ✦      .        ✧         .       ✦",
+    "  ▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙▄▟█▙",
+    "  █▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓▒░█▓",
 )
 
 _CORE = {
@@ -118,6 +127,12 @@ def _visible(line):
     """Line content a viewer actually sees once ANSI codes are stripped."""
     return _ANSI_RE.sub("", line)
 
+def _has_unsafe_chars(text):
+    """Unicode is allowed, but control characters (C0/C1, DEL) are not --
+    those could inject terminal escape sequences of their own outside the
+    ANSI SGR codes this module already controls."""
+    return any(ord(c) < 0x20 or 0x7F <= ord(c) <= 0x9F for c in text)
+
 def _ansi_balanced(line):
     """Every color-open code on this line is matched by a reset, so no
     color can bleed past the line into whatever the terminal prints next."""
@@ -137,7 +152,7 @@ def render(level):
     lines.append("Logged in as bandit%d" % level)
     lines.append("Final level: submit your result; there is no next account." if level == 33 else "Submit this level, then use CTFd launch panel for bandit%d." % (level + 1))
     lines.extend(POLICY)
-    if any(any(ord(ch) > 127 for ch in _visible(line)) or len(_visible(line)) > 80 for line in lines):
+    if any(_has_unsafe_chars(_visible(line)) or len(_visible(line)) > 80 for line in lines):
         raise ValueError("unsafe banner rendering")
     if any(not _ansi_balanced(line) for line in lines):
         raise ValueError("unsafe banner rendering: unbalanced ANSI codes")
@@ -149,7 +164,7 @@ def generate(root):
         text = render(level)
         if re.search(r"BANDITPLACEHOLDER|password|flag\{", text, re.I):
             raise ValueError("banner secret scan failed")
-        (root / ("bandit%d" % level)).write_text(text, encoding="ascii")
+        (root / ("bandit%d" % level)).write_text(text, encoding="utf-8")
 
 if __name__ == "__main__":
     import sys

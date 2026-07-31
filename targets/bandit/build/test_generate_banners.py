@@ -15,7 +15,7 @@ class BannerTests(unittest.TestCase):
             mod.generate(root)
             self.assertEqual(len(list(Path(root).iterdir())), 34)
             for level in range(34):
-                text = (Path(root) / ("bandit%d" % level)).read_text(encoding="ascii")
+                text = (Path(root) / ("bandit%d" % level)).read_text(encoding="utf-8")
                 self.assertIn("Misuse of this system is prohibited", text)
                 self.assertIn("AI or external tools", text)
                 self.assertIn("assigned challenge environment", text)
@@ -117,7 +117,7 @@ class BannerTests(unittest.TestCase):
         for level, text in plain.items():
             self.assertNotIn(text, seen.values(), "bandit%d not distinct once color is stripped" % level)
             seen[level] = text
-            self.assertTrue(all(ord(ch) <= 127 for ch in text))
+            self.assertTrue(all(ord(ch) >= 0x20 and not (0x7F <= ord(ch) <= 0x9F) for ch in text.replace("\n", " ")))
             self.assertLessEqual(max(len(l) for l in text.splitlines()), 80)
 
     def test_palette_progresses_gradually_with_level_depth(self):

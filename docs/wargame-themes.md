@@ -61,10 +61,14 @@ Every piece of art in all three tracks is built from one reusable prompt,
 filled in with the track's theme (above) and the level's title only:
 
 ```
-You are creating a small ASCII art image for a CTF training login banner.
+You are creating a small ASCII/Unicode art image for a CTF training login
+banner.
 
-Output constraints: each line <=80 characters, 7-bit ASCII only (no
-Unicode/box-drawing characters), no profanity, no real-world hate symbols,
+Output constraints: each line <=80 single-width characters. Unicode is
+allowed -- box-drawing, block-element, and dingbat glyphs -- but restrict
+to single-width BMP characters only (no emoji, no CJK-width characters),
+so one character always equals one terminal column and the 80-column
+width check stays meaningful. No profanity, no real-world hate symbols,
 no copyrighted characters or logos. There is no hard line-count cap --
 SSH clients scroll and modern (1080p+) terminals aren't height-constrained
 the way the 80-column line width is, so banners can run taller than a
@@ -74,6 +78,10 @@ height (Bandit: a starlit wall skyline; Krypton: a starfield with an
 incoming wave-train; Natas: a mirrored reflection below a waterline,
 fitting its own theme) -- these frames carry no hint content, only
 overall-theme imagery.
+
+Note on compatibility: unlike 7-bit ASCII (which is universal), Unicode
+rendering depends on the connecting player's own terminal/client
+supporting UTF-8. This is an accepted tradeoff, not an oversight.
 
 Overall track theme: {TRACK_THEME}
 This piece is for the question titled: "{LEVEL_TITLE}"
@@ -86,6 +94,16 @@ What is NOT fine: any actual instructional text -- no words, phrases, or
 labels that explain, name, or spell out the specific command, tool,
 payload, or step needed to solve it. A player may recognize "oh, this is
 about X kind of thing" from the shapes, but must never be able to read an
-answer or a how-to off the banner. Output only the ASCII art, nothing
-else.
+answer or a how-to off the banner. Output only the art, nothing else.
 ```
+
+## Color
+
+Bandit and Krypton color their art with ANSI SGR escape codes (basic
+8-color only), each with its own progressive palette (see those tracks'
+generators). Natas colors its art via CSS `<span style="color:...">`,
+deliberately reusing the *exact same* per-level hue that
+`build/generate_themes.py` already uses for that level's page
+background/headings (a continuous cool-blue -> hot-magenta sweep from
+natas0's passive recon to natas14's full exploitation) -- rather than
+inventing a second, redundant palette for the same page.

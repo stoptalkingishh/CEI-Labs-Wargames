@@ -1,4 +1,11 @@
-"""Build-time, ASCII-only Krypton banners. Output is data, never shell code.
+"""Build-time Krypton banners. Output is data, never shell code.
+
+Unicode (box-drawing, block-element, and dingbat glyphs) is allowed, but
+restricted to single-width BMP characters only -- no emoji, no CJK-width
+characters -- so one Python character always equals one terminal column
+and the 80-column width check below stays meaningful. Rendering then
+depends on the connecting client's terminal supporting UTF-8, unlike
+plain ASCII which is universal.
 
 Color is a supplement only, never load-bearing: every banner is written so
 the plain-text art/title/policy content is fully readable with zero ANSI
@@ -46,9 +53,9 @@ POLICY = (
 # at the TOP, never the bottom, so it never risks pushing the title line
 # (appended to the core art's last line) past 80 characters.
 _FRAME_TOP = (
-    "     *        .          *          .        *",
-    "  .     *          .          *          .",
-    "  - - - - - - - - - - - - - - - - - - - - - -",
+    "     ★        .          ☆          .        ★",
+    "  .     ★          .          ☆          .",
+    "  ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈",
 )
 
 _CORE = {
@@ -90,6 +97,13 @@ def _visible_len(line):
     return len(_ANSI_RE.sub("", line))
 
 
+def _has_unsafe_chars(text):
+    """Unicode is allowed, but control characters (C0/C1, DEL) are not --
+    those could inject terminal escape sequences of their own outside the
+    ANSI SGR codes this module already controls."""
+    return any(ord(c) < 0x20 or 0x7F <= ord(c) <= 0x9F for c in text)
+
+
 def render(level):
     if set(TITLES) != set(range(0, 7)):
         raise ValueError("Krypton coverage")
@@ -113,7 +127,7 @@ def render(level):
         else "Submit this level, then use CTFd launch panel for krypton%d." % (level + 1)
     )
     lines.extend(POLICY)
-    if any(any(ord(c) > 127 for c in line) or _visible_len(line) > 80 for line in lines):
+    if any(_has_unsafe_chars(_ANSI_RE.sub("", line)) or _visible_len(line) > 80 for line in lines):
         raise ValueError("unsafe banner")
     return "\n".join(lines) + "\n"
 
@@ -121,7 +135,7 @@ def render(level):
 def generate(root):
     root = Path(root)
     for level in range(0, 7):
-        (root / ("krypton%d" % level)).write_text(render(level), encoding="ascii")
+        (root / ("krypton%d" % level)).write_text(render(level), encoding="utf-8")
 
 
 if __name__ == "__main__":

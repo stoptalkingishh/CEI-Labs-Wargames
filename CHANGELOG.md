@@ -9,6 +9,16 @@ record.
 ## [Unreleased]
 
 ### Changed
+- Login banners now allow Unicode (box-drawing/block-element/dingbat
+  glyphs, restricted to single-width BMP characters so the 80-column
+  width check stays meaningful) instead of 7-bit-ASCII-only; frames and
+  several core pieces across all three tracks updated to use it. This is
+  a deliberate compatibility tradeoff -- rendering now depends on the
+  connecting player's terminal supporting UTF-8, unlike plain ASCII.
+- Natas banner art is now colored via CSS, reusing the exact per-level
+  hue `build/generate_themes.py` already uses for that level's page
+  background/headings (cool blue at natas0 -> hot magenta at natas14)
+  instead of leaving it plain or inventing a second palette.
 - Login banner art policy loosened: art may now visually depict the
   general *kind* of technique/vulnerability involved in a level (a
   rotation dial, a frequency histogram, a directory-traversal arrow, a

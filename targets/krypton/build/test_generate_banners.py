@@ -10,15 +10,17 @@ class TestKryptonBanners(unittest.TestCase):
   with tempfile.TemporaryDirectory() as root:
    b.generate(root); files=list(Path(root).iterdir()); self.assertEqual(len(files),7)
    for level in expected:
-    text=(Path(root)/("krypton%d"%level)).read_text("ascii")
+    text=(Path(root)/("krypton%d"%level)).read_text("utf-8")
     self.assertIn("Misuse of this system is prohibited",text); self.assertIn("AI or external tools",text); self.assertIn("assigned challenge environment",text)
     # Length limit is on VISIBLE columns, not raw bytes -- ANSI escape
     # codes occupy zero terminal columns, so strip them before measuring
     # (matches render()'s own _visible_len check).
     plain=ANSI_RE.sub("",text)
     self.assertLessEqual(max(map(len,plain.splitlines())),80)
-    self.assertTrue(all(ord(c)<128 for c in text))
-   self.assertIn("no next account",(Path(root)/"krypton6").read_text("ascii"))
+    # Unicode is allowed now; only control chars (which could inject
+    # escape sequences of their own) remain forbidden.
+    self.assertTrue(all(ord(c)>=0x20 and not(0x7F<=ord(c)<=0x9F) for c in plain.replace("\n"," ")))
+   self.assertIn("no next account",(Path(root)/"krypton6").read_text("utf-8"))
  def test_art_is_distinct_per_level(self):
   arts=[tuple(b.ART[level]) for level in range(0,7)]
   self.assertEqual(len(arts),len(set(arts)),"every level's art must be visually distinct")
@@ -53,7 +55,7 @@ class TestKryptonBanners(unittest.TestCase):
   with tempfile.TemporaryDirectory() as root:
    b.generate(root)
    for level in range(0,7):
-    lines=(Path(root)/("krypton%d"%level)).read_text("ascii").splitlines()
+    lines=(Path(root)/("krypton%d"%level)).read_text("utf-8").splitlines()
     for line in lines:
      if line.startswith("Logged in as") or line.startswith("Submit this level") or line.startswith("Final level") or line in b.POLICY:
       self.assertNotIn("\x1b[",line)
@@ -64,7 +66,7 @@ class TestKryptonBanners(unittest.TestCase):
   with tempfile.TemporaryDirectory() as root:
    b.generate(root)
    for level in range(0,7):
-    raw=(Path(root)/("krypton%d"%level)).read_text("ascii")
+    raw=(Path(root)/("krypton%d"%level)).read_text("utf-8")
     plain=ANSI_RE.sub("",raw)
     self.assertIn("CEI Labs Krypton %d: %s"%(level,b.TITLES[level]),plain)
     self.assertIn("Logged in as krypton%d"%level,plain)

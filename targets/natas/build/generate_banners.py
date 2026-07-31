@@ -1,6 +1,18 @@
 from pathlib import Path
 from html import escape
+import importlib.util as _ilu
+
+# Reuse the exact same cool-blue -> hot-magenta per-level hue used for the
+# page's own background/heading theme (see build/generate_themes.py's
+# _progression_hue/_hue_to_hex) so the banner art's color matches the
+# level's already-established color identity instead of inventing a
+# second, redundant palette.
+_themes_spec = _ilu.spec_from_file_location("natas_themes", Path(__file__).with_name("generate_themes.py"))
+_themes = _ilu.module_from_spec(_themes_spec); _themes_spec.loader.exec_module(_themes)
+
 T={0:"View Source",1:"Right-Click Block",2:"Directory Traversal (Files)",3:"Web Crawlers (Robots.txt)",4:"Referer Spoofing",5:"Cookie Manipulation",6:"Hidden Inclusion Files",7:"Local File Inclusion (LFI)",8:"Reversing Crypto Schemes",9:"Command Injection I",10:"Command Injection II (Sanitization Bypass)",11:"XOR Encryption Bypass",12:"Arbitrary File Upload (Web Shell)",13:"File Upload Bypass (Magic Bytes)",14:"SQL Injection (SQLi)"}
+
+COLOR = {n: _themes._hue_to_hex(_themes._progression_hue(n)) for n in range(15)}
 
 # Small, title-themed ASCII art per level, built around Natas's adopted
 # track theme (see docs/wargame-themes.md): "Natas" is "Satan" spelled
@@ -13,15 +25,19 @@ T={0:"View Source",1:"Right-Click Block",2:"Directory Traversal (Files)",3:"Web 
 # class involved (a layer hidden beneath the surface, a path climbing
 # outside its box, two things crossed together) -- but never any actual
 # instructional text/labels naming the specific payload, parameter, or
-# steps to solve it. Plain ASCII only; HTML-escaped before use, same as
-# the rest of the banner text.
+# steps to solve it. Unicode is allowed (single-width BMP glyphs only, so
+# it stays consistent with the 80-column width check); HTML-escaped
+# before use, same as the rest of the banner text. main() additionally
+# wraps the art block (only) in a <span> using this level's own hue from
+# generate_themes.py, so the banner's color matches the page's already-
+# established per-level color identity.
 #
 # Every level's core art is reflected below a waterline -- literally
 # mirroring the track's own theme (NATAS/SATAN, the reflected wallpaper)
 # and giving each banner more visual height, since taller banners are
 # fine here: SSH clients scroll and 1080p screens aren't height-limited
 # the way the 80-col line width is.
-_WATERLINE = "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+_WATERLINE = "  ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
 
 _CORE = {
     0: ["  [ page ]", "  <!--   -->", "  .-----.", "  | text |", "  '--v--'", "   txet"],  # a layer hidden beneath the page -- a mirror, text reflecting reversed
@@ -54,7 +70,9 @@ def render(n, title):
         "Do not use AI or external tools/services to cheat or obtain answers.\n"
         "Stay within your assigned challenge environment only.\n"
     ) % (n, title, n)
-    if any(ord(ch) > 127 for ch in body) or any(len(line) > 80 for line in body.splitlines()):
+    # Unicode is allowed; only control characters (C0/C1, DEL) are not --
+    # those could inject something other than visible glyphs.
+    if any(ord(ch) < 0x20 and ch != "\n" or 0x7F <= ord(ch) <= 0x9F for ch in body) or any(len(line) > 80 for line in body.splitlines()):
         raise ValueError("unsafe natas banner rendering for level %d" % n)
     return body
 
@@ -65,8 +83,13 @@ def main(root):
     root = Path(root)
     for n, title in T.items():
         text = render(n, title)
+        art_block = "\n".join(ART[n])
+        escaped_text = escape(text)
+        escaped_art = escape(art_block)
+        colored_art = '<span style="color:%s">%s</span>' % (COLOR[n], escaped_art)
+        html_body = escaped_text.replace(escaped_art, colored_art, 1)
         (root / ("natas%d.html" % n)).write_text(
-            '<pre class="cei-login-banner">' + escape(text) + "</pre>", "ascii"
+            '<pre class="cei-login-banner">' + html_body + "</pre>", encoding="utf-8"
         )
 
 
