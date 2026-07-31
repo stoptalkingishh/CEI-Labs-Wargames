@@ -6,7 +6,7 @@ Per-level art drawn against the prompts in [`wargame-story.md`](wargame-story.md
 
 All pieces obey the shared constraints in `wargame-story.md`: single-width characters only, <= 80 columns per line, and no written text -- the art depicts, it never labels. Rendering depends on the viewer's font; these use box-drawing and block-element glyphs, so a font with poor coverage will show gaps.
 
-Each track carries a recurring anchor so a piece reads as belonging to its track at a glance: Bandit the starlit sky and ground line, Krypton the listening dish, Natas a depth gauge down the left edge (filled above, marker at this floor, empty below). Where a figure appears, it shares a baseline with whatever it is acting on.
+Each track carries a recurring anchor so a piece reads as belonging to its track at a glance: Bandit the starlit sky and ground line, Krypton the listening dish, Natas a depth gauge down the left edge (filled above, marker at this floor, empty below). Every Bandit piece is a physical place in the compound with the figure present, sharing a baseline with whatever it is acting on.
 
 ## Bandit -- "The Vault at Dryrock"
 
@@ -152,15 +152,15 @@ Each track carries a recurring anchor so a piece reads as belonging to its track
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-        ┌───────────────────────┐
-        │  ┌─────────────────┐  │
-        │  │  ┌───────────┐  │  │
-        │  │  │  ┌─────┐  │  │  │
-        │  │  │  │  ◈  │  │  │  │
-        │  │  │  └─────┘  │  │  │
-        │  │  └───────────┘  │  │
-        │  └─────────────────┘  │
-        └───────────────────────┘
+      ┌───────────────────────┐
+      │  ┌─────────────────┐  │
+      │  │  ┌───────────┐  │  │
+      │  │  │  ┌─────┐  │  │  │
+      │  │  │  │  ◈  │  │  │  │
+      │  │  │  └─────┘  │  │  │
+\○/   │  │  └───────────┘  │  │
+ |    │  └─────────────────┘  │
+/ \   └───────────────────────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -168,11 +168,11 @@ Each track carries a recurring anchor so a piece reads as belonging to its track
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-                      ▛▀▀▀▀▀▜
-    ▄▄▄               ▌     ▐
-   █   █▄▄▄▄▄▄▄  ══▶  ▌  ◉  ▐
-   █   █▀▀▘▝▀▀▘       ▌     ▐
-    ▀▀▀               ▙▄▄▄▄▄▟
+                            ▛▀▀▀▀▀▜
+          ▄▄▄               ▌     ▐
+ ○       █   █▄▄▄▄▄▄▄  ══▶  ▌  ◉  ▐
+/|\      █   █▀▀▘▝▀▀▘       ▌     ▐
+/ \       ▀▀▀               ▙▄▄▄▄▄▟
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -215,12 +215,12 @@ Each track carries a recurring anchor so a piece reads as belonging to its track
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-┌─────────────┐          ┌─────────────┐
-│ ─────────── │          │ ─────────── │
-│ ─────────── │          │ ─────────── │
-│ ───◈─────── │    ╭─╮   │ ─────────── │
-│ ─────────── │    ╰─╯   │ ─────────── │
-└─────────────┘          └─────────────┘
+      ┌─────────────┐          ┌─────────────┐
+      │ ─────────── │          │ ─────────── │
+      │ ─────────── │          │ ─────────── │
+ ○    │ ───◈─────── │    ╭─╮   │ ─────────── │
+/|\   │ ─────────── │    ╰─╯   │ ─────────── │
+/ \   └─────────────┘          └─────────────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -273,11 +273,11 @@ Each track carries a recurring anchor so a piece reads as belonging to its track
        ▀▀▀◍▀▀▀
       ▛▀▀▀▀▀▀▀▀▜
       ▌   12   ▐
-      ▌   ◷    ▐     ▄ ▄ ▄ ▄
-      ▌   6    ▐    ▄████████▄
-      ▙▄▄▄▄▄▄▄▄▟    █   ◉    █
-      █████████     ▀████████▀
-      █████████      ▀ ▀ ▀ ▀
+      ▌   ◷    ▐    ▄ ▄ ▄ ▄
+      ▌   6    ▐   ▄████████▄
+\○/   ▙▄▄▄▄▄▄▄▄▟   █   ◉    █
+ |    █████████    ▀████████▀
+/ \   █████████     ▀ ▀ ▀ ▀
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -291,11 +291,11 @@ Each track carries a recurring anchor so a piece reads as belonging to its track
        ▀▀▀◍▀▀▀
       ▛▀▀▀▀▀▀▀▀▜
       ▌   12   ▐
-      ▌   ◷    ▐     ▄ ▄ ▄ ▄
-      ▌   6    ▐    ▄████████▄
-      ▙▄▄▄▄▄▄▄▄▟    █   ◉    █
-      █████████     ▀████████▀
-      █████████      ▀ ▀   ▀
+      ▌   ◷    ▐    ▄ ▄ ▄ ▄
+      ▌   6    ▐   ▄████████▄
+\○/   ▙▄▄▄▄▄▄▄▄▟   █   ◉    █
+ |    █████████    ▀████████▀
+/ \   █████████     ▀ ▀   ▀
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -304,16 +304,16 @@ Each track carries a recurring anchor so a piece reads as belonging to its track
 ```
   ✦        ·          ✧         ·        ✦        ·
         ▄▄▄▄▄
-       ███████       ▄ ▄ ▄ ▄
-      █████████     ▄████████▄
-       ▀▀▀◍▀▀▀      █   ◉    █
-      ▛▀▀▀▀▀▀▀▀▜    ▀████████▀
-      ▌   12   ▐     ▀ ▀ ▀ ▀
+       ███████      ▄ ▄ ▄ ▄
+      █████████    ▄████████▄
+       ▀▀▀◍▀▀▀     █   ◉    █
+      ▛▀▀▀▀▀▀▀▀▜   ▀████████▀
+      ▌   12   ▐    ▀ ▀ ▀ ▀
       ▌   ◷    ▐
-      ▌   6    ▐    ▕▔▔▔▔▔▔▔▏
-      ▙▄▄▄▄▄▄▄▄▟    ▕ ───── ▏
-      █████████     ▕ ───── ▏
-      █████████     ▕▁▁▁▁▁▁▁▏
+      ▌   6    ▐   ▕▔▔▔▔▔▔▔▏
+\○/   ▙▄▄▄▄▄▄▄▄▟   ▕ ───── ▏
+ |    █████████    ▕ ───── ▏
+/ \   █████████    ▕▁▁▁▁▁▁▁▏
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -370,12 +370,12 @@ Each track carries a recurring anchor so a piece reads as belonging to its track
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-┌─────────────────────────────┐
-│ ●──── ───────────────────── │
-│ ●──── ───────────────────── │
-│ ●──── ───────────────────── │
-│ ●──── ───────────────────── │
-└─────────────────────────────┘
+      ┌───────────┬───────────┐
+      │ ●──────── │ ●──────── │
+      │ ●──────── │ ●──────── │
+ ○    │ ●──────── │ ●──────── │
+/|\   │ ●──────── │ ●──────── │
+/ \   └───────────┴───────────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -383,11 +383,13 @@ Each track carries a recurring anchor so a piece reads as belonging to its track
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-                        ●───●───●
-                       ╱
-       ●───●───●───●──●
-                       ╲
-                        ●───●───●
+                          ┌──────────┐
+                    ╱─────│ ▤▤▤▤▤▤▤▤ │
+      ┌──────────┐ ╱      └──────────┘
+      │ ▤▤▤▤▤▤▤▤ │
+ ○    └──────────┘ ╲      ┌──────────┐
+/|\                 ╲─────│ ▤▤▤▤▤▤▤▤ │
+/ \                       └──────────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -395,11 +397,12 @@ Each track carries a recurring anchor so a piece reads as belonging to its track
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-     ●───●───◈───●───●───◈───●───●
-             │           │
-           ▕▔▔▔▏       ▕▔▔▔▏
-           ▕ ▤ ▏       ▕ ▤ ▏
-           ▕▁▁▁▏       ▕▁▁▁▏
+      ┌───────────┬───────────┐
+      │ ●──────── │ ●──────── │ ◀▮
+      │ ●──────── │ ●──────── │
+ ○    │ ●──────── │ ●──────── │ ◀▮
+/|\   │ ●──────── │ ●──────── │
+/ \   └───────────┴───────────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -407,11 +410,11 @@ Each track carries a recurring anchor so a piece reads as belonging to its track
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-      ┌─────────────────────────────┐
-      │ ●──── ───────────────────── │
- ○    │ ●──── ───────────────────── │
-/|\   │ ●──── ──────────────── ✎    │
-/ \   └─────────────────────────────┘
+        ┌───────────┬───────────┐
+        │ ●──────── │ ●──────── │
+ ○  ✎   │ ●──────── │ ●──────── │
+/|\     │ ●──────── │ ●─── ✎    │
+/ \     └───────────┴───────────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
