@@ -185,7 +185,7 @@ challenges_data = [
         "id": "natas-11",
         "name": "Natas 11 -> 12: XOR Encryption Bypass",
         "points": 750,
-        "desc": f"**Goal:** Recover an XOR key and forge encrypted data with it.\n\n{TARGET_NOTE} `http://<target-host>:8011/`. Log in as `natas11` using the flag from Natas 10 as your password.\n\nPreferences are stored in a cookie XOR-encrypted with a short repeating key. The logged-out default plaintext is predictable -- XOR it against the default ciphertext to recover the key, then forge a cookie with `showpassword` set to `yes`.",
+        "desc": f"**Goal:** Recover an XOR key and forge encrypted data with it.\n\n{TARGET_NOTE} `http://<target-host>:8011/`. Log in as `natas11` using the flag from Natas 10 as your password.\n\nPreferences are stored in a cookie XOR-encrypted with a short repeating key. The logged-out default plaintext is predictable -- XOR it against the default ciphertext to recover the key, then forge a cookie with `showpassword` set to `yes`. This one needs a short script rather than a single command -- `python3` is on your attacker workstation for the byte-level XOR/base64 work.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas12"}
     },
     {
@@ -226,7 +226,7 @@ EXTRA_INFO = {
     "natas-08": (["browser view-source", "base64", "xxd"], []),
     "natas-09": (["browser view-source", "curl"], []),
     "natas-10": (["browser view-source", "curl"], []),
-    "natas-11": (["browser devtools", "base64", "xxd"], [("XOR cipher on Wikipedia", "https://en.wikipedia.org/wiki/XOR_cipher")]),
+    "natas-11": (["browser devtools", "base64", "xxd", "python3"], [("XOR cipher on Wikipedia", "https://en.wikipedia.org/wiki/XOR_cipher")]),
     "natas-12": (["browser view-source", "curl"], []),
     "natas-13": (["browser view-source", "curl"], []),
     "natas-14": (["browser view-source"], [("SQL injection on Wikipedia", "https://en.wikipedia.org/wiki/SQL_injection")]),
