@@ -25,9 +25,11 @@ class TestKryptonBanners(unittest.TestCase):
  def test_art_is_thematically_relevant(self):
   # spot-check a few levels for a keyword tying the art to the track's
   # adopted narrative theme (see docs/wargame-themes.md: a hidden world
-  # transmitting signals, growing stranger the deeper you go) -- NOT to
-  # the level's actual cipher/technique, since the art must never hint at
-  # how to solve anything.
+  # transmitting signals, growing stranger the deeper you go) and/or the
+  # general shape of the level's cipher family (rotation, repetition,
+  # feedback) -- depicting what KIND of thing is going on is fine; no
+  # actual instructional text/labels naming the specific technique,
+  # key, or solving steps is ever written.
   self.assertTrue(any("signal" in line.lower() for line in b.ART[0]))
   self.assertTrue(any("spinning" in line.lower() for line in b.ART[1]))
   self.assertTrue(any("?" in line for line in b.ART[2]))

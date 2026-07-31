@@ -63,16 +63,29 @@ filled in with the track's theme (above) and the level's title only:
 ```
 You are creating a small ASCII art image for a CTF training login banner.
 
-Output constraints: 5-9 lines, each line <=80 characters, 7-bit ASCII only
-(no Unicode/box-drawing characters), no profanity, no real-world hate
-symbols, no copyrighted characters or logos.
+Output constraints: each line <=80 characters, 7-bit ASCII only (no
+Unicode/box-drawing characters), no profanity, no real-world hate symbols,
+no copyrighted characters or logos. There is no hard line-count cap --
+SSH clients scroll and modern (1080p+) terminals aren't height-constrained
+the way the 80-column line width is, so banners can run taller than a
+single screenful. Each track additionally prepends/wraps a fixed,
+track-wide frame around every level's per-title core art purely to add
+height (Bandit: a starlit wall skyline; Krypton: a starfield with an
+incoming wave-train; Natas: a mirrored reflection below a waterline,
+fitting its own theme) -- these frames carry no hint content, only
+overall-theme imagery.
 
 Overall track theme: {TRACK_THEME}
 This piece is for the question titled: "{LEVEL_TITLE}"
 
-Draw only from the overall track theme's imagery/setting and the mood of
-the title itself. Do NOT depict, reference, or hint at the specific
-command, tool, technique, or vulnerability used to solve this question --
-a player must not be able to learn anything about HOW to solve it from
-the art. Output only the ASCII art, nothing else.
+Draw from the overall track theme's imagery/setting, the mood of the
+title, and the general *nature* of the question (e.g. a rotation cipher,
+a repeated-pattern search, a filter being bypassed, a record being
+exposed) -- visual depictions of what kind of thing is going on are fine.
+What is NOT fine: any actual instructional text -- no words, phrases, or
+labels that explain, name, or spell out the specific command, tool,
+payload, or step needed to solve it. A player may recognize "oh, this is
+about X kind of thing" from the shapes, but must never be able to read an
+answer or a how-to off the banner. Output only the ASCII art, nothing
+else.
 ```

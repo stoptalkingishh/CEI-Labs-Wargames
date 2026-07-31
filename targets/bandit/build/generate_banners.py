@@ -15,27 +15,42 @@ POLICY = (
 # track theme (see docs/wargame-themes.md): you're an outlaw breaking into
 # a guarded compound, moving room to room, picking locks, slipping past
 # guards, stealing what's hidden deeper inside as you go -- ending in an
-# escape at the final level. Each piece draws ONLY on that theme plus the
-# level's own (already player-visible) title -- deliberately NOT on the
-# level's actual technique/command/vulnerability, so the art itself never
-# hints at how to solve anything. The last line of each entry is where
-# render() appends the "CEI Labs Bandit N: Title" text, so keep last
-# lines short to stay well under the 80-char safety limit.
-ART = {
+# escape at the final level. Each piece draws on that theme, the level's
+# own (already player-visible) title, and the general shape of the
+# technique involved (a marked tile among plain ones, a repeated/branching
+# path, a dial with unknown digits) -- but never any actual instructional
+# text/labels naming the specific command, flag, or steps to solve it.
+# The last line of each entry is where render() appends the "CEI Labs
+# Bandit N: Title" text, so keep last lines short to stay well under the
+# 80-char safety limit.
+#
+# A fixed, track-wide frame (starlit night over the compound's outer wall)
+# is prepended to every level's core art below -- taller banners are fine
+# since SSH clients scroll, and 1080p terminals aren't width/height
+# constrained the way the 80-col line limit is. The frame is only added
+# at the TOP, never the bottom, so it never risks pushing the title line
+# (appended to the core art's last line) past 80 characters.
+_FRAME_TOP = (
+    "   *      .        *         .       *",
+    "  _/\\__/\\__/\\__/\\__/\\__/\\__/\\__/\\__/\\_",
+    " ||__||__||__||__||__||__||__||__||__||",
+)
+
+_CORE = {
     0: ["   .---.", "   | o | -->", "   '---'"],                    # stepping through the outer gate
-    1: ["   .-------.", "   |   X   |", "   '-------'"],            # a dead end, hopes dashed
-    2: ["  |  |     |  |", "  |  | o   |  |", "  |  |     |  |"],   # slipping through a narrow gap
+    1: ["  [-][ ][ ][ ]", "      ^picked", "   .-------.", "   |   X   |", "   '-------'"],  # a marked tile among plain ones -- a dead end, hopes dashed
+    2: ["  [ A    B ]", "   <--joined-->", "  |  |     |  |", "  |  | o   |  |", "  |  |     |  |"],  # two halves bridged into one -- slipping through a narrow gap
     3: ["  [#][#][#]", "  [#][o][#]", "  [#][#][#]"],               # blending among the crates
     4: ["   ,-------.", "   | note   |", "   |  o     |", "   `-------'"],  # reading by torchlight
     5: ["  ~~~~~~~~~~", "  ~~~ | ~~~~", "  ~~~~~~~~~~"],            # searching the haystack
     6: ["  [=][=][=]", "  [=][=][=]  o", "  [=][=][=]"],            # combing a row of cabinets
-    7: ["  wwwwwwwwwwwww", "  ww[W]wwwwwwww", "  wwwwwwwwwwwww"],   # one word among countless
+    7: ["  1 2 3 ... (n) ...", "        ^counted", "  wwwwwwwwwwwww", "  ww[W]wwwwwwww", "  wwwwwwwwwwwww"],  # a counted position in a long list -- one word among countless
     8: ["  ooooooooo", "  oo[*]oooo", "  ooooooooo"],               # a single glint among many
     9: ["    \\|/", "     o", "    /|\\"],                          # tangled up, working free
-    10: ["   ####", "   #  # o", "   ####"],                        # a carved tablet, studied closely
+    10: ["  [#$%@] --> [====]", "   ####", "   #  # o", "   ####"],  # a scrambled block resolving -- a carved tablet, studied closely
     11: ["  [A]<->[B]", "      o", "   swapped"],                   # switching one thing for another
     12: ["  [ [ [ o ] ] ]", "   [ [ ] ]", "    [ ]"],                # a chest inside a chest
-    13: ["   .--.", "  ( () )==o", "   `--'"],                      # an ornate key, held up
+    13: ["   .--.", "  ( () )==>[ o ]", "   `--'"],                 # an ornate key, held up to a waiting lock
     14: ["   o -->", "   [ ]  <-hatch"],                            # a note passed through a hatch
     15: ["    .--.", "   /    \\", "  |--[]--| o"],                 # a sealed vault door
     16: ["  [ ][ ][ ]", "   o  scan-->"],                           # sweeping past a row of doors
@@ -49,7 +64,7 @@ ART = {
     24: ["  [1][2][3]", "  [4][5][6] o", "  [7][8][9]"],            # working through a locked dial
     25: ["  |||||", "  ||X|| o-->", "  |||||"],                     # breaking through the cell door
     26: ["  +--//--+", "  | o  //|", "  +-------+"],                # out through a cracked window
-    27: ["   o", "   |\\--> o", "   o"],                            # a path copied and followed onward
+    27: ["   o---o---o", "        \\", "         o"],                # a copied trail branching onward
     28: ["  o---o---o", "   stack  o"],                             # stones stacked one on the last
     29: ["      o--o", "     /", "  o-o--o--o"],                    # the path splits in two
     30: ["   _____", "  /     \\--o", "  \\_____/"],                # a marker tied to a stone
@@ -57,6 +72,8 @@ ART = {
     32: ["  [cloak A]", "      o", "  [cloak B]"],                  # one disguise traded for another
     33: ["  +--+", "  |o |->", "  +--+"],                           # out through the wall, free
 }
+
+ART = {level: list(_FRAME_TOP) + list(core) for level, core in _CORE.items()}
 
 # --- Progressive color, layered on top of the art above -------------------
 #

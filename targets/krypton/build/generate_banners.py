@@ -29,21 +29,39 @@ POLICY = (
 # Small, title-themed ASCII art per level, built around Krypton's adopted
 # track theme (see docs/wargame-themes.md): a distant, hidden world
 # transmitting encoded signals across space, growing stranger and more
-# alien the deeper you go. Each piece draws ONLY on that theme plus the
-# level's own (already player-visible) title -- deliberately NOT on the
-# level's actual cipher/technique, so the art itself never hints at how
-# to solve anything. The last line of each entry is where render()
-# appends the "CEI Labs Krypton N: Title" text, so keep last lines short
-# to stay well under the 80-char safety limit.
-ART = {
-    0: ["    .-.", "   ( (.) )  << signal", "    `-'"],                  # a dish, first faint signal received
-    1: ["   \\ | /", "   -- O --  spinning", "   / | \\"],               # a dial turning under the stars
-    2: ["   \\ | /", "   -- ? --  half-turned", "   / | \\"],            # the same dial, shadowed, offset unknown
-    3: ["   .  .   .", "  .   .  .  .", " ------------  spectrum"],      # a wavering signal spectrum
-    4: ["  (( (( (( ))", "   ((  core  ))", "  (( (( (( ))"],           # a ringed array, pulsing in sequence
-    5: ["  (((( (( ((", "  ((( deeper ((((", "  (( (((( (("],          # the array, dimmer, more rings
-    6: ["   *", "    \\_/\\_/\\_", "   endless loop"],                  # a distant star, endlessly pulsing
+# alien the deeper you go. Each piece draws on that theme, the level's
+# own (already player-visible) title, and the general shape of what kind
+# of cipher/technique is involved (a dial rotating, a repeating pattern,
+# a feedback loop) -- but never any actual instructional text/labels
+# naming the specific technique, key, or steps to solve it; a player may
+# recognize "this is some kind of rotation/repetition/feedback thing"
+# from the shapes, never read an answer off the banner. The last line of
+# each entry is where render() appends the "CEI Labs Krypton N: Title"
+# text, so keep last lines short to stay well under the 80-char limit.
+#
+# A fixed, track-wide frame (a starfield with an incoming wave-train) is
+# prepended to every level's core art below -- taller banners are fine
+# since SSH clients scroll, and 1080p terminals aren't width/height
+# constrained the way the 80-col line limit is. The frame is only added
+# at the TOP, never the bottom, so it never risks pushing the title line
+# (appended to the core art's last line) past 80 characters.
+_FRAME_TOP = (
+    "     *        .          *          .        *",
+    "  .     *          .          *          .",
+    "  - - - - - - - - - - - - - - - - - - - - - -",
+)
+
+_CORE = {
+    0: ["  [ %#&@ ]  -->  [ ==== ]", "         << signal"],             # scrambled block resolving -- an encode/decode swap
+    1: ["   \\ | /", "   -- O --  spinning", "   / | \\"],               # a dial turning under the stars -- a rotation
+    2: ["   \\ | /", "   -- ? --  half-turned", "   / | \\"],            # the same dial, shadowed, offset unknown -- rotation by an unknown amount
+    3: ["   |     ##", "   |  #  ## #", "   | ## ## ##", "   +-----------  spectrum"],  # bars of uneven height -- a frequency spectrum
+    4: ["  [AA][AA][AA][AA]", "  (( (( (( ))", "   ((  core  ))", "  (( (( (( ))"],  # a short repeating tile -- a fixed-length repeating pattern
+    5: ["  [xxx]......[xxx]", "   |<-- gap -->|", "  ((( deeper ((((", "  (( (((( (("],  # two matching marks with a measured gap -- a repeat-distance search
+    6: ["  [1][0][1][1]<-.", "   ^____________|", "   *", "    \\_/\\_/\\_", "   endless loop"],  # a register chain feeding back into itself
 }
+
+ART = {level: list(_FRAME_TOP) + list(core) for level, core in _CORE.items()}
 
 # Progressive cool-to-deep palette, basic 8-color SGR only. Deliberately
 # NOT the warm (red/orange/yellow) ramp Bandit uses and NOT plain green

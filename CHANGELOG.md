@@ -8,6 +8,24 @@ record.
 
 ## [Unreleased]
 
+### Changed
+- Login banner art policy loosened: art may now visually depict the
+  general *kind* of technique/vulnerability involved in a level (a
+  rotation dial, a frequency histogram, a directory-traversal arrow, a
+  branching commit graph) in addition to the track theme and title --
+  still never any actual instructional text/labels naming the specific
+  command, payload, key, or steps to solve it. Updated the shared
+  generation prompt in `docs/wargame-themes.md` and re-derived several
+  Bandit/Krypton/Natas pieces accordingly.
+- Bandit and Krypton banners now prepend a fixed, track-wide decorative
+  frame (a starlit compound wall; a starfield with an incoming
+  wave-train) to every level's art purely for added height. Natas
+  banners now mirror each level's art below a waterline, doubling their
+  height in a way that fits its own "inverted underworld" theme. No hard
+  line-count cap exists anymore -- only the existing 80-char line-width
+  limit -- since SSH clients scroll and modern terminals aren't
+  height-constrained.
+
 ### Added
 - `docs/wargame-themes.md`: documents each track's adopted narrative theme
   (Bandit: an outlaw breaking into a guarded compound; Krypton: a hidden

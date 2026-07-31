@@ -9,19 +9,29 @@ T={0:"View Source",1:"Right-Click Block",2:"Directory Traversal (Files)",3:"Web 
 # visual language as the attacker workstation's desktop wallpaper
 # (cei-labs-engine's natas-wallpaper.svg: NATAS reflecting into SATAN).
 # Each piece draws ONLY on that theme plus the level's own (already
-# player-visible) title -- deliberately NOT on the level's actual
-# vulnerability/payload/technique, so the art itself never hints at how
-# to solve anything. Plain ASCII only; HTML-escaped before use, same as
+# player-visible) title, and the general shape of the vulnerability
+# class involved (a layer hidden beneath the surface, a path climbing
+# outside its box, two things crossed together) -- but never any actual
+# instructional text/labels naming the specific payload, parameter, or
+# steps to solve it. Plain ASCII only; HTML-escaped before use, same as
 # the rest of the banner text.
-ART = {
-    0: ["  .-----.", "  | text |", "  '--v--'", "   txet"],                # a mirror, text reflecting reversed
+#
+# Every level's core art is reflected below a waterline -- literally
+# mirroring the track's own theme (NATAS/SATAN, the reflected wallpaper)
+# and giving each banner more visual height, since taller banners are
+# fine here: SSH clients scroll and 1080p screens aren't height-limited
+# the way the 80-col line width is.
+_WATERLINE = "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+
+_CORE = {
+    0: ["  [ page ]", "  <!--   -->", "  .-----.", "  | text |", "  '--v--'", "   txet"],  # a layer hidden beneath the page -- a mirror, text reflecting reversed
     1: ["    [ menu ]", "       X", "      o"],                            # a hand reaching, the menu denied
-    2: ["  [^][^][v]", "  door door door"],                                # a row of doors, one upside down
+    2: ["  [/][/][..]-->", "  [^][^][v]", "  door door door"],              # a path climbing up levels -- a row of doors, one upside down
     3: ["    /|\\", "   --*--  web", "    \\|/"],                          # a crawler on a mirrored web
     4: ["   o", "  /|\\  letter", "  / \\  (mirrored)"],                   # a messenger with a mirrored letter
     5: ["  ( o o )", "  ( o X )  jar", "  `-----'"],                       # a jar, one cookie cracked open
     6: ["  ~~~~~~~~", "  ~~[ ]~~  rug", "     |"],                        # a trapdoor beneath the rug
-    7: ["  [D][D][D]", "   \\  |  /", "    [ ]"],                         # doors folding into one another
+    7: ["  [box]<--[../../file]", "  [D][D][D]", "   \\  |  /", "    [ ]"],  # a path reaching outside its box -- doors folding into one another
     8: ["   .--.", "  ( () )", "   `--'", "  (mirrored)"],                # a locked box, reflecting its own key
     9: ["   o", "  /|\\  ...", "  / \\"],                                 # a puppet, an extra word slipped in
     10: ["   o", "  /|\\ -->[ ]", "  / \\"],                              # the same puppet, past a watchful guard
@@ -30,6 +40,8 @@ ART = {
     13: ["  [ parcel ]", "     (o)", "   false seal"],                    # the same parcel, wearing a false seal
     14: ["  [=======]", "  [=cracked=]", "  [=======]"],                  # a vault of records, cracked open
 }
+
+ART = {n: core + [_WATERLINE] + list(reversed(core)) for n, core in _CORE.items()}
 
 
 def render(n, title):
