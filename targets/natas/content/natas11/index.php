@@ -4,12 +4,14 @@ if (isset($_GET['source'])) {
     exit;
 }
 
+require __DIR__ . "/xor_key.php";
+
 function xor_encrypt($in) {
-    $key = 'qw8J';
+    global $xor_key;
     $text = $in;
     $outText = '';
     for ($i = 0; $i < strlen($text); $i++) {
-        $outText .= $text[$i] ^ $key[$i % strlen($key)];
+        $outText .= $text[$i] ^ $xor_key[$i % strlen($xor_key)];
     }
     return $outText;
 }
