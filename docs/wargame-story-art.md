@@ -464,22 +464,22 @@ Each track carries a recurring anchor so a piece reads as belonging to its track
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-                 ╲  │  ╱   ↻
-                  ╲ │ ╱
- ○    ╲▁▁▁╱    ───────◉─────
-/|\    ▕ ▏        ╱ │ ╲
-/ \     █        ╱  │  ╲
+                    ╲  │  ╱   ↻
+                     ╲ │ ╱
+ ○    ╲▁▁▁╱      ───── ◉ ─────
+/|\    ▕ ▏           ╱ │ ╲
+/ \     █           ╱  │  ╲
 ```
 
 ### krypton2: Caesar Cipher (Unknown Shift)
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-                 ╲  ┊  ╱   ↻ ?
-                  ╲ ┊ ╱
- ○    ╲▁▁▁╱    ┄┄┄┄┄──◉─────
-/|\    ▕ ▏        ╱ ┊ ╲
-/ \     █        ╱  ┊  ╲
+                    ╲  ┊  ╱   ↻ ?
+                     ╲ ┊ ╱
+ ○    ╲▁▁▁╱      ┄┄┄┄┄ ◉ ┄┄┄┄┄
+/|\    ▕ ▏           ╱ ┊ ╲
+/ \     █           ╱  ┊  ╲
 ```
 
 ### krypton3: Frequency Analysis
@@ -660,29 +660,30 @@ Each track carries a recurring anchor so a piece reads as belonging to its track
 ### natas11: XOR Encryption Bypass
 
 ```
-▓           ╲                   ╱
-▓            ╲                ╱
-▓             ╲            ╱
-▓              ╲        ╱
-▓               ╲    ╱
-▓                 ◉
-▓               ╱    ╲
-█    ○         ╱        ╲
-░   /|\       ╱            ╲
-░   / \      ╱                ╲
+▓                ╲         ╱
+▓                 ╲       ╱
+▓                  ╲     ╱
+▓                   ╲   ╱
+▓                    ╲ ╱
+▓                     ◉
+▓                    ╱ ╲
+▓                   ╱   ╲
+█    ○             ╱     ╲
+░   /|\           ╱       ╲
+░   / \          ╱         ╲
 ```
 
 ### natas12: Arbitrary File Upload (Web Shell)
 
 ```
-▓         ████████████████████
-▓         ███████  ▭▭  ███████
-▓         ████████████████████
+▓         ██████████    ██████████
+▓         ██████████    ██████████
+▓         ██████████    ██████████
 ▓                    ▲
-▓                ┌──────┐
-▓    ○           │ ▨▨▨▨ │
-█   /|\          │ ▨▨▨▨ │
-░   / \          └──────┘
+▓                 ┌──────┐
+▓    ○            │ ▨▨▨▨ │
+█   /|\           │ ▨▨▨▨ │
+░   / \           └──────┘
 ```
 
 ### natas13: File Upload Bypass (Magic Bytes)
