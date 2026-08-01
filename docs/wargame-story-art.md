@@ -8,7 +8,11 @@ All pieces obey the shared constraints in `wargame-story.md`: single-width chara
 
 Each track carries a recurring anchor so a piece reads as belonging to its track at a glance: Bandit the starlit sky and ground line, Krypton the listening dish, Natas a depth gauge down the left edge (filled above, marker at this floor, empty below).
 
-Bandit's outlaw and Krypton's operator appear in every one of their pieces, sharing a baseline with whatever they are acting on. Natas carries the descent on the one descending: the figure begins human at natas0 and changes stage by stage as the shaft goes down -- horns, then wings, then claws -- until natas14, where it is the creature at the bottom of the inverted underworld rather than anyone who could still walk back out.
+Each track's figure changes as its story runs, so the set reads as a progression rather than a gallery:
+
+* **Bandit** starts as an ordinary person at bandit0 and becomes the article -- face covered, then a hat, then the loot sack -- so by the escape they look like what they have spent the night becoming. The disguise only ever builds up, never comes back off.
+* **Krypton** is listened to from the planet it is named for, so the operator is a caped Kryptonian (a generic silhouette with no emblem -- the constraints forbid copyrighted characters). The strip beneath each piece walks the signal out through the solar system, Mercury at krypton0 to Neptune at krypton6.
+* **Natas** carries its descent on the one descending: human at natas0, then horns, wings and claws stage by stage, until natas14, where it is the creature at the bottom of the inverted underworld rather than anyone who could still walk back out.
 
 ## Bandit -- "The Vault at Dryrock"
 
@@ -144,7 +148,7 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
   ✦        ·          ✧         ·        ✦        ·
         ▛▀▀▀▀▜            ▛▀▀▀▀▜
         ▌    ▐            ▌    ▐
- ○  ◈   ▌ ◈  ▐            ▌ ▢  ▐
+ ◑  ◈   ▌ ◈  ▐            ▌ ▢  ▐
 /|\     ▌    ▐   ◀────▶   ▌    ▐
 / \     ▙▄▄▄▄▟            ▙▄▄▄▄▟
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
@@ -160,7 +164,7 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
       │  │  │  ┌─────┐  │  │  │
       │  │  │  │  ◈  │  │  │  │
       │  │  │  └─────┘  │  │  │
-\○/   │  │  └───────────┘  │  │
+\◑/   │  │  └───────────┘  │  │
  |    │  └─────────────────┘  │
 / \   └───────────────────────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
@@ -172,7 +176,7 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
   ✦        ·          ✧         ·        ✦        ·
                             ▛▀▀▀▀▀▜
           ▄▄▄               ▌     ▐
- ○       █   █▄▄▄▄▄▄▄  ══▶  ▌  ◉  ▐
+ ◑       █   █▄▄▄▄▄▄▄  ══▶  ▌  ◉  ▐
 /|\      █   █▀▀▘▝▀▀▘       ▌     ▐
 / \       ▀▀▀               ▙▄▄▄▄▄▟
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
@@ -184,7 +188,7 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
   ✦        ·          ✧         ·        ✦        ·
       ▛▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▜
       ▌ █████████████     ███████████████ ▐
- ○    ▌ █████████████ ▭▶  ███████████████ ▐
+ ◑    ▌ █████████████ ▭▶  ███████████████ ▐
 /|\   ▌ █████████████     ███████████████ ▐
 / >   ▙▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▟
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
@@ -196,7 +200,7 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
   ✦        ·          ✧         ·        ✦        ·
       ▛▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▜
       ▌ ████████████ ▚▚▚▚▚▚ ████████████ ▐
- ○    ▌ ████████████ ▚ ▭▶ ▚ ████████████ ▐
+ ◑    ▌ ████████████ ▚ ▭▶ ▚ ████████████ ▐
 /|\   ▌ ████████████ ▚▚▚▚▚▚ ████████████ ▐
 / >   ▙▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▟
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
@@ -207,7 +211,7 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
 ```
   ✦        ·          ✧         ·        ✦        ·
       ┌──┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐
- ○    │▚▚│  │▚▚│  │▚▚│  │▚▚│  │▚▚│  │▚▚│
+ ◑    │▚▚│  │▚▚│  │▚▚│  │▚▚│  │▚▚│  │▚▚│
 /|\   │▚▚│  │▚▚│  │▚▚│  │▚▚│  │▚▚│  │▚▚│
 / >   └──┘  └──┘  └──┘  └──┘  └──┘  └──┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
@@ -220,7 +224,7 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
       ┌─────────────┐          ┌─────────────┐
       │ ─────────── │          │ ─────────── │
       │ ─────────── │          │ ─────────── │
- ○    │ ───◈─────── │    ╭─╮   │ ─────────── │
+ ◑    │ ───◈─────── │    ╭─╮   │ ─────────── │
 /|\   │ ─────────── │    ╰─╯   │ ─────────── │
 / \   └─────────────┘          └─────────────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
@@ -232,7 +236,7 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
   ✦        ·          ✧         ·        ✦        ·
 ▛▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▜
 ▌ ███████████ ▐▌ ██████     ▕▔▔▔▔▔▔▔▔▏ ▐
-▌ ███████████ ▐▌ ██████  ○  ▕        ▏ ▐
+▌ ███████████ ▐▌ ██████  ◑  ▕        ▏ ▐
 ▌ ███████████ ▐▌ ██████ /|\ ▕        ▏ ▐
 ▌ ███████████ ▐▌ ██████ / \ ▕▁▁▁▁▁▁▁▁▏ ▐
 ▙▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▟
@@ -245,7 +249,7 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
   ✦        ·          ✧         ·        ✦        ·
       ▕▔▔▔▔▔▔▔▔▔▏
       ▕ ███████ ▏
- ○    ▕ ███████ ▏   ══▶    ○
+ ◑    ▕ ███████ ▏   ══▶    ○
 /|\   ▕ ███████ ▏         /█\
 / \   ▕▁▁▁▁▁▁▁▁▁▏         / \
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
@@ -258,7 +262,7 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
 ▛▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▜
 ▌                 ┌─────┐ ▐
 ▌                 │     │ ▐
-▌  ○      ) ) )   │  ◐  │ ▐
+▌  ◑      ) ) )   │  ◐  │ ▐
 ▌ /|\   ▶ ▶ ▶ ▶   │     │ ▐
 ▌ / \             └─────┘ ▐
 ▙▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▟
@@ -276,8 +280,8 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
       ▛▀▀▀▀▀▀▀▀▜
       ▌   12   ▐
       ▌   ◷    ▐    ▄ ▄ ▄ ▄
-      ▌   6    ▐   ▄████████▄
-\○/   ▙▄▄▄▄▄▄▄▄▟   █   ◉    █
+▄▄▄   ▌   6    ▐   ▄████████▄
+\◑/   ▙▄▄▄▄▄▄▄▄▟   █   ◉    █
  |    █████████    ▀████████▀
 / \   █████████     ▀ ▀ ▀ ▀
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
@@ -294,8 +298,8 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
       ▛▀▀▀▀▀▀▀▀▜
       ▌   12   ▐
       ▌   ◷    ▐    ▄ ▄ ▄ ▄
-      ▌   6    ▐   ▄████████▄
-\○/   ▙▄▄▄▄▄▄▄▄▟   █   ◉    █
+▄▄▄   ▌   6    ▐   ▄████████▄
+\◑/   ▙▄▄▄▄▄▄▄▄▟   █   ◉    █
  |    █████████    ▀████████▀
 / \   █████████     ▀ ▀   ▀
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
@@ -312,8 +316,8 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
       ▛▀▀▀▀▀▀▀▀▜   ▀████████▀
       ▌   12   ▐    ▀ ▀ ▀ ▀
       ▌   ◷    ▐
-      ▌   6    ▐   ▕▔▔▔▔▔▔▔▏
-\○/   ▙▄▄▄▄▄▄▄▄▟   ▕ ───── ▏
+▄▄▄   ▌   6    ▐   ▕▔▔▔▔▔▔▔▏
+\◑/   ▙▄▄▄▄▄▄▄▄▟   ▕ ───── ▏
  |    █████████    ▕ ───── ▏
 / \   █████████    ▕▁▁▁▁▁▁▁▏
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
@@ -324,8 +328,8 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
 ```
   ✦        ·          ✧         ·        ✦        ·
       ▛▀▀▀▀▀▀▀▀▀▜
-      ▌ ▨ ▨ ▨ ▨ ▐
- ○    ▌ ? ? ? ? ▐
+▄▄▄   ▌ ▨ ▨ ▨ ▨ ▐
+ ◑    ▌ ? ? ? ? ▐
 /|\   ▙▄▄▄▄▄▄▄▄▄▟
 / \     ███████
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
@@ -337,7 +341,8 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
   ✦        ·          ✧         ·        ✦        ·
 ▛▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▜
 ▌                                          ▐
-▌ ▐▌▐▌▐▌▐▌▐▌▐▌▐▌▐▌  ○  ▐▌▐▌▐▌▐▌▐▌▐▌▐▌▐▌  ▚ ▐
+▌                  ▄▄▄                   ▚ ▐
+▌ ▐▌▐▌▐▌▐▌▐▌▐▌▐▌▐▌  ◑  ▐▌▐▌▐▌▐▌▐▌▐▌▐▌▐▌    ▐
 ▌ ▐▌▐▌▐▌▐▌▐▌▐▌▐▌▐▌ /|\ ▐▌▐▌▐▌▐▌▐▌▐▌▐▌▐▌    ▐
 ▌ ▐▌▐▌▐▌▐▌▐▌▐▌▐▌▐▌ / \ ▐▌▐▌▐▌▐▌▐▌▐▌▐▌▐▌    ▐
 ▙▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▟
@@ -350,7 +355,8 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
   ✦        ·          ✧         ·        ✦        ·
 ▛▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▜
 ▌                          ▐
-▌ ▐▌▐▌▐▌▐▌  ○  ▐▌▐▌▐▌▐▌  ▚ ▐
+▌          ▄▄▄           ▚ ▐
+▌ ▐▌▐▌▐▌▐▌  ◑  ▐▌▐▌▐▌▐▌    ▐
 ▌ ▐▌▐▌▐▌▐▌ /|\ ▐▌▐▌▐▌▐▌    ▐
 ▌ ▐▌▐▌▐▌▐▌ / \ ▐▌▐▌▐▌▐▌    ▐
 ▙▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▟
@@ -361,10 +367,10 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-       ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐
- ○ ▤   │ ▤▤▤▤ │  │ ▤▤▤▤ │  │ ▤▤▤▤ │  │ ▤▤▤▤ │
-/|\    │ ▤▤▤▤ │  │ ▤▤▤▤ │  │ ▤▤▤▤ │  │ ▤▤▤▤ │
-/ \    └──────┘  └──────┘  └──────┘  └──────┘
+▄▄▄       ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐
+ ◑ ▤      │ ▤▤▤▤ │  │ ▤▤▤▤ │  │ ▤▤▤▤ │  │ ▤▤▤▤ │
+/|\  ▓▓   │ ▤▤▤▤ │  │ ▤▤▤▤ │  │ ▤▤▤▤ │  │ ▤▤▤▤ │
+/ \  ▓▓   └──────┘  └──────┘  └──────┘  └──────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -372,12 +378,12 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-      ┌───────────┬───────────┐
-      │ ●──────── │ ●──────── │
-      │ ●──────── │ ●──────── │
- ○    │ ●──────── │ ●──────── │
-/|\   │ ●──────── │ ●──────── │
-/ \   └───────────┴───────────┘
+         ┌───────────┬───────────┐
+         │ ●──────── │ ●──────── │
+▄▄▄      │ ●──────── │ ●──────── │
+ ◑       │ ●──────── │ ●──────── │
+/|\ ▓▓   │ ●──────── │ ●──────── │
+/ \ ▓▓   └───────────┴───────────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -385,13 +391,13 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-                          ┌──────────┐
-                    ╱─────│ ▤▤▤▤▤▤▤▤ │
-      ┌──────────┐ ╱      └──────────┘
-      │ ▤▤▤▤▤▤▤▤ │
- ○    └──────────┘ ╲      ┌──────────┐
-/|\                 ╲─────│ ▤▤▤▤▤▤▤▤ │
-/ \                       └──────────┘
+                             ┌──────────┐
+                       ╱─────│ ▤▤▤▤▤▤▤▤ │
+         ┌──────────┐ ╱      └──────────┘
+▄▄▄      │ ▤▤▤▤▤▤▤▤ │
+ ◑       └──────────┘ ╲      ┌──────────┐
+/|\ ▓▓                 ╲─────│ ▤▤▤▤▤▤▤▤ │
+/ \ ▓▓                       └──────────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -399,12 +405,12 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-      ┌───────────┬───────────┐
-      │ ●──────── │ ●──────── │ ◀▮
-      │ ●──────── │ ●──────── │
- ○    │ ●──────── │ ●──────── │ ◀▮
-/|\   │ ●──────── │ ●──────── │
-/ \   └───────────┴───────────┘
+         ┌───────────┬───────────┐
+         │ ●──────── │ ●──────── │ ◀▮
+▄▄▄      │ ●──────── │ ●──────── │
+ ◑       │ ●──────── │ ●──────── │ ◀▮
+/|\ ▓▓   │ ●──────── │ ●──────── │
+/ \ ▓▓   └───────────┴───────────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -412,11 +418,11 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-        ┌───────────┬───────────┐
-        │ ●──────── │ ●──────── │
- ○  ✎   │ ●──────── │ ●──────── │
-/|\     │ ●──────── │ ●─── ✎    │
-/ \     └───────────┴───────────┘
+           ┌───────────┬───────────┐
+▄▄▄        │ ●──────── │ ●──────── │
+ ◑  ✎      │ ●──────── │ ●──────── │
+/|\   ▓▓   │ ●──────── │ ●─── ✎    │
+/ \   ▓▓   └───────────┴───────────┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -424,16 +430,16 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-      ▛▀▀▀▀▀▀▀▀▀▀▀▀▀▜
-      ▌    ┌───┐    ▐
-      ▌    │ ◉ │    ▐
-      ▌    └───┘    ▐
-      ▌      ✗      ▐
-      ▙▄▄▄▄▄▄▄▄▄▄▄▄▄▟
-             ▲
- ○         ┌───┐
-/|\        │ ◉ │
-/ \        └───┘
+         ▛▀▀▀▀▀▀▀▀▀▀▀▀▀▜
+         ▌    ┌───┐    ▐
+         ▌    │ ◉ │    ▐
+         ▌    └───┘    ▐
+         ▌      ✗      ▐
+         ▙▄▄▄▄▄▄▄▄▄▄▄▄▄▟
+▄▄▄             ▲
+ ◑            ┌───┐
+/|\ ▓▓        │ ◉ │
+/ \ ▓▓        └───┘
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -441,11 +447,11 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
 
 ```
   ✦        ·          ✧         ·        ✦        ·
-█████████████            ·      ✦
-██████▛▀▀▀▀▀▀               ·
-██████▌          ○ ▤    ✧     ·
-██████▙▄▄▄▄▄▄   /|\       ·   ✦
-█████████████   / \
+█████████████               ·      ✦
+██████▛▀▀▀▀▀▀   ▄▄▄            ·
+██████▌          ◑ ▤       ✧     ·
+██████▙▄▄▄▄▄▄   /|\  ▓▓      ·   ✦
+█████████████   / \  ▓▓
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ```
 
@@ -455,77 +461,92 @@ Bandit's outlaw and Krypton's operator appear in every one of their pieces, shar
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-      ╲   ▁▁▁▁▁   ╱
-       ╲ ▕     ▏ ╱    ≈≈≈    ▨▧▨▧▩▨
- ○      ▕▔▔▔▔▔▔▔▏     ≈≈≈≈   ▧▩▨▧▨▩
-/|\      ▔▔▔█▔▔▔      ≈≈≈    ▨▧▩▨▧▨
-/ \         █
+        ╲   ▁▁▁▁▁   ╱
+  ○      ╲ ▕     ▏ ╱    ≈≈≈    ▨▧▨▧▩▨
+ ╱|╲      ▕▔▔▔▔▔▔▔▏     ≈≈≈≈   ▧▩▨▧▨▩
+ ▟█▙       ▔▔▔█▔▔▔      ≈≈≈    ▨▧▩▨▧▨
+ ╱ ╲          █
+  ·    ○    ⊕    ◦    ◯   ─◉─   ◍    ●
+  ▲
 ```
 
 ### krypton1: ROT13 Substitution Cipher
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-                    ╲  │  ╱   ↻
-                     ╲ │ ╱
- ○    ╲▁▁▁╱      ───── ◉ ─────
-/|\    ▕ ▏           ╱ │ ╲
-/ \     █           ╱  │  ╲
+                      ╲  │  ╱   ↻
+  ○                    ╲ │ ╱
+ ╱|╲    ╲▁▁▁╱      ───── ◉ ─────
+ ▟█▙     ▕ ▏           ╱ │ ╲
+ ╱ ╲      █           ╱  │  ╲
+  ·    ○    ⊕    ◦    ◯   ─◉─   ◍    ●
+       ▲
 ```
 
 ### krypton2: Caesar Cipher (Unknown Shift)
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-                    ╲  ┊  ╱   ↻ ?
-                     ╲ ┊ ╱
- ○    ╲▁▁▁╱      ┄┄┄┄┄ ◉ ┄┄┄┄┄
-/|\    ▕ ▏           ╱ ┊ ╲
-/ \     █           ╱  ┊  ╲
+                      ╲  ┊  ╱   ↻ ?
+  ○                    ╲ ┊ ╱
+ ╱|╲    ╲▁▁▁╱      ┄┄┄┄┄ ◉ ┄┄┄┄┄
+ ▟█▙     ▕ ▏           ╱ ┊ ╲
+ ╱ ╲      █           ╱  ┊  ╲
+  ·    ○    ⊕    ◦    ◯   ─◉─   ◍    ●
+            ▲
 ```
 
 ### krypton3: Frequency Analysis
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-              │
-              │              ▉
-              │        ▉     ▉  ▉
- ○    ╲▁▁▁╱   │     ▉  ▉  ▉  ▉  ▉     ▉
-/|\    ▕ ▏    │  ▉  ▉  ▉  ▉  ▉  ▉  ▉  ▉  ▉
-/ \     █     └──────────────────────────────────
+                │
+                │              ▉
+  ○             │        ▉     ▉  ▉
+ ╱|╲    ╲▁▁▁╱   │     ▉  ▉  ▉  ▉  ▉     ▉
+ ▟█▙     ▕ ▏    │  ▉  ▉  ▉  ▉  ▉  ▉  ▉  ▉  ▉
+ ╱ ╲      █     └──────────────────────────────────
+  ·    ○    ⊕    ◦    ◯   ─◉─   ◍    ●
+                      ▲
 ```
 
 ### krypton4: Vigenere Cipher (Known Key Length)
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-               ▟▀▀▙   ▟▀▀▙   ▟▀▀▙   ▟▀▀▙   ▟▀▀▙
-              ╱    ╲ ╱    ╲ ╱    ╲ ╱    ╲ ╱    ╲
- ○    ╲▁▁▁╱         V      V      V      V
-/|\    ▕ ▏    ├──────┼──────┼──────┼──────┼─────┤
-/ \     █     ◀─────▶◀─────▶◀─────▶◀─────▶◀────▶
+                 ▟▀▀▙   ▟▀▀▙   ▟▀▀▙   ▟▀▀▙   ▟▀▀▙
+  ○             ╱    ╲ ╱    ╲ ╱    ╲ ╱    ╲ ╱    ╲
+ ╱|╲    ╲▁▁▁╱         V      V      V      V
+ ▟█▙     ▕ ▏    ├──────┼──────┼──────┼──────┼─────┤
+ ╱ ╲      █     ◀─────▶◀─────▶◀─────▶◀─────▶◀────▶
+  ·    ○    ⊕    ◦    ◯   ─◉─   ◍    ●
+                           ▲
 ```
 
 ### krypton5: Vigenere Cipher (Kasiski Test)
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
- ○    ╲▁▁▁╱   ░░░ ███ ░░░░ ░░░ ███ ░░░ ░░░ ███ ░░░
-/|\    ▕ ▏        └─────────────┘     └─────────┘
-/ \     █         ◀─────────────▶     ◀─────────▶
+  ○
+ ╱|╲    ╲▁▁▁╱   ░░░ ███ ░░░░ ░░░ ███ ░░░ ░░░ ███ ░░░
+ ▟█▙     ▕ ▏        └─────────────┘     └─────────┘
+ ╱ ╲      █         ◀─────────────▶     ◀─────────▶
+  ·    ○    ⊕    ◦    ◯   ─◉─   ◍    ●
+                                ▲
 ```
 
 ### krypton6: Stream Cipher / LFSR
 
 ```
  ·     ★        ·        ☆       ·      ★       ·
-                  ┌─────────────┐
-                  │             │
-                  ▼    ┌─┬─┬─┬─┬─┬─┬─┐
- ○    ╲▁▁▁╱       ▲    │░│█│░│█│█│░│█│
-/|\    ▕ ▏        │    └─┴─┴─┴─┴─┴─┴─┘
-/ \     █         └───────────────────┘
+                    ┌─────────────┐
+                    │             │
+  ○                 ▼    ┌─┬─┬─┬─┬─┬─┬─┐
+ ╱|╲    ╲▁▁▁╱       ▲    │░│█│░│█│█│░│█│
+ ▟█▙     ▕ ▏        │    └─┴─┴─┴─┴─┴─┴─┘
+ ╱ ╲      █         └───────────────────┘
+  ·    ○    ⊕    ◦    ◯   ─◉─   ◍    ●
+                                     ▲
 ```
 
 ## Natas -- "Into the Mirror"
