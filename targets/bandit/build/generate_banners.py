@@ -1,4 +1,13 @@
-"""Build-time, ASCII-only Bandit banners. Output is data, never shell code."""
+"""Build-time Bandit banners. Output is data, never shell code.
+
+Unicode (box-drawing, block-element, and dingbat glyphs) is allowed, but
+restricted to single-width BMP characters only -- no emoji, no CJK-width
+characters -- so one Python character always equals one terminal column
+and the existing 80-column width check stays meaningful. Banners are
+streamed to the client verbatim via `cat` (see the Dockerfile's
+/etc/profile.d hook), so whatever bytes are written here reach the
+player's terminal unmodified; rendering then depends on THEIR client
+supporting UTF-8, unlike plain ASCII which is universal."""
 from pathlib import Path
 import re
 
@@ -11,52 +20,92 @@ POLICY = (
     "Stay within your assigned challenge environment only.",
 )
 
-# Small, title-themed ASCII art per level, built around Bandit's adopted
-# track theme (see docs/wargame-themes.md): you're an outlaw breaking into
-# a guarded compound, moving room to room, picking locks, slipping past
-# guards, stealing what's hidden deeper inside as you go -- ending in an
-# escape at the final level. Each piece draws ONLY on that theme plus the
-# level's own (already player-visible) title -- deliberately NOT on the
-# level's actual technique/command/vulnerability, so the art itself never
-# hints at how to solve anything. The last line of each entry is where
-# render() appends the "CEI Labs Bandit N: Title" text, so keep last
-# lines short to stay well under the 80-char safety limit.
-ART = {
-    0: ["   .---.", "   | o | -->", "   '---'"],                    # stepping through the outer gate
-    1: ["   .-------.", "   |   X   |", "   '-------'"],            # a dead end, hopes dashed
-    2: ["  |  |     |  |", "  |  | o   |  |", "  |  |     |  |"],   # slipping through a narrow gap
-    3: ["  [#][#][#]", "  [#][o][#]", "  [#][#][#]"],               # blending among the crates
-    4: ["   ,-------.", "   | note   |", "   |  o     |", "   `-------'"],  # reading by torchlight
-    5: ["  ~~~~~~~~~~", "  ~~~ | ~~~~", "  ~~~~~~~~~~"],            # searching the haystack
-    6: ["  [=][=][=]", "  [=][=][=]  o", "  [=][=][=]"],            # combing a row of cabinets
-    7: ["  wwwwwwwwwwwww", "  ww[W]wwwwwwww", "  wwwwwwwwwwwww"],   # one word among countless
-    8: ["  ooooooooo", "  oo[*]oooo", "  ooooooooo"],               # a single glint among many
-    9: ["    \\|/", "     o", "    /|\\"],                          # tangled up, working free
-    10: ["   ####", "   #  # o", "   ####"],                        # a carved tablet, studied closely
-    11: ["  [A]<->[B]", "      o", "   swapped"],                   # switching one thing for another
-    12: ["  [ [ [ o ] ] ]", "   [ [ ] ]", "    [ ]"],                # a chest inside a chest
-    13: ["   .--.", "  ( () )==o", "   `--'"],                      # an ornate key, held up
-    14: ["   o -->", "   [ ]  <-hatch"],                            # a note passed through a hatch
-    15: ["    .--.", "   /    \\", "  |--[]--| o"],                 # a sealed vault door
-    16: ["  [ ][ ][ ]", "   o  scan-->"],                           # sweeping past a row of doors
-    17: ["   [A]  [B]", "     o  <->"],                             # weighing two things side by side
-    18: ["  |||||", "  ||| o -->", "  |||||"],                      # slipping past the bars
-    19: ["    ^", "   /|", "  o |"],                                # climbing to a higher ledge
-    20: ["  )))", "  ))) o", "   |"],                                # a whisper through the wall
-    21: ["   _12_", "  9  o  3", "   `-6-'"],                       # watching the bell tower
-    22: ["   _12_   ,_,", "  9  o 3 (o.o)", "   `-6-'"],            # the bell tower, something's off
-    23: ["   _12_  |~~~", "  9  o 3 |~~~", "   `-6-' |~~~"],        # leaving a note on the gears
-    24: ["  [1][2][3]", "  [4][5][6] o", "  [7][8][9]"],            # working through a locked dial
-    25: ["  |||||", "  ||X|| o-->", "  |||||"],                     # breaking through the cell door
-    26: ["  +--//--+", "  | o  //|", "  +-------+"],                # out through a cracked window
-    27: ["   o", "   |\\--> o", "   o"],                            # a path copied and followed onward
-    28: ["  o---o---o", "   stack  o"],                             # stones stacked one on the last
-    29: ["      o--o", "     /", "  o-o--o--o"],                    # the path splits in two
-    30: ["   _____", "  /     \\--o", "  \\_____/"],                # a marker tied to a stone
-    31: ["   .-~~-.", "  (  o   )", "   `-..-'", "     ^"],         # sending a loaded cart onward
-    32: ["  [cloak A]", "      o", "  [cloak B]"],                  # one disguise traded for another
-    33: ["  +--+", "  |o |->", "  +--+"],                           # out through the wall, free
-}
+# Storyboard, not standalone scenes: rather than each level inventing its
+# own isolated picture (which kept reading as noise -- see PR history),
+# every banner is one frame of a single continuous journey through the
+# compound. A fixed "establishing shot" frame (starlit wall) tops every
+# banner, identical across the whole track on purpose -- it's the
+# recurring backdrop, not the part that changes. This also means no
+# level's art can ever leak a hint: nothing below is hand-invented per
+# level, it only ever encodes "how far along you are."
+#
+# A single 34-cell strip (one cell per level) was tried first, but
+# adjacent levels then differ by only one character shifting one
+# position -- imperceptible at a glance, since that's genuinely almost
+# the same amount of progress. Fixed by chunking the compound into 6
+# visibly distinct chapters (each with its own bracket style, so
+# passing between chapters is an obvious shape change), plus a smaller
+# strip showing exact position *within* the current chapter -- so even
+# two levels in the same chapter (e.g. bandit17/18) are still visibly
+# different from each other, not just from levels in other chapters.
+_FRAME_TOP = (
+    "   ✦      .        ✧         .       ✦",
+    "  █  █  █  █  █  █  █  █  █  █  █  █  █",
+    "  ████████████████████████████████████",
+)
+
+_CHAPTER_CORNERS = (".-.", "+-+", "/-\\", "#-#", "~-~", ":-:", "*-*", ">-<")
+
+# Chapter boundaries follow the track's own content clusters, NOT an even
+# numeric split of 34. An even split cut straight through related runs --
+# it put Cron Jobs in one chapter and Cron Debugging/Scripting in the
+# next, and split the git levels across two chapters -- so a chapter
+# change landed in the middle of the same material. These bounds are
+# explicit so a boundary always falls where the material actually
+# changes. See docs/wargame-story.md for the narrative each maps to.
+_CHAPTER_BOUNDS = (
+    (0, 5),    # Over the Wall     - first steps inside
+    (5, 11),   # The Storeyard     - searching for anything useful
+    (11, 17),  # The Inner Halls   - keys, hatches, doors
+    (17, 21),  # The Guardroom     - borrowing authority
+    (21, 24),  # The Bell Tower    - everything on a schedule
+    (24, 27),  # The Locked Wing   - rooms built to hold you
+    (27, 32),  # The Archive       - the record room and its history
+    (32, 34),  # The Escape        - out through the far wall
+)
+
+def _chapter_bounds(total=34, chapters=len(_CHAPTER_CORNERS)):
+    if _CHAPTER_BOUNDS[-1][1] != total or len(_CHAPTER_BOUNDS) != chapters:
+        raise ValueError("chapter bounds must cover all %d levels in %d chapters" % (total, chapters))
+    return list(_CHAPTER_BOUNDS)
+
+def _chapter_index(level, bounds):
+    """The chapter whose (start, end) actually contains this level --
+    derived from the same bounds used to draw the chapter row, rather
+    than a separate formula, so the two can never disagree at an edge."""
+    for idx, (start, end) in enumerate(bounds):
+        if start <= level < end:
+            return idx
+    return len(bounds) - 1
+
+def _chapter_rows(level, total=34):
+    bounds = _chapter_bounds(total)
+    idx = _chapter_index(level, bounds)
+    start, end = bounds[idx]
+    top, mid, bot = [], [], []
+    for c, (left, dash, right) in enumerate(_CHAPTER_CORNERS):
+        if c < idx:
+            fill = "XXXX"
+        elif c == idx:
+            fill = ">OO<"
+        else:
+            fill = "    "
+        top.append(left + dash * 4 + right)
+        mid.append("|" + fill + "|")
+        bot.append(left + dash * 4 + right)
+    within = "".join("x" if i < level - start else ("o" if i == level - start else ".") for i in range(end - start))
+    return [
+        "  " + " ".join(top),
+        "  " + " ".join(mid),
+        "  " + " ".join(bot),
+        "  in this room: [" + within + "]",
+    ]
+
+# render() appends the title to the art's last line; the trailing line
+# below stays short so that never risks exceeding 80 columns.
+_TAIL = "  -->"
+
+ART = {level: list(_FRAME_TOP) + _chapter_rows(level) + [_TAIL] for level in range(34)}
 
 # --- Progressive color, layered on top of the art above -------------------
 #
@@ -101,6 +150,12 @@ def _visible(line):
     """Line content a viewer actually sees once ANSI codes are stripped."""
     return _ANSI_RE.sub("", line)
 
+def _has_unsafe_chars(text):
+    """Unicode is allowed, but control characters (C0/C1, DEL) are not --
+    those could inject terminal escape sequences of their own outside the
+    ANSI SGR codes this module already controls."""
+    return any(ord(c) < 0x20 or 0x7F <= ord(c) <= 0x9F for c in text)
+
 def _ansi_balanced(line):
     """Every color-open code on this line is matched by a reset, so no
     color can bleed past the line into whatever the terminal prints next."""
@@ -120,7 +175,7 @@ def render(level):
     lines.append("Logged in as bandit%d" % level)
     lines.append("Final level: submit your result; there is no next account." if level == 33 else "Submit this level, then use CTFd launch panel for bandit%d." % (level + 1))
     lines.extend(POLICY)
-    if any(any(ord(ch) > 127 for ch in _visible(line)) or len(_visible(line)) > 80 for line in lines):
+    if any(_has_unsafe_chars(_visible(line)) or len(_visible(line)) > 80 for line in lines):
         raise ValueError("unsafe banner rendering")
     if any(not _ansi_balanced(line) for line in lines):
         raise ValueError("unsafe banner rendering: unbalanced ANSI codes")
@@ -132,7 +187,7 @@ def generate(root):
         text = render(level)
         if re.search(r"BANDITPLACEHOLDER|password|flag\{", text, re.I):
             raise ValueError("banner secret scan failed")
-        (root / ("bandit%d" % level)).write_text(text, encoding="ascii")
+        (root / ("bandit%d" % level)).write_text(text, encoding="utf-8")
 
 if __name__ == "__main__":
     import sys

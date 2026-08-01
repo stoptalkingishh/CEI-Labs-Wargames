@@ -10,31 +10,38 @@ class TestKryptonBanners(unittest.TestCase):
   with tempfile.TemporaryDirectory() as root:
    b.generate(root); files=list(Path(root).iterdir()); self.assertEqual(len(files),7)
    for level in expected:
-    text=(Path(root)/("krypton%d"%level)).read_text("ascii")
+    text=(Path(root)/("krypton%d"%level)).read_text("utf-8")
     self.assertIn("Misuse of this system is prohibited",text); self.assertIn("AI or external tools",text); self.assertIn("assigned challenge environment",text)
     # Length limit is on VISIBLE columns, not raw bytes -- ANSI escape
     # codes occupy zero terminal columns, so strip them before measuring
     # (matches render()'s own _visible_len check).
     plain=ANSI_RE.sub("",text)
     self.assertLessEqual(max(map(len,plain.splitlines())),80)
-    self.assertTrue(all(ord(c)<128 for c in text))
-   self.assertIn("no next account",(Path(root)/"krypton6").read_text("ascii"))
+    # Unicode is allowed now; only control chars (which could inject
+    # escape sequences of their own) remain forbidden.
+    self.assertTrue(all(ord(c)>=0x20 and not(0x7F<=ord(c)<=0x9F) for c in plain.replace("\n"," ")))
+   self.assertIn("no next account",(Path(root)/"krypton6").read_text("utf-8"))
  def test_art_is_distinct_per_level(self):
   arts=[tuple(b.ART[level]) for level in range(0,7)]
   self.assertEqual(len(arts),len(set(arts)),"every level's art must be visually distinct")
- def test_art_is_thematically_relevant(self):
-  # spot-check a few levels for a keyword tying the art to the track's
-  # adopted narrative theme (see docs/wargame-themes.md: a hidden world
-  # transmitting signals, growing stranger the deeper you go) -- NOT to
-  # the level's actual cipher/technique, since the art must never hint at
-  # how to solve anything.
-  self.assertTrue(any("signal" in line.lower() for line in b.ART[0]))
-  self.assertTrue(any("spinning" in line.lower() for line in b.ART[1]))
-  self.assertTrue(any("?" in line for line in b.ART[2]))
-  self.assertTrue(any("spectrum" in line.lower() for line in b.ART[3]))
-  self.assertTrue(any("(" in line for line in b.ART[4]))
-  self.assertTrue(any("deeper" in line.lower() for line in b.ART[5]))
-  self.assertTrue(any("loop" in line.lower() for line in b.ART[6]))
+ def test_art_is_a_storyboard_of_progress(self):
+  # Each banner's art is a fixed "establishing shot" frame (the same
+  # across the whole track on purpose) plus a transmission strip that
+  # shows the signal's actual distance traveled: '-' = distance already
+  # crossed, 'o' = the signal's current position (this level), '.' =
+  # distance still ahead, unreached. This is what makes each banner
+  # genuinely distinct -- and reading the whole set in order tells one
+  # continuous story -- without ever hand-inventing (and risking a hint
+  # in) a scene per level.
+  for level in range(0,7):
+   strip=b.ART[level][-2]
+   self.assertEqual(strip.count("o"),1,"krypton%d: must show exactly one current position"%level)
+   self.assertEqual(len(strip),44,"krypton%d: transmission strip length must stay constant"%level)
+  positions=[b.ART[level][-2].index("o") for level in range(0,7)]
+  self.assertEqual(positions,sorted(positions),"signal position must move steadily deeper with level")
+  self.assertLess(positions[0],positions[-1],"signal must travel further by the final level")
+  frames={tuple(b.ART[level][:3]) for level in range(0,7)}
+  self.assertEqual(len(frames),1,"the establishing-shot frame must be identical across the track")
  def test_color_is_progressive_and_distinct_per_level(self):
   self.assertEqual(set(b.COLOR),set(range(0,7)))
   colors=[b.COLOR[level] for level in range(0,7)]
@@ -51,7 +58,7 @@ class TestKryptonBanners(unittest.TestCase):
   with tempfile.TemporaryDirectory() as root:
    b.generate(root)
    for level in range(0,7):
-    lines=(Path(root)/("krypton%d"%level)).read_text("ascii").splitlines()
+    lines=(Path(root)/("krypton%d"%level)).read_text("utf-8").splitlines()
     for line in lines:
      if line.startswith("Logged in as") or line.startswith("Submit this level") or line.startswith("Final level") or line in b.POLICY:
       self.assertNotIn("\x1b[",line)
@@ -62,7 +69,7 @@ class TestKryptonBanners(unittest.TestCase):
   with tempfile.TemporaryDirectory() as root:
    b.generate(root)
    for level in range(0,7):
-    raw=(Path(root)/("krypton%d"%level)).read_text("ascii")
+    raw=(Path(root)/("krypton%d"%level)).read_text("utf-8")
     plain=ANSI_RE.sub("",raw)
     self.assertIn("CEI Labs Krypton %d: %s"%(level,b.TITLES[level]),plain)
     self.assertIn("Logged in as krypton%d"%level,plain)

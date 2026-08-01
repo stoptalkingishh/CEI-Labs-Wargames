@@ -15,7 +15,7 @@ class BannerTests(unittest.TestCase):
             mod.generate(root)
             self.assertEqual(len(list(Path(root).iterdir())), 34)
             for level in range(34):
-                text = (Path(root) / ("bandit%d" % level)).read_text(encoding="ascii")
+                text = (Path(root) / ("bandit%d" % level)).read_text(encoding="utf-8")
                 self.assertIn("Misuse of this system is prohibited", text)
                 self.assertIn("AI or external tools", text)
                 self.assertIn("assigned challenge environment", text)
@@ -44,37 +44,49 @@ class BannerTests(unittest.TestCase):
             )
             seen_art[level] = art_text
 
-    def test_art_is_themed_to_title(self):
-        # Judgment-call spot checks -- just confirm a few levels' art contains
-        # a recognizable token tying it back to the title theme, so we don't
-        # regress to one generic shape reused everywhere. These check the
-        # track's own outlaw-narrative motifs (see docs/wargame-themes.md),
-        # not the level's actual technique -- the art must never hint at how
-        # to solve anything.
-        clock_level = 21  # "Cron Jobs"
-        clock_art = "\n".join(mod.ART[clock_level])
-        self.assertTrue(
-            "12" in clock_art and "6" in clock_art,
-            "expected a clock face (12/6) for the Cron Jobs banner",
-        )
+    def test_chapter_bounds_are_contiguous_and_complete(self):
+        # _CHAPTER_BOUNDS is hand-maintained (it follows content clusters,
+        # not a formula), so guard the invariants a formula used to give
+        # for free: every level lands in exactly one chapter, chapters
+        # butt up against each other with no gap or overlap, none are
+        # empty, and there's one bracket style per chapter.
+        bounds = mod._chapter_bounds()
+        self.assertEqual(len(bounds), len(mod._CHAPTER_CORNERS))
+        self.assertEqual(bounds[0][0], 0)
+        self.assertEqual(bounds[-1][1], 34)
+        for (start, end), (next_start, _) in zip(bounds, bounds[1:]):
+            self.assertLess(start, end, "chapter (%d, %d) is empty" % (start, end))
+            self.assertEqual(end, next_start, "gap or overlap at chapter boundary %d" % end)
+        covered = [level for start, end in bounds for level in range(start, end)]
+        self.assertEqual(covered, list(range(34)), "chapters must cover every level exactly once")
 
-        needle_level = 5  # "The Needle"
-        self.assertTrue(
-            any("~" in line for line in mod.ART[needle_level]),
-            "expected a haystack (~~~) for The Needle banner",
-        )
-
-        matryoshka_level = 12  # "Matryoshka"
-        self.assertTrue(
-            any(line.count("[") >= 3 for line in mod.ART[matryoshka_level]),
-            "expected nested brackets for the Matryoshka banner",
-        )
-
-        escape_level = 33  # "Final Escape"
-        self.assertTrue(
-            any("+--+" in line or "->" in line for line in mod.ART[escape_level]),
-            "expected a door/exit motif for the Final Escape banner",
-        )
+    def test_art_is_a_storyboard_of_progress(self):
+        # Each banner's art is a fixed "establishing shot" frame (the same
+        # across the whole track on purpose), a chapter room-box row
+        # showing which chapter of the compound the player is in, and a
+        # within-chapter strip showing exact position inside it. This is
+        # what makes each banner genuinely distinct from EVERY other
+        # level -- including its immediate neighbors, not just levels far
+        # away in the track -- without ever hand-inventing (and risking a
+        # hint in) a scene per level.
+        bounds = mod._chapter_bounds()
+        for level in range(34):
+            idx = mod._chapter_index(level, bounds)
+            start, end = bounds[idx]
+            mid_row = mod.ART[level][4]
+            self.assertEqual(mid_row.count("XXXX"), idx, "bandit%d: wrong number of cleared chapters" % level)
+            self.assertEqual(mid_row.count(">OO<"), 1, "bandit%d: must show exactly one current chapter" % level)
+            within = mod.ART[level][6].split("[", 1)[1].rsplit("]", 1)[0]
+            self.assertEqual(within.count("x"), level - start, "bandit%d: wrong position within its chapter" % level)
+            self.assertEqual(within.count("o"), 1, "bandit%d: must show exactly one position within its chapter" % level)
+        # the frame above the chapter row is identical across every level --
+        # confirms it's a shared establishing shot, not per-level content
+        frames = {tuple(mod.ART[level][:3]) for level in range(34)}
+        self.assertEqual(len(frames), 1, "the establishing-shot frame must be identical across the track")
+        # even two levels sharing the same chapter (e.g. 17 and 18, both in
+        # chapter 3) must still be visually distinct from each other
+        art_blocks = ["\n".join(mod.ART[level]) for level in range(34)]
+        self.assertEqual(len(art_blocks), len(set(art_blocks)), "every level's full art block must be distinct")
 
     def test_color_is_well_formed_and_always_resets(self):
         # Every SGR color-open code must be closed with a reset on the same
@@ -117,7 +129,7 @@ class BannerTests(unittest.TestCase):
         for level, text in plain.items():
             self.assertNotIn(text, seen.values(), "bandit%d not distinct once color is stripped" % level)
             seen[level] = text
-            self.assertTrue(all(ord(ch) <= 127 for ch in text))
+            self.assertTrue(all(ord(ch) >= 0x20 and not (0x7F <= ord(ch) <= 0x9F) for ch in text.replace("\n", " ")))
             self.assertLessEqual(max(len(l) for l in text.splitlines()), 80)
 
     def test_palette_progresses_gradually_with_level_depth(self):

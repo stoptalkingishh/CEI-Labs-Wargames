@@ -1,35 +1,39 @@
 from pathlib import Path
 from html import escape
+import importlib.util as _ilu
+
+# Reuse the exact same cool-blue -> hot-magenta per-level hue used for the
+# page's own background/heading theme (see build/generate_themes.py's
+# _progression_hue/_hue_to_hex) so the banner art's color matches the
+# level's already-established color identity instead of inventing a
+# second, redundant palette.
+_themes_spec = _ilu.spec_from_file_location("natas_themes", Path(__file__).with_name("generate_themes.py"))
+_themes = _ilu.module_from_spec(_themes_spec); _themes_spec.loader.exec_module(_themes)
+
 T={0:"View Source",1:"Right-Click Block",2:"Directory Traversal (Files)",3:"Web Crawlers (Robots.txt)",4:"Referer Spoofing",5:"Cookie Manipulation",6:"Hidden Inclusion Files",7:"Local File Inclusion (LFI)",8:"Reversing Crypto Schemes",9:"Command Injection I",10:"Command Injection II (Sanitization Bypass)",11:"XOR Encryption Bypass",12:"Arbitrary File Upload (Web Shell)",13:"File Upload Bypass (Magic Bytes)",14:"SQL Injection (SQLi)"}
 
-# Small, title-themed ASCII art per level, built around Natas's adopted
-# track theme (see docs/wargame-themes.md): "Natas" is "Satan" spelled
-# backwards -- a mirrored, upside-down digital underworld where the
-# ordinary logic of the web gets inverted and manipulated, the same
-# visual language as the attacker workstation's desktop wallpaper
-# (cei-labs-engine's natas-wallpaper.svg: NATAS reflecting into SATAN).
-# Each piece draws ONLY on that theme plus the level's own (already
-# player-visible) title -- deliberately NOT on the level's actual
-# vulnerability/payload/technique, so the art itself never hints at how
-# to solve anything. Plain ASCII only; HTML-escaped before use, same as
-# the rest of the banner text.
-ART = {
-    0: ["  .-----.", "  | text |", "  '--v--'", "   txet"],                # a mirror, text reflecting reversed
-    1: ["    [ menu ]", "       X", "      o"],                            # a hand reaching, the menu denied
-    2: ["  [^][^][v]", "  door door door"],                                # a row of doors, one upside down
-    3: ["    /|\\", "   --*--  web", "    \\|/"],                          # a crawler on a mirrored web
-    4: ["   o", "  /|\\  letter", "  / \\  (mirrored)"],                   # a messenger with a mirrored letter
-    5: ["  ( o o )", "  ( o X )  jar", "  `-----'"],                       # a jar, one cookie cracked open
-    6: ["  ~~~~~~~~", "  ~~[ ]~~  rug", "     |"],                        # a trapdoor beneath the rug
-    7: ["  [D][D][D]", "   \\  |  /", "    [ ]"],                         # doors folding into one another
-    8: ["   .--.", "  ( () )", "   `--'", "  (mirrored)"],                # a locked box, reflecting its own key
-    9: ["   o", "  /|\\  ...", "  / \\"],                                 # a puppet, an extra word slipped in
-    10: ["   o", "  /|\\ -->[ ]", "  / \\"],                              # the same puppet, past a watchful guard
-    11: ["  \\   /", "   \\ /", "    X", "   / \\"],                      # two mirrored beams crossing
-    12: ["   o", "  /|\\  [==>", "  / \\   slot"],                        # a parcel slipped through a slot
-    13: ["  [ parcel ]", "     (o)", "   false seal"],                    # the same parcel, wearing a false seal
-    14: ["  [=======]", "  [=cracked=]", "  [=======]"],                  # a vault of records, cracked open
-}
+COLOR = {n: _themes._hue_to_hex(_themes._progression_hue(n)) for n in range(15)}
+
+# Storyboard, not standalone scenes: rather than each level inventing its
+# own isolated picture (which kept reading as noise -- see PR history),
+# every banner is one frame of a single continuous descent into Natas's
+# adopted track theme (see docs/wargame-themes.md): "Natas" is "Satan"
+# spelled backwards -- a mirrored, upside-down digital underworld. A
+# vertical shaft shows how deep the player has descended: 'x' = a level
+# already passed through, 'o' = the level they're on right now (this
+# level), '.' = depths still ahead, unreached. The shaft's shape is what
+# makes each banner genuinely distinct -- structurally guaranteed, not
+# hand-invented per level -- and reading the whole set in order shows a
+# steady descent from the surface (natas0) to the depths (natas14),
+# reinforced by generate_themes.py's own cool-to-hot color progression
+# (COLOR above) applied to this same art via main()'s <span>. This also
+# means no level's art can ever leak a hint: it only encodes "how deep
+# you are," nothing about any specific vulnerability.
+def _shaft(level, total=15):
+    rows = ["  [%s]" % ("x" if i < level else ("o" if i == level else ".")) for i in range(total)]
+    return ["  surface"] + rows + ["  depths"]
+
+ART = {n: _shaft(n) for n in range(15)}
 
 
 def render(n, title):
@@ -42,7 +46,9 @@ def render(n, title):
         "Do not use AI or external tools/services to cheat or obtain answers.\n"
         "Stay within your assigned challenge environment only.\n"
     ) % (n, title, n)
-    if any(ord(ch) > 127 for ch in body) or any(len(line) > 80 for line in body.splitlines()):
+    # Unicode is allowed; only control characters (C0/C1, DEL) are not --
+    # those could inject something other than visible glyphs.
+    if any(ord(ch) < 0x20 and ch != "\n" or 0x7F <= ord(ch) <= 0x9F for ch in body) or any(len(line) > 80 for line in body.splitlines()):
         raise ValueError("unsafe natas banner rendering for level %d" % n)
     return body
 
@@ -53,8 +59,13 @@ def main(root):
     root = Path(root)
     for n, title in T.items():
         text = render(n, title)
+        art_block = "\n".join(ART[n])
+        escaped_text = escape(text)
+        escaped_art = escape(art_block)
+        colored_art = '<span style="color:%s">%s</span>' % (COLOR[n], escaped_art)
+        html_body = escaped_text.replace(escaped_art, colored_art, 1)
         (root / ("natas%d.html" % n)).write_text(
-            '<pre class="cei-login-banner">' + escape(text) + "</pre>", "ascii"
+            '<pre class="cei-login-banner">' + html_body + "</pre>", encoding="utf-8"
         )
 
 

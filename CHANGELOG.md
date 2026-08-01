@@ -9,6 +9,78 @@ record.
 ## [Unreleased]
 
 ### Added
+- `docs/wargame-story-art.md`: per-level art drawn against each prompt
+  in `wargame-story.md` -- 56 pieces, one per level. Explicitly a
+  proposal: nothing in it is wired into any Dockerfile or banner
+  generator, and the shipped banners remain the programmatic
+  storyboard. All pieces are purely pictorial (no written labels), stay
+  within 80 columns, and name no command, tool, payload, or step.
+- `docs/wargame-story.md`: a simple on-theme story for each track
+  ("The Vault at Dryrock" for Bandit, "Signal from the Dark" for
+  Krypton, "Into the Mirror" for Natas), broken into the same beats the
+  storyboard mechanic already visualizes, plus a per-level generation
+  prompt grounded in that beat and the level's public title. Every one
+  of the 56 levels has its own distinct beat. Shared prompt constraints
+  are stated once rather than repeated per level, and level titles and
+  chapter bounds are pulled from the generators so they can't drift.
+  Chapter/beat names are internal design vocabulary -- deliberately not
+  printed in the banners players see.
+- Test guarding that Bandit's now hand-maintained `_CHAPTER_BOUNDS`
+  stay contiguous, non-empty, and cover every level exactly once.
+
+### Fixed
+- Bandit's chapter boundaries came from an even 34/6 split, which cut
+  through related level runs -- Cron Jobs landed in a different chapter
+  than Cron Debugging/Scripting, and the git levels straddled two. Now
+  8 explicit chapters aligned to the track's actual content clusters,
+  so a chapter change always lands where the material changes.
+- Bandit's storyboard corridor (34 levels in one 38-char strip) made
+  adjacent levels differ by only one character shifting one position --
+  imperceptible at a glance (confirmed directly: bandit16/17/18 looked
+  identical side by side). Chunked into 6 visibly distinct chapters
+  (each with its own bracket style), plus a within-chapter position
+  strip, so every level -- including same-chapter neighbors -- is now
+  visibly distinct and the art is bigger besides.
+
+### Changed
+- Login banner art redesigned around a storyboard mechanic instead of a
+  standalone per-level scene: each banner is now a fixed track-wide
+  establishing-shot frame plus a programmatically generated progress
+  strip (`x`/`-` = ground covered, `o` = this level's position, `.` =
+  ground ahead) -- Bandit's is a corridor of rooms, Krypton's is a
+  transmission distance from the dish, Natas's is a depth shaft.
+  Distinctness across all 56 banners is now structurally guaranteed
+  (the strip's shape always differs) instead of hand-invented per level,
+  which had repeatedly produced unreadable symbol combinations. See
+  `docs/wargame-themes.md`'s "Storyboard mechanic" section.
+- Login banners now allow Unicode (box-drawing/block-element/dingbat
+  glyphs, restricted to single-width BMP characters so the 80-column
+  width check stays meaningful) instead of 7-bit-ASCII-only; frames and
+  several core pieces across all three tracks updated to use it. This is
+  a deliberate compatibility tradeoff -- rendering now depends on the
+  connecting player's terminal supporting UTF-8, unlike plain ASCII.
+- Natas banner art is now colored via CSS, reusing the exact per-level
+  hue `build/generate_themes.py` already uses for that level's page
+  background/headings (cool blue at natas0 -> hot magenta at natas14)
+  instead of leaving it plain or inventing a second palette.
+- Login banner art policy loosened: art may now visually depict the
+  general *kind* of technique/vulnerability involved in a level (a
+  rotation dial, a frequency histogram, a directory-traversal arrow, a
+  branching commit graph) in addition to the track theme and title --
+  still never any actual instructional text/labels naming the specific
+  command, payload, key, or steps to solve it. Updated the shared
+  generation prompt in `docs/wargame-themes.md` and re-derived several
+  Bandit/Krypton/Natas pieces accordingly.
+- Bandit and Krypton banners now prepend a fixed, track-wide decorative
+  frame (a starlit compound wall; a starfield with an incoming
+  wave-train) to every level's art purely for added height. Natas
+  banners now mirror each level's art below a waterline, doubling their
+  height in a way that fits its own "inverted underworld" theme. No hard
+  line-count cap exists anymore -- only the existing 80-char line-width
+  limit -- since SSH clients scroll and modern terminals aren't
+  height-constrained.
+
+### Added
 - `docs/wargame-themes.md`: documents each track's adopted narrative theme
   (Bandit: an outlaw breaking into a guarded compound; Krypton: a hidden
   world transmitting encoded signals; Natas: "Satan" spelled backwards, a

@@ -1,4 +1,11 @@
-"""Build-time, ASCII-only Krypton banners. Output is data, never shell code.
+"""Build-time Krypton banners. Output is data, never shell code.
+
+Unicode (box-drawing, block-element, and dingbat glyphs) is allowed, but
+restricted to single-width BMP characters only -- no emoji, no CJK-width
+characters -- so one Python character always equals one terminal column
+and the 80-column width check below stays meaningful. Rendering then
+depends on the connecting client's terminal supporting UTF-8, unlike
+plain ASCII which is universal.
 
 Color is a supplement only, never load-bearing: every banner is written so
 the plain-text art/title/policy content is fully readable with zero ANSI
@@ -26,24 +33,38 @@ POLICY = (
     "Stay within your assigned challenge environment only.",
 )
 
-# Small, title-themed ASCII art per level, built around Krypton's adopted
-# track theme (see docs/wargame-themes.md): a distant, hidden world
-# transmitting encoded signals across space, growing stranger and more
-# alien the deeper you go. Each piece draws ONLY on that theme plus the
-# level's own (already player-visible) title -- deliberately NOT on the
-# level's actual cipher/technique, so the art itself never hints at how
-# to solve anything. The last line of each entry is where render()
-# appends the "CEI Labs Krypton N: Title" text, so keep last lines short
-# to stay well under the 80-char safety limit.
-ART = {
-    0: ["    .-.", "   ( (.) )  << signal", "    `-'"],                  # a dish, first faint signal received
-    1: ["   \\ | /", "   -- O --  spinning", "   / | \\"],               # a dial turning under the stars
-    2: ["   \\ | /", "   -- ? --  half-turned", "   / | \\"],            # the same dial, shadowed, offset unknown
-    3: ["   .  .   .", "  .   .  .  .", " ------------  spectrum"],      # a wavering signal spectrum
-    4: ["  (( (( (( ))", "   ((  core  ))", "  (( (( (( ))"],           # a ringed array, pulsing in sequence
-    5: ["  (((( (( ((", "  ((( deeper ((((", "  (( (((( (("],          # the array, dimmer, more rings
-    6: ["   *", "    \\_/\\_/\\_", "   endless loop"],                  # a distant star, endlessly pulsing
-}
+# Storyboard, not standalone scenes: rather than each level inventing its
+# own isolated picture (which kept reading as noise -- see PR history),
+# every banner is one frame of a single continuous signal traveling
+# further from the receiving dish. A fixed "establishing shot" frame (a
+# starfield with an incoming wave-train) tops every banner, identical
+# across the whole track on purpose -- it's the recurring backdrop, not
+# the part that changes. Underneath it, a transmission strip shows how
+# far the signal has traveled: '-' = distance already crossed, 'o' = the
+# signal's current position (this level), '.' = distance still ahead,
+# unreached. The strip's shape is what makes each banner genuinely
+# distinct -- structurally guaranteed, not hand-invented per level -- and
+# reading the whole set in order shows the signal traveling steadily
+# deeper into unknown space from level 0 to level 6. This also means no
+# level's art can ever leak a hint: it only encodes "how far along you
+# are," nothing about any specific cipher/technique.
+_FRAME_TOP = (
+    "     ★        .          ☆          .        ★",
+    "  .     ★          .          ☆          .",
+    "  ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈",
+)
+
+def _transmission(level, total_levels=7, width=40):
+    pos = round(level * (width - 1) / (total_levels - 1))
+    return "  [" + "".join("-" if i < pos else ("o" if i == pos else ".") for i in range(width)) + "]"
+
+# The transmission strip is deliberately NOT the art's last line --
+# render() appends the title to the last line, and the strip (44 chars)
+# plus the longest title would exceed 80 columns. This short trailing
+# line carries the title instead, and doubles as "the signal continues".
+_TAIL = "  ~>"
+
+ART = {level: list(_FRAME_TOP) + [_transmission(level), _TAIL] for level in range(7)}
 
 # Progressive cool-to-deep palette, basic 8-color SGR only. Deliberately
 # NOT the warm (red/orange/yellow) ramp Bandit uses and NOT plain green
@@ -72,6 +93,13 @@ def _visible_len(line):
     return len(_ANSI_RE.sub("", line))
 
 
+def _has_unsafe_chars(text):
+    """Unicode is allowed, but control characters (C0/C1, DEL) are not --
+    those could inject terminal escape sequences of their own outside the
+    ANSI SGR codes this module already controls."""
+    return any(ord(c) < 0x20 or 0x7F <= ord(c) <= 0x9F for c in text)
+
+
 def render(level):
     if set(TITLES) != set(range(0, 7)):
         raise ValueError("Krypton coverage")
@@ -95,7 +123,7 @@ def render(level):
         else "Submit this level, then use CTFd launch panel for krypton%d." % (level + 1)
     )
     lines.extend(POLICY)
-    if any(any(ord(c) > 127 for c in line) or _visible_len(line) > 80 for line in lines):
+    if any(_has_unsafe_chars(_ANSI_RE.sub("", line)) or _visible_len(line) > 80 for line in lines):
         raise ValueError("unsafe banner")
     return "\n".join(lines) + "\n"
 
@@ -103,7 +131,7 @@ def render(level):
 def generate(root):
     root = Path(root)
     for level in range(0, 7):
-        (root / ("krypton%d" % level)).write_text(render(level), encoding="ascii")
+        (root / ("krypton%d" % level)).write_text(render(level), encoding="utf-8")
 
 
 if __name__ == "__main__":
