@@ -29,7 +29,7 @@ its own.
 - **Owner** — every level is currently unowned (`TBD` across the whole
   tracker). Not invented here.
 - **Prerequisites** — CTFd has no configured prerequisite/requirement
-  chain for any of these 59 challenges (checked directly). The content
+  chain for any of these 65 challenges (checked directly). The content
   design assumes sequential play within a track (each level's solution is
   the next level's login), but nothing technically gates level N+1 behind
   level N — a player can jump to any unlocked level. Audience is the same
@@ -60,8 +60,9 @@ Base64 string embedded directly in the description text). It now has a
 real `krypton0` account on the same shared Krypton box as levels 1-6,
 with a per-team Base64 secret written into its home directory by
 `entrypoint.sh` at container start — the same per-team-dynamic mechanism
-every other level uses. All 59 challenges now have per-team-unique
-flags.
+every other level uses. All 59 *staged* challenges now have per-team-unique
+flags; the 6 unstaged AI Copilot Setup challenges (below) are static by
+design — they prove local setup work, not shared-box solves.
 
 ### bandit (35 levels)
 
@@ -151,9 +152,31 @@ Dependencies: `targets/natas/` (LAMP target) + kali-novnc attacker image,
 team — the isolation model documented in `cei-labs-event/docs/
 threat-model.md`).
 
+### AI Copilot Setup (6 challenges)
+
+This track has no per-team Docker instance at all — the "target" is the
+player's own laptop (see `scripts/build_agent.py`'s header). Flags are
+static, but each is only learnable by running `ctf-agent-verify` locally
+and passing the real milestone, so a static flag here does not carry the
+collusion risk discussed above: the *work*, not the string, is the proof.
+Hidden by default (`RELEASE_STATE` in `scripts/build_agent.py`) — the
+organizer releases it manually.
+
+| ID | Points | Flag source | Instance type | Reset/teardown | Hints (cost) | Expected solve path |
+| :--- | ---: | :--- | :--- | :--- | :--- | :--- |
+| `cei-agent-start-here` | 10 | static (orientation) | none (player's laptop) | n/a | 0 | Read the track intro and confirm the setup goal. |
+| `cei-agent-01-ollama` | 100 | static via `ctf-agent-verify` | none | n/a | 0 | Install Ollama and get it running. |
+| `cei-agent-02-model` | 100 | static via `ctf-agent-verify` | none | n/a | 0 | Pull at least one model. |
+| `cei-agent-03-install` | 100 | static via `ctf-agent-verify` | none | n/a | 0 | Install the `ctf-agent` package and launch it. |
+| `cei-agent-04-ssh` | 150 | static via `ctf-agent-verify` | none | n/a | 0 | Point the agent at a challenge box and complete a live SSH round-trip. |
+| `cei-agent-05-prompt` | 150 | static via `ctf-agent-verify` | none | n/a | 0 | Ask for help using the documented prompt shape. |
+
 ## Totals
 
-35 + 8 + 16 = **59 levels**, matching `game-stages.yml`'s
-`expected_challenge_count` for all three staggered-game stages. Points run
+35 + 8 + 16 = **59 staged levels**, matching `game-stages.yml`'s
+`expected_challenge_count` for all three staggered-game stages, plus the
+6 deliberately-unstaged AI Copilot Setup challenges above = **65
+challenges total** (the same split `scripts/validate_generated.py`
+encodes as `UNSTAGED_TRACK_CHALLENGE_COUNT`). Points run
 sequentially within each track (Bandit 100→1750, Krypton 200/250...500,
 Natas 200→900), all `start-here` levels fixed at 10 points.
