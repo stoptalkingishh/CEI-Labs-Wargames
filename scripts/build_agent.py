@@ -47,8 +47,11 @@ challenges_data = [
         "name": "AI Copilot Setup: Start Here",
         "points": 10,
         "desc": (
-            "**Goal:** Read the rules for this track, then set up your own local AI "
+            "## Goal\n"
+            "Read the rules for this track, then set up your own local AI "
             "copilot for the rest of the event.\n\n"
+            "---\n\n"
+            "### What this is\n"
             "[CEI Labs Agent](https://github.com/Judgernaut777/CEI-Labs-Agent) is a small, "
             "free AI assistant that runs entirely on YOUR laptop (via [Ollama](https://ollama.com), "
             "no API key, no account, no cloud bill) and helps coach you through the Bandit, "
@@ -60,7 +63,8 @@ challenges_data = [
             "specifically to installing and using this one tool, for this track. It does not "
             "excuse using any other outside AI/service to solve the other tracks' levels "
             "directly; that rule still stands everywhere else.\n\n"
-            "**Get started:**\n"
+            "---\n\n"
+            "### Get started\n"
             "1. Download `bootstrap.sh` (macOS/Linux) or `bootstrap.ps1` (Windows) below and "
             "run it -- one command installs Ollama, the agent, and its dependencies, then "
             "opens the app in your browser.\n"
@@ -70,11 +74,15 @@ challenges_data = [
             "3. `cei-labs-agent-site-offline.zip` is a complete offline copy of the project's "
             "info site, in case venue Wi-Fi is unreliable -- see the `HOW-TO-RUN-OFFLINE.md` "
             "inside it for how to serve it locally with one command.\n\n"
+            "---\n\n"
+            "### How verification works\n"
             "Every challenge in this track is verified by a small command-line tool that "
             "ships with the agent, `ctf-agent-verify` -- it checks a real, specific milestone "
             "and prints that challenge's flag only when the milestone is genuinely true on "
             "your machine. Nothing here is guessable without actually doing the step.\n\n"
-            "**Flag:** run `ctf-agent-verify` after finishing setup and it will tell you "
+            "---\n\n"
+            "### Flag\n"
+            "Run `ctf-agent-verify` after finishing setup and it will tell you "
             "which of the five later challenges you've already completed. For THIS "
             "challenge, submit the exact sentence below (word for word) confirming you "
             "understand the AI-use exception this track carves out -- copy it precisely:\n\n"
@@ -94,11 +102,16 @@ challenges_data = [
         "name": "AI Copilot Setup 1: Get Your Local Brain Running",
         "points": 100,
         "desc": (
-            "**Goal:** Get Ollama (the local AI runtime CEI Labs Agent depends on) "
+            "## Goal\n"
+            "Get Ollama (the local AI runtime CEI Labs Agent depends on) "
             "installed and running.\n\n"
+            "---\n\n"
+            "### Why it matters\n"
             "Nothing else in this track works until this piece is alive -- the agent "
             "itself is just a thin app that talks to Ollama over a small local network "
             "API; if that service isn't running, there is no 'brain' behind it yet.\n\n"
+            "---\n\n"
+            "### Do this\n"
             "Run the bootstrap script from **Start Here** if you haven't -- it installs "
             "Ollama for you automatically. Then run:\n```\nctf-agent-verify\n```\n"
             "and read the flag next to check `[1/5]` once it reports PASS."
@@ -110,11 +123,16 @@ challenges_data = [
         "name": "AI Copilot Setup 2: Pull a Model",
         "points": 100,
         "desc": (
-            "**Goal:** Get at least one AI model actually downloaded and installed.\n\n"
+            "## Goal\n"
+            "Get at least one AI model actually downloaded and installed.\n\n"
+            "---\n\n"
+            "### Why it matters\n"
             "An AI runtime with no model loaded can't think about anything yet -- Ollama "
             "needs to be told which specific model to download and use. The app's "
             "settings panel pre-selects one sized to fit your laptop's memory; click "
             "**Install model** there and wait for it to finish.\n\n"
+            "---\n\n"
+            "### Do this\n"
             "Then re-run:\n```\nctf-agent-verify\n```\n"
             "and check `[2/5]` for the flag."
         ),
@@ -125,11 +143,16 @@ challenges_data = [
         "name": "AI Copilot Setup 3: Install and Launch the Agent",
         "points": 100,
         "desc": (
-            "**Goal:** Get `ctf-agent` itself properly installed on your machine, not "
+            "## Goal\n"
+            "Get `ctf-agent` itself properly installed on your machine, not "
             "just downloaded.\n\n"
+            "---\n\n"
+            "### Why it matters\n"
             "Running the bootstrap script from **Start Here** installs `uv` (a Python "
             "tool manager), then uses it to install the `ctf-agent`/`ctf-agent-verify` "
             "commands from the CEI Labs Agent repository, and finally launches the app.\n\n"
+            "---\n\n"
+            "### Do this\n"
             "Once it's finished, open a terminal and run:\n```\nctf-agent-verify\n```\n"
             "(If it says the command isn't found, close your terminal and open a fresh "
             "one -- see TROUBLESHOOTING.md.) Check `[3/5]` for the flag."
@@ -141,13 +164,18 @@ challenges_data = [
         "name": "AI Copilot Setup 4: Point It At Your Box",
         "points": 150,
         "desc": (
-            "**Goal:** Prove the agent can actually reach and run a real command on a "
+            "## Goal\n"
+            "Prove the agent can actually reach and run a real command on a "
             "challenge box -- not just chat.\n\n"
+            "---\n\n"
+            "### Why it matters\n"
             "The whole point of CEI Labs Agent is that it *acts*: it runs real commands "
             "over SSH against a box you point it at, reads the result, and reasons about "
             "it. This check performs a genuine SSH connection using the exact same tool "
             "code the agent itself uses internally -- so passing it proves that core "
             "capability really works end to end, not just in theory.\n\n"
+            "---\n\n"
+            "### Do this\n"
             "Launch (or reuse) **any** currently-running instance from Bandit, Krypton, "
             "or Natas, and copy its Host, Port, username, and password from that "
             "challenge's connect panel. Then run:\n```\nctf-agent-verify --host <host> --port <port> --user <username> --password <password>\n```\n"
@@ -160,12 +188,17 @@ challenges_data = [
         "name": "AI Copilot Setup 5: Know How To Ask For Help",
         "points": 150,
         "desc": (
-            "**Goal:** Show you know the basic shape of a good first prompt.\n\n"
+            "## Goal\n"
+            "Show you know the basic shape of a good first prompt.\n\n"
+            "---\n\n"
+            "### Why it matters\n"
             "CEI Labs Agent isn't a mind-reader -- what you type is the only thing that "
             "tells it which track and level you want help with, and that you're actually "
             "asking for help rather than just chatting. Naming a track (Bandit, Krypton, "
             "or Natas) and a level number, alongside an explicit ask like 'Help me with...', "
             "is the pattern that lets it orient itself immediately instead of guessing.\n\n"
+            "---\n\n"
+            "### Do this\n"
             "Run:\n```\nctf-agent-verify --prompt \"Help me with Bandit level 1\"\n```\n"
             "(any track and level number works -- it just has to follow that same shape). "
             "Check `[5/5]` for the flag, then go type that same kind of message into the "
