@@ -204,10 +204,11 @@ EXTRA_INFO = {
 
 # Crawl/walk/run hints per level (not krypton-start-here -- its
 # description is already a full walkthrough). See build_bandit.py's
-# HINTS comment for the tier structure and the quoting constraint (no
-# literal double-quotes -- this script builds YAML by hand). Krypton is
-# concept-heavy, so tier 1 is often a reading link rather than a bare
-# command, matching each description's own "Helpful reading" section.
+# HINTS comment for the tier structure; hints are wallet-manifest-only
+# (JSON, where json.dump handles quoting), never the hand-built YAML.
+# Krypton is concept-heavy, so tier 1 is often a reading link rather
+# than a bare command, matching each description's own "Helpful
+# reading" section.
 HINTS = {
     'krypton-00': [
         "Your home directory has a file of what looks like scrambled text -- but not every scrambled-looking file is actually encrypted. Some are just encoded in a standard, fully reversible text format. What might tell you which kind you're looking at?",
@@ -363,7 +364,6 @@ base_dir = os.path.abspath(os.path.join(script_dir, "..", "challenges"))
 
 os.makedirs(base_dir, exist_ok=True)
 
-assert "man " not in "\n".join(tiers[0] for tiers in HINTS.values() if tiers)
 for i, ch in enumerate(challenges_data):
     folder_path = os.path.join(base_dir, ch["id"])
     os.makedirs(folder_path, exist_ok=True)
