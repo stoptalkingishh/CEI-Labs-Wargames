@@ -161,6 +161,43 @@ def _ansi_balanced(line):
     color can bleed past the line into whatever the terminal prints next."""
     return len(_ANSI_OPEN_RE.findall(line)) == line.count(RESET)
 
+# --- Banner presentation: box frame, wordmark, info block ------------------
+#
+# The storyboard ART above is wrapped in a box-drawing frame with a large
+# BANDIT wordmark on top and an info block under a thin divider. All frame,
+# wordmark, and info lines are derived from the level number alone -- no
+# per-level hand-invented content -- and color stays supplementary: strip
+# the SGR codes and every line is still fully readable.
+#
+# The wordmark uses only single-width BMP block/box glyphs, six rows tall,
+# 47 columns wide, so it fits the 74-column content area with room to spare.
+_WORDMARK = (
+    "██████╗  █████╗ ███╗   ██╗██████╗ ██╗████████╗",
+    "██╔══██╗██╔══██╗████╗  ██║██╔══██╗██║╚══██╔══╝",
+    "██████╔╝███████║██╔██╗ ██║██║  ██║██║   ██║   ",
+    "██╔══██╗██╔══██║██║╚██╗██║██║  ██║██║   ██║   ",
+    "██████╔╝██║  ██║██║ ╚████║██████╔╝██║   ██║   ",
+    "╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚═╝   ╚═╝   ",
+)
+
+# 68 visible columns total: border + 2-space padding + 62-char content
+# + 2-space padding + border. The raw-width contract counts ANSI bytes,
+# so the frame stays narrow enough that even a bold-colored content line
+# (ESC[1;3Xm ... ESC[0m, 11 bytes of SGR overhead) keeps the raw line
+# <= 80 columns. Padding is computed on the *visible* width so
+# ANSI-colored content lines up with plain lines.
+_CONTENT_WIDTH = 62
+
+def _frame_line(content=""):
+    pad = _CONTENT_WIDTH - len(_visible(content))
+    if pad < 0:
+        raise ValueError("banner content wider than the frame")
+    return "║  " + content + " " * pad + "  ║"
+
+_FRAME_TOP_LINE = "╔" + "═" * (_CONTENT_WIDTH + 4) + "╗"
+_FRAME_BOT_LINE = "╚" + "═" * (_CONTENT_WIDTH + 4) + "╝"
+_FRAME_DIVIDER = "╟" + "─" * (_CONTENT_WIDTH + 4) + "╢"
+
 def render(level):
     if set(TITLES) != set(range(34)):
         raise ValueError("Bandit banner titles must cover levels 0 through 33")
@@ -171,9 +208,21 @@ def render(level):
     color, bold = palette_for(level)
     colored_art = [colorize(line, color, bold) for line in art[:-1]]
     colored_last = colorize(art[-1], color, bold) + "  CEI Labs Bandit %d: %s" % (level, title)
-    lines = colored_art + [colored_last]
-    lines.append("Logged in as bandit%d" % level)
-    lines.append("Final level: submit your result; there is no next account." if level == 33 else "Submit this level, then use CTFd launch panel for bandit%d." % (level + 1))
+    lines = [_FRAME_TOP_LINE]
+    lines += [_frame_line(colorize(row, color, bold)) for row in _WORDMARK]
+    lines.append(_frame_line())
+    lines += [_frame_line(line) for line in colored_art]
+    lines.append(_frame_line(colored_last))
+    lines.append(_FRAME_DIVIDER)
+    # Info block: plain text only -- account/next-step lines are never
+    # colored, so the frame carries the decoration and these stay sober.
+    account = "Logged in as bandit%d" % level
+    progress = "Progress: %d/34 (%d%%)" % (level, round(level * 100 / 33))
+    gap = _CONTENT_WIDTH - len(account) - len(progress)
+    lines.append(_frame_line(account + " " * gap + progress))
+    lines.append(_frame_line("Final level: submit your result; there is no next account." if level == 33 else "Submit this level, then use CTFd launch panel for bandit%d." % (level + 1)))
+    lines.append(_FRAME_BOT_LINE)
+    # POLICY lines stay the last three lines, verbatim and uncolored.
     lines.extend(POLICY)
     if any(_has_unsafe_chars(_visible(line)) or len(_visible(line)) > 80 for line in lines):
         raise ValueError("unsafe banner rendering")

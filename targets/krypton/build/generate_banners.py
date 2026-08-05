@@ -86,6 +86,30 @@ COLOR = {
     6: "\x1b[35;1m",   # bright magenta
 }
 
+# Track wordmark: five-row banner letters spelling KRYPTON, drawn at the
+# top of the frame in the level's color. Hand-tuned once for the whole
+# track (not per level), 47 columns wide so it fits the frame with room
+# to spare.
+_GLYPHS = {
+    "K": ("K  K", "K K ", "KK  ", "K K ", "K  K"),
+    "R": ("RRR ", "R  R", "RRR ", "R R ", "R  R"),
+    "Y": ("Y   Y", " Y Y ", "  Y  ", "  Y  ", "  Y  "),
+    "P": ("PPP ", "P  P", "PPP ", "P   ", "P   "),
+    "T": ("TTTTT", "  T  ", "  T  ", "  T  ", "  T  "),
+    "O": (" OOO ", "O   O", "O   O", "O   O", " OOO "),
+    "N": ("N   N", "NN  N", "N N N", "N  NN", "N   N"),
+}
+_WORDMARK = ["  ".join(_GLYPHS[ch][row] for ch in "KRYPTON").rstrip() for row in range(5)]
+
+# Box frame geometry: one inner content column-width for the whole
+# banner, 2-space padding each side, 78 visible columns total (<= 80).
+_BOX_W = 74
+_BOX_TOP = "╔" + "═" * (_BOX_W + 2) + "╗"
+_BOX_BOT = "╚" + "═" * (_BOX_W + 2) + "╝"
+_BOX_BLANK = "║" + " " * (_BOX_W + 2) + "║"
+# Thin divider separating the framed art from the info block below.
+_DIVIDER = "─" * (_BOX_W + 4)
+
 _ANSI_RE = re.compile("\x1b\\[[0-9;]*m")
 
 
@@ -110,17 +134,35 @@ def render(level):
     title = TITLES[level]
     art = ART[level]
     color = COLOR[level]
-    # Only the art block is colorized -- title/login/policy lines stay
-    # plain so the informational content never depends on color at all.
-    colored_art = [color + line + _RESET for line in art[:-1]]
-    colored_art.append(color + art[-1] + _RESET + "  CEI Labs Krypton %d: %s" % (level, title))
-    lines = colored_art
+    # Only the framed wordmark/art block is colorized -- title, login,
+    # next-step, progress, and policy lines stay plain so the
+    # informational content never depends on color at all.
+    def box_colored(text):
+        return color + "║ " + text.ljust(_BOX_W) + " ║" + _RESET
+
+    lines = [color + _BOX_TOP + _RESET]
+    lines.extend(box_colored(row) for row in _WORDMARK)
+    lines.append(_BOX_BLANK)
+    lines.extend(box_colored(line) for line in art[:-1])
+    # The title rides on the art's final line, after the color reset,
+    # exactly as before (test pins the plain title string).
+    tail = art[-1]
+    trailer = "  CEI Labs Krypton %d: %s" % (level, title)
+    lines.append(
+        color + "║ " + tail + _RESET + trailer + " " * (_BOX_W - len(tail) - len(trailer)) + " ║"
+    )
+    lines.append(color + _BOX_BOT + _RESET)
+    lines.append(color + _DIVIDER + _RESET)
     lines.append("Logged in as krypton%d" % level)
     lines.append("Player tools: krypton-tools --help")
     lines.append(
         "Final level: submit your result; there is no next account."
         if level == 6
         else "Submit this level, then use CTFd launch panel for krypton%d." % (level + 1)
+    )
+    lines.append(
+        "Progress: %d/%d levels completed (%d%% through the track)"
+        % (level, 6, round(level * 100 / 6))
     )
     lines.extend(POLICY)
     if any(_has_unsafe_chars(_ANSI_RE.sub("", line)) or _visible_len(line) > 80 for line in lines):
