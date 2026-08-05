@@ -82,9 +82,9 @@ def _get_there(level: int) -> str:
     return (
         "### Get there\n"
         "1. Launch the environment and open your **attacker workstation** (noVNC or SSH) "
-        "from the launch panel — everything below happens inside it, not on your own machine.\n"
+        "from the launch panel \u2014 everything below happens inside it, not on your own machine.\n"
         f"2. Browse to `http://<target-host>:{8000 + level}/`, where `<target-host>` is the "
-        "**Target** value in that panel (NOT the **Host** field — that one is only for "
+        "**Target** value in that panel (NOT the **Host** field \u2014 that one is only for "
         "SSH-ing into the attacker itself).\n"
         f"3. Log in as `natas{level}` with {cred_phrase}.\n\n"
         f"> **Using curl?** Authenticate every request: `curl -u 'natas{level}:{cred_curl}' ...`. "
