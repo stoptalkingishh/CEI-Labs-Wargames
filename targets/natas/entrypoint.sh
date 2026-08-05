@@ -89,6 +89,31 @@ else
     echo "WARNING: no LEVEL_SECRETS set -- natas1-14 will not be playable until content is synced." >&2
 fi
 
+# Security: child processes spawned from this script inherit its ENTIRE
+# environment, including $LEVEL_SECRETS -- the JSON blob holding every
+# level's password AND the final flag for this team, only ever meant to
+# be read by the python3 heredoc above. Neither mysqld nor Apache/PHP
+# has any legitimate need for it, but mysqld_safe's mysqld child and
+# every apache2/PHP worker forked from the exec'd process below would
+# otherwise inherit it verbatim, making it readable via getenv()/$_ENV,
+# PHP's phpinfo(), or the raw /proc/<pid>/environ file of any worker
+# (plain `su` without -l/- preserves the caller's environment too, so
+# the exec'd apache2ctl is equally exposed). Several Natas levels are
+# INTENTIONALLY vulnerable to arbitrary file read/inclusion or code
+# execution as their whole teaching point (e.g. natas7's unsanitized
+# `include($_GET['page'])`, natas12/13's upload RCE) -- solving any one
+# of those was meant to leak only that level's own
+# /etc/natas_webpass/natasN file (see 02-set-webpasswords.sh's narrow
+# per-level ownership/chmod), not every other level's password and the
+# final flag in one shot via /proc/self/environ. Explicitly scrubbing
+# just this one variable BEFORE mysqld_safe launches (and not `su -l`,
+# which would also reset PATH to a non-root ENV_PATH lacking /usr/sbin
+# and break `apache2ctl`) closes that off while leaving everything else
+# Apache legitimately needs (PATH, etc.) untouched. Nothing between the
+# heredoc and the end of this script reads $LEVEL_SECRETS, so unsetting
+# here is safe.
+unset LEVEL_SECRETS
+
 mkdir -p /var/run/mysqld
 chown mysql:mysql /var/run/mysqld
 mysqld_safe --datadir=/var/lib/mysql --bind-address=127.0.0.1 &
@@ -97,27 +122,6 @@ for i in $(seq 1 30); do
     mysqladmin ping --silent && break
     sleep 1
 done
-
-# Security: plain `su` (no -l/-) on Debian preserves the calling
-# process's ENTIRE environment for the target process, including
-# $LEVEL_SECRETS -- the JSON blob holding every level's password AND the
-# final flag for this team, only ever meant to be read by the python3
-# heredoc above. Apache/PHP have no legitimate need for it, but every
-# apache2/PHP worker forked from this exec'd process would otherwise
-# inherit it verbatim, making it readable via getenv()/$_ENV, PHP's
-# phpinfo(), or the raw /proc/<pid>/environ file of any worker. Several
-# Natas levels are INTENTIONALLY vulnerable to arbitrary file read/
-# inclusion or code execution as their whole teaching point (e.g.
-# natas7's unsanitized `include($_GET['page'])`, natas12/13's upload
-# RCE) -- solving any one of those was meant to leak only that level's
-# own /etc/natas_webpass/natasN file (see 02-set-webpasswords.sh's
-# narrow per-level ownership/chmod), not every other level's password
-# and the final flag in one shot via /proc/self/environ. Explicitly
-# scrubbing just this one variable (not `su -l`, which would also reset
-# PATH to a non-root ENV_PATH lacking /usr/sbin and break `apache2ctl`)
-# closes that off while leaving everything else Apache legitimately
-# needs (PATH, etc.) untouched.
-unset LEVEL_SECRETS
 
 # Must be a genuine exec of the apache2 binary AS apache-itk-idle (not
 # started as root and setuid()'d down internally) for the file

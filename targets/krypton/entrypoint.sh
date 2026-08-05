@@ -20,9 +20,8 @@
 # directly in the CTFd description, and krypton1's password was that
 # same static string (see docs/security-audit-status.md and
 # cei-labs-event#17 for that history); both are now generated here like
-# every other level. Level 6's content is still build-time/static for
-# now -- see docs/security-audit-status.md and
-# docs/self-hosted-wargames-status.md for what's converted so far. Any
+# every other level. Level 6's content is likewise generated here at
+# container start (see the "Level 6" section below). Any
 # level missing its key in $LEVEL_SECRETS is simply left with no usable
 # password/content -- a locked account or a build-time-placeholder-free
 # directory is a safe failure mode, not a shared-credential one, so this

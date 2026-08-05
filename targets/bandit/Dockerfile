@@ -13,6 +13,10 @@
 # is ignored by the Linux kernel, so these must be compiled C), but the
 # compiler itself has no business shipping in the final image -- keeps
 # the "as light as possible" requirement intact.
+#
+# Release/event builds should pin the base image for reproducibility by
+# passing --build-arg BASE_IMAGE=ghcr.io/stoptalkingishh/cei-labs-engine/target-base-linux@sha256:<digest>
+# (the floating :latest default is for development only).
 ARG BASE_IMAGE=ghcr.io/stoptalkingishh/cei-labs-engine/target-base-linux:latest
 
 FROM debian:12-slim AS builder
@@ -152,5 +156,13 @@ RUN chmod +x /entrypoint.sh
 # these levels need since players interact with them from their own SSH
 # session on this same host).
 EXPOSE 22
+
+# sshd is the box's only required service (the 3000x daemons are
+# level-local conveniences, and entrypoint.sh starts them before the
+# exec'd sshd anyway). ss/iproute2 is deliberately not installed, but
+# netcat-openbsd is (player toolset above), so probe the SSH listener
+# with nc.
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD nc -z localhost 22 || exit 1
 
 CMD ["/entrypoint.sh"]

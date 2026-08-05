@@ -426,9 +426,9 @@ EXTRA_INFO = {
 #     technique isn't obvious -- still requires the player to run the
 #     commands and read output themselves rather than being handed the
 #     literal flag value.
-# Content must not contain a literal double-quote character (this script
-# builds YAML by hand, not via PyYAML -- use backticks/single quotes for
-# anything that needs quoting).
+# Hints are wallet-manifest-only: they never enter the hand-built YAML,
+# only the JSON hint-wallet manifest, where json.dump handles all quoting
+# -- so literal double-quotes in hint text are fine.
 HINTS = {
     'bandit-00': [
         "Working with a remote CTF box, your very first job is just getting logged in remotely at all -- every step after this happens over that same kind of remote connection. What's the standard, secure way to open a command-line session on another machine over a network?",
@@ -699,7 +699,11 @@ def _validate_bandit_content() -> None:
 
     for challenge_id, tiers in HINTS.items():
         _require(bool(tiers), f"{challenge_id} needs at least one hint tier")
-        value = next(challenge["points"] for challenge in challenges_data if challenge["id"] == challenge_id)
+        value = next(
+            (challenge["points"] for challenge in challenges_data if challenge["id"] == challenge_id),
+            None,
+        )
+        _require(value is not None, f"HINTS key {challenge_id} has no matching challenge")
         _require(len(tiers) == 3, f"{challenge_id} must have exactly three managed hint tiers")
         # Real invariant check on the percents managed_tiers() actually
         # produces (strictly increasing, cumulative percent-of-value, never

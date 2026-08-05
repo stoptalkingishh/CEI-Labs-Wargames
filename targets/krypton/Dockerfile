@@ -7,6 +7,10 @@
 # Multi-stage: levels 2 and 6 ship compiled `encrypt` binaries (so the
 # shift/keystream isn't just readable in a script); the compiler itself
 # has no business in the final image.
+#
+# Release/event builds should pin the base image for reproducibility by
+# passing --build-arg BASE_IMAGE=ghcr.io/stoptalkingishh/cei-labs-engine/target-base-linux@sha256:<digest>
+# (the floating :latest default is for development only).
 ARG BASE_IMAGE=ghcr.io/stoptalkingishh/cei-labs-engine/target-base-linux:latest
 
 FROM debian:12-slim AS builder
@@ -68,5 +72,11 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 22
+
+# sshd is the box's only required service. Neither ss (iproute2) nor
+# netcat is installed here (unlike bandit, krypton's toolset doesn't
+# need them), so probe the SSH listener with python3, which is.
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD python3 -c "import socket; socket.create_connection(('127.0.0.1', 22), 5).close()" || exit 1
 
 CMD ["/entrypoint.sh"]

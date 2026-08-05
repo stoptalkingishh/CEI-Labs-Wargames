@@ -278,9 +278,9 @@ EXTRA_INFO = {
 
 # One real, technique-specific hint per level (not natas-start-here --
 # its description is already a full walkthrough). See build_bandit.py's
-# HINTS comment for the quoting constraint (no literal double-quotes --
-# note this rules out double-quote-style SQLi/JSON payloads in hint text,
-# use single-quote syntax instead).
+# HINTS comment for the tier structure; hints are wallet-manifest-only
+# (JSON, where json.dump handles quoting), never the hand-built YAML, so
+# literal double-quotes in payloads (e.g. SQLi syntax) are fine.
 HINTS = {
     'natas-00': [
         "A webpage you see in your browser isn't the whole story -- what you're looking at is the browser's own rendering of a plain text file the server sent it. That rendering step hides some of what's actually in the file, with nothing showing up on screen for it. What might be sitting in that raw text that never makes it to the screen?",
@@ -355,7 +355,7 @@ HINTS = {
     'natas-14': [
         "The login form checks a username and password against a database, most likely by building a query out of exactly what you typed and running it. If your input becomes part of that query's actual TEXT rather than being kept separate from it, what else could you make the query do besides just checking a password?",
         "Click 'View sourcecode': the login query is built by directly gluing your username and password INTO a SQL string, with no escaping at all. That means a quote character you type doesn't stay 'just data' -- it can close the string the developer intended early and let you add your own SQL logic that the database executes as part of the real query. Pay attention to which quote character the source itself uses to wrap each field, since your input needs to match that same style to actually close the string.",
-        'The query wraps each field in DOUBLE quotes and concatenates them directly, so a username like `\\" OR \\"1\\"=\\"1\\" -- ` (matching that double-quote style -- note the trailing space after the double-dash, which comments out the rest of the original query) closes the string early, adds an always-true condition, and comments out everything after it.\n\nIllustrative example only -- your real value will differ:\n```\n$ curl --data-urlencode \'username=\\" OR \\"1\\"=\\"1\\" -- \' --data-urlencode \'password=x\' http://<target-host>:8014/index.php\nLogged in. The password for natas15 is <the final password>\n```',
+        'The query wraps each field in DOUBLE quotes and concatenates them directly, so a username like `" OR "1"="1" -- ` (matching that double-quote style -- note the trailing space after the double-dash, which comments out the rest of the original query) closes the string early, adds an always-true condition, and comments out everything after it.\n\nIllustrative example only -- your real value will differ:\n```\n$ curl --data-urlencode \'username=" OR "1"="1" -- \' --data-urlencode \'password=x\' http://<target-host>:8014/index.php\nLogged in. The password for natas15 is <the final password>\n```',
     ],
 }
 
@@ -393,12 +393,38 @@ def _render_hint(challenge_id: str, tier_number: int, content: str) -> str:
     )
     return f"### {HINT_TITLES[tier_number - 1]}\n\n{_curl_auth_note(challenge_id)}\n\n{authenticated}"
 
+def _require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ValueError(message)
+
+
+def _validate_natas_content() -> None:
+    """Keep the hint wallet aligned with the challenge set, mirroring
+    build_bandit.py's / build_krypton.py's validators."""
+    challenge_ids = {challenge["id"] for challenge in challenges_data}
+    # Every HINTS key must be a real challenge, and every challenge except
+    # natas-start-here (whose description is already a full walkthrough)
+    # must have wallet coverage.
+    for challenge_id in HINTS:
+        _require(challenge_id in challenge_ids, f"HINTS key {challenge_id} has no matching challenge")
+    for challenge_id in challenge_ids:
+        if challenge_id == "natas-start-here":
+            continue
+        _require(challenge_id in HINTS, f"{challenge_id} is missing hint-wallet coverage")
+
+    hint_text = "\n".join(content for tiers in HINTS.values() for content in tiers)
+    _require("man " not in hint_text, "Natas hints must use image-supported built-in help")
+    for challenge_id, tiers in HINTS.items():
+        _require(len(tiers) == 3, f"{challenge_id} must have exactly three managed hint tiers")
+
+
+_validate_natas_content()
+
 # Generate folder and files
 script_dir = os.path.dirname(os.path.abspath(__file__))
 base_dir = os.path.abspath(os.path.join(script_dir, "..", "challenges"))
 os.makedirs(base_dir, exist_ok=True)
 
-assert "man " not in "\n".join(tiers[0] for tiers in HINTS.values() if tiers)
 for i, ch in enumerate(challenges_data):
     folder_path = os.path.join(base_dir, ch["id"])
     os.makedirs(folder_path, exist_ok=True)
