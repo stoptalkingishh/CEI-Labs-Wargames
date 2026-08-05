@@ -4,8 +4,7 @@ content (Base64, ROT13, substitution, two Vigenere variants) is
 generated at CONTAINER START by entrypoint.sh from per-team secrets, not
 baked in here at build time -- see docs/security-audit-status.md. Levels
 2 and 6 (which need the compiled `encrypt` binaries) are handled
-separately too, also at container start now for level 2 (level 6 still
-build-time for now)."""
+separately too, also at container start (both levels 2 and 6)."""
 import os
 import subprocess
 
