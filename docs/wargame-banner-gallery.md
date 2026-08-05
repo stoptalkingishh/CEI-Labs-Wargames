@@ -1199,6 +1199,7 @@ Stay within your assigned challenge environment only.
   [.]
   [.]
   [.]
+  [.]
   depths
 ╠══════════════════════════════════════════════════════════════════════════╣
 ║  CEI Labs Natas 0: View Source                                           ║
