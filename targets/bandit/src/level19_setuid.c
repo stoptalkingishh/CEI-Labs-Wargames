@@ -15,20 +15,22 @@
  * cleanly avoids the mismatch entirely: the spawned shell sees a
  * consistent real=effective=bandit20 UID, exactly like a normal login.
  *
- * Security: this binary is installed setuid-root (chmod 4755, see the
- * Dockerfile), so its executable bit alone is reachable by ANY caller,
- * not just someone who actually solved level 19 -- the home directory
- * it lives in (bandit19's) being merely non-world-writable was never
- * enough to stop that. Without an explicit caller check, bandit0 (or
- * any other bandit* account) could invoke it directly and jump straight
- * to a bandit20 shell, skipping levels 0-19 entirely. We look up
- * bandit19's UID at runtime (matching however 01-create-users.sh
- * happens to have created that account -- never assume a fixed UID
- * number) and refuse to run unless the REAL uid of the process that
- * invoked us (i.e. whoever is actually logged in and ran this binary)
- * is exactly that. getuid(), not geteuid(): by the time this check
- * runs the effective uid is still 0 (root, from the setuid bit) --
- * it's the real uid that tells us who actually invoked the program. */
+ * Security: this binary is installed setuid-root with mode 4750
+ * root:bandit19 (see the Dockerfile), NOT 4755 root:root -- at 4755 its
+ * executable bit alone would be reachable by ANY caller, not just
+ * someone who actually solved level 19 (the home directory it lives in,
+ * bandit19's, being merely non-world-writable was never enough to stop
+ * that), so bandit0 (or any other bandit* account) could have invoked
+ * it directly and jumped straight to a bandit20 shell, skipping levels
+ * 0-19 entirely. Restricting execute to bandit19's group closes that;
+ * as defense-in-depth we additionally look up bandit19's UID at runtime
+ * (matching however 01-create-users.sh happens to have created that
+ * account -- never assume a fixed UID number) and refuse to run unless
+ * the REAL uid of the process that invoked us (i.e. whoever is actually
+ * logged in and ran this binary) is exactly that. getuid(), not
+ * geteuid(): by the time this check runs the effective uid is still 0
+ * (root, from the setuid bit) -- it's the real uid that tells us who
+ * actually invoked the program. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
