@@ -12,6 +12,10 @@
 # debian:12-slim), keeping one base-OS family project-wide. This image
 # never starts the base image's sshd -- target-attacker instances have
 # no inbound access at all except from their own range's attacker.
+#
+# Release/event builds should pin the base image for reproducibility by
+# passing --build-arg BASE_IMAGE=ghcr.io/stoptalkingishh/cei-labs-engine/target-base-linux@sha256:<digest>
+# (the floating :latest default is for development only).
 ARG BASE_IMAGE=ghcr.io/stoptalkingishh/cei-labs-engine/target-base-linux:latest
 FROM ${BASE_IMAGE}
 
@@ -103,7 +107,8 @@ RUN /opt/build/01-create-users.sh \
 
 COPY content/ /var/www/natas/
 RUN /opt/build/04-fix-content-ownership.sh \
-    && /opt/build/05-setup-mariadb.sh
+    && /opt/build/05-setup-mariadb.sh \
+    && rm -rf /opt/build
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
@@ -112,5 +117,13 @@ RUN chmod +x /entrypoint.sh
 # what Apache itself binds to internally -- this image is only ever
 # reached over the range's private network, never published to the host.
 EXPOSE 8000-8014
+
+# Apache is the box's only required service. Every vhost (including
+# natas0 on 8000) sits behind HTTP Basic Auth, so a healthy Apache
+# answers with 401, not 200 -- probe with plain curl (installed via the
+# sury repo fetch above) and treat ANY HTTP response as healthy, rather
+# than curl -f, which would false-fail on the 401.
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD curl -s -o /dev/null http://localhost:8000/ || exit 1
 
 CMD ["/entrypoint.sh"]
