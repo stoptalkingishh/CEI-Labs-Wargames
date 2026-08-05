@@ -19,7 +19,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [bandit, krypton, natas]
+        include:
+          - target: bandit
+            image: bandit-target
+          - target: krypton
+            image: krypton-target
+          - target: natas
+            image: natas-target
+          - target: natas-attacker
+            image: natas-attacker
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Require immutable base image
@@ -40,7 +48,7 @@ jobs:
         with:
           context: targets/${{ matrix.target }}
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/cei-labs-wargames/${{ matrix.target }}-target:sha-${{ github.sha }}
+          tags: ghcr.io/${{ github.repository_owner }}/cei-labs-wargames/${{ matrix.image }}:sha-${{ github.sha }}
           build-args: BASE_IMAGE=${{ inputs.base_image }}
           sbom: true
           provenance: mode=max

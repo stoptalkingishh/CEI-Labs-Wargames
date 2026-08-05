@@ -776,7 +776,7 @@ show_launcher: {"true" if ch["id"] == "bandit-start-here" else "false"}
     # hint unlocks debit global score and must not be a bypass.
 
     file_path = os.path.join(folder_path, "challenge.yml")
-    with open(file_path, "w") as f:
+    with open(file_path, "w", encoding="utf-8") as f:
         f.write(yaml_content)
 
 print(f"Successfully generated {len(challenges_data)} Bandit challenges inside '{base_dir}'!")

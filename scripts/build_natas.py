@@ -484,7 +484,7 @@ show_launcher: {"true" if ch["id"] == "natas-start-here" else "false"}
     # Managed by the plugin manifest, never CTFd native hints.
 
     file_path = os.path.join(folder_path, "challenge.yml")
-    with open(file_path, "w") as f:
+    with open(file_path, "w", encoding="utf-8") as f:
         f.write(yaml_content)
 
 print(f"Successfully generated {len(challenges_data)} Natas challenges inside the '{base_dir}' folder!")
