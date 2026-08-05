@@ -1,8 +1,11 @@
 """Deterministic, score-independent hint-cost economy shared by builders.
 
-The generated YAML retains hint text, but its native point cost is deliberately
-zero: production CTFd unlocks these managed tiers through the hint-wallet
-plugin, never through the global scoreboard.
+All four builders keep hints out of the generated CTFd YAML entirely:
+challenge.yml files carry no `hints:` section at all. Instead each builder
+writes a per-track JSON hint-wallet manifest (e.g. bandit-hint-wallet.json)
+holding each tier's text and formula-derived cost, and production CTFd
+unlocks these managed tiers through the hint-wallet plugin, never through
+native CTFd hints (which would debit the global scoreboard).
 
 Cost model (see cei-labs-event#7): each tier's cost is a PERCENTAGE of the
 challenge's own point value, not a flat/absolute number of points spent from
@@ -11,7 +14,7 @@ that this owner peeked at that tier for that specific challenge. The percent
 is applied at solve time as a reduction of THAT challenge's own award: a
 player who solves after opening tier N keeps `100 - tier_costs(value)[N-1]`
 percent of the challenge's point value. Tiers are cumulative, not additive --
-opening tier 3 costs 85% of the value (not 10+50+85), leaving 15%.
+opening tier 3 costs 85% of the value (not 20+50+85), leaving 15%.
 """
 
 # Cumulative percent-of-value cost for opening tier 1/2/3 (fully opening all
