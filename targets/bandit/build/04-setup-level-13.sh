@@ -2,8 +2,9 @@
 # Level 13: bandit13's home gets a private key that logs into bandit14
 # (whose account password isn't discoverable any other way -- you have to
 # use the key to get in and read /etc/bandit_pass/bandit14, exactly
-# mirroring the real level). bandit14's own login password (set in
-# 02-set-passwords.sh) equals bandit-13's flag, so once discovered via the
+# mirroring the real level). bandit14's own login password (written into
+# /etc/bandit_pass/bandit14 by entrypoint.sh at container start from the
+# per-team secrets) equals bandit-13's flag, so once discovered via the
 # key it also works as a normal password for the next step.
 #
 # Security: the SSH keypair itself is NOT generated here anymore --
