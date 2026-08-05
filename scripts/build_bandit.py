@@ -64,7 +64,7 @@ INSTANCE_GROUP = "bandit"
 # URLs) -- a player installs an app on their own device beforehand, over
 # their own connection, not from inside the venue.
 SSH_CONNECT_GUIDE = (
-    "**Connecting via SSH:** Once launched, the panel below shows a Host and Port. "
+    "Once launched, the panel below shows a Host and Port. "
     "Every level in this track connects the same way: `ssh <username>@<host> -p <port>`, "
     "then enter the password when prompted. How you run that command depends on your "
     "own device -- most players will be on Windows, which is covered below, but every "
@@ -87,8 +87,12 @@ challenges_data = [
         "id": "bandit-start-here",
         "name": "Bandit: Start Here",
         "points": 10,
+        # bandit-start-here's desc is goal + body (with its own section
+        # headings) rather than the goal + task shape the levels use, so
+        # _render_description special-cases it.
         "desc": (
-            "**Goal:** Learn the launch controls, then prove you used them.\n\n"
+            "Learn the launch controls, then prove you used them.\n\n"
+            "### The launch controls\n"
             "Every challenge in Bandit that needs a live environment has a launch control "
             "attached to it, right here on the challenge itself:\n"
             "- **Launch Environment** -- starts your box, or reconnects you to one that's "
@@ -100,8 +104,10 @@ challenges_data = [
             "- **+5 more minutes** -- shows up only once you've solved every level in this "
             "track and a shutdown countdown has started. Extends it if you're not done "
             "looking around yet.\n\n"
+            "### Connecting from your device\n"
             + SSH_CONNECT_GUIDE +
-            "\n\nClick Launch, wait for it to show a Host and Port, then connect as `bandit0` "
+            "\n\n### Prove you connected\n"
+            "Click Launch, wait for it to show a Host and Port, then connect as `bandit0` "
             "with password `bandit0`. The moment you log in, a banner prints automatically -- "
             "no file to go read, it's already on your screen. Its last three lines are an "
             "acceptable-use notice; the middle one is about not using AI or outside "
@@ -115,238 +121,238 @@ challenges_data = [
         "id": "bandit-00",
         "name": "Bandit 0 -> 1: The First Step",
         "points": 100,
-        "desc": "**Goal:** Connect to the server and retrieve the flag.\n\nLog in as `bandit0` with password `bandit0`.\n\nRead the `readme` file in the home directory to find the password for the next level. Submit that password here as your flag.",
+        "desc": "Connect to the server and retrieve the flag.\n\nLog in as `bandit0` with password `bandit0`.\n\nRead the `readme` file in the home directory to find the password for the next level. Submit that password here as your flag.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit0"}
     },
     {
         "id": "bandit-01",
         "name": "Bandit 1 -> 2: Dashed Hopes",
         "points": 150,
-        "desc": "**Goal:** Read a file whose name looks like a command-line flag.\n\nLog in as `bandit1`. The next password is hidden in a file named `-` (a single dash) in the home directory.",
+        "desc": "Read a file whose name looks like a command-line flag.\n\nLog in as `bandit1`. The next password is hidden in a file named `-` (a single dash) in the home directory.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit1"}
     },
     {
         "id": "bandit-02",
         "name": "Bandit 2 -> 3: Spaces in Places",
         "points": 200,
-        "desc": "**Goal:** Read a file whose name contains spaces.\n\nLog in as `bandit2`. The next password is in a file called `spaces in this filename`, in the home directory.",
+        "desc": "Read a file whose name contains spaces.\n\nLog in as `bandit2`. The next password is in a file called `spaces in this filename`, in the home directory.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit2"}
     },
     {
         "id": "bandit-03",
         "name": "Bandit 3 -> 4: Hidden in Plain Sight",
         "points": 250,
-        "desc": "**Goal:** Recover the password from the `inhere` directory.\n\nLog in as `bandit3`. The next password is in a file inside the `inhere` directory in your home folder -- but it doesn't show up in an ordinary listing. Work out how to reveal it (the hints walk you through it if you get stuck).",
+        "desc": "Recover the password from the `inhere` directory.\n\nLog in as `bandit3`. The next password is in a file inside the `inhere` directory in your home folder -- but it doesn't show up in an ordinary listing. Work out how to reveal it (the hints walk you through it if you get stuck).",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit3"}
     },
     {
         "id": "bandit-04",
         "name": "Bandit 4 -> 5: Human Readable",
         "points": 300,
-        "desc": "**Goal:** The password for the next level is stored in one of the files in the `inhere` directory. It is the only file that contains human-readable text. Log in as `bandit4`.",
+        "desc": "The password for the next level is stored in one of the files in the `inhere` directory. It is the only file that contains human-readable text. Log in as `bandit4`.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit4"}
     },
     {
         "id": "bandit-05",
         "name": "Bandit 5 -> 6: The Needle",
         "points": 350,
-        "desc": "**Goal:** Find one specific file among many nested decoys.\n\nLog in as `bandit5`. Somewhere under `inhere` (which has subdirectories) is a file matching all three properties:\n1. Human-readable\n2. Exactly 1033 bytes in size\n3. Not executable",
+        "desc": "Find one specific file among many nested decoys.\n\nLog in as `bandit5`. Somewhere under `inhere` (which has subdirectories) is a file matching all three properties:\n1. Human-readable\n2. Exactly 1033 bytes in size\n3. Not executable",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit5"}
     },
     {
         "id": "bandit-06",
         "name": "Bandit 6 -> 7: Server Search",
         "points": 400,
-        "desc": "**Goal:** Search the whole filesystem by owner, group, and size.\n\nLog in as `bandit6`. The next password is somewhere on the server (not necessarily under your home directory) -- owned by user `bandit7`, group `bandit6`, exactly 33 bytes.",
+        "desc": "Search the whole filesystem by owner, group, and size.\n\nLog in as `bandit6`. The next password is somewhere on the server (not necessarily under your home directory) -- owned by user `bandit7`, group `bandit6`, exactly 33 bytes.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit6"}
     },
     {
         "id": "bandit-07",
         "name": "Bandit 7 -> 8: The Millionth Word",
         "points": 450,
-        "desc": "**Goal:** Extract a value next to a known marker word.\n\nLog in as `bandit7`. The next password is in `data.txt`, on the same line as the word `millionth`.",
+        "desc": "Extract a value next to a known marker word.\n\nLog in as `bandit7`. The next password is in `data.txt`, on the same line as the word `millionth`.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit7"}
     },
     {
         "id": "bandit-08",
         "name": "Bandit 8 -> 9: The Only One",
         "points": 500,
-        "desc": "**Goal:** Find the one line that appears only once in a large file.\n\nLog in as `bandit8`. The next password is the one line in `data.txt` that occurs exactly once.",
+        "desc": "Find the one line that appears only once in a large file.\n\nLog in as `bandit8`. The next password is the one line in `data.txt` that occurs exactly once.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit8"}
     },
     {
         "id": "bandit-09",
         "name": "Bandit 9 -> 10: Strings Attached",
         "points": 550,
-        "desc": "**Goal:** Pull the readable text out of a mostly-binary file.\n\nLog in as `bandit9`. The next password is one of the few human-readable strings in `data.txt`, preceded by several `=` characters.",
+        "desc": "Pull the readable text out of a mostly-binary file.\n\nLog in as `bandit9`. The next password is one of the few human-readable strings in `data.txt`, preceded by several `=` characters.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit9"}
     },
     {
         "id": "bandit-10",
         "name": "Bandit 10 -> 11: Base Operations",
         "points": 600,
-        "desc": "**Goal:** Decode a base64-encoded password.\n\nLog in as `bandit10`. `data.txt` holds the next password encoded in base64 -- decode it.",
+        "desc": "Decode a base64-encoded password.\n\nLog in as `bandit10`. `data.txt` holds the next password encoded in base64 -- decode it.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit10"}
     },
     {
         "id": "bandit-11",
         "name": "Bandit 11 -> 12: Substitution",
         "points": 650,
-        "desc": "**Goal:** Reverse a ROT13 substitution.\n\nLog in as `bandit11`. `data.txt` holds the next password with every letter rotated 13 positions (ROT13) -- reverse it.",
+        "desc": "Reverse a ROT13 substitution.\n\nLog in as `bandit11`. `data.txt` holds the next password with every letter rotated 13 positions (ROT13) -- reverse it.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit11"}
     },
     {
         "id": "bandit-12",
         "name": "Bandit 12 -> 13: Matryoshka",
         "points": 700,
-        "desc": "**Goal:** Unwrap several layers of hexdump and compression.\n\nLog in as `bandit12`. `data.txt` is a hexdump of a file that's been compressed multiple times. Revert the hexdump, then decompress repeatedly (gzip, bzip2, tar -- the file type at each step tells you which) to reach the password.",
+        "desc": "Unwrap several layers of hexdump and compression.\n\nLog in as `bandit12`. `data.txt` is a hexdump of a file that's been compressed multiple times. Revert the hexdump, then decompress repeatedly (gzip, bzip2, tar -- the file type at each step tells you which) to reach the password.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit12"}
     },
     {
         "id": "bandit-13",
         "name": "Bandit 13 -> 14: Private Keys",
         "points": 750,
-        "desc": "**Goal:** Use a provided private key to log in as another account.\n\nLog in as `bandit13`. Use the provided private SSH key (`sshkey.private`, in the home directory) to log into `bandit14` on localhost, then read the password from `/etc/bandit_pass/bandit14`.",
+        "desc": "Use a provided private key to log in as another account.\n\nLog in as `bandit13`. Use the provided private SSH key (`sshkey.private`, in the home directory) to log into `bandit14` on localhost, then read the password from `/etc/bandit_pass/bandit14`.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit13"}
     },
     {
         "id": "bandit-14",
         "name": "Bandit 14 -> 15: Port Submission",
         "points": 800,
-        "desc": "**Goal:** Submit a password to a listening TCP service.\n\nLog in as `bandit14`. Submit the current password to **port 30000 on localhost** to receive the next one.",
+        "desc": "Submit a password to a listening TCP service.\n\nLog in as `bandit14`. Submit the current password to **port 30000 on localhost** to receive the next one.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit14"}
     },
     {
         "id": "bandit-15",
         "name": "Bandit 15 -> 16: SSL Encryption",
         "points": 850,
-        "desc": "**Goal:** Submit a password over a TLS-encrypted connection.\n\nLog in as `bandit15`. Submit the current password to **port 30001 on localhost**, this time over SSL/TLS.",
+        "desc": "Submit a password over a TLS-encrypted connection.\n\nLog in as `bandit15`. Submit the current password to **port 30001 on localhost**, this time over SSL/TLS.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit15"}
     },
     {
         "id": "bandit-16",
         "name": "Bandit 16 -> 17: SSL Port Scan",
         "points": 900,
-        "desc": "**Goal:** Find the one correct service among a range of listening ports.\n\nLog in as `bandit16`. The next credentials come from submitting the current password to the right port somewhere in the range **31000-32000 on localhost** -- scan the range to find which one actually wants it.",
+        "desc": "Find the one correct service among a range of listening ports.\n\nLog in as `bandit16`. The next credentials come from submitting the current password to the right port somewhere in the range **31000-32000 on localhost** -- scan the range to find which one actually wants it.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit16"}
     },
     {
         "id": "bandit-17",
         "name": "Bandit 17 -> 18: File Comparisons",
         "points": 950,
-        "desc": "**Goal:** Diff two large, nearly-identical files.\n\nLog in as `bandit17`. The home directory has `passwords.old` and `passwords.new`. The next password is on the one line that changed between them.",
+        "desc": "Diff two large, nearly-identical files.\n\nLog in as `bandit17`. The home directory has `passwords.old` and `passwords.new`. The next password is on the one line that changed between them.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit17"}
     },
     {
         "id": "bandit-18",
         "name": "Bandit 18 -> 19: Shell Bypass",
         "points": 1000,
-        "desc": "**Goal:** Read a file without getting an interactive shell.\n\nLog in as `bandit18` -- this account's `.bashrc` has been modified to log you out immediately on interactive login. Find a way to still read the `readme` file in its home directory.",
+        "desc": "Read a file without getting an interactive shell.\n\nLog in as `bandit18` -- this account's `.bashrc` has been modified to log you out immediately on interactive login. Find a way to still read the `readme` file in its home directory.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit18"}
     },
     {
         "id": "bandit-19",
         "name": "Bandit 19 -> 20: SUID Escalation",
         "points": 1050,
-        "desc": "**Goal:** Use a setuid binary to read a file you otherwise couldn't.\n\nLog in as `bandit19`. The home directory has a setuid binary -- use it to reach the next password.",
+        "desc": "Use a setuid binary to read a file you otherwise couldn't.\n\nLog in as `bandit19`. The home directory has a setuid binary -- use it to reach the next password.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit19"}
     },
     {
         "id": "bandit-20",
         "name": "Bandit 20 -> 21: Port Listener Connection",
         "points": 1100,
-        "desc": "**Goal:** Have a setuid binary connect back to a listener you control.\n\nLog in as `bandit20`. The home directory has a setuid binary that connects to a port on localhost you supply as an argument, reads a line, and checks it against the current password. Set up a listener of your own first, then trigger the connection.",
+        "desc": "Have a setuid binary connect back to a listener you control.\n\nLog in as `bandit20`. The home directory has a setuid binary that connects to a port on localhost you supply as an argument, reads a line, and checks it against the current password. Set up a listener of your own first, then trigger the connection.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit20"}
     },
     {
         "id": "bandit-21",
         "name": "Bandit 21 -> 22: Cron Jobs",
         "points": 1150,
-        "desc": "**Goal:** Read what a cron job does and follow it to the password.\n\nLog in as `bandit21`. A job runs automatically on a schedule via cron -- check `/etc/cron.d/` for the configuration and see where it leads.",
+        "desc": "Read what a cron job does and follow it to the password.\n\nLog in as `bandit21`. A job runs automatically on a schedule via cron -- check `/etc/cron.d/` for the configuration and see where it leads.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit21"}
     },
     {
         "id": "bandit-22",
         "name": "Bandit 22 -> 23: Cron Debugging",
         "points": 1200,
-        "desc": "**Goal:** Trace a cron job to the script it actually runs.\n\nLog in as `bandit22`. Same starting point as before (`/etc/cron.d/`), but this time you'll need to find and read the script the job executes to see where it writes the password.",
+        "desc": "Trace a cron job to the script it actually runs.\n\nLog in as `bandit22`. Same starting point as before (`/etc/cron.d/`), but this time you'll need to find and read the script the job executes to see where it writes the password.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit22"}
     },
     {
         "id": "bandit-23",
         "name": "Bandit 23 -> 24: Cron Scripting",
         "points": 1250,
-        "desc": "**Goal:** Write your own script for a cron job to run on your behalf.\n\nLog in as `bandit23`. This cron job runs whatever script matches a pattern you can influence -- write your own to copy out the password.",
+        "desc": "Write your own script for a cron job to run on your behalf.\n\nLog in as `bandit23`. This cron job runs whatever script matches a pattern you can influence -- write your own to copy out the password.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit23"}
     },
     {
         "id": "bandit-24",
         "name": "Bandit 24 -> 25: PIN Brute Force",
         "points": 1300,
-        "desc": "**Goal:** Brute-force a 4-digit PIN against a listening daemon.\n\nLog in as `bandit24`. A daemon on port 30002 returns the next password if you send it the current password plus the correct 4-digit PIN -- script the brute force.",
+        "desc": "Brute-force a 4-digit PIN against a listening daemon.\n\nLog in as `bandit24`. A daemon on port 30002 returns the next password if you send it the current password plus the correct 4-digit PIN -- script the brute force.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit24"}
     },
     {
         "id": "bandit-25",
         "name": "Bandit 25 -> 26: Shell Breakout",
         "points": 1350,
-        "desc": "**Goal:** Escape a restricted, non-bash login shell.\n\nLog in as `bandit25`. Account `bandit26`'s login shell isn't `/bin/bash` -- find out what it actually is and how to break out of it into a real shell.",
+        "desc": "Escape a restricted, non-bash login shell.\n\nLog in as `bandit25`. Account `bandit26`'s login shell isn't `/bin/bash` -- find out what it actually is and how to break out of it into a real shell.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit25"}
     },
     {
         "id": "bandit-26",
         "name": "Bandit 26 -> 27: Text UI Breakout",
         "points": 1400,
-        "desc": "**Goal:** Break out of a terminal pager into a shell.\n\nLog in as `bandit26` (this account's shell pages a short file and exits immediately -- shrinking your terminal window before connecting buys you a window to act in). Once you've broken out, look around the filesystem to find the flag.",
+        "desc": "Break out of a terminal pager into a shell.\n\nLog in as `bandit26` (this account's shell pages a short file and exits immediately -- shrinking your terminal window before connecting buys you a window to act in). Once you've broken out, look around the filesystem to find the flag.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit26"}
     },
     {
         "id": "bandit-27",
         "name": "Bandit 27 -> 28: Git Clone",
         "points": 1450,
-        "desc": "**Goal:** Clone a git repository and find a password committed to it.\n\nA repository is reachable at `ssh://bandit27-git@<your-instance-host>/home/bandit27-git/repo` (use the SSH port your launch panel shows). Log in with `bandit27`'s own password (the previous level's flag), clone it, and find the next password.",
+        "desc": "Clone a git repository and find a password committed to it.\n\nA repository is reachable at `ssh://bandit27-git@<your-instance-host>/home/bandit27-git/repo` (use the SSH port your launch panel shows). Log in with `bandit27`'s own password (the previous level's flag), clone it, and find the next password.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit27"}
     },
     {
         "id": "bandit-28",
         "name": "Bandit 28 -> 29: Git Commits",
         "points": 1500,
-        "desc": "**Goal:** Find a secret that was committed and later removed.\n\nRepository: `ssh://bandit28-git@<your-instance-host>/home/bandit28-git/repo`, login with `bandit28`'s own password. Clone it and check the commit history -- the current tree isn't the only place a password could have been.",
+        "desc": "Find a secret that was committed and later removed.\n\nRepository: `ssh://bandit28-git@<your-instance-host>/home/bandit28-git/repo`, login with `bandit28`'s own password. Clone it and check the commit history -- the current tree isn't the only place a password could have been.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit28"}
     },
     {
         "id": "bandit-29",
         "name": "Bandit 29 -> 30: Git Branches",
         "points": 1550,
-        "desc": "**Goal:** Find a secret that only exists on a non-default branch.\n\nRepository: `ssh://bandit29-git@<your-instance-host>/home/bandit29-git/repo`, login with `bandit29`'s own password. Clone it and check every branch, not just the default.",
+        "desc": "Find a secret that only exists on a non-default branch.\n\nRepository: `ssh://bandit29-git@<your-instance-host>/home/bandit29-git/repo`, login with `bandit29`'s own password. Clone it and check every branch, not just the default.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit29"}
     },
     {
         "id": "bandit-30",
         "name": "Bandit 30 -> 31: Git Tags",
         "points": 1600,
-        "desc": "**Goal:** Find a secret attached to a git tag.\n\nRepository: `ssh://bandit30-git@<your-instance-host>/home/bandit30-git/repo`, login with `bandit30`'s own password. Clone it and check the tags.",
+        "desc": "Find a secret attached to a git tag.\n\nRepository: `ssh://bandit30-git@<your-instance-host>/home/bandit30-git/repo`, login with `bandit30`'s own password. Clone it and check the tags.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit30"}
     },
     {
         "id": "bandit-31",
         "name": "Bandit 31 -> 32: Git Push",
         "points": 1650,
-        "desc": "**Goal:** Satisfy a repository's own stated requirements to earn the next password.\n\nRepository: `ssh://bandit31-git@<your-instance-host>/home/bandit31-git/repo`, login with `bandit31`'s own password. Clone it, read the README for the exact requirements, then push a file that meets them to receive the password.",
+        "desc": "Satisfy a repository's own stated requirements to earn the next password.\n\nRepository: `ssh://bandit31-git@<your-instance-host>/home/bandit31-git/repo`, login with `bandit31`'s own password. Clone it, read the README for the exact requirements, then push a file that meets them to receive the password.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit31"}
     },
     {
         "id": "bandit-32",
         "name": "Bandit 32 -> 33: Shell Overrides",
         "points": 1700,
-        "desc": "**Goal:** Reach a real shell from one that mangles every command you type.\n\nLog in as `bandit32` -- this account's shell uppercases every command before running it. Find a way around that limitation to reach a normal shell, then locate the next password.",
+        "desc": "Reach a real shell from one that mangles every command you type.\n\nLog in as `bandit32` -- this account's shell uppercases every command before running it. Find a way around that limitation to reach a normal shell, then locate the next password.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit32"}
     },
     {
         "id": "bandit-33",
         "name": "Bandit 33 -> 34: Final Escape",
         "points": 1750,
-        "desc": "**Goal:** One last escape to finish the track.\n\nLog in as `bandit33`. After all that git work, it's time for one more escape. Good luck.",
+        "desc": "One last escape to finish the track.\n\nLog in as `bandit33`. After all that git work, it's time for one more escape. Good luck.",
         "flag": {"type": "per_team_dynamic_fixed", "content": "per-team-dynamic (placeholder, not read)", "data": "bandit33"}
     }
 ]
@@ -598,10 +604,11 @@ HINTS = {
 
 
 def _progression_note(challenge_id: str) -> str:
-    """Return the common, current-instance account-transition instruction."""
+    """Return the trailing account-transition section (heading + body)."""
     if challenge_id == "bandit-start-here":
         return (
-            "\n\n**Next challenge:** After submitting this flag, begin Bandit 0 -> 1. "
+            "### Up next\n"
+            "After submitting this flag, begin Bandit 0 -> 1. "
             "Use the current host and port shown by the launch panel to connect as "
             "`bandit0` with password `bandit0`."
         )
@@ -609,14 +616,16 @@ def _progression_note(challenge_id: str) -> str:
     level = int(challenge_id.rsplit("-", 1)[1])
     if level == 33:
         return (
-            "\n\n**Finish:** You are working as `bandit33`. Submit the recovered "
+            "### Finish line\n"
+            "You are working as `bandit33`. Submit the recovered "
             "password here to complete the Bandit track; no further account switch is required."
         )
 
     return (
-        f"\n\n**Account progression:** You are working as `bandit{level}`. After "
-        "recovering and submitting this password, exit and reconnect to the current "
-        f"host and port shown by the launch panel as `bandit{level + 1}`, using the "
+        f"### Moving on\n"
+        f"You are working as `bandit{level}`. After "
+        "recovering and submitting this password, exit and reconnect as "
+        f"`bandit{level + 1}` at the host and port shown by the launch panel, using the "
         "recovered password, before starting the next level."
     )
 
@@ -627,13 +636,49 @@ def _require(condition: bool, message: str) -> None:
 
 
 def _render_description(challenge: dict) -> str:
-    full_desc = challenge["desc"]
+    """Render a challenge's description in the sectioned layout:
+
+        ## Goal
+        <goal>
+
+        ---
+
+        ### The task
+        <task>                        (levels only; may be empty, e.g. bandit-04)
+
+        **Commands you may need:** ...   (optional, from EXTRA_INFO)
+
+        **Helpful reading:**             (optional, from EXTRA_INFO)
+        - ...
+
+        ---
+
+        ### Moving on / ### Finish line / ### Up next
+        <progression note>
+
+    A level's `desc` holds "<goal>\n\n<task>"; bandit-start-here instead
+    holds "<goal>\n\n<body with its own ### headings>" and skips the
+    "### The task" / EXTRA_INFO machinery entirely.
+    """
+    goal, separator, body = challenge["desc"].partition("\n\n")
+    if challenge["id"] == "bandit-start-here":
+        _require(separator, "bandit-start-here desc must split into goal and body")
+        return "\n\n".join([
+            f"## Goal\n{goal}",
+            "---",
+            body,
+            "---",
+            _progression_note(challenge["id"]),
+        ])
+
+    task_section = "### The task" + (f"\n{body}" if body else "")
+    sections = [f"## Goal\n{goal}", "---", task_section]
     extra_info = EXTRA_INFO.get(challenge["id"])
     if extra_info:
         cmds, reading = extra_info
         if cmds:
             cmd_list = ", ".join(f"`{command}`" for command in cmds)
-            full_desc += f"\n\n**Commands you may need to solve this level:** {cmd_list}"
+            sections.append(f"**Commands you may need:** {cmd_list}")
         if reading:
             # No live links: the venue network runs with no internet access
             # (see docs/offline-dependency-audit.md and
@@ -641,8 +686,10 @@ def _render_description(challenge: dict) -> str:
             # rendered as plain reference titles rather than clickable
             # [title](url) markdown links, which would be dead at the venue.
             links = "\n".join(f"- {title}" for title, url in reading)
-            full_desc += f"\n\n**Helpful reading:**\n{links}"
-    return full_desc + _progression_note(challenge["id"])
+            sections.append(f"**Helpful reading:**\n{links}")
+    sections.append("---")
+    sections.append(_progression_note(challenge["id"]))
+    return "\n\n".join(sections)
 
 
 def _validate_bandit_content() -> None:

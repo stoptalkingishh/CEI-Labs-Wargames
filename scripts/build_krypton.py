@@ -47,14 +47,17 @@ INSTANCE_GROUP = "krypton"
 # password instead (`krypton0`, matching Bandit's own `bandit0` front
 # door; see targets/krypton/build/02-set-passwords.sh).
 
-# Shown once, in krypton-start-here only -- identical wording to Bandit's
-# own SSH_CONNECT_GUIDE (scripts/build_bandit.py) since it's the same
-# underlying connection mechanism for both tracks, just duplicated rather
-# than imported since neither build script otherwise depends on the
-# other. Every app name here is plain text, deliberately not a clickable
+# Shown once, in krypton-start-here only, under its own
+# "### Connecting from your device" heading -- same body wording as
+# Bandit's own SSH_CONNECT_GUIDE (scripts/build_bandit.py) since it's the
+# same underlying connection mechanism for both tracks, just duplicated
+# rather than imported since neither build script otherwise depends on the
+# other. Bandit still inlines a "**Connecting via SSH:**" bold lead-in;
+# Krypton drops it because the section heading now carries that label.
+# Every app name here is plain text, deliberately not a clickable
 # link -- see build_bandit.py's SSH_CONNECT_GUIDE comment for why.
 SSH_CONNECT_GUIDE = (
-    "**Connecting via SSH:** Once launched, the panel below shows a Host and Port. "
+    "Once launched, the panel below shows a Host and Port. "
     "Every level in this track connects the same way: `ssh <username>@<host> -p <port>`, "
     "then enter the password when prompted. How you run that command depends on your "
     "own device -- most players will be on Windows, which is covered below, but every "
@@ -77,8 +80,12 @@ challenges_data = [
         "id": "krypton-start-here",
         "name": "Krypton: Start Here",
         "points": 10,
-        "desc": (
-            "**Goal:** Learn the launch controls, then prove you used them.\n\n"
+        # Custom multi-section body (no "### The task" / EXTRA_INFO) --
+        # _render_description splices this in between the "## Goal"
+        # header and the "### Up next" progression note.
+        "goal": "Learn the launch controls, then prove you used them.",
+        "body": (
+            "### The launch controls\n"
             "Levels 0-6 in Krypton share one box, launched from a control attached to each "
             "of those challenges, right there on the challenge itself:\n"
             "- **Launch Environment** -- starts the box, or reconnects you to one already "
@@ -89,8 +96,10 @@ challenges_data = [
             "if something's broken beyond a reboot; anything you changed inside it is lost.\n"
             "- **+5 more minutes** -- shows up only once every level in this track is solved "
             "and a shutdown countdown has started. Extends it if you're not done yet.\n\n"
+            "### Connecting from your device\n"
             + SSH_CONNECT_GUIDE +
-            "\n\nClick Launch, wait for it to show a Host and Port, then connect as `krypton0` "
+            "\n\n### Prove you connected\n"
+            "Click Launch, wait for it to show a Host and Port, then connect as `krypton0` "
             "with password `krypton0` (the fixed, publicly-known entry password for Krypton "
             "-- same idea as Bandit's own `bandit0`/`bandit0`). The moment you log in, a "
             "banner prints automatically -- no file to go read, it's already on your screen. "
@@ -105,8 +114,8 @@ challenges_data = [
         "id": "krypton-00",
         "name": "Krypton 0 -> 1: Base64 Decoding",
         "points": 200,
-        "desc": (
-            "**Goal:** Decode a Base64-encoded password.\n\n"
+        "goal": "Decode a Base64-encoded password.",
+        "task": (
             "Click Launch, wait for it to show a host and port, then connect as `krypton0` "
             "with password `krypton0` (the fixed, publicly-known entry password for Krypton "
             "-- same idea as Bandit's own `bandit0`/`bandit0`). Your home directory contains "
@@ -119,18 +128,23 @@ challenges_data = [
         "id": "krypton-01",
         "name": "Krypton 1 -> 2: ROT13 Substitution Cipher",
         "points": 250,
-        "desc": "**Goal:** Reverse a ROT13 rotation cipher.\n\nThe next password is in `/home/krypton1/krypton2`, encrypted with a simple ROT13 rotation.",
+        "goal": "Reverse a ROT13 rotation cipher.",
+        "task": "The next password is in `/home/krypton1/krypton2`, encrypted with a simple ROT13 rotation.",
         "flag": {"type": "per_team_dynamic_alpha", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton1"}
     },
     {
         "id": "krypton-02",
         "name": "Krypton 2 -> 3: Caesar Cipher (Unknown Shift)",
         "points": 300,
-        "desc": (
-            "**Goal:** The password for level 3 is in the file `krypton3`, encrypted with a Caesar cipher whose "
+        # The whole brief is the goal here -- there is no separate task
+        # paragraph, so "### The task" is followed directly by the
+        # commands/reading lines.
+        "goal": (
+            "The password for level 3 is in the file `krypton3`, encrypted with a Caesar cipher whose "
             "shift comes from a keyfile you can't read directly -- but you can use the `encrypt` binary next to "
             "it, which reads that keyfile every time it runs."
         ),
+        "task": "",
         # Per-team dynamic flag: the orchestrator generates a fresh random
         # value per team at instance-creation time (env key "krypton2"),
         # and cei-labs-engine's routes.py persists it for CTFd to validate
@@ -145,28 +159,32 @@ challenges_data = [
         "id": "krypton-03",
         "name": "Krypton 3 -> 4: Frequency Analysis",
         "points": 350,
-        "desc": "**Goal:** Break a substitution cipher using letter-frequency analysis.\n\n`/home/krypton3/krypton4` is English text under a simple substitution cipher (each letter always maps to the same other letter). The `found1`, `found2`, and `found3` samples use the same alphabet. Combine them, count letter frequencies, and use word patterns to refine the mapping.\n\n*Hint: E, T, A, O, I, N are the most common letters in English.*",
+        "goal": "Break a substitution cipher using letter-frequency analysis.",
+        "task": "`/home/krypton3/krypton4` is English text under a simple substitution cipher (each letter always maps to the same other letter). The `found1`, `found2`, and `found3` samples use the same alphabet. Combine them, count letter frequencies, and use word patterns to refine the mapping.\n\n*Hint: E, T, A, O, I, N are the most common letters in English.*",
         "flag": {"type": "per_team_dynamic_alpha", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton3"}
     },
     {
         "id": "krypton-04",
         "name": "Krypton 4 -> 5: Vigenere Cipher (Known Key Length)",
         "points": 400,
-        "desc": "**Goal:** Break a Vigenere cipher when the key length is already known.\n\n`/home/krypton4/krypton5` is a Vigenere cipher with a key exactly 6 letters long (see the README next to it). Split the ciphertext LETTERS into 6 interleaved groups (spaces and punctuation do not advance the key) and solve each independently as its own Caesar shift.",
+        "goal": "Break a Vigenere cipher when the key length is already known.",
+        "task": "`/home/krypton4/krypton5` is a Vigenere cipher with a key exactly 6 letters long (see the README next to it). Split the ciphertext LETTERS into 6 interleaved groups (spaces and punctuation do not advance the key) and solve each independently as its own Caesar shift.",
         "flag": {"type": "per_team_dynamic_alpha", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton4"}
     },
     {
         "id": "krypton-05",
         "name": "Krypton 5 -> 6: Vigenere Cipher (Kasiski Test)",
         "points": 450,
-        "desc": "**Goal:** Break a Vigenere cipher when the key length isn't given.\n\n`/home/krypton5/krypton6` is another Vigenere cipher, but this time you don't know the key length. Use the Kasiski examination (repeating ciphertext patterns) to estimate it -- likely 3, 6, or 9 -- then apply frequency analysis per group to recover the key.",
+        "goal": "Break a Vigenere cipher when the key length isn't given.",
+        "task": "`/home/krypton5/krypton6` is another Vigenere cipher, but this time you don't know the key length. Use the Kasiski examination (repeating ciphertext patterns) to estimate it -- likely 3, 6, or 9 -- then apply frequency analysis per group to recover the key.",
         "flag": {"type": "per_team_dynamic_alpha", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton5"}
     },
     {
         "id": "krypton-06",
         "name": "Krypton 6 -> 7: Stream Cipher / LFSR",
         "points": 500,
-        "desc": "**Goal:** Recover a repeating keystream and use it to decrypt the final password.\n\nThis is the final Krypton level. `/home/krypton6/final` is encrypted with a stream cipher whose keystream repeats every 30 characters -- the `encrypt` binary next to it implements it. Encrypt a long run of identical characters (30+ of them) to read the repeating keystream straight off the output, then use it to decrypt the final flag.",
+        "goal": "Recover a repeating keystream and use it to decrypt the final password.",
+        "task": "This is the final Krypton level. `/home/krypton6/final` is encrypted with a stream cipher whose keystream repeats every 30 characters -- the `encrypt` binary next to it implements it. Encrypt a long run of identical characters (30+ of them) to read the repeating keystream straight off the output, then use it to decrypt the final flag.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "krypton6"}
     }
 ]
@@ -224,7 +242,7 @@ HINTS = {
     'krypton-06': [
         "This cipher combines each byte of plaintext with a byte from what's supposed to be a random keystream, except that keystream turns out to repeat after a fixed number of characters. If you already knew a long, predictable stretch of plaintext, could feeding it through the cipher directly reveal that repeating keystream?",
         "Feeding the encryption program a long run of identical, known characters (since every input byte is the same known value) means the corresponding output bytes reveal the raw keystream itself, byte for byte, wherever the relationship between a known plaintext byte and its output byte can be reversed. Once you've recovered the full repeating keystream (30 bytes long here), applying that same relationship to the real ciphertext, cycling the keystream every 30 bytes, recovers the final plaintext.",
-        "Create 60 known `A` characters, encrypt them, then give the known input, its encrypted output, and the real ciphertext to the installed helper. It derives the repeating additive shifts and applies them to `final`:\n```\n$ python3 -c 'print(\"A\" * 60, end=\"\")' > known.txt\n$ /home/krypton6/encrypt < known.txt > encrypted.txt\n$ krypton-tools stream-decrypt known.txt encrypted.txt /home/krypton6/final\n<the final flag>\n```",
+        "Create 60 known `A` characters, encrypt them, then give the known input, its encrypted output, and the real ciphertext to the installed helper. It derives the repeating additive shifts and applies them to `final`:\n```\n$ python3 -c 'print(\"A\" * 60, end=\")' > known.txt\n$ /home/krypton6/encrypt < known.txt > encrypted.txt\n$ krypton-tools stream-decrypt known.txt encrypted.txt /home/krypton6/final\n<the final flag>\n```",
     ],
 }
 
@@ -241,7 +259,8 @@ def _progression_note(challenge_id: str) -> str:
     levels use -- no more special-casing needed here."""
     if challenge_id == "krypton-start-here":
         return (
-            "\n\n**Next challenge:** After submitting this flag, begin Krypton 0 -> 1: "
+            "\n\n---\n\n### Up next\n"
+            "After submitting this flag, begin Krypton 0 -> 1: "
             "Base64 Decoding. Connect as `krypton0` (password `krypton0`, the fixed "
             "public entry password) and decode the Base64 string in your home "
             "directory to find the password for `krypton1`."
@@ -251,15 +270,17 @@ def _progression_note(challenge_id: str) -> str:
 
     if level == 6:
         return (
-            "\n\n**Finish:** You are working as `krypton6`. Submit the recovered "
+            "\n\n---\n\n### Finish line\n"
+            "You are working as `krypton6`. Submit the recovered "
             "password here to complete the Krypton track; no further account switch is required."
         )
 
     return (
-        f"\n\n**Account progression:** You are working as `krypton{level}`. After "
-        "recovering and submitting this password, exit and reconnect to the current "
-        f"host and port shown by the launch panel as `krypton{level + 1}`, using the "
-        "recovered password, before starting the next level."
+        "\n\n---\n\n### Moving on\n"
+        f"You are working as `krypton{level}`. After "
+        "recovering and submitting this password, exit and reconnect as "
+        f"`krypton{level + 1}` at the host and port shown by the launch panel, "
+        "using the recovered password, before starting the next level."
     )
 
 
@@ -269,22 +290,37 @@ def _require(condition: bool, message: str) -> None:
 
 
 def _render_description(challenge: dict) -> str:
-    full_desc = challenge["desc"]
-    extra_info = EXTRA_INFO.get(challenge["id"])
-    if extra_info:
-        cmds, reading = extra_info
-        if cmds:
-            cmd_list = ", ".join(f"`{command}`" for command in cmds)
-            full_desc += f"\n\n**Commands you may need to solve this level:** {cmd_list}"
-        if reading:
-            # No live links: the venue network runs with no internet access
-            # (see docs/offline-dependency-audit.md and
-            # cei-labs-event#8/live-hint-links-offline-gap), so these are
-            # rendered as plain reference titles rather than clickable
-            # [title](url) markdown links, which would be dead at the venue.
-            links = "\n".join(f"- {title}" for title, url in reading)
-            full_desc += f"\n\n**Helpful reading:**\n{links}"
-    return full_desc + _progression_note(challenge["id"])
+    """Sectioned layout: `## Goal` header, `---` separator, the middle
+    section(s), another `---`, then the progression note's own `###`
+    section (see _progression_note). krypton-start-here supplies a fully
+    custom multi-section `body`; every other level gets a `### The task`
+    section built from its `task` text plus the EXTRA_INFO commands and
+    reading lists."""
+    if "body" in challenge:
+        middle = challenge["body"]
+    else:
+        task_parts = []
+        task = challenge.get("task", "")
+        if task:
+            task_parts.append(task)
+        extra_info = EXTRA_INFO.get(challenge["id"])
+        if extra_info:
+            cmds, reading = extra_info
+            if cmds:
+                cmd_list = ", ".join(f"`{command}`" for command in cmds)
+                task_parts.append(f"**Commands you may need:** {cmd_list}")
+            if reading:
+                # No live links: the venue network runs with no internet access
+                # (see docs/offline-dependency-audit.md and
+                # cei-labs-event#8/live-hint-links-offline-gap), so these are
+                # rendered as plain reference titles rather than clickable
+                # [title](url) markdown links, which would be dead at the venue.
+                links = "\n".join(f"- {title}" for title, url in reading)
+                task_parts.append(f"**Helpful reading:**\n{links}")
+        middle = "### The task"
+        if task_parts:
+            middle += "\n" + "\n\n".join(task_parts)
+    return f"## Goal\n{challenge['goal']}\n\n---\n\n{middle}" + _progression_note(challenge["id"])
 
 
 def _validate_krypton_content() -> None:
@@ -334,7 +370,13 @@ for i, ch in enumerate(challenges_data):
 
     full_desc = _render_description(ch)
 
-    escaped_desc = full_desc.replace('\n', '\n  ')
+    # Indent continuation lines for the YAML block scalar (the template
+    # already indents the first line); leave blank lines truly empty
+    # rather than whitespace-only.
+    escaped_desc = "\n".join(
+        ("  " + line) if line and n else line
+        for n, line in enumerate(full_desc.split("\n"))
+    )
     is_final_level = (i == len(challenges_data) - 1)
     yaml_content = f"""name: "{ch['name']}"
 author: "CEI Labs (self-hosted recreation of OverTheWire's Krypton)"
