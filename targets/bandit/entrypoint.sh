@@ -340,8 +340,12 @@ if not _git_levels_already_set_up and all(git_pw.values()) and all(git_flag.valu
 
     subprocess.run(["rm", "-rf", TMP], check=False)
 
-    with open("/etc/shells", "a") as f:
-        f.write("/usr/bin/git-shell\n")
+    # Guard against duplicate lines on repeated entrypoint runs.
+    with open("/etc/shells") as f:
+        _shells = f.read().splitlines()
+    if "/usr/bin/git-shell" not in _shells:
+        with open("/etc/shells", "a") as f:
+            f.write("/usr/bin/git-shell\n")
 PYEOF
 else
     echo "WARNING: no LEVEL_SECRETS set -- bandit1-33 will not be playable until content is synced." >&2
@@ -349,7 +353,28 @@ fi
 
 for daemon in /opt/bandit-daemons/*.py; do
     [ -e "$daemon" ] || continue
-    su banditd -s /bin/bash -c "python3 '$daemon'" &
+    # Scope each daemon's LEVEL_SECRETS to just the two keys it needs --
+    # bandit{N-1} (expected) and bandit{N} (next), N parsed from the
+    # levelN_ filename -- instead of handing every daemon all 34 flags.
+    # A daemon whose filename has no levelN_ match gets an empty {} (safe
+    # failure mode: it simply never accepts any password).
+    filtered=$(python3 - "$daemon" <<'PYEOF'
+import json
+import os
+import re
+import sys
+
+m = re.search(r"level(\d+)_", os.path.basename(sys.argv[1]))
+secrets = json.loads(os.environ.get("LEVEL_SECRETS", "{}"))
+if not m:
+    print("{}")
+else:
+    n = int(m.group(1))
+    keys = (f"bandit{n-1}", f"bandit{n}")
+    print(json.dumps({k: secrets[k] for k in keys if k in secrets}))
+PYEOF
+)
+    LEVEL_SECRETS="$filtered" su banditd -s /bin/bash -c "python3 '$daemon'" &
 done
 
 cron
