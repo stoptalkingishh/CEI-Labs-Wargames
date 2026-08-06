@@ -85,8 +85,10 @@ containers for flags.
 
 ## 4. Player participation
 
-- **19 registered users / 11 teams.** 9 teams have solves; `admin` and
-  `ctfguy1` are 0-score placeholders.
+- **30 total participants** (operator's count — source of truth for who took
+  part). Of those, **19 registered users / 11 teams** appear in the CTFd DB;
+  the delta is people who played but never registered or submitted on the box.
+- 9 teams have solves; `admin` and `ctfguy1` are 0-score placeholders.
 - **199 accepted solves** from **399 total submissions** across all 4 active
   tracks (65 challenges).
 - **Agent-driven playthrough:** 10 registered players (`cei-player-1`…`10`) on
