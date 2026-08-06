@@ -70,23 +70,47 @@ team so players reused them instead of re-spending. Submissions went through
 the public challenge-submit path only — **no** reading of CTFd DB, source, or
 containers for flags.
 
-| Track | Solved (accepted submissions, first pass) |
-| :--- | :--- |
-| Bandit | Start Here + 0→1 … 15→16 (16 levels) |
-| Krypton | Start Here + 0→1, 1→2 (2 levels) |
-| Natas | Start Here + 0→1 (1 level) |
-| **Total** | **24 accepted** |
+| Track | Unique challenges solved (final) | Available |
+| :--- | :--- | :--- |
+| Bandit (Linux Basics) | 22 | 35 |
+| Krypton (Cryptography) | 7 | 8 |
+| Natas (Web Security) | 11 | 16 |
+| AI Copilot Setup | 4 | 6 |
 
-Real player progress (team 22 / Workhorse) separately tracked to **Bandit 19**
-and **Krypton 1→2 + Start Here** before the resume-point fix.
+Earlier orchestration pass (agent-driven) contributed an initial
+**24 accepted submissions** (Bandit 0→1…15→16, Krypton 0→1/1→2, Natas 0→1);
+real teams carried the event to the final totals above. Submissions went through
+the public challenge-submit path only — **no** reading of CTFd DB, source, or
+containers for flags.
 
 ## 4. Player participation
 
-- Agent-driven playthrough: **10 players** on one shared team
-  (`CEI-Agent-Team`).
-- Real user teams were present; the operator and agents were actively
-  resolving per-team account/flag issues throughout (see the communications
-  recap in `docs/event-communications-2026-08-06.md`).
+- **19 registered users / 11 teams.** 9 teams have solves; `admin` and
+  `ctfguy1` are 0-score placeholders.
+- **199 accepted solves** from **399 total submissions** across all 4 active
+  tracks (65 challenges).
+- **Agent-driven playthrough:** 10 registered players (`cei-player-1`…`10`) on
+  one shared team (`CEI-Agent-Team`), launched via the CTFd launch API with
+  recovered keys shared team-wide.
+
+**Final scoreboard (score / solves):**
+
+| Team | Score | Solves |
+| :--- | :--- | :--- |
+| DexMix | 16,080 | 35 |
+| Workhorse | 15,830 | 36 |
+| Ducks | 13,370 | 26 |
+| 0100 | 9,690 | 32 |
+| cyberparkour | 4,980 | 20 |
+| Nerd_Nuggies | 3,720 | 14 |
+| west point grads | 3,130 | 15 |
+| Computers are evil | 1,780 | 11 |
+| TeamSloth2ElectricBoogaloo | 1,770 | 10 |
+
+Numbers pulled live from the CTFd DB on `192.168.1.150` at event close by the
+orchestrating agent. The operator and agents were actively resolving per-team
+account/flag issues throughout (see the communications recap in
+`docs/event-communications-2026-08-06.md`).
 
 ## 5. What was sacrificed to make the event happen (network)
 
