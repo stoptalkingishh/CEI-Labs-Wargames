@@ -29,14 +29,16 @@ $ErrorActionPreference = 'Stop'
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-# TEMPORARY PIN (CEI Labs CTF distribution copy only -- not the upstream
-# repo's own bootstrap.ps1): pinned to stoptalkingishh's fork/branch because
-# it carries ctf-agent-verify, which this CTF's "AI Copilot Setup" track
-# depends on, and that isn't merged into Judgernaut777/CEI-Labs-Agent's
-# default branch yet (see https://github.com/Judgernaut777/CEI-Labs-Agent/pull/2).
-# Once that PR merges, switch this back to:
-#   $RepoUrl = 'git+https://github.com/Judgernaut777/CEI-Labs-Agent'
-$RepoUrl   = 'git+https://github.com/stoptalkingishh/CEI-Labs-Agent@feature/ctf-verify-tool'
+# Distribution copy for the CEI Labs CTF (not the upstream repo's own
+# bootstrap.ps1). Installs from Judgernaut777/CEI-Labs-Agent's default branch,
+# which carries ctf-agent-verify (this CTF's "AI Copilot Setup" track depends
+# on it) AND the wheel-build fix -- a duplicate force-include of the static
+# assets in pyproject.toml used to make `uv tool install` from git fail with
+# "A second file is being added to the wheel archive at the same path:
+# cei_labs_agent/static/app.js". Do NOT re-pin this to
+# stoptalkingishh/CEI-Labs-Agent@feature/ctf-verify-tool: that branch still
+# has the broken pyproject.toml and the install will fail again.
+$RepoUrl   = 'git+https://github.com/Judgernaut777/CEI-Labs-Agent'
 $MinFreeGB = 6                                   # Minimum recommended free disk (GB).
 $OllamaUrl = 'https://ollama.com/download/OllamaSetup.exe'
 

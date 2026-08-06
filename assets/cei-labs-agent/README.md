@@ -59,16 +59,22 @@ web browser.
 Open the **Terminal** app and paste:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/Judgernaut777/CEI-Labs-Agent/main/bootstrap.sh | sh
+curl -fsSL https://raw.githubusercontent.com/Judgernaut777/CEI-Labs-Agent/claude/cei-labs-agent-models-002oeu/bootstrap.sh | sh
 ```
 
 ### Windows
 
-Open **PowerShell** (search for it in the Start menu, then click it) and paste:
+Open **PowerShell** (search for it in the Start menu, then click it) and paste
+this one line:
 
 ```powershell
-irm https://raw.githubusercontent.com/Judgernaut777/CEI-Labs-Agent/main/bootstrap.ps1 | iex
+powershell -ExecutionPolicy Bypass -NoProfile -Command "irm https://raw.githubusercontent.com/Judgernaut777/CEI-Labs-Agent/claude/cei-labs-agent-models-002oeu/bootstrap.ps1 | iex"
 ```
+
+The `-ExecutionPolicy Bypass` applies to this one command only -- it does not
+change any system setting, and because the script runs in memory there is
+nothing to unblock. You do **not** need `Set-ExecutionPolicy` or
+`Unblock-File` with this command.
 
 That's it. When the browser tab opens, you're ready to go.
 

@@ -146,6 +146,31 @@ green.
 
 ---
 
+## PowerShell says "running scripts is disabled" or "not digitally signed"
+
+**Symptoms (Windows):** you downloaded `bootstrap.ps1` and ran it, and PowerShell
+answers with a red error like `File ...\bootstrap.ps1 cannot be loaded because
+running scripts is disabled on this system`, or (after
+`Set-ExecutionPolicy RemoteSigned`) `... is not digitally signed`.
+
+**Why:** Windows blocks downloaded `.ps1` files by default. This is normal and
+expected — nothing is broken.
+
+**Fix — use the one-liner from the challenge page instead.** It runs the script
+with a bypass that applies to that single command only (no system setting is
+changed, nothing to unblock):
+
+```powershell
+powershell -ExecutionPolicy Bypass -NoProfile -File "$env:USERPROFILE\Downloads\bootstrap.ps1"
+```
+
+(Adjust the path if you saved `bootstrap.ps1` somewhere other than Downloads.)
+
+If you already ran `Set-ExecutionPolicy`, no harm done — but you do not need it
+with the command above.
+
+---
+
 ## Locked-down corporate or school laptops
 
 **Heads up: heavily managed work or school laptops are a known non-goal.** If your
