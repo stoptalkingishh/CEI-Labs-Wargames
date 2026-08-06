@@ -181,9 +181,41 @@ event day, beyond the PR queue):
   materialize on an overlay-network race and had to be recreated live (Issue 5
   above).
 
-## 8. Referenced logs
+## 8. Server resource usage and score backup
+
+**Score backup (durable, machine-readable):** a full CTFd MariaDB dump was
+taken from the `ctfd-db` container on `192.168.1.150` at event close →
+`cei-labs-ctfd-backup-2026-08-06.sql` (256 KB, verified valid MariaDB 10.11
+dump). It preserves every scoring table — `solves`, `submissions`,
+`solutions`, `awards`, `challenges`, `flags`, `teams`, `users`, `hints` — plus
+the custom `wargame_stages` / `audit` / `instance_launcher_team_secrets`
+tables. Archived at `/home/ismaelrodriguez/backups/` on the box and mirrored
+to the orchestrator agent's workspace. The scoreboard text in this recap is
+now backed up in SQL, not just prose.
+
+**Resource usage — capacity + post-event idle state (with a caveat).** No
+monitoring daemon was running during the event, so **true peak CPU/mem/disk
+during live play is not recoverable** — nothing logged it. Rather than
+fabricate peaks, the below records node capacity and current post-event idle
+state as the authoritative record:
+
+| Node | Role (CPU) | RAM | Disk | Load | Notable containers |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `.150` cei-ryzen5-61g-swarm01 | Swarm leader (12c) | 6.9 / 61 Gi | 53 / 464 G (12%) | 0.22 | ctfd-db 105 MiB, orchestrator 41 MiB, traefik 26 MiB |
+| `.193` cei-i7-31g-swarm02 | Worker (12c) | 3.8 / 31 Gi | 13 / 475 G (3%) | 0.17 | ctfd app 370 MiB / 1 Gi |
+| `.125` cei-xeon-e3-8g-swarm03 | Worker (8c) | 2.6 / 7.7 Gi | 6 / 231 G (3%) | 0.08 | ctfd-redis 5.1 MiB (4% CPU — highest any container showed) + challenge gateway containers |
+
+~20 per-team `chinst`/`chrange` containers ran at 64–512 MiB limits, all idle
+at capture (0–3% CPU), none near its limit.
+
+**Lesson for next time:** to capture real peaks, run a `docker stats` loop or a
+node-exporter/Prometheus scrape across the Swarm for the full event window.
+
+## 9. Referenced logs
 
 - `WORK_LOGS/2026-08-05_SERVER_LAN_OPNSENSE_CHECK.md` — OPNsense path saga.
 - `WORK_LOGS/2026-08-06_SWARM_NEW_SUBNET.md` — re-home to 192.168.1.0/24.
 - `WORK_LOGS/2026-08-06_CTFD_RESET_ADMIN_GAMES_USERS.md` — reset, hint-cache
   fix, Workhorse Krypton/Bandit fixes.
+- `WORK_LOGS/2026-08-06_SERVER_RESOURCE_USAGE_AND_SCORE_BACKUP.md` — resource
+  capacity + idle state and the CTFd score dump.
