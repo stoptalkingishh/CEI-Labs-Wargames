@@ -20,17 +20,35 @@ from hint_economy import managed_tiers
 # Deliberately NOT one of the game-stages.yml wave-gated tracks (see that
 # file and scripts/validate_game_stages.py): those exist to hide/reveal
 # shared per-team boxes in timed waves, which doesn't apply here since there
-# is no shared box. Visibility for this track is instead controlled directly
-# below via RELEASE_STATE, a plain manual on/off switch -- not a timed wave.
+# is no shared box. Visibility for this track is instead controlled by
+# RELEASE_STATE below, a plain manual on/off switch -- not a timed wave.
 #
 # Defaults to "hidden": the organizer releases this track by choice, on
-# their own schedule, not automatically alongside deploy. To release it:
-#   1. Change RELEASE_STATE below to "visible".
-#   2. Re-run `python3 scripts/build_agent.py` and redeploy/resync
-#      (`ctf challenge sync challenges/cei-agent-*` or a full deploy.sh run).
-# Or, without touching this repo at all: toggle each challenge's visibility
-# directly in the CTFd admin UI (Challenges -> select -> Hidden/Visible).
-RELEASE_STATE = "hidden"
+# their own schedule, not automatically alongside deploy. To release it,
+# set the environment variable at generation time -- no repo edit:
+#
+#   CEI_AGENT_RELEASE_STATE=visible python3 scripts/build_agent.py
+#
+# then redeploy/resync (`ctf challenge sync challenges/cei-agent-*` or a
+# full deploy.sh run). Or, without running this script at all: toggle each
+# challenge's visibility directly in the CTFd admin UI (Challenges ->
+# select -> Hidden/Visible).
+#
+# This used to be a hardcoded constant an organizer edited in place, which
+# meant releasing the track dirtied a tracked file. On a real station that
+# edit then sat uncommitted indefinitely, so `git status` could not
+# distinguish "event-day toggle" from "unshipped work" -- and the machine's
+# actual release state was invisible to anyone reading the repo. Sourcing it
+# from the environment keeps the default honest in git while letting a
+# station override it per run.
+_VALID_RELEASE_STATES = ("hidden", "visible")
+RELEASE_STATE = os.environ.get("CEI_AGENT_RELEASE_STATE", "hidden").strip().lower()
+if RELEASE_STATE not in _VALID_RELEASE_STATES:
+    raise SystemExit(
+        f"CEI_AGENT_RELEASE_STATE must be one of {_VALID_RELEASE_STATES}, "
+        f"got {RELEASE_STATE!r}. Leave it unset for the default "
+        f"({_VALID_RELEASE_STATES[0]})."
+    )
 
 FLAG_START_HERE = (
     "CEI Labs Agent is a permitted exception to the 'no AI or outside "

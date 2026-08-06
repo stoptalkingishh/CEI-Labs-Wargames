@@ -12,10 +12,11 @@ This repository contains the infrastructure and challenge generation scripts to 
    a free, local AI coaching assistant for the three tracks above (see
    `scripts/build_agent.py`). Unlike the three tracks above, this one has no
    per-team Docker instance and isn't part of the staged/wave-gated rollout
-   below. It ships **hidden by default** (`RELEASE_STATE` in
-   `scripts/build_agent.py`) -- the organizer releases it manually, on their
-   own schedule, once ready (see that script's header comment for the two
-   ways to flip it visible).
+   below. It ships **hidden by default** -- the organizer releases it
+   manually, on their own schedule, once ready, by generating with
+   `CEI_AGENT_RELEASE_STATE=visible python3 scripts/build_agent.py` (or by
+   toggling visibility directly in the CTFd admin UI). See that script's
+   header comment for both ways.
 
 Each game's folder holds three docs:
 - `writeups.md` — complete, step-by-step solutions for every level
