@@ -141,7 +141,47 @@ The biggest concession was **network architecture**:
 | `.12` / `cei-ryzen5-15g-swarm04` | Never joined the Swarm (transport/SSH issues); event ran on 3 nodes |
 | OPNsense as CTF egress control point | Served as local DNS/DHCP only for the event |
 
-## 7. Referenced logs
+## 7. Pre-event PR history and last-minute work
+
+Content and platform were built through a long run of merged PRs leading up to
+the event. The last several landed the night before / day of, and represent
+the final push to make all four tracks playable offline.
+
+**Last-minute PRs (merged 2026-08-04 → 08-06):**
+
+| PR | Merged | What it did |
+| :--- | :--- | :--- |
+| #55 `kimi/inventory-drift-check` | 08-04 14:48 | Validate challenge inventory against the build to catch drift |
+| #56 `kimi/question-format-readability` | 08-04 21:48 | Make question/hint formatting readable in the launch panel |
+| #57 `kimi/banner-glowup` | 08-04 22:52 | Taller, richer ASCII banner art across all three tracks |
+| #58 `kimi/wargames-check-fixes` | 08-05 04:43 | Fixes to the wargames check/validation path |
+| #59 `kimi/wargames-check-minors` | 08-05 04:43 | Minor follow-up fixes to the check path |
+| #60 `kimi/bootstrap-one-liner` | 08-06 00:48 | Make the Windows bootstrap a true one-liner; unpin agent install |
+
+**Earlier build PRs (2026-07-22 → 07-29):** the content-review pass (#1),
+offline-dependency audit (#3), Codex fix notes (#4), the P0 deploy/signature/
+content fixes (#5, #6, #12, #18), banner and login/art features (#7, #8, #9,
+#10), Bandit/Krypton/Natas per-level fixes (#11, #13–#19), hint-cost and
+theory-structure work (#39), the AI Copilot Setup track (#40) with the
+agent-track hidden-by-default and hint-wallet-pending-engine-support follow-ups
+(#41, #42), and the agent playability-fix pass (#43).
+
+**Last-minute operational issues** (these were the ones that actually bit on
+event day, beyond the PR queue):
+
+- The Swarm was still advertising the stale `192.168.10.13` address after the
+  subnet re-home; fixed by re-initializing the manager and rejoining workers
+  (Issue 1 above).
+- CTFd's DB credentials and the admin hash no longer matched after the
+  persistent volume came up — rescued without data loss (Issues 2–3 above).
+- A full user/game reset wiped the hint-wallet display cache (`409
+  no_active_catalog`), which had to be rebuilt from the orchestrator catalog
+  (Issue 4 above).
+- The per-team Krypton instance for Workhorse (team 22) silently failed to
+  materialize on an overlay-network race and had to be recreated live (Issue 5
+  above).
+
+## 8. Referenced logs
 
 - `WORK_LOGS/2026-08-05_SERVER_LAN_OPNSENSE_CHECK.md` — OPNsense path saga.
 - `WORK_LOGS/2026-08-06_SWARM_NEW_SUBNET.md` — re-home to 192.168.1.0/24.
