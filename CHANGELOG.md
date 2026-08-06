@@ -9,6 +9,12 @@ record.
 ## [Unreleased]
 
 ### Added
+- `docs/event-recap-2026-08-06.md`: post-event recap of the 2026-08-06
+  wargames run — issues hit and fixed, infrastructure end-state, what was
+  sacrificed (network + systems), how challenges were played, and player
+  participation.
+- `docs/event-communications-2026-08-06.md`: condensed recap of the
+  `CEI-LABS` channel conversation that drove the event.
 - `docs/wargame-story-art.md`: per-level art drawn against each prompt
   in `wargame-story.md` -- 56 pieces, one per level. Explicitly a
   proposal: nothing in it is wired into any Dockerfile or banner
