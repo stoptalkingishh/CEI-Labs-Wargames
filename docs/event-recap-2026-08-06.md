@@ -181,6 +181,30 @@ event day, beyond the PR queue):
   materialize on an overlay-network race and had to be recreated live (Issue 5
   above).
 
+**Engine repo (`cei-labs-engine`) pre-event build PRs** — the deployment/engine
+half of the platform, all merged to its `main` in the run-up to the event
+(~33 PRs, 2026-07-10 → event day). The event deployed from engine state
+`engine-31a6471` (PR #49 merge). Consolidated from merge history:
+
+- **2026-07-10 — security & image hardening:** shared VNC/operator password
+  removal, `kali-rolling` base digest pin, CSRF nonce on admin mapping forms,
+  security-audit summary.
+- **2026-07-14:** staggered wargame administration.
+- **2026-07-15:** PR #2 Fedora common Ansible base role.
+- **2026-07-22 — resilience & docs:** participant quotas (#3), stack
+  healthchecks (#4), worker-failure recovery (#5), crypto flag-variant
+  acceptance (#6), clean-station restore (#7), local-testing/deploy docs
+  (#8), offline-install bundle docs (#9).
+- **2026-07-23 — the large P0/P1 hardening + theming day (PRs #11–30):**
+  credential lifecycle/encryption (#11, #14), VNC/SSH password (#12), hint-wallet
+  endpoint (#13) and CTFd plugin (#17), image pinning (#15), browser launcher
+  (#16), external hint-wallet secret (#18), CTFd modal theming (#19), Chromium/
+  Natas theming (#20), CI test wiring (#22), attacker TLS fallback (#23), reaper
+  atomicity (#24), spawn-workspaces hardening (#25), stage gating (#26), theme/
+  hint-wallet consistency (#27), hint-wallet frontend (#28), secrets & CI (#29),
+  offline-install doc cleanup (#30).
+- **2026-08-04:** PR #49 docs index (`engine-31a6471`, the deployed state).
+
 ## 8. Server resource usage and score backup
 
 **Score backup (durable, machine-readable):** a full CTFd MariaDB dump was
