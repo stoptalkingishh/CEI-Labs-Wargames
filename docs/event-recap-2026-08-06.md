@@ -7,6 +7,19 @@ for the numbers below is the `CEI-LABS` relay channel recap plus the operator
 `WORK_LOGS`; live player counts were confirmed at event time by the
 orchestrating agent.
 
+## Headline Facts
+
+| Item | Value |
+|------|-------|
+| Date | 2026-08-06 |
+| Infrastructure | 3-node Docker Swarm, manager `192.168.1.150`, workers `.193`, `.125` |
+| CEI Stack | CTFd 3.8.6 (teams mode), MariaDB, Redis, Orchestrator, Traefik — all `1/1` |
+| Games | Bandit (35), Krypton (8), Natas (16), AI Copilot (6) — 65 challenges total |
+| Players | 30 total participants, 19 registered accounts, 11 teams |
+| Total submissions | 399 submissions, 199 accepted solves |
+| Platform host | `192.168.1.150` (cei-ryzen5-61g-swarm01) |
+| Channel messages | 200 messages over Aug 5-8, 2026 |
+
 ## 1. Infrastructure end-state
 
 | Component | End-state |
@@ -219,3 +232,60 @@ node-exporter/Prometheus scrape across the Swarm for the full event window.
   fix, Workhorse Krypton/Bandit fixes.
 - `WORK_LOGS/2026-08-06_SERVER_RESOURCE_USAGE_AND_SCORE_BACKUP.md` — resource
   capacity + idle state and the CTFd score dump.
+
+## 10. Lessons Learned
+
+1. **Stale advertise address bites after every subnet change.** After re-homing
+   the Swarm, `docker swarm init --advertise-addr` must be run — the manager
+   will silently advertise the old IP otherwise, and workers will successfully
+   join but fail to reach the manager.
+2. **CTFd DB credential drift is silent until the stack restarts.** The
+   persistent volume holds passwords that drift from the compose secrets. Have a
+   `mariadb --skip-grant-tables` rescue plan ready.
+3. **Full user/game reset must NOT DELETE the hint-wallet cache row.** The
+   `hint_wallet_catalog_cache` table is write-once-by-orchestrator; wiping it
+   causes `409 no_active_catalog` errors until it's rebuilt from the
+   orchestrator catalog.
+4. **Subnet re-homing is high-risk.** Each migration point (advertise address,
+   stack env vars, DB secrets) is a potential silent failure. Have a documented
+   migration checklist.
+5. **OPNsense console access is a prerequisite.** Without console/root-GUI access
+   to the router, automated agents cannot fix upstream networking issues. Ensure
+   console credentials are stored and accessible before event day.
+6. **Backup early, backup often.** The CTFd DB backup taken before the reset
+   saved the deployment — there was no working admin password to recover without
+   it.
+7. **Monitor during the event.** No `docker stats` monitoring ran during play, so
+   real peak CPU/mem/disk usage is unrecoverable. Run a stats loop or
+   node-exporter on event day.
+
+## 11. External AI Conversation Recap
+
+The user requested pulling CEI-Labs-related conversations from Claude Desktop,
+ChatGPT, and other external AI chat applications. No export files or
+conversation transcripts were found in Downloads or the workspace — the
+applications store conversations in local databases, not as exportable
+plain-text files. The following CEI-Labs-related context was identified from
+available workspace and repo files:
+
+- `CEI-Labs-CTF-Kickoff.pptx` (in Downloads) — event kickoff presentation
+- `OKComputer_CEI_Labs_Repo_Review` (in Downloads) — a repo review archive of
+  `cei-labs-engine`
+- Several `cei-fixes.tar.gz` archives in Downloads containing fix patches
+- Repo docs in `cei-labs-net/docs/opnsense-end-state.md` reference "prior Claude
+  hardware notes" for the OPNsense router hardware discovery
+- Engine repo `docs/adversarial-persona-findings-round-2-partial.md` references
+  a Claude session performing orchestrator log analysis
+- The `adversarial-persona-briefs/` and
+  `adversarial-persona-round2-findings/` directories contain Claude-origin
+  analysis committed to the repo
+
+To recover the full conversation history, the user would need to:
+1. Open Claude Desktop and export the relevant CEI-Labs conversations
+2. Open ChatGPT and export/screenshot the relevant conversations
+3. Upload or share the exports via the channel
+
+Note: All Codex agent conversations (Codex 5.5, Codex 5.6 Luna) occurred in the
+CEI-LABS Buzz channel and are fully captured in `docs/event-communications-2026-08-06.md`.
+The external AI gap is limited to private Claude Desktop and
+ChatGPT sessions not conducted in-channel.
