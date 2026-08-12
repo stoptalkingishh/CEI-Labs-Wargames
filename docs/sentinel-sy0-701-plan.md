@@ -15,6 +15,10 @@ Objective wording is summarized here rather than copied. Sentinel complements
 the existing Linux, cryptography, and web-security tracks with defensive
 system administration and incident response work.
 
+Tooling and lab-platform research, including the recommended lightweight
+open-source toolchain and Windows scope, is recorded in
+[`sentinel-tooling-research.md`](sentinel-tooling-research.md).
+
 ## Player experience
 
 Sentinel uses the existing `single-target` pattern: each team receives one
