@@ -19,6 +19,9 @@ Tooling and lab-platform research, including the recommended lightweight
 open-source toolchain and Windows scope, is recorded in
 [`sentinel-tooling-research.md`](sentinel-tooling-research.md).
 
+The per-lab learning, evidence, validation, software, and build contracts are
+maintained in [`sentinel-lab-design-matrix.md`](sentinel-lab-design-matrix.md).
+
 ## Player experience
 
 Sentinel uses the existing `single-target` pattern: each team receives one
