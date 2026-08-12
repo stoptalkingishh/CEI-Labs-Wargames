@@ -41,30 +41,30 @@ of the exam outline. Each lab needs an authored scenario, a measurable output,
 three progressive hints, a complete instructor writeup, and a live runtime
 test before it can ship.
 
-| Lab | Scenario and observable work | SY0-701 alignment |
-| --- | --- | --- |
-| Start Here | Connect using SSH, read the engagement rules, retrieve the onboarding token. | Safe lab conduct; SSH as a secure access method. |
-| 01 Asset Census | Reconcile a supplied asset inventory with installed packages, active services, and ownership metadata. | 4.2 asset management; 4.1 secure baselines. |
-| 02 Control Review | Classify a set of implemented safeguards by category and purpose using evidence on the host. | 1.1 controls; 1.2 CIA and AAA. |
-| 03 Change Window | Review a change request, identify missing approval, rollback, or test evidence, and select the safe action. | 1.3 change management. |
-| 04 Certificate Trail | Inspect a certificate chain, key permissions, and revocation evidence to identify the trustworthy service identity. | 1.4 PKI, certificates, hashing, and signatures. |
-| 05 Attack Surface | Enumerate listening services and configuration artifacts, then identify the exposed default service. | 2.2 attack surface; 2.5 hardening. |
-| 06 Suspicious Access | Correlate authentication logs for password spraying, impossible travel, and concurrent-session indicators. | 2.4 indicators of malicious activity; 4.9 log sources. |
-| 07 Vulnerability Triage | Validate a scanner finding against package and configuration evidence, distinguish false positive from true finding, and prioritize remediation. | 2.3 vulnerabilities; 4.3 vulnerability management. |
-| 08 Least Privilege | Audit Unix users, groups, ACLs, and sudo policy to correct an over-broad delegated permission. | 2.5 access control and least privilege; 4.6 IAM. |
-| 09 Segmented Services | Read a constrained host firewall and network-zone diagram to identify the allowed management path and an unsafe rule. | 3.1 architecture models; 3.2 infrastructure security. |
-| 10 Data Handling | Classify sample data and choose the required protection for data at rest, in transit, and in use. | 3.3 data protection. |
-| 11 Recovery Evidence | Validate encrypted backup metadata, recovery-point evidence, and a restoration drill record. | 3.4 resilience and recovery. |
-| 12 Baseline Drift | Compare a secure baseline with the current system, identify unauthorized service or configuration drift, and restore the approved state. | 4.1 secure baselines and hardening; 4.7 automation guard rails. |
-| 13 Integrity Alert | Verify a file-integrity alert with hashes and package ownership, then identify the affected asset. | 1.4 hashing; 4.4 monitoring; 4.5 file integrity monitoring. |
-| 14 Identity Lifecycle | Process a simulated offboarding request and verify deprovisioning, group removal, and credential invalidation evidence. | 4.6 provisioning and deprovisioning; least privilege. |
-| 15 Alert Tuning | Analyze SIEM-like normalized events, separate a false positive from a true alert, and document the tuning rationale. | 4.4 alerting and monitoring. |
-| 16 Secure Service Change | Apply a narrow, reversible secure-protocol and firewall configuration change through the supplied automation interface. | 4.5 secure protocols and firewall rules; 4.7 automation. |
-| 17 Incident Containment | Build a timeline from endpoint, application, and firewall records, then choose the containment action that preserves evidence. | 4.8 incident response; 4.9 investigation sources. |
-| 18 Forensic Handoff | Validate an evidence manifest and chain-of-custody record without modifying the evidence set. | 4.8 digital forensics, preservation, and reporting. |
-| 19 Policy to Practice | Match system evidence to policy, standard, procedure, and ownership requirements; identify a governance gap. | 5.1 governance. |
-| 20 Risk Register | Calculate and prioritize a small risk register using likelihood, impact, exposure factor, SLE, ARO, ALE, RTO, and RPO. | 5.2 risk management and business impact analysis. |
-| 21 Assurance Review | Assess a vendor evidence pack and a reported phishing message, then select the required escalation and compliance record. | 5.3 third-party risk; 5.4 compliance; 5.5 assessments; 5.6 awareness. |
+| Lab | Status / batch | Scenario and primary evidence | SY0-701 coverage |
+| --- | --- | --- | --- |
+| Start Here | Built, PR #68 / 0 | SSH connection, engagement rules, onboarding token. | Secure access context. |
+| 01 Asset Census | Built, PR #68 / 0 | Asset inventory, installed packages, active services, ownership metadata. | 4.1, 4.2 |
+| 02 Control Review | Built, PR #68 / 0 | Host safeguards classified by category and purpose. | 1.1, 1.2 |
+| 03 Change Window | Built, PR #68 / 0 | Change record with approval, test, rollback, and maintenance evidence. | 1.3 |
+| 04 Certificate Trail | Built, PR #68 / 0 | Certificate chain, key permissions, and revocation evidence. | 1.4 |
+| 05 Attack Surface | Built, PR #68 / 0 | Listening services and configuration artifacts exposing a default service. | 2.2, 2.5 |
+| 06 Suspicious Access | Planned / 1 | Deterministic SSH/auth/audit logs for spraying, impossible travel, and concurrent sessions. | 2.4, 4.4, 4.9 |
+| 07 Vulnerability Triage | Planned / 1 | Mock scanner/advisory plus package and configuration evidence. | 2.3, 4.3 |
+| 08 Least Privilege | Planned / 1 | Unix users, groups, ACLs, and `sudo` policy. | 2.5, 4.6 |
+| 09 Segmented Services | Planned / 2 | Firewall policy and network-zone diagram. | 3.1, 3.2 |
+| 10 Data Handling | Planned / 2 | Data classification and state-of-data protection decision record. | 3.3 |
+| 11 Recovery Evidence | Planned / 2 | Encrypted backup metadata, RPO/RTO, and restoration-drill record. | 3.4, 5.2 |
+| 12 Baseline Drift | Planned / 3 | Secure baseline versus unauthorized service/configuration drift. | 4.1, 4.7 |
+| 13 Integrity Alert | Planned / 3 | FIM alert, hashes, and package ownership. | 1.4, 4.4, 4.5 |
+| 14 Identity Lifecycle | Planned / 3 | Offboarding, group removal, and credential-invalidation evidence. | 4.6 |
+| 15 Alert Tuning | Planned / 3 | Normalized SIEM-like events and false-positive rationale. | 4.4 |
+| 16 Secure Service Change | Planned / 3 | Reversible secure-protocol/firewall automation change. | 4.5, 4.7 |
+| 17 Incident Containment | Planned / 4 | Endpoint, application, firewall, and network timeline. | 2.4, 4.8, 4.9 |
+| 18 Forensic Handoff | Planned / 4 | Evidence manifest and chain-of-custody record. | 4.8 |
+| 19 Policy to Practice | Planned / 5 | Policy, standard, procedure, ownership, and system-evidence package. | 5.1 |
+| 20 Risk Register | Planned / 5 | Risk register and BIA using SLE, ARO, ALE, RTO, and RPO. | 5.2 |
+| 21 Assurance Review | Planned / 5 | Vendor evidence pack and phishing-reporting scenario. | 2.1, 5.3-5.6 |
 
 ## Architecture contract
 
