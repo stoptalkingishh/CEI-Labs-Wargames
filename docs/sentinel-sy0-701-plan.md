@@ -127,6 +127,55 @@ must update these contracts together:
    restart determinism, secret-leak probes, final-only teardown, mapping
    reconciliation, and concurrent launch/relaunch behavior.
 
+## Curriculum implementation pipeline
+
+Each curriculum batch is one reviewable PR after its predecessor has passed
+its target and generator tests. A batch may add an existing tool only when the
+lab cannot be expressed faithfully with the current deterministic artifacts;
+the tooling decision record is the authority for that choice.
+
+| Batch | Labs | Objectives | Primary evidence and tools | Completion gate |
+| --- | --- | --- | --- | --- |
+| 0: Foundation | Start Here, 01-05 | 1.1-1.4, 2.2, 2.5, 4.1, 4.2 | OpenSSH, OpenSSL, synthetic inventory/control/change records. | Implemented in PR #68. It remains non-staged until platform integration. |
+| 1: Authentication and evidence | 06-08 | 2.4, 2.5, 4.4, 4.6, 4.9 | Deterministic SSH/auth/audit logs, account/group/ACL fixtures, `journalctl`, `last`, `ausearch` where justified. | Intended login path and neighboring-account denial pass; learner derives a timeline and least-privilege conclusion from raw logs. |
+| 2: Architecture and resilience | 09-11 | 3.1-3.4, 5.2 | Static topology/data-classification/backup artifacts; optional `nftables`, OpenSSL, and restic only for bounded verification. | Every scenario is solvable with no host network capability and has an explicit RTO/RPO, data-state, or access-path answer. |
+| 3: Operations and detection | 12-16 | 2.3, 4.1, 4.3-4.7 | Baseline/drift fixtures, mock advisory and scan evidence, FIM data; then offline PCAP via `tcpdump -r` and pinned Suricata rules/EVE JSON. | PCAPs, logs, rules, package versions, and expected output are pinned/checksummed; no feeds, live capture, or internet access. |
+| 4: Incident response | 17-18 | 2.4, 4.8, 4.9 | Combined authentication, process, file, application/firewall, and PCAP evidence; chain-of-custody and timeline artifacts. | A full raw-evidence timeline, scope, containment decision, and evidence-preservation test pass without modifying the evidence corpus. |
+| 5: Governance and assurance | 19-21 | 2.1, 5.1-5.6 | Original policy/standard/procedure/RACI, risk register/BIA, vendor evidence, audit/attestation, and phishing/reporting artifacts. | Answers cite evidence and distinguish policy, standard, procedure, control owner, risk treatment, and required escalation. |
+| 6: Windows evidence extension | Optional additional scenarios, not required for initial 22 challenges | Windows-relevant 2.4, 4.1, 4.4-4.6, 4.8-4.9 | Project-owned, sanitized EVTX plus raw/normalized evidence and an open-source parser such as `libevtx`. | Fixture provenance, source scenario, audit-policy assumptions, checksum, and expected timeline are documented. No Windows runtime is required. |
+| 7: Shared advanced environment | Optional, post-release | Selected 4.3-4.5 and 4.8-4.9 | Shared Wazuh, Velociraptor, Greenbone, or isolated Windows evaluation VM. | Separate capacity, licensing, isolation, retention, reset, and maintenance review. These services never become a hidden requirement for the core SSH track. |
+
+### Dependency rules
+
+- Batches 1-5 may be authored and tested against the Sentinel image after
+  Batch 0, but cannot be deployed until the Engine fourth-track support and
+  Wargames platform integration are merged and released.
+- Batch 3 may not introduce Suricata until Batch 3's PCAP corpus and its
+  `tcpdump -r` workflows are already reproducible. Suricata processes local
+  PCAPs with a committed rule set only.
+- Batches 2 and 5 prefer documents and deterministic records over services;
+  installing a product is not evidence of learning a governance or risk
+  objective.
+- Batch 6 must not bundle proprietary Windows software or a Microsoft image.
+  Native Windows administration is a separate shared-lab decision, not a
+  per-team container feature.
+- A batch may not change the stage's expected challenge count without an
+  explicit plan amendment and matching Engine-stage contract change.
+
+### Required evidence for every batch
+
+- Mapping from every new lab to at least one objective in the project
+  objective reference.
+- Original scenario artifacts with fictional data, deterministic timestamps,
+  checksums for binary evidence, and no production credentials or captures.
+- A target test for intended solve, wrong-user denial, restart determinism,
+  and secret/environment leakage where the lab uses dynamic secrets.
+- Generated-YAML and hint-wallet coverage: exactly three progressive hints for
+  each scored lab; no hint-tier solution text in its free description.
+- Instructor writeup, learner objective, cheat-sheet entry, and concise
+  post-lab debrief covering decisive evidence, false-positive consideration,
+  mitigation, and appropriate ATT&CK mapping where relevant.
+
 ## Completion criteria
 
 Sentinel is ready only when all 21 labs map to this document, their intended
