@@ -98,14 +98,14 @@ must update these contracts together:
 | Deploy and validation | Build Sentinel in `deploy.sh`, include its hint wallet, update exact totals only after generated counts are known, and update generated-YAML, inventory, smoke, concurrency, and reconciliation tests. |
 | CI and release | Build/test the target in `.github/workflows/build-targets.yml` and `validate.yml`; use immutable image digests for release validation. |
 | Documentation | Add `docs/sentinel/{writeups,learning-objectives,cheatsheet}.md` and update the README, curriculum index, facilitator material, participant quick-start, and inventory. |
-| Engine coordination | Extend Engine hint-wallet track validation and verify the stage-manifest ingestion, admin controls, mapping reconciliation, and Swarm hardening for a fourth staged track. |
+| Engine coordination | Extend Engine hint-wallet track validation, the duplicated category-to-track mappings, and its independent default-stage registry. Engine does not ingest `game-stages.yml`; the two repositories must carry matching Sentinel slug, category, order, and expected-count contracts. |
 
 ## Delivery sequence and gates
 
 1. **Platform contract PRs:** generalize staged-track validation and deploy
    assumptions in this repository; make the coordinated Engine change for a
-   fourth managed hint wallet and stage. No Sentinel content is released at
-   this point.
+   fourth managed hint wallet, category mapping, and independently seeded
+   stage. No Sentinel content is released at this point.
 2. **Target foundation PR:** add the minimal SSH image, account model,
    secret plumbing, one onboarding path, and isolation/restart tests. The
    image must demonstrate no secret leakage before curriculum work begins.
@@ -137,8 +137,9 @@ build alone is not sufficient.
   category.
 - Confirm the 21-lab initial scope versus a smaller pilot (Start Here plus
   labs 01-05) before content implementation.
-- Approve the coordinated Engine work as a prerequisite; the current wallet
-  allowlist and stage assumptions cannot support a fourth managed track.
+- Approve the coordinated Engine work as a prerequisite; its current wallet
+  allowlist accepts exactly three tracks and its stage configuration is not
+  sourced from this repository's manifest.
 - Confirm the event's offline policy for any future reading links. Sentinel
   should prefer original, local explanations and must not require external
   websites.
