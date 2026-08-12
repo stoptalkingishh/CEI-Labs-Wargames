@@ -9,10 +9,11 @@ areas. It is not affiliated with CompTIA, does not reproduce exam questions,
 and does not claim that completing it prepares a participant to pass an exam.
 
 The source used for the alignment is the local `CompTIA Security+ SY0-701
-Exam Objectives (7.0).pdf`, dated 2023. Objective wording is summarized here
-rather than copied. Sentinel complements the existing Linux, cryptography,
-and web-security tracks with defensive system administration and incident
-response work.
+Exam Objectives (7.0).pdf`, dated 2023, with a cleaned project reference at
+[`reference/comptia-security-plus-sy0-701-v7-objectives.md`](reference/comptia-security-plus-sy0-701-v7-objectives.md).
+Objective wording is summarized here rather than copied. Sentinel complements
+the existing Linux, cryptography, and web-security tracks with defensive
+system administration and incident response work.
 
 ## Player experience
 
