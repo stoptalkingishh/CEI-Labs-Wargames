@@ -66,6 +66,12 @@ chmod +x deploy.sh
 ./deploy.sh
 ```
 
+### Natas RCE isolation audit
+
+For an authorized synthetic-secret container audit of the intentional Natas
+12/13 upload RCE lessons, see
+[`docs/natas-12-13-rce-isolation-audit.md`](docs/natas-12-13-rce-isolation-audit.md).
+
 Deployment generates all four tracks and runs the read-only stage validator
 before uploading. It must report Bandit 35, Krypton 8, and Natas 16 (the
 staged/wave-gated games); AI Copilot Setup's 6 challenges aren't part of
