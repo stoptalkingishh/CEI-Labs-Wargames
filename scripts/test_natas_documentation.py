@@ -31,7 +31,11 @@ class NatasDocumentationTest(unittest.TestCase):
             "docs/facilitation-runbook.md",
         ):
             text = (ROOT / relative_path).read_text(encoding="utf-8")
-            self.assertTrue("explicitly" in text or "operator has supplied and tested" in text)
+            self.assertTrue(
+                "explicitly" in text
+                or "operator has supplied and tested" in text
+                or "operator explicitly provisioned and tested" in text
+            )
             self.assertNotIn("SSH into the attacker\nworkstation is offered", text)
 
 

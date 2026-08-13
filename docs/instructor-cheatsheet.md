@@ -24,7 +24,7 @@ puzzle issue).
 - **Natas attacker workstation access:** after the event operator has
   completed the release checks in `natas-completion-status.md`, noVNC is
   supported without a participant credential. SSH is unavailable unless
-  the operator supplies and tests a specific endpoint and credential;
+  the operator explicitly supplies and tests a specific endpoint and credential;
   point participants to noVNC first.
 - **Shared-box tracks (Bandit, Krypton):** everyone on a track shares one
   target box. If a participant's session looks broken in a way not
