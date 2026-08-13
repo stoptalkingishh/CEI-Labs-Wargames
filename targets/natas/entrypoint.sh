@@ -73,7 +73,7 @@ NEXT_PASSWORD_FILES = {
     "/var/www/natas/natas6/next_password.php": ("natas6", "natas7", "next_password"),
     "/var/www/natas/natas8/next_password.php": ("natas8", "natas9", "next_password"),
     "/var/www/natas/natas11/next_password.php": ("natas11", "natas12", "next_password"),
-    "/var/www/natas/natas14/next_password.php": ("natas14", "natas15", "next_password"),
+    "/var/www/natas/natas14/next_password.php": ("natas14", "natas14final", "final_flag"),
 }
 for path, (owner, key, var_name) in NEXT_PASSWORD_FILES.items():
     value = secrets.get(key)

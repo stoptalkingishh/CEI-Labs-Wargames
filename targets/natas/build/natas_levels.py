@@ -4,7 +4,10 @@ FIRST_LEVEL = 0
 LAST_LEVEL = 34
 LEVELS = range(FIRST_LEVEL, LAST_LEVEL + 1)
 WEBPASS_LEVELS = range(1, LAST_LEVEL + 1)
-TERMINAL_SECRET_KEY = "natas34final"
+# The deployed 0-14 CTFd contract terminates at Natas 14. The later webpass
+# keys are reserved for future scenarios, but cannot replace this final flag
+# until the atomic 36-challenge expansion changes the release contract.
+TERMINAL_SECRET_KEY = "natas14final"
 REQUIRED_SECRET_KEYS = frozenset(
     ["natas%d" % level for level in WEBPASS_LEVELS] + [TERMINAL_SECRET_KEY]
 )

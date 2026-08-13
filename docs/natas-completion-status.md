@@ -14,6 +14,15 @@ for levels 15-34 remains pending and is deliberately not a release of 36
 challenges. Deployment totals, `game-stages.yml`, and current deployment
 behavior remain unchanged. See plan PR #69 for the deferred scenario work.
 
+### Deployed 0-14 Compatibility Boundary
+
+Until the atomic 36-challenge expansion updates the challenge generator, stage
+manifest, and audit contract together, the deployed `natas-14` challenge keeps
+its existing terminal behavior: its SQLi solve exposes and scores
+`natas14final`. The reserved `natas15` through `natas34` runtime secrets only
+authenticate their inert pending endpoints; no released 0-14 route discloses
+them or changes the terminal flag semantics.
+
 ## What This Repository Owns
 
 - `targets/natas/` is the Natas target build context.

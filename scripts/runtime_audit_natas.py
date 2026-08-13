@@ -28,7 +28,7 @@ def parse_secrets(value):
     require(isinstance(secrets, dict), "NATAS_AUDIT_SECRETS must be a JSON object")
     for level in range(1, 35):
         require(isinstance(secrets.get(f"natas{level}"), str) and secrets[f"natas{level}"], f"missing synthetic secret natas{level}")
-    require(isinstance(secrets.get("natas34final"), str) and secrets["natas34final"], "missing synthetic secret natas34final")
+    require(isinstance(secrets.get("natas14final"), str) and secrets["natas14final"], "missing synthetic secret natas14final")
     return secrets
 
 
@@ -154,14 +154,14 @@ def main(base_url, secrets):
     require(b"uploads/audit.php" in body, "Natas 13 magic-byte upload failed")
     expect(audit, 13, secrets["natas14"].encode(), "Natas 13 uploaded PHP did not execute", path="/uploads/audit.php")
     status, body, _ = audit.form(14, {"username": '" OR "1"="1" -- ', "password": "x"})
-    require(status == 200 and secrets["natas15"].encode() in body, "Natas 14 SQL injection failed")
+    require(status == 200 and secrets["natas14final"].encode() in body, "Natas 14 SQL injection failed")
     print("NATAS_LEVELS_0_THROUGH_14_OK")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-url", required=True, help="explicit local level-0 URL, such as http://127.0.0.1:18000")
-    parser.add_argument("--secrets", required=True, help="JSON object containing synthetic natas1..natas14 and natas14final values")
+    parser.add_argument("--secrets", required=True, help="JSON object containing synthetic natas1..natas34 values and the deployed natas14final")
     args = parser.parse_args()
     try:
         main(args.base_url, parse_secrets(args.secrets))
