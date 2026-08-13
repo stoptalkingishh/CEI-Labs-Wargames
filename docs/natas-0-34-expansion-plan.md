@@ -54,14 +54,14 @@ services are introduced.
 | 22-23 | Redirect/execution mismatch | Route emits a redirect and controlled body marker; secure comparator terminates. | No external redirects, no-store response, generated local token only. |
 | 23-24 | Numeric-prefix coercion | Pinned toy parser with insecure and strict comparators. | No real authentication; runtime semantics unit-tested. |
 | 24-25 | Parameter shape/type confusion | Controlled request parser and in-memory comparison model. | Depth/count caps; no debug errors or shared middleware state. |
-| 25-26 | File/log data-flow weakness | Synthetic resolver/audit fixture interpreter with inert markers. | No native include/eval/shell, host mounts, served writable directory, or external path resolution. |
+| 25-26 | Composite request, log, and interpreted-file data-flow chain | Synthetic resolver/audit fixture interpreter with inert markers. | No native include/eval/shell, host mounts, served writable directory, or external path resolution. |
 | 26-27 | Unsafe serialized-state concept | JSON project parser and virtual export sink, never native object deserialization. | Size/depth caps; virtual sink only; no object hooks/filesystem writes. |
 | 27-28 | Identity normalization ambiguity | Custom bounded account-store comparison model. | Per-instance namespace; no real account/DB collision. |
 | 28-29 | ECB integrity failure concept | Deterministic visual block/token assembler and miniature allowlisted query model. | No real encryption oracle, DB, shared key, or raw input logging. |
 | 29-30 | Filename-to-command interpretation | Parser emulator and fixed virtual command catalog. | No Perl `open`, shell, subprocess, or writable executable directory. |
 | 30-31 | Repeated-parameter type propagation | Fixed form parser and mock quote/query model. | No real DBI/database; pinned parser behavior; request limits. |
-| 31-32 | Legacy multipart/input ambiguity | Modern app simulation of assigned training-artifact selection. | Allowlisted virtual artifacts only; no host paths or process calls. |
-| 32-33 | Legacy command-execution reasoning | Command emulator with fixed safe output catalog. | No real RCE; a real historical interpreter is prohibited in the shared target. |
+| 31-32 | Duplicate-parameter and context-sensitive file-handle selection | Modern app simulation of assigned training-artifact selection. | Allowlisted virtual artifacts only; no host paths or process calls. |
+| 32-33 | File-handle primitive execution-escalation reasoning | Command emulator with fixed safe output catalog. | No real RCE; a real historical interpreter is prohibited in the shared target. |
 | 33-34 | Upload/archive metadata trust boundary | Simulated upload registry and benign metadata lifecycle event. | No executable uploads, PHAR/native deserialization, magic methods, include, or writable web root. |
 | 34 terminal | Completion/debrief | Static completion view or server-side terminal marker. | No next credential or secret-bearing terminal service. |
 
@@ -91,3 +91,6 @@ redact secret values in failures.
   progression and level model.
 - [CertCube Natas reference](https://blog.certcube.com/overthewire-natas/):
   concept discovery reference only. It is not copied into CEI Labs materials.
+- [LearnHacking Natas reference](https://learnhacking.io/tag/natas/):
+  independent public concept corroboration only. It is not copied into CEI Labs
+  materials.
