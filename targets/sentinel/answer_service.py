@@ -4,7 +4,14 @@
 import json
 import sys
 
-LAB_USERS = {"sentinel-start-here": "sentinel0", **{f"sentinel-{number:02d}": f"sentinel{number}" for number in range(1, 6)}}
+LAB_USERS = {
+    "sentinel-start-here": "sentinel0",
+    "sentinel-01": "sentinel0",
+    "sentinel-02": "sentinel1",
+    "sentinel-03": "sentinel2",
+    "sentinel-04": "sentinel3",
+    "sentinel-05": "sentinel4",
+}
 
 
 def fail():

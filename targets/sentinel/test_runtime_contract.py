@@ -38,14 +38,30 @@ class SentinelRuntimeContractTests(unittest.TestCase):
 
     def test_valid_answer_releases_only_its_credential(self):
         submission = {"lab": "sentinel-01", "answer": runtime.ANSWERS["sentinel-01"]}
-        self.assertEqual(answer_service.release(submission, "sentinel1", runtime.ANSWERS, {"sentinel-01": "team-secret"}), "team-secret")
+        self.assertEqual(answer_service.release(submission, "sentinel0", runtime.ANSWERS, {"sentinel-01": "team-secret"}), "team-secret")
 
-    def test_invalid_or_wrong_account_answer_releases_nothing(self):
+    def test_each_submission_is_bound_to_its_progression_account(self):
+        expected_users = {
+            "sentinel-start-here": "sentinel0",
+            "sentinel-01": "sentinel0",
+            "sentinel-02": "sentinel1",
+            "sentinel-03": "sentinel2",
+            "sentinel-04": "sentinel3",
+            "sentinel-05": "sentinel4",
+        }
+        credentials = {lab: f"{lab}-credential" for lab in runtime.ANSWERS}
+        self.assertEqual(answer_service.LAB_USERS, expected_users)
+        for lab, caller in expected_users.items():
+            submission = {"lab": lab, "answer": runtime.ANSWERS[lab]}
+            self.assertEqual(answer_service.release(submission, caller, runtime.ANSWERS, credentials), credentials[lab])
+            adjacent = f"sentinel{(int(caller[-1]) + 1) % 6}"
+            with self.assertRaises(SystemExit, msg=lab):
+                answer_service.release(submission, adjacent, runtime.ANSWERS, credentials)
+
+    def test_invalid_answer_releases_nothing(self):
         submission = {"lab": "sentinel-01", "answer": {"asset": "wrong"}}
         with self.assertRaises(SystemExit):
-            answer_service.release(submission, "sentinel1", runtime.ANSWERS, {"sentinel-01": "team-secret"})
-        with self.assertRaises(SystemExit):
-            answer_service.release({"lab": "sentinel-01", "answer": runtime.ANSWERS["sentinel-01"]}, "sentinel2", runtime.ANSWERS, {"sentinel-01": "team-secret"})
+            answer_service.release(submission, "sentinel0", runtime.ANSWERS, {"sentinel-01": "team-secret"})
 
     def test_learner_evidence_has_no_credential_values(self):
         with open("runtime.py", encoding="utf-8") as source:
@@ -61,7 +77,16 @@ class SentinelRuntimeContractTests(unittest.TestCase):
         self.assertNotIn("openssl req", dockerfile)
         self.assertIn("-attime 1893456000", runtime_source)
         self.assertIn("-CRLfile training-ca.crl -crl_check", runtime_source)
-        self.assertIn('os.chmod("/home/sentinel4/service.key", 0o400)', runtime_source)
+        self.assertIn('os.chmod("/home/sentinel3/service.key", 0o400)', runtime_source)
+
+    def test_evidence_locations_follow_password_progression(self):
+        with open("runtime.py", encoding="utf-8") as source:
+            content = source.read()
+        self.assertIn('write("sentinel0", "asset-census.txt"', content)
+        self.assertIn('write("sentinel1", "control-evidence.md"', content)
+        self.assertIn('write("sentinel2", "change-window.txt"', content)
+        self.assertIn('write("sentinel3", "certificate-ledger.txt"', content)
+        self.assertIn('write("sentinel4", "exposure-review.conf"', content)
 
     def test_lab01_contract_does_not_require_systemctl(self):
         builder = Path(__file__).resolve().parents[2] / "scripts" / "build_sentinel.py"

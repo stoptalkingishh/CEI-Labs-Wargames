@@ -33,27 +33,27 @@ challenges_data = [
      "flag": _dynamic("sentinel-start-here")},
     {"id": "sentinel-01", "name": "Sentinel 01: Asset Census", "points": 200,
      "goal": "Reconcile a supplied asset inventory with the host's installed software, active services, and ownership evidence.",
-     "task": "Work as `sentinel1`. Review the local inventory evidence and identify the documented census result.", "flag": _dynamic("sentinel-01")},
+     "task": "Work as `sentinel0`. Review the local inventory evidence and submit the documented structured evidence tuple through `sentinel-submit`.", "flag": _dynamic("sentinel-01")},
     {"id": "sentinel-02", "name": "Sentinel 02: Control Review", "points": 250,
      "goal": "Classify the safeguards documented on the host by their control category and purpose.",
-     "task": "Work as `sentinel2`. Compare the control statements with their evidence and identify the approved review result.", "flag": _dynamic("sentinel-02")},
+     "task": "Work as `sentinel1`. Compare the control statements with their evidence and submit the documented structured classification tuple through `sentinel-submit`.", "flag": _dynamic("sentinel-02")},
     {"id": "sentinel-03", "name": "Sentinel 03: Change Window", "points": 300,
      "goal": "Review a change request for approval, testing, and rollback evidence before selecting the safe action.",
-     "task": "Work as `sentinel3`. Inspect the local change packet and identify the recorded disposition.", "flag": _dynamic("sentinel-03")},
+     "task": "Work as `sentinel2`. Inspect the local change packet and submit the documented disposition and missing-evidence tuple through `sentinel-submit`.", "flag": _dynamic("sentinel-03")},
     {"id": "sentinel-04", "name": "Sentinel 04: Certificate Trail", "points": 350,
      "goal": "Trace certificate, key-permission, and revocation evidence to identify the trustworthy service identity.",
-     "task": "Work as `sentinel4`. Inspect the certificate evidence package and identify the verified service record.", "flag": _dynamic("sentinel-04")},
+     "task": "Work as `sentinel3`. Inspect the certificate evidence package and submit the documented structured evidence tuple through `sentinel-submit`.", "flag": _dynamic("sentinel-04")},
     {"id": "sentinel-05", "name": "Sentinel 05: Attack Surface", "points": 400,
      "goal": "Enumerate the host's listening services and review configuration artifacts to identify the exposed default service.",
-     "task": "Work as `sentinel5`. Review the local exposure evidence and submit the documented finding.", "flag": _dynamic("sentinel-05")},
+     "task": "Work as `sentinel4`. Review the local exposure evidence and submit the documented structured exposure tuple through `sentinel-submit`.", "flag": _dynamic("sentinel-05")},
 ]
 
 HINTS = {
     "sentinel-01": ["Start with the supplied inventory, then independently inspect what this host reports.", "Compare package, service, and ownership fields rather than relying on a single source.", "Use `dpkg -l`, `pgrep -a sshd`, and `stat` on the named evidence files; submit the documented evidence tuple through `sentinel-submit`."],
-    "sentinel-02": ["Each statement describes a safeguard and an intended outcome.", "Control categories include technical, administrative, and physical; purposes include preventive, detective, and corrective.", "Read `controls.md` and `control-evidence.md`, then use the line labelled `approved-review-result`."],
-    "sentinel-03": ["A safe production change has accountable approval, testing evidence, and a viable rollback.", "Read every section of the change packet before deciding whether the requested window should proceed.", "The packet's change board disposition records the correct result after the missing evidence is identified."],
+    "sentinel-02": ["Each statement describes a safeguard and an intended outcome.", "Control categories include technical, administrative, and physical; purposes include preventive, detective, and corrective.", "Read `controls.md` and `control-evidence.md`, then submit the documented MFA, badge-review, and log-review classification tuple through `sentinel-submit`."],
+    "sentinel-03": ["A safe production change has accountable approval, testing evidence, and a viable rollback.", "Read every section of the change packet before deciding whether the requested window should proceed.", "Submit the documented `disposition` and `missing_evidence` tuple through `sentinel-submit`."],
     "sentinel-04": ["Trust requires more than a familiar subject name.", "Compare issuer, validity, offline revocation status, and private-key permissions across the provided records.", "Use the fixed-time `openssl verify` command in the ledger and `stat -c '%a %U:%G' service.key`, then submit the evidence tuple through `sentinel-submit`."],
-    "sentinel-05": ["Observed listeners and intended configuration are separate sources of evidence.", "Enumerate TCP listeners, then compare them with the exposure review and service configuration.", "Use `ss -lnt` and read `exposure-review.conf`; the signed finding records the exposed default service."],
+    "sentinel-05": ["Observed listeners and intended configuration are separate sources of evidence.", "Enumerate TCP listeners, then compare them with the exposure review and service configuration.", "Use `ss -lnt` and read `exposure-review.conf`, then submit the documented listener, port, and legacy-metrics tuple through `sentinel-submit`."],
 }
 
 

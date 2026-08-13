@@ -11,32 +11,33 @@ Connect as `sentinel0` with password `sentinel0`, then read
 
 ## 01 Asset Census
 
-Connect as `sentinel1` with the Start Here result. Read
+Continue as `sentinel0` after the Start Here result. Read
 `~/asset-census.txt`; independently compare the recorded package, service,
 and ownership fields if desired. Submit the exact evidence tuple to
 `sentinel-submit`; its output is the next password.
 
 ## 02 Control Review
 
-Connect as `sentinel2`, read `controls.md` and `control-evidence.md`, and
-classify the stated safeguards. Submit the exact classifications to
-`sentinel-submit`.
+Connect as `sentinel1`, read `controls.md` and `control-evidence.md`, and
+submit the documented `mfa`, `badge_review`, and `log_review` classification
+tuple to `sentinel-submit`.
 
 ## 03 Change Window
 
-Connect as `sentinel3`, read `change-window.txt`, and identify the missing
+Connect as `sentinel2`, read `change-window.txt`, and identify the missing
 change-owner approval. The safe decision is to defer the change. Submit the
-disposition and missing-evidence fields to `sentinel-submit`.
+documented `disposition` and `missing_evidence` tuple to `sentinel-submit`.
 
 ## 04 Certificate Trail
 
-Connect as `sentinel4`, inspect the committed test CA, `service.pem`,
+Connect as `sentinel3`, inspect the committed test CA, `service.pem`,
 `training-ca.crl`, `service.key`, and `certificate-ledger.txt`. Run the
 ledger's fixed-time offline OpenSSL command and inspect the private-key mode.
 Submit the exact evidence tuple to `sentinel-submit`.
 
 ## 05 Attack Surface
 
-Connect as `sentinel5`, run `ss -lnt`, and compare it with
+Connect as `sentinel4`, run `ss -lnt`, and compare it with
 `exposure-review.conf`. SSH is the only listener; the legacy metrics service
-is disabled. Submit the exact exposure tuple to `sentinel-submit`.
+is disabled. Submit the documented `listener`, `port`, and `legacy_metrics`
+tuple to `sentinel-submit`.

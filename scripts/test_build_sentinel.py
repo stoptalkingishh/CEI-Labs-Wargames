@@ -16,6 +16,13 @@ class SentinelBuilderTests(unittest.TestCase):
         self.assertEqual(set(HINTS), {f"sentinel-{number:02d}" for number in range(1, 6)})
         self.assertTrue(validate() is None)
 
+    def test_structured_submission_copy_replaces_obsolete_result_fields(self):
+        for lab in ("sentinel-02", "sentinel-03", "sentinel-05"):
+            self.assertIn("sentinel-submit", HINTS[lab][2])
+        self.assertNotIn("approved-review-result", HINTS["sentinel-02"][2])
+        self.assertNotIn("recorded disposition", HINTS["sentinel-03"][2])
+        self.assertNotIn("signed finding", HINTS["sentinel-05"][2])
+
     def test_generated_yaml_and_wallet_keep_the_runtime_contract(self):
         with tempfile.TemporaryDirectory() as directory:
             build(directory)

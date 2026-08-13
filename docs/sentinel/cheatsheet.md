@@ -7,11 +7,11 @@ complete. Levels 06-21 remain planned.
 | Challenge | Account | Evidence | Expected submission |
 | --- | --- | --- | --- |
 | Start Here | `sentinel0` / `sentinel0` | `ENGAGEMENT-RULES.txt` | structured engagement-scope answer |
-| 01 Asset Census | `sentinel1` | `asset-census.txt`, native `sshd` process | structured asset evidence |
-| 02 Control Review | `sentinel2` | `controls.md`, `control-evidence.md` | structured classifications |
-| 03 Change Window | `sentinel3` | `change-window.txt` | structured disposition evidence |
-| 04 Certificate Trail | `sentinel4` | test CA, leaf, CRL, key, ledger | structured certificate evidence |
-| 05 Attack Surface | `sentinel5` | `exposure-review.conf`, `ss -lnt` | structured exposure evidence |
+| 01 Asset Census | `sentinel0` | `asset-census.txt`, native `sshd` process | structured asset evidence |
+| 02 Control Review | `sentinel1` | `controls.md`, `control-evidence.md` | structured MFA, badge-review, and log-review tuple |
+| 03 Change Window | `sentinel2` | `change-window.txt` | structured disposition and missing-evidence tuple |
+| 04 Certificate Trail | `sentinel3` | test CA, leaf, CRL, key, ledger | structured certificate evidence |
+| 05 Attack Surface | `sentinel4` | `exposure-review.conf`, `ss -lnt` | structured listener, port, and legacy-metrics tuple |
 
 Submit JSON to `sentinel-submit`, for example
 `printf '%s\n' '{"lab":"sentinel-01","answer":{...}}' | sentinel-submit`.

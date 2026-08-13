@@ -60,18 +60,18 @@ def main():
     write_root("answers.json", json.dumps(ANSWERS))
 
     write("sentinel0", "ENGAGEMENT-RULES.txt", "Northstar training host: inspect only local evidence. Do not alter services or access other systems.\nSubmit this structured answer with `sentinel-submit`: {\"lab\": \"sentinel-start-here\", \"answer\": {\"engagement_scope\": \"local-evidence-only\"}}\n")
-    write("sentinel1", "asset-census.txt", "Asset inventory: northstar-jump-01\nInstalled package review: openssh-server approved\nActive service review: sshd approved\nOwnership review: /etc/ssh/sshd_config root:root\nSubmit the asset, package, service, and owner fields through `sentinel-submit`.\n")
-    write("sentinel2", "controls.md", "MFA: technical preventive\nBadge review: physical preventive\nLog review: technical detective\n")
-    write("sentinel2", "control-evidence.md", "Evidence confirms the listed safeguards are implemented.\nSubmit the MFA, badge-review, and log-review classifications through `sentinel-submit`.\n")
-    write("sentinel3", "change-window.txt", "Change: rotate jump-host certificate\nApproval: missing change-owner signature\nTesting: attached\nRollback: attached\nBoard disposition: DEFER\nSubmit the disposition and missing-evidence fields through `sentinel-submit`.\n")
+    write("sentinel0", "asset-census.txt", "Asset inventory: northstar-jump-01\nInstalled package review: openssh-server approved\nActive service review: sshd approved\nOwnership review: /etc/ssh/sshd_config root:root\nSubmit the asset, package, service, and owner fields through `sentinel-submit`.\n")
+    write("sentinel1", "controls.md", "MFA: technical preventive\nBadge review: physical preventive\nLog review: technical detective\n")
+    write("sentinel1", "control-evidence.md", "Evidence confirms the listed safeguards are implemented.\nSubmit the MFA, badge-review, and log-review classifications through `sentinel-submit`.\n")
+    write("sentinel2", "change-window.txt", "Change: rotate jump-host certificate\nApproval: missing change-owner signature\nTesting: attached\nRollback: attached\nBoard disposition: DEFER\nSubmit the disposition and missing-evidence fields through `sentinel-submit`.\n")
     for name in ("training-ca.pem", "service.pem", "training-ca.crl"):
         with open(f"/opt/sentinel/certs/{name}", encoding="utf-8") as source:
-            write("sentinel4", name, source.read())
-    subprocess.run(["cp", "/opt/sentinel/certs/service.key", "/home/sentinel4/service.key"], check=True)
-    subprocess.run(["chown", "root:root", "/home/sentinel4/service.key"], check=True)
-    os.chmod("/home/sentinel4/service.key", 0o400)
-    write("sentinel4", "certificate-ledger.txt", "Service: ops.northstar.training\nIssuer: Northstar Training Test CA\nRevocation: clear in training-ca.crl\nKey permissions: /home/sentinel4/service.key is root:root mode 0400\nVerify offline with: openssl verify -attime 1893456000 -CAfile training-ca.pem -CRLfile training-ca.crl -crl_check service.pem\nSubmit service, issuer, revocation_status, and key_mode through `sentinel-submit`.\n")
-    write("sentinel5", "exposure-review.conf", "Observed listener: ssh tcp/22\nConfigured default service: legacy-metrics disabled\nNo web, database, or remote-management service is exposed.\nSubmit listener, port, and legacy_metrics through `sentinel-submit`.\n")
+            write("sentinel3", name, source.read())
+    subprocess.run(["cp", "/opt/sentinel/certs/service.key", "/home/sentinel3/service.key"], check=True)
+    subprocess.run(["chown", "root:root", "/home/sentinel3/service.key"], check=True)
+    os.chmod("/home/sentinel3/service.key", 0o400)
+    write("sentinel3", "certificate-ledger.txt", "Service: ops.northstar.training\nIssuer: Northstar Training Test CA\nRevocation: clear in training-ca.crl\nKey permissions: /home/sentinel3/service.key is root:root mode 0400\nVerify offline with: openssl verify -attime 1893456000 -CAfile training-ca.pem -CRLfile training-ca.crl -crl_check service.pem\nSubmit service, issuer, revocation_status, and key_mode through `sentinel-submit`.\n")
+    write("sentinel4", "exposure-review.conf", "Observed listener: ssh tcp/22\nConfigured default service: legacy-metrics disabled\nNo web, database, or remote-management service is exposed.\nSubmit listener, port, and legacy_metrics through `sentinel-submit`.\n")
 
 
 if __name__ == "__main__":
