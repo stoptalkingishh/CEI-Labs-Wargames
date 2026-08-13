@@ -17,7 +17,8 @@ Two instance patterns cover everything built so far:
   for N levels, and it's how OverTheWire's own real Bandit/Krypton work,
   which made mapping content over straightforward.
 - **`target-attacker`** (Natas): a shared target box plus a **separate**
-  attacker workstation (noVNC + SSH), because the puzzles are entirely
+  attacker workstation (noVNC; SSH only when explicitly provisioned and
+  verified by the event operator), because the puzzles are entirely
   HTTP-based and there's no reason to give a participant a shell on the
   target itself — that would leak the answer. Use this pattern whenever
   the track's puzzles live behind a network service the participant
@@ -49,7 +50,8 @@ Here**" whose job is purely to explain that track's specific connection
 method and prove the participant used it (usually by fetching one
 trivial, guaranteed-reachable file/value). This exists because the three
 tracks genuinely connect differently (direct SSH vs. an attacker
-workstation with noVNC/SSH options), and burying that explanation inside
+workstation with a noVNC path and any operator-provided SSH option), and
+burying that explanation inside
 level 1's own puzzle content would conflate "learning the tooling" with
 "solving the first real puzzle." Keep this pattern for any new track
 whose connection method isn't identical to an existing one.

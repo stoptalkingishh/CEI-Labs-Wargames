@@ -71,7 +71,7 @@ to:
 | Two different challenges' instances collide or one won't come up | Same race, port-allocation edge | Wait a few seconds and retry the launch; if it persists, flag for a restart of the orchestrator |
 | A participant reports "reboot/relaunch/extend returns an error" | Possibly the documented Swarm network-recreation race on relaunch | Retry the same relaunch once — this specific race is known non-deterministic and typically succeeds on retry |
 | An admin content-sync script gets 403s on delete calls | CTFd's CSRF check quirk on bodyless DELETEs — see FAQ | Not participant-facing; if you're running sync scripts yourself, add `Content-Type: application/json` to DELETE calls |
-| Natas participant can't SSH into the attacker workstation | No credential is surfaced anywhere in the UI — see FAQ | Direct them to noVNC instead (password-free); this is a known gap, not something to debug further live |
+| Natas participant asks for SSH to the attacker workstation | SSH is not a supported participant path unless the operator explicitly provisioned and tested it | Direct them to noVNC; do not troubleshoot or advertise SSH without the operator's verified endpoint and credential |
 | Orchestrator was restarted mid-event and now reports state that doesn't match reality | In-memory store has no reconciliation against real Docker state | Needs manual cleanup (remove orphaned services/networks by name) — plan to avoid restarting the orchestrator mid-event |
 
 ## After the event
