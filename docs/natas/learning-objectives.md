@@ -85,3 +85,6 @@ which level(s) teach it. Pairs with `writeups.md` (full solutions) and
 - Identify how normalization can create local account-identity ambiguity.
 - Assemble fixed visual blocks into an allowlisted query model without encryption.
 - Reason about filename interpretation through a parser and fixed catalog without process execution.
+
+## Local audit runner
+- `python3 scripts/run_natas_0_29_audits.py` builds one local target, reserves a contiguous loopback port range, waits for authenticated Apache readiness, and runs the 0-14, 15-19, 20-24, and 25-29 audits. It uses synthetic secrets and removes its container afterward.

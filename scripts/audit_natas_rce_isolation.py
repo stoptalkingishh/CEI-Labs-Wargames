@@ -68,10 +68,16 @@ def published_ports():
     bindings = json.loads(
         run("docker", "inspect", "--format", "{{json .NetworkSettings.Ports}}", CONTAINER, capture_output=True).stdout
     )
-    return {
-        level: int(bindings[f"{8000 + level}/tcp"][0]["HostPort"])
-        for level in (12, 13)
-    }
+    published = {}
+    for level in (12, 13):
+        binding = bindings.get(f"{8000 + level}/tcp")
+        if not isinstance(binding, list) or len(binding) != 1:
+            raise RuntimeError(f"level {level} is not published to one loopback port")
+        host_port = binding[0].get("HostPort")
+        if not isinstance(host_port, str) or not host_port.isdigit():
+            raise RuntimeError(f"level {level} has an invalid published port")
+        published[level] = int(host_port)
+    return published
 
 
 def proof(level):
@@ -111,7 +117,7 @@ def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     run("docker", "build", "--tag", IMAGE, "targets/natas", cwd=root)
     run("docker", "rm", "--force", CONTAINER, check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    ports = [item for level in (12, 13) for item in ("-p", f"127.0.0.1::{8000 + level}")]
+    ports = [item for level in (12, 13) for item in ("--publish", f"127.0.0.1::{8000 + level}")]
     try:
         run("docker", "run", "--detach", "--name", CONTAINER, "--env", f"LEVEL_SECRETS={json.dumps(SECRETS)}", *ports, IMAGE, stdout=subprocess.DEVNULL)
         PORTS.update(published_ports())
