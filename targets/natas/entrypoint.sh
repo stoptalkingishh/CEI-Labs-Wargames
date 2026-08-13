@@ -93,7 +93,7 @@ for path, owner, key, var_name in (
     subprocess.run(["chown", f"{owner}:{owner}", path], check=True)
     os.chmod(path, 0o600)
 
-# Batch A keeps its challenge state outside served content.  Each file is
+# Batch A and B keep challenge state outside served content. Each file is
 # replaced on container start, giving every target/team a clean bounded state.
 team = re.sub(r"[^A-Za-z0-9_-]", "_", os.environ.get("NATAS_TARGET_TEAM", "local"))[:64] or "local"
 for path, owner, key, var_name in (
@@ -102,6 +102,11 @@ for path, owner, key, var_name in (
     ("/etc/cei-labs/natas-runtime/natas17.php", "natas17", "natas18", "natas18_secret"),
     ("/etc/cei-labs/natas-runtime/natas18.php", "natas18", "natas19", "natas19_secret"),
     ("/etc/cei-labs/natas-runtime/natas19.php", "natas19", "natas20", "natas20_secret"),
+    ("/etc/cei-labs/natas-runtime/natas20.php", "natas20", "natas21", "natas21_secret"),
+    ("/etc/cei-labs/natas-runtime/natas21.php", "natas21", "natas22", "natas22_secret"),
+    ("/etc/cei-labs/natas-runtime/natas22.php", "natas22", "natas23", "natas23_secret"),
+    ("/etc/cei-labs/natas-runtime/natas23.php", "natas23", "natas24", "natas24_secret"),
+    ("/etc/cei-labs/natas-runtime/natas24.php", "natas24", "natas25", "natas25_secret"),
 ):
     write_php_secret(path, var_name, secrets[key])
     with open(path, "a") as state_file:
@@ -118,6 +123,16 @@ with open(state_path, "w") as state_file:
     # The single elevated record is challenge data, not a framework session.
     json.dump({"42": {"role": "operator"}}, state_file)
 subprocess.run(["chown", "natas18:natas18", state_path], check=True)
+os.chmod(state_path, 0o600)
+
+state_dir = "/var/lib/cei-labs/natas-batch-b"
+os.makedirs(state_dir, exist_ok=True)
+subprocess.run(["chown", "natas20:natas20", state_dir], check=True)
+os.chmod(state_dir, 0o700)
+state_path = os.path.join(state_dir, "record-%s.txt" % team)
+with open(state_path, "w") as state_file:
+    state_file.write("id=guest|role=viewer|note=welcome")
+subprocess.run(["chown", "natas20:natas20", state_path], check=True)
 os.chmod(state_path, 0o600)
 PYEOF
 

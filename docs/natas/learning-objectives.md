@@ -1,7 +1,7 @@
 # Natas — Learning Objectives
 
 A skills inventory for the Natas track (web application security, level
- endpoints 0–19), organized by concept rather than by level number, so it can be
+  endpoints 0–24), organized by concept rather than by level number, so it can be
 referenced independent of any specific level: to check what a
 participant has actually learned, to plan which levels to assign for a
 given skill gap, or to compare against a course syllabus. Each entry
@@ -71,3 +71,10 @@ which level(s) teach it. Pairs with `writeups.md` (full solutions) and
 - Recognize why filtering command punctuation does not make a command-shaped interface safe; this lab uses an isolated evaluator.
 - Measure deterministic application timing differences without response-content disclosure.
 - Identify predictable bounded numeric session identifiers and encoded tokens that lack integrity protection.
+
+## Bounded state and control-flow trust failures (levels 20-24)
+- Assess ambiguous custom serialization using a private, reset-safe state record.
+- Identify trust decisions that cross two internal application routes.
+- Inspect a local redirect response without assuming execution stopped.
+- Compare a deliberately pinned numeric-prefix compatibility rule with strict equality.
+- Validate both request values and request shapes in a bounded in-memory model.

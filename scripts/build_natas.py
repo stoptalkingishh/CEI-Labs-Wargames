@@ -283,6 +283,36 @@ challenges_data = [
         "points": 1150, "goal": "Recognize encoding as distinct from session integrity protection.",
         "task": "The ticket portal uses a strict, encoded two-field session ticket.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas20"}
+    },
+    {
+        "id": "natas-20", "name": "Natas 20 -> 21: Delimited Session Record",
+        "points": 1200, "goal": "Identify how ambiguous custom record serialization can alter local state.",
+        "task": "The profile desk saves a short note in a compact local record. State persists only for this instance until reset.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas21"}
+    },
+    {
+        "id": "natas-21", "name": "Natas 21 -> 22: Cross-Route Session Trust",
+        "points": 1250, "goal": "Assess trust boundaries between separately routed internal applications.",
+        "task": "Use the office's two local routes and observe how a desk-issued badge is trusted by reports.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas22"}
+    },
+    {
+        "id": "natas-22", "name": "Natas 22 -> 23: Redirect Execution Mismatch",
+        "points": 1300, "goal": "Recognize that a redirect does not necessarily stop server-side response generation.",
+        "task": "The local dispatch route returns a redirect and a no-store response body. Compare both response behaviors.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas23"}
+    },
+    {
+        "id": "natas-23", "name": "Natas 23 -> 24: Toy Numeric Prefix Comparison",
+        "points": 1350, "goal": "Contrast a bounded numeric-prefix compatibility check with strict comparison.",
+        "task": "The training console displays the result of a toy compatibility check alongside a strict control.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas24"}
+    },
+    {
+        "id": "natas-24", "name": "Natas 24 -> 25: Request Shape Confusion",
+        "points": 1400, "goal": "Understand why request field shape must be validated as well as field values.",
+        "task": "The local access model accepts a compact request and handles a bounded alternate shape.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas25"}
     }
 ]
 
@@ -307,6 +337,8 @@ EXTRA_INFO = {
     "natas-14": (["browser view-source"], [("SQL injection on Wikipedia", "https://en.wikipedia.org/wiki/SQL_injection")]),
     "natas-15": (["curl"], []), "natas-16": (["curl"], []), "natas-17": (["curl"], []),
     "natas-18": (["curl"], []), "natas-19": (["curl", "base64"], []),
+    "natas-20": (["curl"], []), "natas-21": (["curl"], []), "natas-22": (["curl"], []),
+    "natas-23": (["curl"], []), "natas-24": (["curl"], []),
 }
 
 # One real, technique-specific hint per level (not natas-start-here --
@@ -395,6 +427,11 @@ HINTS = {
     'natas-17': ["The response text is intentionally uniform.", "Compare several requests for each candidate rather than trusting one measurement.", "A matching prefix takes longer application work; enumerate conservatively."],
     'natas-18': ["The session cookie is numeric.", "Its accepted range is small and the service has one local elevated record.", "Test bounded numeric identifiers rather than guessing unbounded values."],
     'natas-19': ["The ticket is encoded, not signed.", "Decode it as a strict two-field text record.", "Change only a valid field value, then re-encode using the URL-safe token alphabet."],
+    'natas-20': ["The first request changes state for a later request.", "Read how the compact record is assembled and then parsed.", "Test whether note data can create another record field without exceeding the form limit."],
+    'natas-21': ["There are exactly two internal routes.", "One route issues a badge and the other relies on it.", "Keep both requests on this local target and preserve the cookie between them."],
+    'natas-22': ["Do not let your client discard the first response automatically.", "A redirect status and a response body can coexist.", "Inspect the original local response headers and body without following its redirect."],
+    'natas-23': ["The two result lines intentionally use different comparisons.", "The compatibility check reads only a constrained numeric prefix.", "Find an input accepted by the compatibility line but rejected by the strict control."],
+    'natas-24': ["A request field can arrive in more than one shape.", "The model accepts only a small named set in its alternate shape.", "Compare a scalar request with a compact structured request while keeping its local region unchanged."],
 }
 
 HINT_TITLES = (

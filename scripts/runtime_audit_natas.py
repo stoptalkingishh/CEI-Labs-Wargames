@@ -18,6 +18,11 @@ import urllib.request
 import uuid
 
 
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, request, fp, code, msg, headers, newurl):
+        return None
+
+
 def require(value, message):
     if not value:
         raise AssertionError(message)
@@ -47,14 +52,15 @@ class NatasAudit:
     def url(self, level, path="/"):
         return f"{self.base_url.rsplit(':', 1)[0]}:{urllib.parse.urlparse(self.base_url).port + level}{path}"
 
-    def request(self, level, path="/", data=None, headers=None, password=None):
+    def request(self, level, path="/", data=None, headers=None, password=None, follow_redirects=True):
         password = self.secrets[f"natas{level}"] if password is None and level else (password or "natas0")
         token = base64.b64encode(f"natas{level}:{password}".encode()).decode()
         request_headers = {"Authorization": f"Basic {token}"}
         request_headers.update(headers or {})
         req = urllib.request.Request(self.url(level, path), data=data, headers=request_headers)
         try:
-            with urllib.request.urlopen(req, timeout=10) as response:
+            opener = urllib.request.build_opener() if follow_redirects else urllib.request.build_opener(NoRedirect)
+            with opener.open(req, timeout=10) as response:
                 return response.status, response.read(), response.headers
         except urllib.error.HTTPError as error:
             return error.code, error.read(), error.headers
@@ -88,8 +94,8 @@ def main(base_url, secrets):
     for level in range(35):
         status, _, _ = audit.request(level, password="wrong-password")
         require(status == 401, f"Natas {level} accepts wrong credentials")
-        status, _, _ = audit.request(level)
-        require(status == 200, f"Natas {level} rejects its configured credentials")
+        status, _, _ = audit.request(level, follow_redirects=False)
+        require(status in (200, 302), f"Natas {level} rejects its configured credentials")
 
     body, _ = expect(audit, 0, secrets["natas1"].encode(), "Natas 0 HTML comment missing")
     require(b"<!--" in body, "Natas 0 secret is not in an HTML comment")

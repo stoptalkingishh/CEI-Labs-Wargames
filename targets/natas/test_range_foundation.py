@@ -39,10 +39,10 @@ class NatasRangeFoundationTests(unittest.TestCase):
         for secret_name in ("natas15", "natas34", "natas14final"):
             self.assertNotIn(secret_name, generator)
 
-    def test_batch_a_replaces_only_its_pending_pages(self):
+    def test_batches_a_and_b_replace_only_their_pending_pages(self):
         generator = (ROOT / "build" / "generate_pending_content.py").read_text()
-        self.assertIn("range(20, LAST_LEVEL + 1)", generator)
-        for level in range(15, 20):
+        self.assertIn("range(25, LAST_LEVEL + 1)", generator)
+        for level in range(15, 25):
             page = (ROOT / "content" / ("natas%d" % level) / "index.php").read_text()
             self.assertNotIn("SCENARIO_PENDING", page)
         self.assertNotIn("natas15", (ROOT / "content" / "natas14" / "index.php").read_text())
@@ -61,6 +61,22 @@ class NatasRangeFoundationTests(unittest.TestCase):
         self.assertIn("'handoff' => 'sealed-record'", page)
         self.assertNotIn("catalog credential", page)
         self.assertIn("highlight_file(__FILE__)", page)
+
+    def test_batch_b_scenarios_are_bounded_and_do_not_use_framework_sessions(self):
+        pages = "\n".join(
+            (ROOT / "content" / ("natas%d" % level) / "index.php").read_text()
+            for level in range(20, 25)
+        )
+        for forbidden in ("$_SESSION", "session_start", "unserialize", "shell_exec", "exec(", "system(", "proc_open", "http://", "https://"):
+            self.assertNotIn(forbidden, pages)
+        self.assertIn("natas-batch-b", (ROOT / "entrypoint.sh").read_text())
+        self.assertIn("Cache-Control: no-store", (ROOT / "content" / "natas22" / "index.php").read_text())
+
+    def test_batch_b_record_is_recreated_on_instance_start(self):
+        entrypoint = (ROOT / "entrypoint.sh").read_text()
+        self.assertIn('state_path = os.path.join(state_dir, "record-%s.txt" % team)', entrypoint)
+        self.assertIn('state_file.write("id=guest|role=viewer|note=welcome")', entrypoint)
+        self.assertIn('os.chmod(state_path, 0o600)', entrypoint)
 
 
 if __name__ == "__main__":
