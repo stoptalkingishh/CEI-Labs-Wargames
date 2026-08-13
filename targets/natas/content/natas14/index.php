@@ -6,7 +6,8 @@ if (isset($_GET['source'])) {
 
 $msg = "";
 if (array_key_exists("username", $_REQUEST) && array_key_exists("password", $_REQUEST)) {
-    $link = mysql_connect('127.0.0.1', 'natas14', 'natas14dbP4ss');
+    require '/etc/cei-labs/natas-db/natas14.php';
+    $link = mysql_connect($natas14_db_host, $natas14_db_user, $natas14_db_password);
     mysql_select_db('natas14', $link);
 
     // Raw string concatenation into the query -- the entire lesson, and

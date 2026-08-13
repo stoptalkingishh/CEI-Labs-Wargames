@@ -90,7 +90,7 @@ echo json_encode(array(
     'nonadjacent_webpass' => readable('/etc/natas_webpass/natas1'),
     'runtime_secret_file' => readable('/var/www/natas/natas14/next_password.php'),
     'runtime_secret_env' => strpos($env, 'LEVEL_SECRETS=') !== false,
-    'mariadb_credentials' => @mysql_connect('127.0.0.1', 'natas14', 'natas14dbP4ss') !== false,
+    'mariadb_credentials' => readable('/etc/cei-labs/natas-db/natas14.php'),
     'other_identity_capability' => ($cap_eff & ((1 << 6) | (1 << 7))) !== 0,
     'docker_host_control' => $docker,
     'cross_team_materials' => readable('/run/secrets') || readable('/var/run/secrets/kubernetes.io/serviceaccount/token')
