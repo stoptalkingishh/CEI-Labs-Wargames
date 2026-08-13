@@ -24,7 +24,9 @@ FOUNDATION_TITLES = {
     18: "Predictable Numeric Sessions", 19: "Encoded Weak Session Token",
     20: "Delimited Session Record", 21: "Cross-Route Session Trust",
     22: "Redirect Execution Mismatch", 23: "Toy Numeric Prefix Comparison",
-    24: "Request Shape Confusion",
+    24: "Request Shape Confusion", 25: "Synthetic Audit Resolver",
+    26: "JSON Export Model", 27: "Identity Normalization Model",
+    28: "Visual Block Token Model", 29: "Virtual Command Catalog",
 }
 
 

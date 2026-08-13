@@ -41,7 +41,7 @@ class NatasRangeFoundationTests(unittest.TestCase):
 
     def test_batches_a_and_b_replace_only_their_pending_pages(self):
         generator = (ROOT / "build" / "generate_pending_content.py").read_text()
-        self.assertIn("range(25, LAST_LEVEL + 1)", generator)
+        self.assertIn("range(30, LAST_LEVEL + 1)", generator)
         for level in range(15, 25):
             page = (ROOT / "content" / ("natas%d" % level) / "index.php").read_text()
             self.assertNotIn("SCENARIO_PENDING", page)
@@ -80,6 +80,15 @@ class NatasRangeFoundationTests(unittest.TestCase):
         self.assertIn('state_path = os.path.join(state_dir, "record-%s.txt" % team)', entrypoint)
         self.assertIn('state_file.write("id=guest|role=viewer|note=welcome")', entrypoint)
         self.assertIn('os.chmod(state_path, 0o600)', entrypoint)
+
+    def test_batch_c_uses_bounded_models_only(self):
+        pages = "\n".join(
+            (ROOT / "content" / ("natas%d" % level) / "index.php").read_text()
+            for level in range(25, 30)
+        )
+        for forbidden in ("include(", "eval(", "unserialize", "shell_exec", "exec(", "system(", "proc_open", "popen", "http://", "https://"):
+            self.assertNotIn(forbidden, pages)
+        self.assertIn("natas-batch-c", (ROOT / "entrypoint.sh").read_text())
 
 
 if __name__ == "__main__":

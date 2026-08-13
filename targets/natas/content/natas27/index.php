@@ -1,0 +1,4 @@
+<?php
+require '/etc/cei-labs/natas-runtime/natas27.php';
+$identity = isset($_POST['identity']) && is_string($_POST['identity']) ? $_POST['identity'] : ''; $normalized = strlen($identity) <= 32 ? strtolower(str_replace('.', '', $identity)) : ''; $accounts = array('opslead' => 'operator', 'guest' => 'viewer'); $operator = isset($accounts[$normalized]) && $accounts[$normalized] === 'operator';
+?><!doctype html><html><body><h1>Bounded account store</h1><p>The training account model normalizes identities before its local comparison.</p><form method="post"><input name="identity" maxlength="32"><button>Look up</button></form><?php if ($operator): ?><p>Account handoff: <?php echo htmlspecialchars($natas28_secret, ENT_QUOTES, 'UTF-8'); ?></p><?php else: ?><p>Viewer account.</p><?php endif; ?></body></html>

@@ -16,6 +16,51 @@ port (`8000` + level number). Login is HTTP Basic Auth: username
 
 ---
 
+### Natas 25 -> 26: Synthetic Audit Resolver
+```
+curl -u 'natas25:<team-natas-25-password>' -d 'marker=audit:handoff' http://<target-host>:8025/
+```
+The resolver contains a fixed in-memory training fixture. It does not read a
+file or a real log. **Result:** `<team's Natas 26 password>`
+
+---
+
+### Natas 26 -> 27: JSON Virtual Export
+```
+curl -u 'natas26:<team-natas-26-password>' --data-urlencode 'project={"project":{"export":"handoff"}}' http://<target-host>:8026/
+```
+This is bounded JSON parsed into a plain data model; the export is virtual.
+**Result:** `<team's Natas 27 password>`
+
+---
+
+### Natas 27 -> 28: Identity Normalization Model
+```
+curl -u 'natas27:<team-natas-27-password>' -d 'identity=ops.lead' http://<target-host>:8027/
+```
+The local model lowercases identities and removes periods before comparison.
+**Result:** `<team's Natas 28 password>`
+
+---
+
+### Natas 28 -> 29: Visual Block Token Model
+```
+curl -u 'natas28:<team-natas-28-password>' -d 'token=VISITOR-ATOROPER' http://<target-host>:8028/
+```
+The four fixed blocks assemble `view=visitor&role=operator`; this is not an
+encryption service. **Result:** `<team's Natas 29 password>`
+
+---
+
+### Natas 29 -> 30: Virtual Command Catalog
+```
+curl -u 'natas29:<team-natas-29-password>' -d 'filename=handoff.log|catalog:handoff' http://<target-host>:8029/
+```
+The interpreter accepts a bounded parser grammar and looks up a fixed virtual
+catalog. It never starts a process. **Result:** `<team's Natas 30 password>`
+
+---
+
 ### Natas 0 → 1: View Source
 ```
 curl -u natas0:natas0 http://<target-host>:8000/

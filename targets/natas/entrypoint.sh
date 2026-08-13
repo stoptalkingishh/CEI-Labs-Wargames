@@ -107,6 +107,11 @@ for path, owner, key, var_name in (
     ("/etc/cei-labs/natas-runtime/natas22.php", "natas22", "natas23", "natas23_secret"),
     ("/etc/cei-labs/natas-runtime/natas23.php", "natas23", "natas24", "natas24_secret"),
     ("/etc/cei-labs/natas-runtime/natas24.php", "natas24", "natas25", "natas25_secret"),
+    ("/etc/cei-labs/natas-runtime/natas25.php", "natas25", "natas26", "natas26_secret"),
+    ("/etc/cei-labs/natas-runtime/natas26.php", "natas26", "natas27", "natas27_secret"),
+    ("/etc/cei-labs/natas-runtime/natas27.php", "natas27", "natas28", "natas28_secret"),
+    ("/etc/cei-labs/natas-runtime/natas28.php", "natas28", "natas29", "natas29_secret"),
+    ("/etc/cei-labs/natas-runtime/natas29.php", "natas29", "natas30", "natas30_secret"),
 ):
     write_php_secret(path, var_name, secrets[key])
     with open(path, "a") as state_file:
@@ -133,6 +138,16 @@ state_path = os.path.join(state_dir, "record-%s.txt" % team)
 with open(state_path, "w") as state_file:
     state_file.write("id=guest|role=viewer|note=welcome")
 subprocess.run(["chown", "natas20:natas20", state_path], check=True)
+os.chmod(state_path, 0o600)
+
+state_dir = "/var/lib/cei-labs/natas-batch-c"
+os.makedirs(state_dir, exist_ok=True)
+subprocess.run(["chown", "natas25:natas25", state_dir], check=True)
+os.chmod(state_dir, 0o700)
+state_path = os.path.join(state_dir, "audit-%s.json" % team)
+with open(state_path, "w") as state_file:
+    json.dump({"requests": 0, "team": team}, state_file)
+subprocess.run(["chown", "natas25:natas25", state_path], check=True)
 os.chmod(state_path, 0o600)
 PYEOF
 

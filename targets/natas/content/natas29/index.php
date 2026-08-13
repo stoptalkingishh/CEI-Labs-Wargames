@@ -1,0 +1,4 @@
+<?php
+require '/etc/cei-labs/natas-runtime/natas29.php';
+$filename = isset($_POST['filename']) && is_string($_POST['filename']) ? $_POST['filename'] : ''; $catalog = array('daily.log' => 'routine entry', 'handoff.log' => 'handoff'); $parts = explode('|', $filename, 2); $resolved = count($parts) === 2 && isset($catalog[$parts[0]]) && $parts[1] === 'catalog:handoff' && strlen($filename) <= 64;
+?><!doctype html><html><body><h1>Virtual command catalog</h1><p>A filename interpreter parser consults a fixed virtual catalog; it executes nothing.</p><form method="post"><input name="filename" maxlength="64"><button>Interpret</button></form><?php if ($resolved): ?><p>Catalog handoff: <?php echo htmlspecialchars($natas30_secret, ENT_QUOTES, 'UTF-8'); ?></p><?php else: ?><p>No catalog handoff.</p><?php endif; ?></body></html>

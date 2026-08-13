@@ -1,7 +1,7 @@
 # Natas — Learning Objectives
 
 A skills inventory for the Natas track (web application security, level
-  endpoints 0–24), organized by concept rather than by level number, so it can be
+  endpoints 0–29), organized by concept rather than by level number, so it can be
 referenced independent of any specific level: to check what a
 participant has actually learned, to plan which levels to assign for a
 given skill gap, or to compare against a course syllabus. Each entry
@@ -78,3 +78,10 @@ which level(s) teach it. Pairs with `writeups.md` (full solutions) and
 - Inspect a local redirect response without assuming execution stopped.
 - Compare a deliberately pinned numeric-prefix compatibility rule with strict equality.
 - Validate both request values and request shapes in a bounded in-memory model.
+
+## Safe models of high-risk legacy concepts (levels 25-29)
+- Trace an inert marker through a synthetic fixture resolver without filesystem or log access.
+- Validate bounded JSON data and route it to a virtual export sink without native deserialization.
+- Identify how normalization can create local account-identity ambiguity.
+- Assemble fixed visual blocks into an allowlisted query model without encryption.
+- Reason about filename interpretation through a parser and fixed catalog without process execution.

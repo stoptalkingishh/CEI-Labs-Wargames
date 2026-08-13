@@ -313,6 +313,36 @@ challenges_data = [
         "points": 1400, "goal": "Understand why request field shape must be validated as well as field values.",
         "task": "The local access model accepts a compact request and handles a bounded alternate shape.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas25"}
+    },
+    {
+        "id": "natas-25", "name": "Natas 25 -> 26: Synthetic Audit Resolver",
+        "points": 1450, "goal": "Trace controlled marker data through a synthetic audit resolver.",
+        "task": "The audit console resolves only named in-memory fixtures and keeps a bounded local request counter.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas26"}
+    },
+    {
+        "id": "natas-26", "name": "Natas 26 -> 27: JSON Virtual Export",
+        "points": 1500, "goal": "Validate structured project input without native object deserialization.",
+        "task": "Submit a compact JSON project that requests the documented virtual export destination.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas27"}
+    },
+    {
+        "id": "natas-27", "name": "Natas 27 -> 28: Identity Normalization Model",
+        "points": 1550, "goal": "Recognize ambiguity introduced by identity normalization.",
+        "task": "The bounded account store normalizes a local identity before comparison.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas28"}
+    },
+    {
+        "id": "natas-28", "name": "Natas 28 -> 29: Visual Block Token Model",
+        "points": 1600, "goal": "Reason about block assembly and integrity without a real encryption oracle.",
+        "task": "Arrange the fixed visual blocks into an allowlisted local query model.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas29"}
+    },
+    {
+        "id": "natas-29", "name": "Natas 29 -> 30: Virtual Command Catalog",
+        "points": 1650, "goal": "Separate filename interpretation from actual command execution.",
+        "task": "Use the parser's compact filename/catalog grammar against its fixed virtual catalog.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas30"}
     }
 ]
 
@@ -339,6 +369,8 @@ EXTRA_INFO = {
     "natas-18": (["curl"], []), "natas-19": (["curl", "base64"], []),
     "natas-20": (["curl"], []), "natas-21": (["curl"], []), "natas-22": (["curl"], []),
     "natas-23": (["curl"], []), "natas-24": (["curl"], []),
+    "natas-25": (["curl"], []), "natas-26": (["curl"], []), "natas-27": (["curl"], []),
+    "natas-28": (["curl"], []), "natas-29": (["curl"], []),
 }
 
 # One real, technique-specific hint per level (not natas-start-here --
@@ -432,6 +464,11 @@ HINTS = {
     'natas-22': ["Do not let your client discard the first response automatically.", "A redirect status and a response body can coexist.", "Inspect the original local response headers and body without following its redirect."],
     'natas-23': ["The two result lines intentionally use different comparisons.", "The compatibility check reads only a constrained numeric prefix and requires a non-canonical boundary value.", "Find a bounded input accepted by the compatibility line but rejected by the strict control."],
     'natas-24': ["A request field can arrive in more than one shape.", "The model accepts only a small named set in its alternate shape.", "Compare a scalar request with a compact structured request while keeping its local region unchanged."],
+    'natas-25': ["The page names its resolver as synthetic.", "Only a fixed marker is present in its in-memory fixture map.", "Submit `marker=audit:handoff`; path-like markers are not resolver inputs."],
+    'natas-26': ["The export desk accepts JSON, not a serialized object.", "The parser permits one top-level `project` object with one export field.", "Submit `{\"project\":{\"export\":\"handoff\"}}` as the project field."],
+    'natas-27': ["The account store applies a small normalization step first.", "It lowercases and removes periods before comparing a fixed local account list.", "Use `ops.lead` to reach the normalized `opslead` operator record."],
+    'natas-28': ["Every token is four visual blocks long.", "The tiles assemble a local query string, not encrypted data.", "Arrange `VISI`, `TOR-`, `ATOR`, `OPER` as `VISITOR-ATOROPER`."],
+    'natas-29': ["This interpreter is only a parser over a fixed catalog.", "Its input has a filename, then one catalog directive separated by `|`.", "Submit `handoff.log|catalog:handoff`; nothing is executed."],
 }
 
 HINT_TITLES = (
