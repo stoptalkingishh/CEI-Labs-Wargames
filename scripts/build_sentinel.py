@@ -29,7 +29,7 @@ def _flags_yaml(flag):
 challenges_data = [
     {"id": "sentinel-start-here", "name": "Sentinel: Start Here", "points": 10,
      "goal": "Connect safely to the Northstar operations jump host and retrieve your onboarding token.",
-     "task": "Launch the environment and sign in as `sentinel0` with the public starter password `sentinel0`. Read the engagement rules in your home directory and submit the onboarding token.",
+     "task": "Launch the environment and sign in as `sentinel0` with the public starter password `sentinel0`. Read `~/evidence/ENGAGEMENT-RULES.txt` and submit the documented structured answer through `sentinel-submit`.",
      "flag": _dynamic("sentinel-start-here")},
     {"id": "sentinel-01", "name": "Sentinel 01: Asset Census", "points": 200,
      "goal": "Reconcile a supplied asset inventory with the host's installed software, active services, and ownership evidence.",

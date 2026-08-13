@@ -25,11 +25,9 @@ class SentinelRuntimeContractTests(unittest.TestCase):
         self.assertNotEqual(runtime.derived("team-a", "asset"), runtime.derived("team-a", "control"))
 
     def test_files_are_private_to_the_intended_account(self):
-        calls = []
-        with patch("runtime.open", create=True) as opened, patch("runtime.subprocess.run", side_effect=lambda command, **kwargs: calls.append(command)), patch("runtime.os.chmod") as chmod:
+        with patch("runtime.write_atomic") as write_atomic:
             runtime.write("sentinel1", "asset-census.txt", "evidence")
-        self.assertIn(["chown", "sentinel1:sentinel1", "/home/sentinel1/asset-census.txt"], calls)
-        chmod.assert_called_once_with("/home/sentinel1/asset-census.txt", 0o400)
+        write_atomic.assert_called_once_with("/srv/sentinel-evidence/sentinel1", "asset-census.txt", "evidence", 0o444)
 
     def test_entrypoint_scrubs_before_sshd(self):
         with open("entrypoint.sh", encoding="utf-8") as source:
@@ -63,6 +61,20 @@ class SentinelRuntimeContractTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             answer_service.release(submission, "sentinel0", runtime.ANSWERS, {"sentinel-01": "team-secret"})
 
+    def test_answer_requires_exact_json_scalar_types(self):
+        submission = {"lab": "sentinel-05", "answer": {**runtime.ANSWERS["sentinel-05"], "port": 22.0}}
+        with self.assertRaises(SystemExit):
+            answer_service.release(submission, "sentinel4", runtime.ANSWERS, {"sentinel-05": "team-secret"})
+        submission["answer"]["port"] = "22"
+        with self.assertRaises(SystemExit):
+            answer_service.release(submission, "sentinel4", runtime.ANSWERS, {"sentinel-05": "team-secret"})
+        submission["answer"]["port"] = [22]
+        with self.assertRaises(SystemExit):
+            answer_service.release(submission, "sentinel4", runtime.ANSWERS, {"sentinel-05": "team-secret"})
+
+    def test_submission_size_is_bounded(self):
+        self.assertEqual(answer_service.MAX_SUBMISSION_BYTES, 65536)
+
     def test_learner_evidence_has_no_credential_values(self):
         with open("runtime.py", encoding="utf-8") as source:
             content = source.read()
@@ -77,7 +89,7 @@ class SentinelRuntimeContractTests(unittest.TestCase):
         self.assertNotIn("openssl req", dockerfile)
         self.assertIn("-attime 1893456000", runtime_source)
         self.assertIn("-CRLfile training-ca.crl -crl_check", runtime_source)
-        self.assertIn('os.chmod("/home/sentinel3/service.key", 0o400)', runtime_source)
+        self.assertIn('write("sentinel3", "service.key", source.read(), 0o400)', runtime_source)
 
     def test_evidence_locations_follow_password_progression(self):
         with open("runtime.py", encoding="utf-8") as source:
@@ -87,6 +99,7 @@ class SentinelRuntimeContractTests(unittest.TestCase):
         self.assertIn('write("sentinel2", "change-window.txt"', content)
         self.assertIn('write("sentinel3", "certificate-ledger.txt"', content)
         self.assertIn('write("sentinel4", "exposure-review.conf"', content)
+        self.assertNotIn('"/home/{owner}/{name}"', content)
 
     def test_lab01_contract_does_not_require_systemctl(self):
         builder = Path(__file__).resolve().parents[2] / "scripts" / "build_sentinel.py"

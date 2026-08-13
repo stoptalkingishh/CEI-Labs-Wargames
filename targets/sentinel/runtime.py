@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 import subprocess
+import tempfile
 
 KEYS = ("sentinel-start-here", "sentinel-01", "sentinel-02", "sentinel-03", "sentinel-04", "sentinel-05")
 
@@ -35,20 +36,28 @@ def load_secrets():
     return secrets
 
 
-def write(owner, name, text):
-    path = f"/home/{owner}/{name}"
-    with open(path, "w", encoding="utf-8", newline="\n") as output:
-        output.write(text)
-    subprocess.run(["chown", f"{owner}:{owner}", path], check=True)
-    os.chmod(path, 0o400)
+def write_atomic(directory, name, text, mode):
+    descriptor, temporary = tempfile.mkstemp(prefix=f".{name}.", dir=directory, text=True)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as output:
+            output.write(text)
+            os.fchown(output.fileno(), 0, 0)
+        os.chmod(temporary, mode)
+        os.replace(temporary, os.path.join(directory, name))
+    except BaseException:
+        try:
+            os.unlink(temporary)
+        except FileNotFoundError:
+            pass
+        raise
+
+
+def write(owner, name, text, mode=0o444):
+    write_atomic(f"/srv/sentinel-evidence/{owner}", name, text, mode)
 
 
 def write_root(name, text):
-    path = f"/var/lib/sentinel/{name}"
-    with open(path, "w", encoding="utf-8", newline="\n") as output:
-        output.write(text)
-    os.chown(path, 0, 0)
-    os.chmod(path, 0o600)
+    write_atomic("/var/lib/sentinel", name, text, 0o600)
 
 
 def main():
@@ -67,10 +76,9 @@ def main():
     for name in ("training-ca.pem", "service.pem", "training-ca.crl"):
         with open(f"/opt/sentinel/certs/{name}", encoding="utf-8") as source:
             write("sentinel3", name, source.read())
-    subprocess.run(["cp", "/opt/sentinel/certs/service.key", "/home/sentinel3/service.key"], check=True)
-    subprocess.run(["chown", "root:root", "/home/sentinel3/service.key"], check=True)
-    os.chmod("/home/sentinel3/service.key", 0o400)
-    write("sentinel3", "certificate-ledger.txt", "Service: ops.northstar.training\nIssuer: Northstar Training Test CA\nRevocation: clear in training-ca.crl\nKey permissions: /home/sentinel3/service.key is root:root mode 0400\nVerify offline with: openssl verify -attime 1893456000 -CAfile training-ca.pem -CRLfile training-ca.crl -crl_check service.pem\nSubmit service, issuer, revocation_status, and key_mode through `sentinel-submit`.\n")
+    with open("/opt/sentinel/certs/service.key", encoding="utf-8") as source:
+        write("sentinel3", "service.key", source.read(), 0o400)
+    write("sentinel3", "certificate-ledger.txt", "Service: ops.northstar.training\nIssuer: Northstar Training Test CA\nRevocation: clear in training-ca.crl\nKey permissions: /srv/sentinel-evidence/sentinel3/service.key is root:root mode 0400\nVerify offline with: openssl verify -attime 1893456000 -CAfile training-ca.pem -CRLfile training-ca.crl -crl_check service.pem\nSubmit service, issuer, revocation_status, and key_mode through `sentinel-submit`.\n")
     write("sentinel4", "exposure-review.conf", "Observed listener: ssh tcp/22\nConfigured default service: legacy-metrics disabled\nNo web, database, or remote-management service is exposed.\nSubmit listener, port, and legacy_metrics through `sentinel-submit`.\n")
 
 
