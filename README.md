@@ -119,3 +119,27 @@ export CTFD_INSECURE=true
 This disables TLS certificate verification for the `ctfcli` calls this
 script makes. It defaults to `false` (verification on) and must be set
 explicitly — never enable it against an instance you don't control.
+
+## Local Natas Runtime Audit
+
+`scripts/runtime_audit_natas.py` is an opt-in integration audit for a local,
+authorized Natas target only. It verifies the Natas 0-14 solve and HTTP auth
+chains using supplied synthetic per-team secrets. It is not run by the normal
+CI validation workflow and rejects non-loopback URLs.
+
+After building the Natas target image, publish its internal ports only to the
+local host and start it with synthetic `LEVEL_SECRETS`. Then run the audit
+with the same JSON values:
+
+```bash
+SECRETS='{"natas1":"local-1","natas2":"local-2","natas3":"local-3","natas4":"local-4","natas5":"local-5","natas6":"local-6","natas7":"local-7","natas8":"local-8","natas9":"local-9","natas10":"local-10","natas11":"local-11","natas12":"local-12","natas13":"local-13","natas14":"local-14","natas14final":"local-final"}'
+docker build -t cei-natas-local targets/natas
+docker run --rm -d --name cei-natas-audit --env "LEVEL_SECRETS=$SECRETS" $(for n in $(seq 0 14); do printf '%s ' "-p 127.0.0.1:$((18000 + n)):$((8000 + n))"; done) cei-natas-local
+for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:18000/ && break; sleep 1; done
+python3 scripts/runtime_audit_natas.py --base-url http://127.0.0.1:18000 --secrets "$SECRETS"
+docker stop cei-natas-audit
+```
+
+An image workflow can run these same commands as a post-build smoke test with
+ephemeral synthetic values and localhost-only port mappings. The audit has no
+public-target fallback or external service dependency.
