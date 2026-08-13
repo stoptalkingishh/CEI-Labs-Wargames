@@ -53,7 +53,8 @@ rewrites, and recommendations outside the assignment are discarded.
 
 ## OODA loop protocol
 
-Every loop writes one ledger row. The same structure applies to every lab.
+Every loop writes one completed-record cell in the compact 21x10 matrix. The
+same structure applies to every lab.
 
 1. **Observe:** record current lab contract, objective IDs, status, evidence,
    learner actions, validation, software, and prior-loop decision.
@@ -119,8 +120,9 @@ hint review rule, and mutation-helper constraints.
 The review workspace is version-controlled under `docs/sentinel-ooda/`:
 
 - `README.md`: method, status, fixed terminology, and completed-loop count.
-- `ledger.md`: one compact row for each of the 210 loops with lab, loop,
-  observation, orientation source, decision, action, severity, and status.
+- `ledger.md`: the authoritative compact 21x10 completed record. A cell's row
+  label and column heading identify its lab and loop; its decision/severity/
+  action text records the final result and cites shared source conventions.
 - `findings.md`: de-duplicated cross-lab findings, accepted design rules, and
   deferred decisions.
 - `backlog.md`: implementation-ready work grouped by curriculum batch, with
@@ -144,9 +146,9 @@ superseding entry that links to the original row.
 
 ## First action after approval
 
-Create the review workspace and pre-populate all 210 ledger rows with lab,
-batch, and loop focus. Then execute checkpoint A, one loop at a time, with an
-orchestrator decision recorded after each subagent result.
+Create the review workspace and pre-populate the 21x10 matrix with lab rows
+and loop columns. Then execute checkpoint A, one loop at a time, with an
+orchestrator decision recorded in each cell after each subagent result.
 
 ## Completed review
 

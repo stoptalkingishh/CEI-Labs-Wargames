@@ -8,12 +8,12 @@ hands-on labs reinforce the public CompTIA Security+ SY0-701 V7 objective
 areas. It is not affiliated with CompTIA, does not reproduce exam questions,
 and does not claim that completing it prepares a participant to pass an exam.
 
-The source used for the alignment is the local `CompTIA Security+ SY0-701
-Exam Objectives (7.0).pdf`, dated 2023, with a cleaned project reference at
-[`reference/comptia-security-plus-sy0-701-v7-objectives.md`](reference/comptia-security-plus-sy0-701-v7-objectives.md).
-Objective wording is summarized here rather than copied. Sentinel complements
-the existing Linux, cryptography, and web-security tracks with defensive
-system administration and incident response work.
+The alignment source is CompTIA's official exam-objectives page, recorded with
+version and retrieval/checksum instructions in the project-owned
+[`reference/comptia-security-plus-sy0-701-v7-objectives.md`](reference/comptia-security-plus-sy0-701-v7-objectives.md)
+coverage map. The map does not reproduce objective wording. Sentinel
+complements the existing Linux, cryptography, and web-security tracks with
+defensive system administration and incident response work.
 
 Tooling and lab-platform research, including the recommended lightweight
 open-source toolchain and Windows scope, is recorded in
@@ -50,11 +50,11 @@ test before it can ship.
 | Lab | Status / batch | Scenario and primary evidence | SY0-701 coverage |
 | --- | --- | --- | --- |
 | Start Here | Built, PR #68 / 0 | SSH connection, engagement rules, onboarding token. | Secure access context. |
-| 01 Asset Census | Built, PR #68 / 0 | Asset inventory, installed packages, active services, ownership metadata. | 4.1, 4.2 |
-| 02 Control Review | Built, PR #68 / 0 | Host safeguards classified by category and purpose. | 1.1, 1.2 |
-| 03 Change Window | Built, PR #68 / 0 | Change record with approval, test, rollback, and maintenance evidence. | 1.3 |
-| 04 Certificate Trail | Built, PR #68 / 0 | Certificate chain, key permissions, and revocation evidence. | 1.4 |
-| 05 Attack Surface | Built, PR #68 / 0 | Listening services and configuration artifacts exposing a default service. | 2.2, 2.5 |
+| 01 Asset Census | Implemented, non-staged; assessment/runtime verification pending | Asset inventory, installed packages, active services, ownership metadata. | 4.1, 4.2 |
+| 02 Control Review | Implemented, non-staged; assessment/runtime verification pending | Host safeguards classified by category and purpose. | 1.1, 1.2 |
+| 03 Change Window | Implemented, non-staged; assessment/runtime verification pending | Change record with approval, test, rollback, and maintenance evidence. | 1.3 |
+| 04 Certificate Trail | Implemented, non-staged; assessment/runtime verification pending | Certificate chain, key permissions, and revocation evidence. | 1.4 |
+| 05 Attack Surface | Implemented, non-staged; assessment/runtime verification pending | Listening services and configuration artifacts exposing a default service. | 2.2, 2.5 |
 | 06 Suspicious Access | Planned / 1 | Deterministic SSH/auth/audit logs for spraying, impossible travel, and concurrent sessions. | 2.4, 4.4, 4.9 |
 | 07 Vulnerability Triage | Planned / 1 | Mock scanner/advisory plus package and configuration evidence. | 2.3, 4.3 |
 | 08 Least Privilege | Planned / 1 | Unix users, groups, ACLs, and `sudo` policy. | 2.5, 4.6 |
@@ -142,7 +142,7 @@ the tooling decision record is the authority for that choice.
 
 | Batch | Labs | Objectives | Primary evidence and tools | Completion gate |
 | --- | --- | --- | --- | --- |
-| 0: Foundation | Start Here, 01-05 | 1.1-1.4, 2.2, 2.5, 4.1, 4.2 | OpenSSH, OpenSSL, synthetic inventory/control/change records. | Implemented in PR #68. It remains non-staged until platform integration. |
+| 0: Foundation | Start Here, 01-05 | 1.1-1.4, 2.2, 2.5, 4.1, 4.2 | OpenSSH, OpenSSL, synthetic inventory/control/change records. | Implemented, non-staged; assessment/runtime verification remains pending until the PR #68 validation checklist is independently recorded. |
 | 1: Authentication and evidence | 06-08 | 2.4, 2.5, 4.4, 4.6, 4.9 | Deterministic SSH/auth/audit logs, account/group/ACL fixtures, `journalctl`, `last`, `ausearch` where justified. | Intended login path and neighboring-account denial pass; learner derives a timeline and least-privilege conclusion from raw logs. |
 | 2: Architecture and resilience | 09-11 | 3.1-3.4, 5.2 | Static topology/data-classification/backup artifacts; optional `nftables`, OpenSSL, and restic only for bounded verification. | Every scenario is solvable with no host network capability and has an explicit RTO/RPO, data-state, or access-path answer. |
 | 3: Operations and detection | 12-16 | 2.3, 4.1, 4.3-4.7 | Baseline/drift fixtures, mock advisory and scan evidence, FIM data; then offline PCAP via `tcpdump -r` and pinned Suricata rules/EVE JSON. | PCAPs, logs, rules, package versions, and expected output are pinned/checksummed; no feeds, live capture, or internet access. |

@@ -8,7 +8,7 @@ lightweight Linux SSH target and cover the practical evidence work that best
 fits this wargame format:
 
 | Priority | Tool | License | Why it is in scope |
-| --- | --- | --- |
+| --- | --- | --- | --- |
 | P0 | OpenSSH | BSD-style | Connection method plus secure access, keys, authentication, authorization, and hardening evidence. |
 | P0 | OpenSSL | Apache-2.0 | Certificates, hashes, signatures, encryption, key formats, and TLS inspection. |
 | P1 | tcpdump/libpcap | BSD-style | Deterministic, offline PCAP evidence analysis without privileged live capture. |
@@ -64,6 +64,23 @@ Artifacts must use fictional organizations, internal addresses, synthetic
 credentials, and fixed timestamps. Raw PCAP/log evidence should remain
 available alongside normalized JSON or worksheets so learners investigate the
 source evidence rather than only a preprocessed answer.
+
+## Copyleft image dependency review gate
+
+Before adding a GPL, AGPL, or other copyleft component to a distributed
+Sentinel image, record an actionable release review. This is an engineering
+release gate, not legal advice.
+
+| Check | Required record before image publication |
+| --- | --- |
+| Dependency identity | Component name, version or immutable source revision, upstream license file, package source, and whether it is merely used, modified, or redistributed in the image. |
+| Notices and source | Preserve required copyright/license notices; identify the corresponding source location and any modified source, patches, build scripts, and source-offer mechanism required by the applicable license. |
+| Network obligations | For AGPL components, identify whether the deployed use exposes network interaction and route the release to license-owner review before service availability or distribution. |
+| Image artifacts | Generate or update the image SBOM; place required notices and source/offer references in the image documentation or accompanying release artifact, where a recipient can obtain them. |
+| Approval | A designated license owner records the review outcome, distribution scope, notice/source location, and any release conditions before publishing the image. |
+
+Suricata, Wazuh, and Velociraptor remain subject to this gate if adopted. A
+tool's inclusion in this research document is not approval to distribute it.
 
 ## Scenario patterns used by training platforms
 

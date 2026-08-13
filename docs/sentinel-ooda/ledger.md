@@ -1,11 +1,14 @@
 # Sentinel OODA Ledger
 
 Key: `K` keep, `R` refine, `D` defer. Severity is `N` none, `m` minor,
-`M` major, `B` blocker. Each cell is an orchestrator decision after Observe,
-Orient, Decide, and Act. Sources: local objective reference, lab design matrix,
-tooling research, OODA plan, and bounded reviewer evidence. `verify PR68`
-means verify the existing pilot claim against PR #68's reported target tests;
-it is not a design defect by itself.
+`M` major, `B` blocker. The 21x10 matrix is the authoritative completed record:
+each cell is the orchestrator's final decision for its lab/loop pair after
+Observe, Orient, Decide, and Act. The row label and column heading provide the
+cell's lab and rubric provenance; the cell's action text is the recorded result.
+Sources are the coverage map, lab design matrix, tooling research, OODA plan,
+and bounded reviewer evidence. `verify PR68` means independently verify the
+existing pilot claim against PR #68's reported target tests; it is not a design
+defect by itself.
 
 | Lab | 1 Objective | 2 Realism | 3 Evidence | 4 Path | 5 Progression | 6 Assessment | 7 Safety | 8 Operations | 9 Tool fit | 10 Readiness |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -22,20 +25,21 @@ it is not a design defect by itself.
 | 11 | R-m: distinguish validation/calculation | R-m: define workload | R-M: reconcile evidence | R-M: checksum/time restore criterion | R-m: RPO/RTO hints | R-M: structured readiness result | R-m: restrict restic path | D-m: static first | K-N | R-M: re-review 3/4/6 |
 | 12 | R-m: require guardrail explanation | K-N | R-m: provenance/context | R-M: diagnose before helper | R-m: staged hints | R-M: diagnosis plus post-state | K-N | R-M: reset/idempotence | K-N | R-M: re-review 4/6/8 |
 | 13 | R-m: distinguish hash/signature | K-N | R-M: evidence consistency | R-m: define comparison order | R-m: staged hints | R-M: classification/response answer | K-N | R-m: pin hashes/times | K-N | R-M: re-review 3/6 |
-| 14 | K-N | K-N | R-M: inert evidence model | R-M: analysis-only or helper | R-m: staged hints | R-M: separate diagnosis/correction | D-B: resolve active-account contradiction | R-M: deterministic fixture/reset | K-N | D-B: redesign then re-review |
+| 14 | K-N | K-N | R-M: inert evidence model | R-M: analysis-only or helper | R-m: staged hints | R-M: separate diagnosis/correction | D-B: resolve active-account contradiction | R-M: deterministic fixture/reset | K-N | D-B: await implementation validation and re-review |
 | 15 | K-N | K-N | R-m: provenance/noise fields | R-M: reproducible query path | R-m: query hints | R-M: rationale plus tradeoff | K-N | K-N | K-N | R-M: re-review 4/6 |
 | 16 | R-m: explain guardrail/effect | K-N | R-m: approved change evidence | R-M: review before helper | R-m: staged hints | R-M: pre/post/backout answer | R-m: namespace constraint | R-M: reset/backout/action log | K-N | R-M: re-review 4/6/8 |
 | 17 | K-N | K-N | R-m: correlation fields/checksum | R-M: unique containment rubric | R-M: add hints/feedback | R-M: structured timeline/scope/action | K-N | K-N | D-m: no Suricata first | R-M: re-review 4/5/6 |
 | 18 | K-N | R-m: case/recipient context | R-m: provenance/signature choice | R-m: readonly/workspace split | R-M: hints/feedback | R-M: structured handoff | R-M: filesystem contract | R-m: error/restart checks | K-N | R-M: re-review 5/6/7 |
 | 19 | R-M: role/responsibility field | K-N | R-M: revision manifest/checksum | K-N | R-m: hierarchy hints | R-M: structured governance answer | K-N | K-N | K-N | D-M: re-review 1/3/6 |
 | 20 | K-N | R-m: business consequence/owner | R-M: input units/rounding | R-M: treatment constraints | R-m: calculation hints | R-M: intermediate-value answer | K-N | R-m: locale/format test | K-N | D-M: re-review 3/4/6 |
-| 21 | R-M: remove 2.1 mapping | R-M: one unifying vendor case | R-M: evidence-decision matrix | R-M: one trigger/escalation | R-M: staged scope hints | R-B: redesign structured assessment | K-N | R-m: revision/timestamp test | K-N | D-B: redesign then re-review |
+| 21 | R-M: remove 2.1 mapping | R-M: one unifying vendor case | R-M: evidence-decision matrix | R-M: one trigger/escalation | R-M: staged scope hints | R-B: structured assessment | K-N | R-m: revision/timestamp test | K-N | D-B: await implementation validation and re-review |
 
 ## Completion note
 
-All 210 rows have an Observe/Orient basis in the cited source set. The compact
-cell format records the final Decide/Act result. Re-review references identify
-only affected loops; they do not erase this completed review record.
+All 210 lab/loop cells have an Observe/Orient basis in the cited source set.
+The compact cell format records the final Decide/Act result. Re-review
+references identify only affected cells; they do not erase this completed
+review record.
 
 ## Superseding blocker decisions
 

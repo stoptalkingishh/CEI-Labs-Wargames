@@ -38,7 +38,8 @@
   evidence timestamps.
 - Labs 15-16: implement provenance, reproducible paths, structured assessment,
   and helper lifecycle tests listed in the ledger.
-- Lab 14: complete blocker redesign before any target implementation.
+- Lab 14: implement the accepted inert evidence-only contract, then validate
+  and re-review it before approval.
 
 ## Batches 4-5
 
@@ -46,16 +47,16 @@
   boundaries, and immutable-corpus tests.
 - Labs 19-20: implement revision/input manifests and structured governance/
   risk decisions.
-- Lab 21: complete blocker redesign, remove 2.1 mapping, and use a single
-  vendor-centered evidence-to-decision model.
+- Lab 21: implement the accepted single vendor-centered evidence-to-decision
+  model, then validate and re-review it before approval. Do not restore 2.1.
 
 ## Superseding design decisions
 
-- Lab 14's blocker redesign is defined: author inert tombstoned offboarding
+- Lab 14's accepted implementation contract is: author inert tombstoned offboarding
   evidence and a structured documentary-gap/follow-up assessment. Target
   implementation must prove that no residual usable account, credential,
   private key, or authorized-key entry exists.
-- Lab 21's blocker redesign is defined: author one vendor-assurance renewal
+- Lab 21's accepted implementation contract is: author one vendor-assurance renewal
   case with citations and decisions for retained 5.3-5.6 criteria, followed by
   one renewal decision. Do not restore 2.1 or the phishing scenario, and do
   not add a challenge.
