@@ -147,3 +147,10 @@ superseding entry that links to the original row.
 Create the review workspace and pre-populate all 210 ledger rows with lab,
 batch, and loop focus. Then execute checkpoint A, one loop at a time, with an
 orchestrator decision recorded after each subagent result.
+
+## Completed review
+
+The completed review workspace is in [`sentinel-ooda/README.md`](sentinel-ooda/README.md),
+with the compact 210-decision ledger, consolidated findings, and implementation
+backlog. The ledger uses one cell per lab/loop to keep the complete record
+reviewable without duplicating the full protocol in every row.
