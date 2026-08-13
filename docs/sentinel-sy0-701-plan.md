@@ -22,6 +22,9 @@ open-source toolchain and Windows scope, is recorded in
 The per-lab learning, evidence, validation, software, and build contracts are
 maintained in [`sentinel-lab-design-matrix.md`](sentinel-lab-design-matrix.md).
 
+The quality-review operating model for the 210-loop, orchestrator-led OODA
+review is in [`sentinel-ooda-review-plan.md`](sentinel-ooda-review-plan.md).
+
 ## Player experience
 
 Sentinel uses the existing `single-target` pattern: each team receives one
