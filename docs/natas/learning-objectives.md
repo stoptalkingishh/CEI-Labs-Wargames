@@ -1,7 +1,7 @@
 # Natas — Learning Objectives
 
 A skills inventory for the Natas track (web application security, level
-endpoints 0–14), organized by concept rather than by level number, so it can be
+ endpoints 0–19), organized by concept rather than by level number, so it can be
 referenced independent of any specific level: to check what a
 participant has actually learned, to plan which levels to assign for a
 given skill gap, or to compare against a course syllabus. Each entry
@@ -64,4 +64,10 @@ which level(s) teach it. Pairs with `writeups.md` (full solutions) and
 - Recognize a login query built by raw string concatenation and
   construct an injection payload (matching the target's actual quoting
   style) that produces an always-true condition and comments out the
-  remainder of the query.
+   remainder of the query.
+
+## Oracle and session design failures (levels 15–19)
+- Distinguish a binary query-validation oracle from a protected lookup and use bounded sampling responsibly.
+- Recognize why filtering command punctuation does not make a command-shaped interface safe; this lab uses an isolated evaluator.
+- Measure deterministic application timing differences without response-content disclosure.
+- Identify predictable bounded numeric session identifiers and encoded tokens that lack integrity protection.

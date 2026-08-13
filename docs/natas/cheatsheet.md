@@ -38,3 +38,8 @@ as a bug.
 | 12→13 | Upload a web shell | "Upload a PHP file, then call the URL it lands at with your own command parameter." | `<?php system($_GET[...]); ?>` upload |
 | 13→14 | Upload check bypassed by header only | "The check only reads the first few bytes — a real file signature followed by your payload still executes." | prepend `GIF89a` magic bytes to a PHP payload |
 | 14→15 | SQL injection | "Source shows the exact quote character the query uses — your payload has to match that, not a generic example." | quote-breakout SQLi with trailing comment |
+| 15→16 | Boolean oracle | "Two responses are enough to test a constrained prefix predicate." | bounded boolean enumeration |
+| 16→17 | Denylist emulator | "It is a small catalog evaluator, not a shell; search its ordinary records." | command-shaped interface failure |
+| 17→18 | Timing oracle | "The body never changes; take repeated, bounded timing samples." | application timing comparison |
+| 18→19 | Numeric session | "The cookie is a small numeric identifier." | bounded session enumeration |
+| 19→20 | Encoded token | "Decode the strict text ticket before considering its fields." | missing token integrity |

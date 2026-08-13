@@ -6,7 +6,9 @@ from natas_levels import LAST_LEVEL
 
 def main(root):
     root = Path(root)
-    for level in range(15, LAST_LEVEL + 1):
+    # Batch A supplies real scenarios through level 19.  Leave later range
+    # foundation endpoints inert until their corresponding implementation.
+    for level in range(20, LAST_LEVEL + 1):
         directory = root / ("natas%d" % level)
         directory.mkdir(parents=True, exist_ok=True)
         (directory / "index.php").write_text(

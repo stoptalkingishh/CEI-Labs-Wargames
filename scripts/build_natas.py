@@ -253,6 +253,36 @@ challenges_data = [
         "goal": "Bypass a login form using SQL injection.",
         "task": "This is the final Natas level. The login form builds its SQL query with raw string concatenation from your username and password fields.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas14final"}
+    },
+    {
+        "id": "natas-15", "name": "Natas 15 -> 16: Boolean Response Oracle",
+        "points": 950, "goal": "Recover a credential through a constrained boolean validation oracle.",
+        "task": "The validation console accepts a narrow account predicate and reveals only whether a matching record exists.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas16"}
+    },
+    {
+        "id": "natas-16", "name": "Natas 16 -> 17: Denylist Search Emulator",
+        "points": 1000, "goal": "Understand why command-like denylist filtering is not a safe design.",
+        "task": "Study the bounded archive search behavior and find the training record the adapter exposes.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas17"}
+    },
+    {
+        "id": "natas-17", "name": "Natas 17 -> 18: Timing Response Oracle",
+        "points": 1050, "goal": "Measure an application-layer timing difference without relying on response content.",
+        "task": "The verifier gives one message for every candidate; compare repeated, bounded measurements.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas18"}
+    },
+    {
+        "id": "natas-18", "name": "Natas 18 -> 19: Predictable Numeric Sessions",
+        "points": 1100, "goal": "Assess the risk of a small predictable session identifier space.",
+        "task": "The service desk identifies sessions with a bounded numeric cookie.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas19"}
+    },
+    {
+        "id": "natas-19", "name": "Natas 19 -> 20: Encoded Weak Session Token",
+        "points": 1150, "goal": "Recognize encoding as distinct from session integrity protection.",
+        "task": "The ticket portal uses a strict, encoded two-field session ticket.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas20"}
     }
 ]
 
@@ -275,6 +305,8 @@ EXTRA_INFO = {
     "natas-12": (["browser view-source", "curl"], []),
     "natas-13": (["browser view-source", "curl"], []),
     "natas-14": (["browser view-source"], [("SQL injection on Wikipedia", "https://en.wikipedia.org/wiki/SQL_injection")]),
+    "natas-15": (["curl"], []), "natas-16": (["curl"], []), "natas-17": (["curl"], []),
+    "natas-18": (["curl"], []), "natas-19": (["curl", "base64"], []),
 }
 
 # One real, technique-specific hint per level (not natas-start-here --
@@ -358,6 +390,11 @@ HINTS = {
         "Click 'View sourcecode': the login query is built by directly gluing your username and password INTO a SQL string, with no escaping at all. That means a quote character you type doesn't stay 'just data' -- it can close the string the developer intended early and let you add your own SQL logic that the database executes as part of the real query. Pay attention to which quote character the source itself uses to wrap each field, since your input needs to match that same style to actually close the string.",
         'The query wraps each field in DOUBLE quotes and concatenates them directly, so a username like `" OR "1"="1" -- ` (matching that double-quote style -- note the trailing space after the double-dash, which comments out the rest of the original query) closes the string early, adds an always-true condition, and comments out everything after it.\n\nIllustrative example only -- your real value will differ:\n```\n$ curl --data-urlencode \'username=" OR "1"="1" -- \' --data-urlencode \'password=x\' http://<target-host>:8014/index.php\nLogged in. The FINAL Natas flag is <the final password>\n```',
     ],
+    'natas-15': ["Observe the two stable outcomes.", "The accepted grammar is deliberately narrow; compare prefixes one position at a time.", "Automate small, bounded prefix probes and keep only candidates that produce the positive outcome."],
+    'natas-16': ["This is an emulator, not a shell.", "Punctuation is rejected before the small catalog is evaluated.", "Read the catalog-oriented response behavior and refine ordinary search terms."],
+    'natas-17': ["The response text is intentionally uniform.", "Compare several requests for each candidate rather than trusting one measurement.", "A matching prefix takes longer application work; enumerate conservatively."],
+    'natas-18': ["The session cookie is numeric.", "Its accepted range is small and the service has one local elevated record.", "Test bounded numeric identifiers rather than guessing unbounded values."],
+    'natas-19': ["The ticket is encoded, not signed.", "Decode it as a strict two-field text record.", "Change only a valid field value, then re-encode using the URL-safe token alphabet."],
 }
 
 HINT_TITLES = (
@@ -464,11 +501,14 @@ for i, ch in enumerate(challenges_data):
             links = "\n".join(f"- {title}" for title, url in reading)
             full_desc += f"\n\n**Helpful reading:**\n{links}"
 
+    indented_description = "\n".join(
+        "  " + line if line else "" for line in full_desc.splitlines()
+    )
     yaml_content = f"""name: "{ch['name']}"
 author: "CEI Labs (self-hosted recreation of OverTheWire's Natas)"
 category: "Web Security"
 description: |
-  {full_desc.replace(chr(10), chr(10) + '  ')}
+{indented_description}
 value: {ch['points']}
 type: standard
 flags:

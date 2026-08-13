@@ -86,19 +86,19 @@ class NatasDocumentationContracts(unittest.TestCase):
         self.assertNotIn("8013/upload/<uploaded-path>", self.writeups)
         self.assertIn("`#` avoids the filtered metacharacters", self.writeups)
         self.assertIn("curl -u natas0:natas0", self.writeups)
-        self.assertEqual(self.writeups.count("**Result:"), 14)
-        for level in range(1, 15):
+        self.assertEqual(self.writeups.count("**Result:"), 19)
+        for level in list(range(1, 15)) + list(range(16, 21)):
             self.assertIn(f"<team's Natas {level} password>", self.writeups)
         self.assertIn("<team-natas-1-password>", self.writeups)
         self.assertIn("<team's final Natas flag>", self.writeups)
 
-    def test_natas_range_ends_at_level_fourteen(self):
+    def test_generated_batch_a_stops_at_level_nineteen(self):
         level_ids = [
             int(challenge["id"].rsplit("-", 1)[1])
             for challenge in self.natas.challenges_data
             if challenge["id"].startswith("natas-") and challenge["id"] != "natas-start-here"
         ]
-        self.assertEqual(level_ids, list(range(15)))
+        self.assertEqual(level_ids, list(range(20)))
 
 
 if __name__ == "__main__":

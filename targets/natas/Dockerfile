@@ -99,12 +99,16 @@ RUN chmod +x /opt/build/*.sh /opt/build/*.py \
     && chmod 1777 /etc/cei-labs/natas-solve-state \
     && mkdir -p /etc/cei-labs/natas-runtime \
     && chown root:root /etc/cei-labs/natas-runtime \
-    && chmod 755 /etc/cei-labs/natas-runtime
+    && chmod 755 /etc/cei-labs/natas-runtime \
+    && mkdir -p /var/lib/cei-labs/natas-batch-a \
+    && chown root:root /var/lib/cei-labs/natas-batch-a \
+    && chmod 700 /var/lib/cei-labs/natas-batch-a
 
 # Users, per-level webpass files, MariaDB schema/users, Apache vhosts,
 # and PHP content -- see each script's own header comment for what it
 # owns.
 RUN /opt/build/01-create-users.sh \
+    && chown natas18:natas18 /var/lib/cei-labs/natas-batch-a \
     && /opt/build/02-set-webpasswords.sh \
     && python3 /opt/build/03-generate-vhosts.py
 

@@ -19,7 +19,9 @@ FOUNDATION_TITLES = {
     8: "Reversing Crypto Schemes", 9: "Command Injection I",
     10: "Command Injection II (Sanitization Bypass)", 11: "XOR Encryption Bypass",
     12: "Arbitrary File Upload (Web Shell)", 13: "File Upload Bypass (Magic Bytes)",
-    14: "SQL Injection (SQLi)",
+    14: "SQL Injection (SQLi)", 15: "Boolean Response Oracle",
+    16: "Denylist Search Emulator", 17: "Timing Response Oracle",
+    18: "Predictable Numeric Sessions", 19: "Encoded Weak Session Token",
 }
 
 

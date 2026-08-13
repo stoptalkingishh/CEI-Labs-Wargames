@@ -1,6 +1,6 @@
 # Natas — Full Solution Writeups
 
-Complete, step-by-step solutions for all 15 Natas level endpoints.
+Complete, step-by-step solutions for Natas level endpoints.
 Instructor answer key — not for participant distribution. Results after
 Natas 0 are per-team dynamic values; replace each placeholder with the
 value recovered by that team.
@@ -207,3 +207,20 @@ original query. Payload must match the source's actual quote character;
 this deployment uses double quotes, not the single-quote style many
 generic SQLi examples show.)
 **Result (final Natas flag):** `<team's final Natas flag>`
+
+---
+
+### Natas 15 → 16: Boolean Response Oracle
+Use the documented constrained predicate grammar and enumerate one credential character at a time, retaining only prefixes that produce the positive response. Keep requests bounded and paced. **Result:** `<team's Natas 16 password>`
+
+### Natas 16 → 17: Denylist Search Emulator
+This clean-room lesson has no process execution. Refine ordinary catalog search terms until the training credential record is returned. **Result:** `<team's Natas 17 password>`
+
+### Natas 17 → 18: Timing Response Oracle
+Submit candidate prefixes repeatedly and compare the deterministic application delay; the body remains identical. **Result:** `<team's Natas 18 password>`
+
+### Natas 18 → 19: Predictable Numeric Sessions
+Inspect the numeric session cookie and test only the documented bounded identifier range to reach the local operator record. **Result:** `<team's Natas 19 password>`
+
+### Natas 19 → 20: Encoded Weak Session Token
+Decode the URL-safe ticket, preserve its strict record syntax, alter the authorization field, and encode it again. **Result:** `<team's Natas 20 password>`

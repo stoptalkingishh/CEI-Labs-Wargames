@@ -14,6 +14,8 @@ python3 - <<'PYEOF'
 import os
 import subprocess
 import sys
+import re
+import json
 
 sys.path.insert(0, "/usr/local/lib")
 from natas_levels import WEBPASS_LEVELS
@@ -90,6 +92,33 @@ for path, owner, key, var_name in (
     write_php_secret(path, var_name, secrets[key])
     subprocess.run(["chown", f"{owner}:{owner}", path], check=True)
     os.chmod(path, 0o600)
+
+# Batch A keeps its challenge state outside served content.  Each file is
+# replaced on container start, giving every target/team a clean bounded state.
+team = re.sub(r"[^A-Za-z0-9_-]", "_", os.environ.get("NATAS_TARGET_TEAM", "local"))[:64] or "local"
+for path, owner, key, var_name in (
+    ("/etc/cei-labs/natas-runtime/natas15.php", "natas15", "natas16", "natas16_secret"),
+    ("/etc/cei-labs/natas-runtime/natas16.php", "natas16", "natas17", "natas17_secret"),
+    ("/etc/cei-labs/natas-runtime/natas17.php", "natas17", "natas18", "natas18_secret"),
+    ("/etc/cei-labs/natas-runtime/natas18.php", "natas18", "natas19", "natas19_secret"),
+    ("/etc/cei-labs/natas-runtime/natas19.php", "natas19", "natas20", "natas20_secret"),
+):
+    write_php_secret(path, var_name, secrets[key])
+    with open(path, "a") as state_file:
+        state_file.write("$natas_team = %r;\n" % team)
+    subprocess.run(["chown", f"{owner}:{owner}", path], check=True)
+    os.chmod(path, 0o600)
+
+state_dir = "/var/lib/cei-labs/natas-batch-a"
+os.makedirs(state_dir, exist_ok=True)
+subprocess.run(["chown", "natas18:natas18", state_dir], check=True)
+os.chmod(state_dir, 0o700)
+state_path = os.path.join(state_dir, "sessions-%s.json" % team)
+with open(state_path, "w") as state_file:
+    # The single elevated record is challenge data, not a framework session.
+    json.dump({"42": {"role": "operator"}}, state_file)
+subprocess.run(["chown", "natas18:natas18", state_path], check=True)
+os.chmod(state_path, 0o600)
 PYEOF
 
 # Security: child processes spawned from this script inherit its ENTIRE

@@ -39,6 +39,22 @@ class NatasRangeFoundationTests(unittest.TestCase):
         for secret_name in ("natas15", "natas34", "natas14final"):
             self.assertNotIn(secret_name, generator)
 
+    def test_batch_a_replaces_only_its_pending_pages(self):
+        generator = (ROOT / "build" / "generate_pending_content.py").read_text()
+        self.assertIn("range(20, LAST_LEVEL + 1)", generator)
+        for level in range(15, 20):
+            page = (ROOT / "content" / ("natas%d" % level) / "index.php").read_text()
+            self.assertNotIn("SCENARIO_PENDING", page)
+        self.assertNotIn("natas15", (ROOT / "content" / "natas14" / "index.php").read_text())
+
+    def test_batch_a_isolated_emulators_do_not_spawn_commands(self):
+        pages = "\n".join(
+            (ROOT / "content" / ("natas%d" % level) / "index.php").read_text()
+            for level in range(15, 20)
+        )
+        for forbidden in ("shell_exec", "exec(", "system(", "proc_open", "passthru", "unserialize", "$_SESSION"):
+            self.assertNotIn(forbidden, pages)
+
 
 if __name__ == "__main__":
     unittest.main()
