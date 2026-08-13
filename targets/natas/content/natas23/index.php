@@ -5,7 +5,8 @@ function toy_numeric_prefix_equal($value, $expected) {
     return (int)$match[0] === (int)$expected;
 }
 $token = isset($_POST['token']) && is_string($_POST['token']) ? $_POST['token'] : '';
-$loose = toy_numeric_prefix_equal($token, '7');
+$noncanonical_boundary = is_string($token) && strlen($token) >= 2 && strlen($token) <= 32;
+$loose = $noncanonical_boundary && toy_numeric_prefix_equal($token, '7');
 $strict = $token === '7';
 ?>
 <!doctype html><html><head><title>Natas 23</title></head><body><h1>Comparison training console</h1><p>A toy compatibility check is paired with a strict control.</p>

@@ -430,7 +430,7 @@ HINTS = {
     'natas-20': ["The first request changes state for a later request.", "Read how the compact record is assembled and then parsed.", "Test whether note data can create another record field without exceeding the form limit."],
     'natas-21': ["There are exactly two internal routes.", "One route issues a badge and the other relies on it.", "Keep both requests on this local target and preserve the cookie between them."],
     'natas-22': ["Do not let your client discard the first response automatically.", "A redirect status and a response body can coexist.", "Inspect the original local response headers and body without following its redirect."],
-    'natas-23': ["The two result lines intentionally use different comparisons.", "The compatibility check reads only a constrained numeric prefix.", "Find an input accepted by the compatibility line but rejected by the strict control."],
+    'natas-23': ["The two result lines intentionally use different comparisons.", "The compatibility check reads only a constrained numeric prefix and requires a non-canonical boundary value.", "Find a bounded input accepted by the compatibility line but rejected by the strict control."],
     'natas-24': ["A request field can arrive in more than one shape.", "The model accepts only a small named set in its alternate shape.", "Compare a scalar request with a compact structured request while keeping its local region unchanged."],
 }
 

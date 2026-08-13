@@ -90,8 +90,9 @@ def main(base, secrets):
 
     _, body, _ = audit.request(23, fields={"token": "7x"})
     require(secrets["natas24"].encode() in body and b"Strict control: denied." in body, "numeric-prefix intended path failed")
-    _, body, _ = audit.request(23, fields={"token": "x7"})
-    require(secrets["natas24"].encode() not in body, "invalid numeric shape accepted")
+    for token, description in (("7", "canonical"), ("x7", "alphabetic"), ("", "empty")):
+        _, body, _ = audit.request(23, fields={"token": token})
+        require(secrets["natas24"].encode() not in body, "%s numeric token released level 24" % description)
 
     _, body, _ = audit.request(24, fields=[("access[role]", "operator"), ("access[region]", "local")])
     require(secrets["natas25"].encode() in body, "structured request intended path failed")

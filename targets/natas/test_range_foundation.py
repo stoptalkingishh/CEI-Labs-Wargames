@@ -71,6 +71,9 @@ class NatasRangeFoundationTests(unittest.TestCase):
             self.assertNotIn(forbidden, pages)
         self.assertIn("natas-batch-b", (ROOT / "entrypoint.sh").read_text())
         self.assertIn("Cache-Control: no-store", (ROOT / "content" / "natas22" / "index.php").read_text())
+        natas23 = (ROOT / "content" / "natas23" / "index.php").read_text()
+        self.assertIn("$noncanonical_boundary", natas23)
+        self.assertIn("strlen($token) >= 2", natas23)
 
     def test_batch_b_record_is_recreated_on_instance_start(self):
         entrypoint = (ROOT / "entrypoint.sh").read_text()
