@@ -19,7 +19,7 @@
 set -e
 
 mkdir -p /etc/natas_webpass
-for i in $(seq 1 14); do
+for i in $(seq 1 34); do
     prev=$((i - 1))
     : > "/etc/natas_webpass/natas${i}"
     chown "natas${i}:natas${prev}" "/etc/natas_webpass/natas${i}"

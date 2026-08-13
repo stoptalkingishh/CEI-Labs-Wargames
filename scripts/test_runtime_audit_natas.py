@@ -13,13 +13,13 @@ parse_secrets = runtime_audit_natas.parse_secrets
 
 
 def secrets():
-    return {**{f"natas{level}": f"synthetic-{level}" for level in range(1, 15)}, "natas14final": "synthetic-final"}
+    return {**{f"natas{level}": f"synthetic-{level}" for level in range(1, 35)}, "natas34final": "synthetic-final"}
 
 
 class RuntimeAuditNatasTests(unittest.TestCase):
     def test_parse_secrets_requires_complete_synthetic_chain(self):
         parsed = parse_secrets(__import__("json").dumps(secrets()))
-        self.assertEqual(parsed["natas14final"], "synthetic-final")
+        self.assertEqual(parsed["natas34final"], "synthetic-final")
         with self.assertRaisesRegex(AssertionError, "natas1"):
             parse_secrets("{}")
 

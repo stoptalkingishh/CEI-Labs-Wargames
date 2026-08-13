@@ -7,11 +7,12 @@ current deployment attestation.
 
 ## Scope
 
-The approved eventual Natas scope is level endpoints 0-34. This PR is only
-the 0-14 foundation: it does not add endpoints 15-34, change the Natas count,
-deploy totals, `game-stages.yml`, or current deployment behavior. The 15-34
-implementation and the 36-challenge count expansion remain deferred to plan
-PR #69 and its range-foundation work.
+The approved eventual Natas scope is level endpoints 0-34. The range
+foundation is complete: endpoints, identities, authentication, runtime secret
+validation, and inert pending pages exist through level 34. Scenario content
+for levels 15-34 remains pending and is deliberately not a release of 36
+challenges. Deployment totals, `game-stages.yml`, and current deployment
+behavior remain unchanged. See plan PR #69 for the deferred scenario work.
 
 ## What This Repository Owns
 

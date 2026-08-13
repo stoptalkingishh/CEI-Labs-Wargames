@@ -5,10 +5,13 @@ import json
 import os
 import sys
 
+# Unit tests load this module from the target source directory, while the
+# image installs natas_levels.py alongside it in /usr/local/lib.
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "build"))
+from natas_levels import REQUIRED_SECRET_KEYS
 
-REQUIRED_KEYS = frozenset(
-    [f"natas{level}" for level in range(1, 15)] + ["natas14final"]
-)
+
+REQUIRED_KEYS = REQUIRED_SECRET_KEYS
 
 
 def load_required_secrets(raw_secrets):

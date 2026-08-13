@@ -1,6 +1,7 @@
 from pathlib import Path
 from html import escape
 import importlib.util as _ilu
+from natas_levels import LAST_LEVEL, LEVELS, title
 
 # Reuse the exact same cool-blue -> hot-magenta per-level hue used for the
 # page's own background/heading theme (see build/generate_themes.py's
@@ -10,9 +11,9 @@ import importlib.util as _ilu
 _themes_spec = _ilu.spec_from_file_location("natas_themes", Path(__file__).with_name("generate_themes.py"))
 _themes = _ilu.module_from_spec(_themes_spec); _themes_spec.loader.exec_module(_themes)
 
-T={0:"View Source",1:"Right-Click Block",2:"Directory Traversal (Files)",3:"Web Crawlers (Robots.txt)",4:"Referer Spoofing",5:"Cookie Manipulation",6:"Hidden Inclusion Files",7:"Local File Inclusion (LFI)",8:"Reversing Crypto Schemes",9:"Command Injection I",10:"Command Injection II (Sanitization Bypass)",11:"XOR Encryption Bypass",12:"Arbitrary File Upload (Web Shell)",13:"File Upload Bypass (Magic Bytes)",14:"SQL Injection (SQLi)"}
+T = {n: title(n) for n in LEVELS}
 
-COLOR = {n: _themes._hue_to_hex(_themes._progression_hue(n)) for n in range(15)}
+COLOR = {n: _themes._hue_to_hex(_themes._progression_hue(n)) for n in LEVELS}
 
 # Storyboard, not standalone scenes: rather than each level inventing its
 # own isolated picture (which kept reading as noise -- see PR history),
@@ -29,11 +30,11 @@ COLOR = {n: _themes._hue_to_hex(_themes._progression_hue(n)) for n in range(15)}
 # (COLOR above) applied to this same art via main()'s <span>. This also
 # means no level's art can ever leak a hint: it only encodes "how deep
 # you are," nothing about any specific vulnerability.
-def _shaft(level, total=15):
+def _shaft(level, total=LAST_LEVEL + 1):
     rows = ["  [%s]" % ("x" if i < level else ("o" if i == level else ".")) for i in range(total)]
     return ["  surface"] + rows + ["  depths"]
 
-ART = {n: _shaft(n) for n in range(15)}
+ART = {n: _shaft(n) for n in LEVELS}
 
 # --- Visual redesign (banner glow-up) ---------------------------------------
 # The whole banner is framed in a box-drawing border (76 cols wide, inside
@@ -88,7 +89,7 @@ def _frame(wordmark, art_lines, info_lines):
 
 
 def _next_step(n):
-    if n < 14:
+    if n < LAST_LEVEL:
         return "Next step: solve natas%d to descend to natas%d" % (n, n + 1)
     return "Next step: none -- you have reached the depths"
 
@@ -98,7 +99,7 @@ def render(n, title):
     info_lines = [
         "CEI Labs Natas %d: %s" % (n, title),
         "Account: natas%d" % n,
-        "Progress: %d/14 levels descended (%d%%)" % (n, n * 100 // 14),
+        "Progress: %d/%d levels descended (%d%%)" % (n, LAST_LEVEL, n * 100 // LAST_LEVEL),
         _next_step(n),
     ]
     body = "\n".join(_frame(_wordmark("NATAS"), art_lines, info_lines)) + "\n"

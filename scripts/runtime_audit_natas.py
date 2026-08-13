@@ -26,9 +26,9 @@ def require(value, message):
 def parse_secrets(value):
     secrets = json.loads(value)
     require(isinstance(secrets, dict), "NATAS_AUDIT_SECRETS must be a JSON object")
-    for level in range(1, 15):
+    for level in range(1, 35):
         require(isinstance(secrets.get(f"natas{level}"), str) and secrets[f"natas{level}"], f"missing synthetic secret natas{level}")
-    require(isinstance(secrets.get("natas14final"), str) and secrets["natas14final"], "missing synthetic secret natas14final")
+    require(isinstance(secrets.get("natas34final"), str) and secrets["natas34final"], "missing synthetic secret natas34final")
     return secrets
 
 
@@ -85,7 +85,7 @@ def expect(audit, level, expected, message, **kwargs):
 def main(base_url, secrets):
     audit = NatasAudit(base_url, secrets)
     # Every vhost rejects bad credentials, while each recovered secret opens the next level.
-    for level in range(15):
+    for level in range(35):
         status, _, _ = audit.request(level, password="wrong-password")
         require(status == 401, f"Natas {level} accepts wrong credentials")
         status, _, _ = audit.request(level)
@@ -154,7 +154,7 @@ def main(base_url, secrets):
     require(b"uploads/audit.php" in body, "Natas 13 magic-byte upload failed")
     expect(audit, 13, secrets["natas14"].encode(), "Natas 13 uploaded PHP did not execute", path="/uploads/audit.php")
     status, body, _ = audit.form(14, {"username": '" OR "1"="1" -- ', "password": "x"})
-    require(status == 200 and secrets["natas14final"].encode() in body, "Natas 14 SQL injection failed")
+    require(status == 200 and secrets["natas15"].encode() in body, "Natas 14 SQL injection failed")
     print("NATAS_LEVELS_0_THROUGH_14_OK")
 
 

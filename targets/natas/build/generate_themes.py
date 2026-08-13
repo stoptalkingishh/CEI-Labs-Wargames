@@ -20,7 +20,7 @@ CSS-only (no binary image assets) -- gradients/patterns keep this
 diffable, avoid repo bloat, and are trivial to re-theme per level.
 
 Palette direction: hue is NOT arbitrary per level -- it's a continuous
-progression across the whole 0-14 track (see _progression_hue below),
+progression across the whole 0-34 range (see _progression_hue below),
 cool cyan/blue at natas0 (passive recon: view-source, robots.txt) sliding
 through amber/violet in the middle (active manipulation: cookies,
 referer, LFI) to hot red/magenta by natas14 (full exploitation: SQLi,
@@ -35,10 +35,11 @@ ANSI-driven palettes -- see those tracks' generators, not shared here.
 """
 from pathlib import Path
 import colorsys
+from natas_levels import LAST_LEVEL, LEVELS, title
 
 # n -> (title, pattern); color is NOT hardcoded per level -- see
 # _progression_hue(), which derives each level's hue from its position
-# in the 0-14 track. "pattern" stays level-specific: it's what makes
+# in the 0-34 range. "pattern" stays level-specific: it's what makes
 # each level's texture thematically match its own vulnerability class,
 # independent of the shared color progression.
 THEMES = {
@@ -58,6 +59,7 @@ THEMES = {
     13: ("File Upload Bypass (Magic Bytes)", "byte-blocks"),
     14: ("SQL Injection (SQLi)", "table-grid"),
 }
+THEMES.update({n: (title(n), "flat") for n in LEVELS if n not in THEMES})
 
 # Cool recon-blue (n=0) -> hot exploitation-magenta/red (n=14), swept
 # through HSL hue space (200deg down to -20deg/340deg, wrapping through
@@ -66,7 +68,7 @@ THEMES = {
 _HUE_START, _HUE_END = 200, -20
 
 
-def _progression_hue(n, total=14):
+def _progression_hue(n, total=LAST_LEVEL):
     return _HUE_START + (_HUE_END - _HUE_START) * (n / total)
 
 
@@ -203,9 +205,9 @@ def main(root):
         solved_note = (
             "natas14 has no next level to observe, so it never reaches "
             "the solved state under this signal -- see module docstring."
-            if n == 14 else ""
+            if n == LAST_LEVEL else ""
         )
-        next_desc = f"natas{n + 1}" if n < 14 else "a level that doesn't exist"
+        next_desc = f"natas{n + 1}" if n < LAST_LEVEL else "a level that doesn't exist"
         css = CSS_TEMPLATE % {
             "n": n,
             "title": title,

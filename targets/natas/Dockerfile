@@ -1,5 +1,5 @@
 # CEI-Labs-Wargames/targets/natas
-# Self-hosted recreation of OverTheWire's Natas wargame (levels 0-14),
+# Self-hosted recreation of OverTheWire's Natas wargame (levels 0-34),
 # a single LAMP box reachable ONLY from its own team's attacker over the
 # range's private network (target-attacker instance type -- no
 # externally published port at all, not even SSH). See
@@ -109,19 +109,21 @@ RUN /opt/build/01-create-users.sh \
     && python3 /opt/build/03-generate-vhosts.py
 
 COPY content/ /var/www/natas/
-RUN /opt/build/04-fix-content-ownership.sh \
+RUN python3 /opt/build/generate_pending_content.py /var/www/natas \
+    && /opt/build/04-fix-content-ownership.sh \
     && /opt/build/05-setup-mariadb.sh \
     && rm -rf /opt/build
 
 COPY entrypoint.sh /entrypoint.sh
 COPY runtime_secrets.py /usr/local/lib/natas_runtime_secrets.py
+COPY build/natas_levels.py /usr/local/lib/natas_levels.py
 RUN chmod +x /entrypoint.sh \
     && chmod 644 /usr/local/lib/natas_runtime_secrets.py
 
 # Deliberately NO EXPOSE of any external-facing port declaration beyond
 # what Apache itself binds to internally -- this image is only ever
 # reached over the range's private network, never published to the host.
-EXPOSE 8000-8014
+EXPOSE 8000-8034
 
 # Apache is the box's only required service. Every vhost (including
 # natas0 on 8000) sits behind HTTP Basic Auth, so a healthy Apache

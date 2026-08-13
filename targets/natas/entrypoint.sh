@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-# Per-team secrets for levels 1-14 (webpass files + htpasswd hashes) and
-# the level-14 final flag, generated fresh by cei-labs-engine's
+# Per-team secrets for levels 1-34 (webpass files + htpasswd hashes) and
+# the terminal flag, generated fresh by cei-labs-engine's
 # orchestrator at container START from $LEVEL_SECRETS (a JSON blob) --
 # not identical hardcoded values baked into every build (see
 # docs/security-audit-status.md). natas0's password stays the real,
@@ -16,6 +16,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, "/usr/local/lib")
+from natas_levels import WEBPASS_LEVELS
 from natas_runtime_secrets import load_required_secrets, write_php_secret
 
 try:
@@ -24,7 +25,7 @@ except ValueError as error:
     print(f"Natas startup refused: {error}", file=sys.stderr)
     raise SystemExit(1)
 
-for n in range(1, 15):
+for n in WEBPASS_LEVELS:
     key = f"natas{n}"
     value = secrets.get(key)
     if not value:
@@ -72,7 +73,7 @@ NEXT_PASSWORD_FILES = {
     "/var/www/natas/natas6/next_password.php": ("natas6", "natas7", "next_password"),
     "/var/www/natas/natas8/next_password.php": ("natas8", "natas9", "next_password"),
     "/var/www/natas/natas11/next_password.php": ("natas11", "natas12", "next_password"),
-    "/var/www/natas/natas14/next_password.php": ("natas14", "natas14final", "final_flag"),
+    "/var/www/natas/natas14/next_password.php": ("natas14", "natas15", "next_password"),
 }
 for path, (owner, key, var_name) in NEXT_PASSWORD_FILES.items():
     value = secrets.get(key)
