@@ -214,7 +214,7 @@ generic SQLi examples show.)
 Use the documented constrained predicate grammar and enumerate one credential character at a time, retaining only prefixes that produce the positive response. Keep requests bounded and paced. **Result:** `<team's Natas 16 password>`
 
 ### Natas 16 → 17: Denylist Search Emulator
-This clean-room lesson has no process execution. Refine ordinary catalog search terms until the training credential record is returned. **Result:** `<team's Natas 17 password>`
+This clean-room lesson has no process execution. Its source documents a strict CEI reference-expansion grammar that the superficial punctuation denylist does not reject. Use the documented reference to resolve the hidden training record; direct catalog terms remain ordinary literal searches. **Result:** `<team's Natas 17 password>`
 
 ### Natas 17 → 18: Timing Response Oracle
 Submit candidate prefixes repeatedly and compare the deterministic application delay; the body remains identical. **Result:** `<team's Natas 18 password>`

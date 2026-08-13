@@ -15,7 +15,7 @@ description: |
   > **Using curl?** Authenticate every request: `curl -u 'natas16:<flag from Natas 15>' ...`. A bare request gets `401 Unauthorized` before it reaches the level.
 
   ### The task
-  Study the bounded archive search behavior and find the training record the adapter exposes.
+  Inspect the bounded archive adapter's source and determine how its legacy reference expansion reaches a hidden training record.
 
   **Commands you may need:** `curl`
 value: 1000

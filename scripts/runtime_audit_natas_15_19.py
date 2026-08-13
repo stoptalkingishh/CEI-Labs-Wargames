@@ -57,7 +57,10 @@ def main(base, secrets):
     prefix = secrets["natas16"][:1]
     _, body, _ = audit.form(15, {"probe": "account=operator; prefix=" + prefix})
     require(b"Record exists." in body, "boolean oracle intended path failed")
-    _, body, _ = audit.request(16, "/?needle=catalog%20credential")
+    for needle in ("catalog", "catalog credential", "sealed-record", "search;catalog"):
+        _, body, _ = audit.request(16, "/?" + urllib.parse.urlencode({"needle": needle}))
+        require(secrets["natas17"].encode() not in body, "emulator leaked through literal or blocked input")
+    _, body, _ = audit.request(16, "/?" + urllib.parse.urlencode({"needle": "search {{ref:handoff}}"}))
     require(secrets["natas17"].encode() in body, "emulator intended path failed")
     measurements = []
     for candidate in ("wrong", secrets["natas18"][:1]):

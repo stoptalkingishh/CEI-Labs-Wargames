@@ -55,6 +55,13 @@ class NatasRangeFoundationTests(unittest.TestCase):
         for forbidden in ("shell_exec", "exec(", "system(", "proc_open", "passthru", "unserialize", "$_SESSION"):
             self.assertNotIn(forbidden, pages)
 
+    def test_natas_sixteen_uses_only_a_bounded_reference_expansion(self):
+        page = (ROOT / "content" / "natas16" / "index.php").read_text()
+        self.assertIn("search \\{\\{ref:", page)
+        self.assertIn("'handoff' => 'sealed-record'", page)
+        self.assertNotIn("catalog credential", page)
+        self.assertIn("highlight_file(__FILE__)", page)
+
 
 if __name__ == "__main__":
     unittest.main()

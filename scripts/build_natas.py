@@ -263,7 +263,7 @@ challenges_data = [
     {
         "id": "natas-16", "name": "Natas 16 -> 17: Denylist Search Emulator",
         "points": 1000, "goal": "Understand why command-like denylist filtering is not a safe design.",
-        "task": "Study the bounded archive search behavior and find the training record the adapter exposes.",
+        "task": "Inspect the bounded archive adapter's source and determine how its legacy reference expansion reaches a hidden training record.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas17"}
     },
     {
@@ -391,7 +391,7 @@ HINTS = {
         'The query wraps each field in DOUBLE quotes and concatenates them directly, so a username like `" OR "1"="1" -- ` (matching that double-quote style -- note the trailing space after the double-dash, which comments out the rest of the original query) closes the string early, adds an always-true condition, and comments out everything after it.\n\nIllustrative example only -- your real value will differ:\n```\n$ curl --data-urlencode \'username=" OR "1"="1" -- \' --data-urlencode \'password=x\' http://<target-host>:8014/index.php\nLogged in. The FINAL Natas flag is <the final password>\n```',
     ],
     'natas-15': ["Observe the two stable outcomes.", "The accepted grammar is deliberately narrow; compare prefixes one position at a time.", "Automate small, bounded prefix probes and keep only candidates that produce the positive outcome."],
-    'natas-16': ["This is an emulator, not a shell.", "Punctuation is rejected before the small catalog is evaluated.", "Read the catalog-oriented response behavior and refine ordinary search terms."],
+    'natas-16': ["This is an emulator, not a shell.", "The punctuation denylist is applied before a legacy reference-expansion step.", "Use the source view to learn the strict expansion grammar, then use its documented reference rather than a literal catalog query."],
     'natas-17': ["The response text is intentionally uniform.", "Compare several requests for each candidate rather than trusting one measurement.", "A matching prefix takes longer application work; enumerate conservatively."],
     'natas-18': ["The session cookie is numeric.", "Its accepted range is small and the service has one local elevated record.", "Test bounded numeric identifiers rather than guessing unbounded values."],
     'natas-19': ["The ticket is encoded, not signed.", "Decode it as a strict two-field text record.", "Change only a valid field value, then re-encode using the URL-safe token alphabet."],
