@@ -49,10 +49,10 @@ challenges_data = [
 ]
 
 HINTS = {
-    "sentinel-01": ["Start with the supplied inventory, then independently inspect what this host reports.", "Compare package, service, and ownership fields rather than relying on a single source.", "Use `dpkg -l`, `systemctl list-units --type=service`, and `stat` on the named evidence files; the reconciliation record contains the result."],
+    "sentinel-01": ["Start with the supplied inventory, then independently inspect what this host reports.", "Compare package, service, and ownership fields rather than relying on a single source.", "Use `dpkg -l`, `pgrep -a sshd`, and `stat` on the named evidence files; submit the documented evidence tuple through `sentinel-submit`."],
     "sentinel-02": ["Each statement describes a safeguard and an intended outcome.", "Control categories include technical, administrative, and physical; purposes include preventive, detective, and corrective.", "Read `controls.md` and `control-evidence.md`, then use the line labelled `approved-review-result`."],
     "sentinel-03": ["A safe production change has accountable approval, testing evidence, and a viable rollback.", "Read every section of the change packet before deciding whether the requested window should proceed.", "The packet's change board disposition records the correct result after the missing evidence is identified."],
-    "sentinel-04": ["Trust requires more than a familiar subject name.", "Compare issuer, validity, revocation status, and private-key permissions across the provided records.", "Use `openssl x509 -in service.pem -noout -subject -issuer -serial`; the verified ledger entry has the service record."],
+    "sentinel-04": ["Trust requires more than a familiar subject name.", "Compare issuer, validity, offline revocation status, and private-key permissions across the provided records.", "Use the fixed-time `openssl verify` command in the ledger and `stat -c '%a %U:%G' service.key`, then submit the evidence tuple through `sentinel-submit`."],
     "sentinel-05": ["Observed listeners and intended configuration are separate sources of evidence.", "Enumerate TCP listeners, then compare them with the exposure review and service configuration.", "Use `ss -lnt` and read `exposure-review.conf`; the signed finding records the exposed default service."],
 }
 

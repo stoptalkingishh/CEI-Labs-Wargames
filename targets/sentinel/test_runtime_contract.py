@@ -1,7 +1,9 @@
 import os
+from pathlib import Path
 import unittest
 from unittest.mock import patch
 
+import answer_service
 import runtime
 
 
@@ -12,6 +14,9 @@ class SentinelRuntimeContractTests(unittest.TestCase):
                 runtime.load_secrets()
         with patch.dict(os.environ, {"LEVEL_SECRETS": "{}"}, clear=True):
             with self.assertRaises(SystemExit):
+                runtime.load_secrets()
+        with patch.dict(os.environ, {"LEVEL_SECRETS": "[]"}, clear=True):
+            with self.assertRaisesRegex(SystemExit, "JSON object"):
                 runtime.load_secrets()
 
     def test_derivation_is_stable_and_team_specific(self):
@@ -30,6 +35,38 @@ class SentinelRuntimeContractTests(unittest.TestCase):
         with open("entrypoint.sh", encoding="utf-8") as source:
             content = source.read()
         self.assertLess(content.index("unset LEVEL_SECRETS"), content.index("exec /usr/sbin/sshd"))
+
+    def test_valid_answer_releases_only_its_credential(self):
+        submission = {"lab": "sentinel-01", "answer": runtime.ANSWERS["sentinel-01"]}
+        self.assertEqual(answer_service.release(submission, "sentinel1", runtime.ANSWERS, {"sentinel-01": "team-secret"}), "team-secret")
+
+    def test_invalid_or_wrong_account_answer_releases_nothing(self):
+        submission = {"lab": "sentinel-01", "answer": {"asset": "wrong"}}
+        with self.assertRaises(SystemExit):
+            answer_service.release(submission, "sentinel1", runtime.ANSWERS, {"sentinel-01": "team-secret"})
+        with self.assertRaises(SystemExit):
+            answer_service.release({"lab": "sentinel-01", "answer": runtime.ANSWERS["sentinel-01"]}, "sentinel2", runtime.ANSWERS, {"sentinel-01": "team-secret"})
+
+    def test_learner_evidence_has_no_credential_values(self):
+        with open("runtime.py", encoding="utf-8") as source:
+            content = source.read()
+        self.assertNotIn('" + secrets[', content)
+
+    def test_lab04_uses_static_offline_certificate_evidence(self):
+        with open("Dockerfile", encoding="utf-8") as source:
+            dockerfile = source.read()
+        with open("runtime.py", encoding="utf-8") as source:
+            runtime_source = source.read()
+        self.assertIn("COPY certs /opt/sentinel/certs", dockerfile)
+        self.assertNotIn("openssl req", dockerfile)
+        self.assertIn("-attime 1893456000", runtime_source)
+        self.assertIn("-CRLfile training-ca.crl -crl_check", runtime_source)
+        self.assertIn('os.chmod("/home/sentinel4/service.key", 0o400)', runtime_source)
+
+    def test_lab01_contract_does_not_require_systemctl(self):
+        builder = Path(__file__).resolve().parents[2] / "scripts" / "build_sentinel.py"
+        with open(builder, encoding="utf-8") as source:
+            self.assertNotIn("systemctl", source.read())
 
     def test_image_only_exposes_ssh_and_homes_are_not_traversable(self):
         with open("Dockerfile", encoding="utf-8") as source:
