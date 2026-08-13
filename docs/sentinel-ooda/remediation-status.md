@@ -14,7 +14,7 @@ authorizes staging or release.
 | Batch 3b | Labs 15-16 alert-tuning and secure-change contracts. | Agent | In review | Matrix contracts define reproducible JSON query/provenance/noise and classification/tuning/tradeoff fields for Lab 15; Lab 16 requires approved-change review before helper use, structured precondition/mutation/postcondition/backout assessment, static-or-private-namespace scope, reset, and action-log validation. |
 | Batch 4 | Labs 17-18 incident and forensic contracts. | Agent | In review | Lab 17 defines correlation/checksum fields, unique preservation-safe containment, lab-specific hints/feedback, and a structured timeline/scope/action response. Lab 18 defines case/recipient and provenance/signature decisions, a read-only evidence and writable-workspace boundary, lab-specific hints/feedback, structured handoff, and restart/error tests. |
 | Batch 5a | Labs 19-20 governance and risk contracts. | Agent | In review | Lab 19 has a versioned checksum manifest and role/responsibility answer; Lab 20 has declared source fields, units, rounding, treatment constraints, consequence/owner, and calculated risk-decision schema. |
-| Platform gates | Engine #58, Wargames platform generalization, stage/deploy integration, release tests. | Orchestrator | In review | Remain separate until token scope and PR review are resolved. |
+| Platform gates | Engine #58, Wargames platform generalization, stage/deploy integration, release tests. | Orchestrator | Blocked | Remain separate until token scope and PR review are resolved. |
 
 ## Update rules
 
