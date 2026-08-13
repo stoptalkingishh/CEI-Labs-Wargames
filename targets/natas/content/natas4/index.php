@@ -1,4 +1,5 @@
 <?php
+require '/etc/cei-labs/natas-runtime/natas4.php';
 // Expected referer is deliberately the NEXT level's own vhost (one port
 // higher than whatever port THIS request actually arrived on -- port-
 // relative rather than a hardcoded absolute port, since the port a
@@ -17,7 +18,7 @@ $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 <h3>natas4</h3>
 <?php
 if ($referer === $expected) {
-    echo "<p>Access granted. The password for natas5 is <tt>__NATAS5_SECRET__</tt></p>";
+    echo "<p>Access granted. The password for natas5 is <tt>" . htmlspecialchars($natas5_secret, ENT_QUOTES, 'UTF-8') . "</tt></p>";
 } else {
     echo "<p>Access disallowed. You are visiting from \"" . htmlspecialchars($referer) . "\" while authorized users should come only from \"" . htmlspecialchars($expected) . "\"</p>";
 }

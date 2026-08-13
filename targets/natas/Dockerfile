@@ -96,7 +96,10 @@ RUN chmod +x /opt/build/*.sh /opt/build/*.py \
     # rather than wiring a new shared group across every natasN user.
     && mkdir -p /etc/cei-labs/natas-solve-state \
     && chown root:root /etc/cei-labs/natas-solve-state \
-    && chmod 1777 /etc/cei-labs/natas-solve-state
+    && chmod 1777 /etc/cei-labs/natas-solve-state \
+    && mkdir -p /etc/cei-labs/natas-runtime \
+    && chown root:root /etc/cei-labs/natas-runtime \
+    && chmod 755 /etc/cei-labs/natas-runtime
 
 # Users, per-level webpass files, MariaDB schema/users, Apache vhosts,
 # and PHP content -- see each script's own header comment for what it
@@ -111,7 +114,9 @@ RUN /opt/build/04-fix-content-ownership.sh \
     && rm -rf /opt/build
 
 COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY runtime_secrets.py /usr/local/lib/natas_runtime_secrets.py
+RUN chmod +x /entrypoint.sh \
+    && chmod 644 /usr/local/lib/natas_runtime_secrets.py
 
 # Deliberately NO EXPOSE of any external-facing port declaration beyond
 # what Apache itself binds to internally -- this image is only ever

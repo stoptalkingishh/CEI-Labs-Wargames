@@ -7,19 +7,22 @@ set -e
 # not identical hardcoded values baked into every build (see
 # docs/security-audit-status.md). natas0's password stays the real,
 # public "natas0" (OverTheWire's well-known bootstrap credential, not a
-# secret). If $LEVEL_SECRETS is missing a key (e.g. CTFd content hasn't
-# been synced with the per_team_dynamic flags yet), that level's webpass/
-# htpasswd files are simply left as the invalid build-time placeholder
-# (locked out -- a safe failure mode, not a shared-credential one), and
-# any content-page placeholder text stays literally visible rather than
-# silently falling back to a shared value.
-if [ -n "${LEVEL_SECRETS:-}" ]; then
-    python3 - <<'PYEOF'
-import json
+# secret). A target without a complete, valid secret set must never start:
+# a partially initialized target can mix team credentials or expose build-time
+# placeholders.
+python3 - <<'PYEOF'
 import os
 import subprocess
+import sys
 
-secrets = json.loads(os.environ.get("LEVEL_SECRETS", "{}"))
+sys.path.insert(0, "/usr/local/lib")
+from natas_runtime_secrets import load_required_secrets, write_php_secret
+
+try:
+    secrets = load_required_secrets(os.environ.get("LEVEL_SECRETS"))
+except ValueError as error:
+    print(f"Natas startup refused: {error}", file=sys.stderr)
+    raise SystemExit(1)
 
 for n in range(1, 15):
     key = f"natas{n}"
@@ -50,13 +53,9 @@ CONTENT_SUBS = {
     "/var/www/natas/natas1/index.php": ("__NATAS2_SECRET__", "natas2"),
     "/var/www/natas/natas2/files/users.txt": ("__NATAS3_SECRET__", "natas3"),
     "/var/www/natas/natas3/s3cr3t/users.txt": ("__NATAS4_SECRET__", "natas4"),
-    "/var/www/natas/natas4/index.php": ("__NATAS5_SECRET__", "natas5"),
-    "/var/www/natas/natas5/index.php": ("__NATAS6_SECRET__", "natas6"),
 }
 for path, (placeholder, key) in CONTENT_SUBS.items():
     value = secrets.get(key)
-    if not value or not os.path.exists(path):
-        continue
     with open(path, "r") as f:
         content = f.read()
     with open(path, "w") as f:
@@ -77,17 +76,20 @@ NEXT_PASSWORD_FILES = {
 }
 for path, (owner, key, var_name) in NEXT_PASSWORD_FILES.items():
     value = secrets.get(key)
-    if not value:
-        continue
-    php_string = value.replace("\\", "\\\\").replace("'", "\\'")
-    with open(path, "w") as f:
-        f.write(f"<?php ${var_name} = '{php_string}';\n")
+    write_php_secret(path, var_name, value)
+    subprocess.run(["chown", f"{owner}:{owner}", path], check=True)
+    os.chmod(path, 0o600)
+
+# Levels 4 and 5 render their next passwords in an HTML response. Keep these
+# values outside the served source files, as with the view-source levels.
+for path, owner, key, var_name in (
+    ("/etc/cei-labs/natas-runtime/natas4.php", "natas4", "natas5", "natas5_secret"),
+    ("/etc/cei-labs/natas-runtime/natas5.php", "natas5", "natas6", "natas6_secret"),
+):
+    write_php_secret(path, var_name, secrets[key])
     subprocess.run(["chown", f"{owner}:{owner}", path], check=True)
     os.chmod(path, 0o600)
 PYEOF
-else
-    echo "WARNING: no LEVEL_SECRETS set -- natas1-14 will not be playable until content is synced." >&2
-fi
 
 # Security: child processes spawned from this script inherit its ENTIRE
 # environment, including $LEVEL_SECRETS -- the JSON blob holding every
