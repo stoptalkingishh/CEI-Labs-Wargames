@@ -14,7 +14,7 @@ class NatasRangeFoundationTests(unittest.TestCase):
         vhosts = (ROOT / "build" / "03-generate-vhosts.py").read_text()
         docker = (ROOT / "Dockerfile").read_text()
         self.assertIn("LAST_LEVEL = 34", levels)
-        self.assertIn("natas14final", levels)
+        self.assertIn("natas34final", levels)
         self.assertIn("seq 0 34", users)
         self.assertIn("seq 1 34", webpasses)
         self.assertIn("LEVELS", vhosts)
@@ -26,22 +26,22 @@ class NatasRangeFoundationTests(unittest.TestCase):
         self.assertIn("not a password, flag, or secret", generator)
         self.assertNotIn("natas%d" % 35, generator)
 
-    def test_level_fourteen_preserves_the_deployed_terminal_contract(self):
+    def test_level_fourteen_hands_off_to_the_expanded_range(self):
         page = (ROOT / "content" / "natas14" / "index.php").read_text()
         entrypoint = (ROOT / "entrypoint.sh").read_text()
-        self.assertIn("FINAL Natas flag", page)
+        self.assertIn("Natas 15 handoff", page)
         self.assertIn("$final_flag", page)
         self.assertNotIn("natas15", page)
-        self.assertIn('"natas14final", "final_flag"', entrypoint)
+        self.assertIn('"natas15", "final_flag"', entrypoint)
 
     def test_pending_content_cannot_use_reserved_or_terminal_secrets(self):
         generator = (ROOT / "build" / "generate_pending_content.py").read_text()
-        for secret_name in ("natas15", "natas34", "natas14final"):
+        for secret_name in ("natas15", "natas34", "natas34final"):
             self.assertNotIn(secret_name, generator)
 
     def test_batches_a_and_b_replace_only_their_pending_pages(self):
         generator = (ROOT / "build" / "generate_pending_content.py").read_text()
-        self.assertIn("range(30, LAST_LEVEL + 1)", generator)
+        self.assertNotIn("range(30, LAST_LEVEL + 1)", generator)
         for level in range(15, 25):
             page = (ROOT / "content" / ("natas%d" % level) / "index.php").read_text()
             self.assertNotIn("SCENARIO_PENDING", page)
@@ -89,6 +89,17 @@ class NatasRangeFoundationTests(unittest.TestCase):
         for forbidden in ("include(", "eval(", "unserialize", "shell_exec", "exec(", "system(", "proc_open", "popen", "http://", "https://"):
             self.assertNotIn(forbidden, pages)
         self.assertIn("natas-batch-c", (ROOT / "entrypoint.sh").read_text())
+
+    def test_batch_d_models_are_bounded_and_terminal_is_final(self):
+        pages = "\n".join((ROOT / "content" / ("natas%d" % level) / "index.php").read_text() for level in range(30, 35))
+        for forbidden in ("shell_exec", "exec(", "system(", "proc_open", "popen", "include(", "eval(", "unserialize", "move_uploaded_file", "http://", "https://"):
+            self.assertNotIn(forbidden, pages)
+        self.assertIn("natas-batch-d", (ROOT / "entrypoint.sh").read_text())
+        self.assertIn("uploads-%s.json", (ROOT / "entrypoint.sh").read_text())
+        self.assertIn("file_put_contents($registry", (ROOT / "content" / "natas33" / "index.php").read_text())
+        terminal = (ROOT / "content" / "natas34" / "index.php").read_text()
+        self.assertIn("terminal_secret", terminal)
+        self.assertNotIn("natas35", terminal)
 
 
 if __name__ == "__main__":

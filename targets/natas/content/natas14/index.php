@@ -22,7 +22,7 @@ if (array_key_exists("username", $_REQUEST) && array_key_exists("password", $_RE
         // above -- this level's flag can no longer be read via ?source
         // without solving the SQLi at all.
         require __DIR__ . "/next_password.php";
-        $msg = "Successful login! The FINAL Natas flag is <tt>" . htmlspecialchars($final_flag) . "</tt>";
+        $msg = "Successful login! The Natas 15 handoff is <tt>" . htmlspecialchars($final_flag) . "</tt>";
     } else {
         $msg = "Access denied!";
     }

@@ -252,7 +252,7 @@ challenges_data = [
         "points": 900,
         "goal": "Bypass a login form using SQL injection.",
         "task": "This is the final Natas level. The login form builds its SQL query with raw string concatenation from your username and password fields.",
-        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas14final"}
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas15"}
     },
     {
         "id": "natas-15", "name": "Natas 15 -> 16: Boolean Response Oracle",
@@ -343,6 +343,36 @@ challenges_data = [
         "points": 1650, "goal": "Separate filename interpretation from actual command execution.",
         "task": "Use the parser's compact filename/catalog grammar against its fixed virtual catalog.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas30"}
+    },
+    {
+        "id": "natas-30", "name": "Natas 30 -> 31: Mock Quote Query Model",
+        "points": 1700, "goal": "Trace repeated form parameters through a fixed type-aware comparison model.",
+        "task": "Submit the two documented scalar quote values in their intended order; the model never contacts a database.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas31"}
+    },
+    {
+        "id": "natas-31", "name": "Natas 31 -> 32: Virtual Multipart Artifact",
+        "points": 1750, "goal": "Distinguish legacy multipart ambiguity from a bounded modern artifact selection model.",
+        "task": "Select the assigned virtual artifact by its allowlisted name; no file upload or path resolution exists.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas32"}
+    },
+    {
+        "id": "natas-32", "name": "Natas 32 -> 33: Fixed Command Emulator",
+        "points": 1800, "goal": "Reason about command-like input without running an interpreter or process.",
+        "task": "Use the documented fixed command label that maps to the local debrief output.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas33"}
+    },
+    {
+        "id": "natas-33", "name": "Natas 33 -> 34: Inert Upload Registry",
+        "points": 1850, "goal": "Identify the metadata trust boundary in a benign, non-executable artifact lifecycle.",
+        "task": "Record the named report with its reviewed archive metadata; no upload bytes are stored.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas34"}
+    },
+    {
+        "id": "natas-34", "name": "Natas 34: Terminal Debrief",
+        "points": 1900, "goal": "Complete the final local debrief and close the Natas training range.",
+        "task": "Submit the documented terminal completion marker. This level has no successor credential.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas34final"}
     }
 ]
 
@@ -371,6 +401,8 @@ EXTRA_INFO = {
     "natas-23": (["curl"], []), "natas-24": (["curl"], []),
     "natas-25": (["curl"], []), "natas-26": (["curl"], []), "natas-27": (["curl"], []),
     "natas-28": (["curl"], []), "natas-29": (["curl"], []),
+    "natas-30": (["curl"], []), "natas-31": (["curl"], []), "natas-32": (["curl"], []),
+    "natas-33": (["curl"], []), "natas-34": (["curl"], []),
 }
 
 # One real, technique-specific hint per level (not natas-start-here --
@@ -469,6 +501,11 @@ HINTS = {
     'natas-27': ["The account store applies a small normalization step first.", "It lowercases and removes periods before comparing a fixed local account list.", "Use `ops.lead` to reach the normalized `opslead` operator record."],
     'natas-28': ["Every token is four visual blocks long.", "The tiles assemble a local query string, not encrypted data.", "Arrange `VISI`, `TOR-`, `ATOR`, `OPER` as `VISITOR-ATOROPER`."],
     'natas-29': ["This interpreter is only a parser over a fixed catalog.", "Its input has a filename, then one catalog directive separated by `|`.", "Submit `handoff.log|catalog:handoff`; nothing is executed."],
+    'natas-30': ["The form intentionally accepts a repeated field.", "Only two short scalar values survive the fixed parser, in order.", "Submit `quote[]=visitor` and `quote[]=operator`; this is a mock comparison, not SQL."],
+    'natas-31': ["This is a modern simulation, not a legacy CGI endpoint.", "Only named virtual artifacts are considered; paths and file content are absent.", "Select `handoff.note` as the artifact."],
+    'natas-32': ["The command label is data, never an executable instruction.", "The fixed catalog has a status label and a debrief label.", "Submit `command=debrief` to receive the next handoff."],
+    'natas-33': ["The registry accepts metadata only, never upload bytes.", "Both the report name and lifecycle marker must match the bounded registry entry.", "Submit `name=field-report.txt` and `metadata=archive:reviewed`."],
+    'natas-34': ["This endpoint is the end of the range.", "Terminal completion is a local route marker, not a new account password.", "Submit `complete=debrief-complete` to view the terminal material."],
 }
 
 HINT_TITLES = (

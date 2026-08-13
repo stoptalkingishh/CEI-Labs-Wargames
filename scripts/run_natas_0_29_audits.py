@@ -16,8 +16,8 @@ import urllib.request
 import uuid
 
 
-IMAGE = "cei-labs-natas-0-29-audit"
-CONTAINER = "cei-labs-natas-0-29-audit"
+IMAGE = "cei-labs-natas-0-34-audit"
+CONTAINER = "cei-labs-natas-0-34-audit"
 FIRST_PORT = 20000
 LAST_PORT = 60000
 LEVEL_COUNT = 35
@@ -69,7 +69,7 @@ def audit_command(script, base, secrets):
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     secrets = {"natas%d" % level: "SWEEP_%d_%s" % (level, uuid.uuid4().hex) for level in range(1, 35)}
-    secrets["natas14final"] = "SWEEP_FINAL_%s" % uuid.uuid4().hex
+    secrets["natas34final"] = "SWEEP_FINAL_%s" % uuid.uuid4().hex
     base = free_port_base()
     publishes = [item for level in range(LEVEL_COUNT) for item in ("--publish", "127.0.0.1:%d:%d" % (base + level, 8000 + level))]
     run("docker", "build", "--tag", IMAGE, "targets/natas", cwd=root)
@@ -81,7 +81,8 @@ def main():
         run(*audit_command("runtime_audit_natas_15_19.py", base, {key: secrets[key] for key in ("natas15", "natas16", "natas17", "natas18", "natas19", "natas20")}), cwd=root)
         run(*audit_command("runtime_audit_natas_20_24.py", base, {key: secrets[key] for key in ("natas20", "natas21", "natas22", "natas23", "natas24", "natas25")}), cwd=root)
         run(*audit_command("runtime_audit_natas_25_29.py", base, {key: secrets[key] for key in ("natas25", "natas26", "natas27", "natas28", "natas29", "natas30")}), cwd=root)
-        print("NATAS_LEVELS_0_THROUGH_29_SWEEP_OK")
+        run(*audit_command("runtime_audit_natas_30_34.py", base, {key: secrets[key] for key in ("natas30", "natas31", "natas32", "natas33", "natas34", "natas34final")}), cwd=root)
+        print("NATAS_LEVELS_0_THROUGH_34_SWEEP_OK")
     finally:
         run("docker", "rm", "--force", CONTAINER, check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
@@ -90,5 +91,5 @@ if __name__ == "__main__":
     try:
         main()
     except (OSError, RuntimeError, subprocess.CalledProcessError, urllib.error.URLError) as error:
-        print("NATAS_0_29_SWEEP_FAILED: %s" % error, file=sys.stderr)
+        print("NATAS_0_34_SWEEP_FAILED: %s" % error, file=sys.stderr)
         raise SystemExit(1)

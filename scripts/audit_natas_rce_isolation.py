@@ -21,7 +21,7 @@ import uuid
 IMAGE = "cei-labs-natas-rce-isolation-audit"
 CONTAINER = "cei-labs-natas-rce-isolation-audit"
 SECRETS = {f"natas{level}": f"AUDIT_ONLY_NATAS_{level}_{uuid.uuid4().hex}" for level in range(1, 35)}
-SECRETS["natas14final"] = f"AUDIT_ONLY_FINAL_{uuid.uuid4().hex}"
+SECRETS["natas34final"] = f"AUDIT_ONLY_FINAL_{uuid.uuid4().hex}"
 PORTS = {}
 
 

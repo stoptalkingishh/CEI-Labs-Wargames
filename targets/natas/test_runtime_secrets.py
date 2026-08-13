@@ -36,7 +36,7 @@ class RuntimeSecretsTests(unittest.TestCase):
 
     def test_rejects_missing_malformed_partial_and_wrong_shaped_values(self):
         partial = valid_secrets()
-        del partial["natas14final"]
+        del partial["natas34final"]
         wrong_key_set = valid_secrets()
         wrong_key_set["unexpected"] = "secret"
         wrong_shape = valid_secrets()

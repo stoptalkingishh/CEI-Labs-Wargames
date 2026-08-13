@@ -4,10 +4,8 @@ FIRST_LEVEL = 0
 LAST_LEVEL = 34
 LEVELS = range(FIRST_LEVEL, LAST_LEVEL + 1)
 WEBPASS_LEVELS = range(1, LAST_LEVEL + 1)
-# The deployed 0-14 CTFd contract terminates at Natas 14. The later webpass
-# keys are reserved for future scenarios, but cannot replace this final flag
-# until the atomic 36-challenge expansion changes the release contract.
-TERMINAL_SECRET_KEY = "natas14final"
+# The range's only terminal material is released by Natas 34's completion route.
+TERMINAL_SECRET_KEY = "natas34final"
 REQUIRED_SECRET_KEYS = frozenset(
     ["natas%d" % level for level in WEBPASS_LEVELS] + [TERMINAL_SECRET_KEY]
 )
@@ -27,6 +25,8 @@ FOUNDATION_TITLES = {
     24: "Request Shape Confusion", 25: "Synthetic Audit Resolver",
     26: "JSON Export Model", 27: "Identity Normalization Model",
     28: "Visual Block Token Model", 29: "Virtual Command Catalog",
+    30: "Mock Quote Query Model", 31: "Virtual Multipart Artifact",
+    32: "Fixed Command Emulator", 33: "Inert Upload Registry", 34: "Terminal Debrief",
 }
 
 

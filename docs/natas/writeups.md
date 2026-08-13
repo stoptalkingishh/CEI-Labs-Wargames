@@ -251,7 +251,7 @@ curl -u 'natas14:<team-natas-14-password>' \
 original query. Payload must match the source's actual quote character;
 this deployment uses double quotes, not the single-quote style many
 generic SQLi examples show.)
-**Result (final Natas flag):** `<team's final Natas flag>`
+**Result:** `<team's Natas 15 password>`
 
 ---
 
@@ -269,3 +269,38 @@ Inspect the numeric session cookie and test only the documented bounded identifi
 
 ### Natas 19 → 20: Encoded Weak Session Token
 Decode the URL-safe ticket, preserve its strict record syntax, alter the authorization field, and encode it again. **Result:** `<team's Natas 20 password>`
+
+### Natas 30 → 31: Mock Quote Query Model
+Send the repeated field twice in order. The fixed parser accepts only two short scalar values and does not contact a database:
+```
+curl -u 'natas30:<team-natas-30-password>' -d 'quote[]=visitor' -d 'quote[]=operator' http://<target-host>:8030/
+```
+**Result:** `<team's Natas 31 password>`
+
+### Natas 31 → 32: Virtual Multipart Artifact
+Select the named virtual artifact, not a filesystem path:
+```
+curl -u 'natas31:<team-natas-31-password>' -d 'artifact=handoff.note' http://<target-host>:8031/
+```
+**Result:** `<team's Natas 32 password>`
+
+### Natas 32 → 33: Fixed Command Emulator
+The command label is matched only against a fixed output catalog:
+```
+curl -u 'natas32:<team-natas-32-password>' -d 'command=debrief' http://<target-host>:8032/
+```
+**Result:** `<team's Natas 33 password>`
+
+### Natas 33 → 34: Inert Upload Registry
+Record the allowlisted metadata event; no file is transferred or executed:
+```
+curl -u 'natas33:<team-natas-33-password>' -d 'name=field-report.txt' -d 'metadata=archive:reviewed' http://<target-host>:8033/
+```
+**Result:** `<team's Natas 34 password>`
+
+### Natas 34: Terminal Debrief
+Complete the final local route. It does not create another credential:
+```
+curl -u 'natas34:<team-natas-34-password>' -d 'complete=debrief-complete' http://<target-host>:8034/
+```
+**Result (terminal Natas material):** `<team's final Natas flag>`

@@ -108,7 +108,10 @@ RUN chmod +x /opt/build/*.sh /opt/build/*.py \
     && chmod 700 /var/lib/cei-labs/natas-batch-b \
     && mkdir -p /var/lib/cei-labs/natas-batch-c \
     && chown root:root /var/lib/cei-labs/natas-batch-c \
-    && chmod 700 /var/lib/cei-labs/natas-batch-c
+    && chmod 700 /var/lib/cei-labs/natas-batch-c \
+    && mkdir -p /var/lib/cei-labs/natas-batch-d \
+    && chown root:root /var/lib/cei-labs/natas-batch-d \
+    && chmod 700 /var/lib/cei-labs/natas-batch-d
 
 # Users, per-level webpass files, MariaDB schema/users, Apache vhosts,
 # and PHP content -- see each script's own header comment for what it
@@ -117,6 +120,7 @@ RUN /opt/build/01-create-users.sh \
     && chown natas18:natas18 /var/lib/cei-labs/natas-batch-a \
     && chown natas20:natas20 /var/lib/cei-labs/natas-batch-b \
     && chown natas25:natas25 /var/lib/cei-labs/natas-batch-c \
+    && chown natas33:natas33 /var/lib/cei-labs/natas-batch-d \
     && /opt/build/02-set-webpasswords.sh \
     && python3 /opt/build/03-generate-vhosts.py
 

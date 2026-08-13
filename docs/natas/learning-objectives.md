@@ -1,7 +1,7 @@
 # Natas — Learning Objectives
 
 A skills inventory for the Natas track (web application security, level
-  endpoints 0–29), organized by concept rather than by level number, so it can be
+  endpoints 0-34), organized by concept rather than by level number, so it can be
 referenced independent of any specific level: to check what a
 participant has actually learned, to plan which levels to assign for a
 given skill gap, or to compare against a course syllabus. Each entry
@@ -86,5 +86,12 @@ which level(s) teach it. Pairs with `writeups.md` (full solutions) and
 - Assemble fixed visual blocks into an allowlisted query model without encryption.
 - Reason about filename interpretation through a parser and fixed catalog without process execution.
 
+## Safe transition and terminal models (levels 30-34)
+- Trace repeated parameters through a fixed type-aware parser and mock query comparison without DBI or a database.
+- Select only allowlisted virtual multipart artifacts, rather than resolving paths or accepting files.
+- Reason about command-shaped input through a fixed output emulator with no interpreter or subprocess.
+- Identify metadata as an upload/archive trust boundary in an inert per-team registry.
+- Complete a terminal debrief route that releases final material without creating a next credential.
+
 ## Local audit runner
-- `python3 scripts/run_natas_0_29_audits.py` builds one local target, reserves a contiguous loopback port range, waits for authenticated Apache readiness, and runs the 0-14, 15-19, 20-24, and 25-29 audits. It uses synthetic secrets and removes its container afterward.
+- `python3 scripts/run_natas_0_29_audits.py` builds one local target, reserves a contiguous loopback port range, waits for authenticated Apache readiness, and runs the 0-34 audits. It uses synthetic secrets and removes its container afterward.

@@ -8,7 +8,7 @@ def main(root):
     root = Path(root)
     # Batch C supplies real scenarios through level 29.  Leave later range
     # foundation endpoints inert until their corresponding implementation.
-    for level in range(30, LAST_LEVEL + 1):
+    for level in range(LAST_LEVEL + 1, LAST_LEVEL + 1):
         directory = root / ("natas%d" % level)
         directory.mkdir(parents=True, exist_ok=True)
         (directory / "index.php").write_text(

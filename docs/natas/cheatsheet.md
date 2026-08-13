@@ -43,3 +43,8 @@ as a bug.
 | 17→18 | Timing oracle | "The body never changes; take repeated, bounded timing samples." | application timing comparison |
 | 18→19 | Numeric session | "The cookie is a small numeric identifier." | bounded session enumeration |
 | 19→20 | Encoded token | "Decode the strict text ticket before considering its fields." | missing token integrity |
+| 30→31 | Repeated parameters | "The parser requires two short scalar quote values in order." | fixed type-aware form model |
+| 31→32 | Virtual artifact | "Choose an allowlisted name, not a path or file." | bounded artifact selection |
+| 32→33 | Command emulator | "The command is a fixed label, not executable text." | allowlisted output catalog |
+| 33→34 | Upload metadata | "Record the report with its reviewed lifecycle marker." | inert metadata registry |
+| 34 | Terminal debrief | "Use the completion marker; there is no next account." | terminal completion route |

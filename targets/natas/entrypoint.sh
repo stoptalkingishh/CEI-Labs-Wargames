@@ -75,7 +75,7 @@ NEXT_PASSWORD_FILES = {
     "/var/www/natas/natas6/next_password.php": ("natas6", "natas7", "next_password"),
     "/var/www/natas/natas8/next_password.php": ("natas8", "natas9", "next_password"),
     "/var/www/natas/natas11/next_password.php": ("natas11", "natas12", "next_password"),
-    "/var/www/natas/natas14/next_password.php": ("natas14", "natas14final", "final_flag"),
+    "/var/www/natas/natas14/next_password.php": ("natas14", "natas15", "final_flag"),
 }
 for path, (owner, key, var_name) in NEXT_PASSWORD_FILES.items():
     value = secrets.get(key)
@@ -112,6 +112,11 @@ for path, owner, key, var_name in (
     ("/etc/cei-labs/natas-runtime/natas27.php", "natas27", "natas28", "natas28_secret"),
     ("/etc/cei-labs/natas-runtime/natas28.php", "natas28", "natas29", "natas29_secret"),
     ("/etc/cei-labs/natas-runtime/natas29.php", "natas29", "natas30", "natas30_secret"),
+    ("/etc/cei-labs/natas-runtime/natas30.php", "natas30", "natas31", "natas31_secret"),
+    ("/etc/cei-labs/natas-runtime/natas31.php", "natas31", "natas32", "natas32_secret"),
+    ("/etc/cei-labs/natas-runtime/natas32.php", "natas32", "natas33", "natas33_secret"),
+    ("/etc/cei-labs/natas-runtime/natas33.php", "natas33", "natas34", "natas34_secret"),
+    ("/etc/cei-labs/natas-runtime/natas34.php", "natas34", "natas34final", "terminal_secret"),
 ):
     write_php_secret(path, var_name, secrets[key])
     with open(path, "a") as state_file:
@@ -128,6 +133,16 @@ with open(state_path, "w") as state_file:
     # The single elevated record is challenge data, not a framework session.
     json.dump({"42": {"role": "operator"}}, state_file)
 subprocess.run(["chown", "natas18:natas18", state_path], check=True)
+os.chmod(state_path, 0o600)
+
+state_dir = "/var/lib/cei-labs/natas-batch-d"
+os.makedirs(state_dir, exist_ok=True)
+subprocess.run(["chown", "natas33:natas33", state_dir], check=True)
+os.chmod(state_dir, 0o700)
+state_path = os.path.join(state_dir, "uploads-%s.json" % team)
+with open(state_path, "w") as state_file:
+    json.dump({"team": team, "artifacts": []}, state_file)
+subprocess.run(["chown", "natas33:natas33", state_path], check=True)
 os.chmod(state_path, 0o600)
 
 state_dir = "/var/lib/cei-labs/natas-batch-b"
