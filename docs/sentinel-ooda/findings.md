@@ -38,3 +38,14 @@
 The reviewers could not inspect the PR #68 branch locally. Before staging the
 built pilot, independently execute its reported generator, target contract,
 Docker, listener, fail-closed, secret-scrub, restart, and cross-account tests.
+
+## Superseding design decisions
+
+- **Lab 14 blocker superseded:** use an inert, evidence-only offboarding case.
+  The former identity has tombstoned records and non-functional key
+  fingerprints only; the target has no residual usable account, credential,
+  private key, or authorized-key entry.
+- **Lab 21 blocker superseded:** retain only 5.3-5.6 in one vendor-assurance
+  renewal case. A structured evidence-to-decision assessment covers each
+  retained criterion and yields one renewal decision; 2.1 and the phishing
+  scenario are removed without adding a challenge.

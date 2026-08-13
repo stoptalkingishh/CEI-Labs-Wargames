@@ -63,14 +63,14 @@ test before it can ship.
 | 11 Recovery Evidence | Planned / 2 | Encrypted backup metadata, RPO/RTO, and restoration-drill record. | 3.4, 5.2 |
 | 12 Baseline Drift | Planned / 3 | Secure baseline versus unauthorized service/configuration drift. | 4.1, 4.7 |
 | 13 Integrity Alert | Planned / 3 | FIM alert, hashes, and package ownership. | 1.4, 4.4, 4.5 |
-| 14 Identity Lifecycle | Planned / 3 | Offboarding, group removal, and credential-invalidation evidence. | 4.6 |
+| 14 Identity Lifecycle | Planned / 3 | Inert offboarding ticket, identity snapshots, revoked-key register, and attestation for an identity absent from the target. | 4.6 |
 | 15 Alert Tuning | Planned / 3 | Normalized SIEM-like events and false-positive rationale. | 4.4 |
 | 16 Secure Service Change | Planned / 3 | Reversible secure-protocol/firewall automation change. | 4.5, 4.7 |
 | 17 Incident Containment | Planned / 4 | Endpoint, application, firewall, and network timeline. | 2.4, 4.8, 4.9 |
 | 18 Forensic Handoff | Planned / 4 | Evidence manifest and chain-of-custody record. | 4.8 |
 | 19 Policy to Practice | Planned / 5 | Policy, standard, procedure, ownership, and system-evidence package. | 5.1 |
 | 20 Risk Register | Planned / 5 | Risk register and BIA using SLE, ARO, ALE, RTO, and RPO. | 5.2 |
-| 21 Assurance Review | Planned / 5 | Vendor evidence pack and phishing-reporting scenario. | 2.1, 5.3-5.6 |
+| 21 Assurance Review | Planned / 5 | One vendor's due diligence, agreement, attestation, audit finding, remediation response, and renewal-decision record. | 5.3-5.6 |
 
 ## Architecture contract
 
@@ -147,7 +147,7 @@ the tooling decision record is the authority for that choice.
 | 2: Architecture and resilience | 09-11 | 3.1-3.4, 5.2 | Static topology/data-classification/backup artifacts; optional `nftables`, OpenSSL, and restic only for bounded verification. | Every scenario is solvable with no host network capability and has an explicit RTO/RPO, data-state, or access-path answer. |
 | 3: Operations and detection | 12-16 | 2.3, 4.1, 4.3-4.7 | Baseline/drift fixtures, mock advisory and scan evidence, FIM data; then offline PCAP via `tcpdump -r` and pinned Suricata rules/EVE JSON. | PCAPs, logs, rules, package versions, and expected output are pinned/checksummed; no feeds, live capture, or internet access. |
 | 4: Incident response | 17-18 | 2.4, 4.8, 4.9 | Combined authentication, process, file, application/firewall, and PCAP evidence; chain-of-custody and timeline artifacts. | A full raw-evidence timeline, scope, containment decision, and evidence-preservation test pass without modifying the evidence corpus. |
-| 5: Governance and assurance | 19-21 | 2.1, 5.1-5.6 | Original policy/standard/procedure/RACI, risk register/BIA, vendor evidence, audit/attestation, and phishing/reporting artifacts. | Answers cite evidence and distinguish policy, standard, procedure, control owner, risk treatment, and required escalation. |
+| 5: Governance and assurance | 19-21 | 5.1-5.6 | Original policy/standard/procedure/RACI, risk register/BIA, and one vendor's due diligence, agreement, attestation, audit finding, and remediation artifacts. | Answers cite evidence and distinguish policy, standard, procedure, control owner, risk treatment, and a vendor-assurance renewal decision. |
 | 6: Windows evidence extension | Optional additional scenarios, not required for initial 22 challenges | Windows-relevant 2.4, 4.1, 4.4-4.6, 4.8-4.9 | Project-owned, sanitized EVTX plus raw/normalized evidence and an open-source parser such as `libevtx`. | Fixture provenance, source scenario, audit-policy assumptions, checksum, and expected timeline are documented. No Windows runtime is required. |
 | 7: Shared advanced environment | Optional, post-release | Selected 4.3-4.5 and 4.8-4.9 | Shared Wazuh, Velociraptor, Greenbone, or isolated Windows evaluation VM. | Separate capacity, licensing, isolation, retention, reset, and maintenance review. These services never become a hidden requirement for the core SSH track. |
 

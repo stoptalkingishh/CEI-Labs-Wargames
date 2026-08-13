@@ -36,3 +36,17 @@ it is not a design defect by itself.
 All 210 rows have an Observe/Orient basis in the cited source set. The compact
 cell format records the final Decide/Act result. Re-review references identify
 only affected loops; they do not erase this completed review record.
+
+## Superseding blocker decisions
+
+- **Lab 14:** The blocker is superseded by an inert evidence-only offboarding
+  contract. The former identity is represented only by tombstoned identifiers,
+  snapshots, and non-functional key fingerprints; no account, credential,
+  private key, or authorized-key entry exists on the target. The structured
+  assessment identifies the documentary gap and follow-up, while fixture tests
+  prove the identity cannot resolve or authenticate.
+- **Lab 21:** The blocker is superseded by one vendor-assurance renewal case.
+  The 2.1 mapping and phishing scenario are removed. One structured assessment
+  requires evidence citations and decisions across retained 5.3-5.6 criteria,
+  then produces one evidence-supported renewal decision without adding a
+  challenge.
