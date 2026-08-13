@@ -44,10 +44,12 @@ the same action succeeds. Not fixed; see "Known open items" in
 
 **Q: How does a Natas participant log into the shared attacker
 workstation?**
-Use the noVNC link only after the event operator has completed the checks in
-`natas-completion-status.md`. SSH is not a supported participant path unless
-the operator explicitly supplies a tested endpoint and credential. Do not ask
-participants to infer credentials from the launch panel or image source.
+After the event operator has completed the checks in
+`natas-completion-status.md`, use the supported **noVNC** browser-desktop link
+on the launch panel. It needs no participant credential. SSH is unavailable
+unless the operator explicitly supplies a tested endpoint and credential. Do
+not ask participants to infer credentials from the launch panel or image
+source; treat unavailable SSH as expected.
 
 **Q: The launch panel used to show a full explanatory paragraph and a
 pre-filled `ssh operator@...` line — now it just shows Host/Port. Is

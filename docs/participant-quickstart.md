@@ -38,19 +38,19 @@ to the attacker workstation).
   every level after the first one in that track reuses the same
   environment automatically.
 
-**For Natas specifically:** use the **noVNC** link supplied by your event
-operator (a full desktop in your browser). It is the supported participant
-path. Do not assume SSH access exists or try to infer a login; use SSH only
-if the event operator explicitly gives you a tested endpoint and credential.
-See [`natas-completion-status.md`](natas-completion-status.md) for the
-deployment prerequisite behind this path.
+**For Natas specifically:** after the event operator has completed the
+release checks in [`natas-completion-status.md`](natas-completion-status.md),
+use the supported **noVNC** link (a full desktop in your browser). It needs no
+extra participant login. SSH is unavailable unless the operator explicitly
+supplies a tested endpoint and credential; noVNC is the intended path.
 
 ## 4. Read the description carefully
 
 Every challenge's description includes a free **"Commands you may need"**
 and **"Helpful reading"** section — pointers to the exact tools and
 background concepts involved, given up front, before you spend any
-points on hints.
+points on hints. Helpful Reading titles are plain offline references,
+not live links.
 
 ## 5. Use hints if you're stuck
 

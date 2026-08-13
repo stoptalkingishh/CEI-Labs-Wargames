@@ -1,7 +1,7 @@
 # Natas — Learning Objectives
 
-A skills inventory for the Natas track (web application security, 15
-levels), organized by concept rather than by level number, so it can be
+A skills inventory for the Natas track (web application security, level
+endpoints 0–14), organized by concept rather than by level number, so it can be
 referenced independent of any specific level: to check what a
 participant has actually learned, to plan which levels to assign for a
 given skill gap, or to compare against a course syllabus. Each entry

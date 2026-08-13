@@ -21,10 +21,11 @@ puzzle issue).
   the platform's own hints first — they're built to cost points on
   purpose (see `wargame-building-playbook.md`). These sheets are for
   you, not for handing directly to a stuck participant.
-- **Natas attacker workstation access:** use noVNC only after the event
-  operator has completed the release checks in
-  `natas-completion-status.md`. Do not promise SSH or distribute a login
-  unless the operator has supplied and tested that specific path.
+- **Natas attacker workstation access:** after the event operator has
+  completed the release checks in `natas-completion-status.md`, noVNC is
+  supported without a participant credential. SSH is unavailable unless
+  the operator supplies and tests a specific endpoint and credential;
+  point participants to noVNC first.
 - **Shared-box tracks (Bandit, Krypton):** everyone on a track shares one
   target box. If a participant's session looks broken in a way not
   explained by the puzzle itself, a **Reboot Host** from the launch panel

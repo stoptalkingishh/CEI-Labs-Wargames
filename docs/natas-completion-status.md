@@ -5,6 +5,14 @@ target and attacker Dockerfile sources, but this audit did not verify a
 launchable Natas range. Do not treat historical playtest statements as a
 current deployment attestation.
 
+## Scope
+
+The approved eventual Natas scope is level endpoints 0-34. This PR is only
+the 0-14 foundation: it does not add endpoints 15-34, change the Natas count,
+deploy totals, `game-stages.yml`, or current deployment behavior. The 15-34
+implementation and the 36-challenge count expansion remain deferred to plan
+PR #69 and its range-foundation work.
+
 ## What This Repository Owns
 
 - `targets/natas/` is the Natas target build context.

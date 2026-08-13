@@ -53,8 +53,9 @@ INSTANCE_GROUP = "natas"
 # two-hop model this note summarizes below.
 #
 # Natas is target-attacker, not single-target: everything happens FROM
-# inside your attacker workstation (reachable via noVNC or SSH, both shown
-# on the launch panel) -- the targets are never reachable directly. All 15
+# inside your attacker workstation (reachable via noVNC; SSH is usable only
+# when the platform supplies credentials) -- the targets are never reachable
+# directly. All 15
 # levels share ONE attacker and ONE target box; each level is just a
 # different port (8000 + level number) on that same target, matching the
 # real OverTheWire Natas layout. The "Get there" block built by
@@ -81,7 +82,7 @@ def _get_there(level: int) -> str:
     cred_phrase, cred_curl = _credentials(level)
     return (
         "### Get there\n"
-        "1. Launch the environment and open your **attacker workstation** (noVNC or SSH) "
+        "1. Launch the environment and open your **attacker workstation** (noVNC, or SSH if the platform supplied credentials) "
         "from the launch panel \u2014 everything below happens inside it, not on your own machine.\n"
         f"2. Browse to `http://<target-host>:{8000 + level}/`, where `<target-host>` is the "
         "**Target** value in that panel (NOT the **Host** field \u2014 that one is only for "
@@ -104,22 +105,22 @@ challenges_data = [
             "### How Natas is different\n"
             "Natas works differently from Bandit and Krypton: launching gives you a shared "
             "**attacker workstation**, not a direct connection to a target. Every one of "
-            "Natas's 15 targets is reachable only from inside that workstation -- never "
+            "Natas's 15 level endpoints are reachable only from inside that workstation -- never "
             "directly from your own machine.\n\n"
             "### The launch controls\n"
             "The launch control attached to this (and every other Natas) challenge offers:\n"
             "- **Launch Environment** -- starts your attacker workstation and this track's "
-            "shared target box (all 15 levels share one target, distinguished by port). "
-            "Shows both a noVNC link (a full desktop in your browser) and an SSH connection.\n"
+            "shared target box (all 15 level endpoints share one target, distinguished by port). "
+            "Provides a noVNC link (a full desktop in your browser); use SSH only when the "
+            "platform has supplied credentials.\n"
             "- **Reboot Host** -- restarts your attacker in place if it gets stuck.\n"
             "- **Relaunch Environment** -- destroys and recreates your whole range (attacker "
             "and target) from scratch. Use this if something's broken beyond a reboot.\n"
             "- **+5 more minutes** -- shows up only once every level in this track is solved "
             "and a shutdown countdown has started.\n\n"
             "### Prove you found it\n"
-            "Click Launch, then open the attacker workstation using the **noVNC** link "
-            "specifically (not SSH this time -- SSH gives you a text-only shell with no "
-            "desktop, and what you need to read next is only visible on the desktop "
+            "Click Launch, then open the attacker workstation using the supported **noVNC** link "
+            "specifically (the required information is visible only on the desktop "
             "itself). The moment the desktop loads, its wallpaper already has your answer "
             "on it -- no file to go read, no login to figure out. The small line directly "
             "under the large NATAS logo (not the logo itself, and not the smaller \"CEI "
@@ -210,7 +211,7 @@ challenges_data = [
         "name": "Natas 9 -> 10: Command Injection I",
         "points": 650,
         "goal": "Inject a shell command through an unsanitized input field.",
-        "task": "The page's search box is passed straight into a shell `grep` command (visible in the source). Inject a shell metacharacter (like `;`) to run your own command and read `/etc/natas_webpass/natas10`.",
+        "task": "Inspect the source and determine how the search input reaches the server-side command. Use that behavior to retrieve the next password.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas10"}
     },
     {
@@ -218,7 +219,7 @@ challenges_data = [
         "name": "Natas 10 -> 11: Command Injection II (Sanitization Bypass)",
         "points": 700,
         "goal": "Achieve the same result once the easy metacharacters are filtered.",
-        "task": "Same underlying `grep` command as before, but `;` and `&` are now blocked. `grep` itself accepts a second filename argument on its own command line -- use that instead of a shell metacharacter to read `/etc/natas_webpass/natas11`.",
+        "task": "The input filter blocks some characters used by the prior level. Inspect the source and the invoked program's behavior to find another way to retrieve the next password.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas11"}
     },
     {
@@ -226,15 +227,15 @@ challenges_data = [
         "name": "Natas 11 -> 12: XOR Encryption Bypass",
         "points": 750,
         "goal": "Recover an XOR key and forge encrypted data with it.",
-        "task": "Preferences are stored in a cookie XOR-encrypted with a short repeating key. The logged-out default plaintext is predictable -- XOR it against the default ciphertext to recover the key, then forge a cookie with `showpassword` set to `yes`. This one needs a short script rather than a single command -- `python3` is on your attacker workstation for the byte-level XOR/base64 work.",
+        "task": "Preferences are stored in a cookie protected with a short repeating XOR key. Inspect the source and cookie, recover what you need to forge an authorized preference, and retrieve the next password. `python3` is available for byte-level work.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas12"}
     },
     {
         "id": "natas-12",
-        "name": "Natas 12 -> 13: Arbitrary File Upload (Web Shell)",
+        "name": "Natas 12 -> 13: Arbitrary File Upload",
         "points": 800,
-        "goal": "Upload and execute a web shell.",
-        "task": "The upload form performs no real validation. Upload a one-line PHP web shell and request it directly to read the next password.",
+        "goal": "Exploit insufficient upload validation to retrieve the next password.",
+        "task": "Inspect the upload flow and its server-side handling. Determine how the accepted file is exposed, then use the behavior to retrieve the next password.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas13"}
     },
     {

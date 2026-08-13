@@ -14,10 +14,10 @@ than reading a hint stub yourself, or when someone's stuck in a way the
 hints don't quite address (e.g., a terminal/environment issue, not a
 puzzle issue).
 
-Shared target, attacker workstation — every level: attacker workstation
-→ `curl`/browser to `http://<target>:800N/`. The attacker box's SSH
-login credential isn't surfaced anywhere in the launch panel UI — point
-participants at **noVNC** first (no credential needed); see
+Shared target, attacker workstation — every level endpoint: attacker
+workstation → `curl`/browser to `http://<target>:800N/`. **noVNC** is
+supported without a participant credential. SSH is unavailable unless
+the platform supplies credentials; see
 `../troubleshooting-faq.md` before treating an "I can't SSH in" report
 as a bug.
 
@@ -33,7 +33,7 @@ as a bug.
 | 7→8 | LFI, no traversal needed | "The parameter takes a path with zero validation — just give it an absolute path." | `?page=/etc/natas_webpass/...` |
 | 8→9 | Reverse a custom encoding | "Source shows the exact functions used to encode it — apply them backwards, in reverse order." | undo `bin2hex(strrev(base64_encode()))` |
 | 9→10 | Command injection, unsanitized | "The parameter goes straight into a shell command — chain another command onto it." | `;cat ...` |
-| 10→11 | Command injection, sanitized | "Shell metacharacters are blocked, but `grep` itself takes more than one filename argument, no special characters needed." | `grep`'s own second-argument/comment trick |
+| 10→11 | Command injection, sanitized | "Only selected shell metacharacters are filtered; `grep` itself takes more than one filename argument." | `grep`'s own second-argument/comment trick |
 | 11→12 | XOR cookie forgery | "You know the default plaintext and can see the ciphertext — XOR them to get the key, then re-encrypt what you want." | recover XOR key from known-plaintext, forge cookie |
 | 12→13 | Upload a web shell | "Upload a PHP file, then call the URL it lands at with your own command parameter." | `<?php system($_GET[...]); ?>` upload |
 | 13→14 | Upload check bypassed by header only | "The check only reads the first few bytes — a real file signature followed by your payload still executes." | prepend `GIF89a` magic bytes to a PHP payload |
