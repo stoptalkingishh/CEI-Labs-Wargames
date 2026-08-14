@@ -130,7 +130,7 @@ Dependencies: `targets/krypton/` image (all 8 levels including
 `krypton-00`, which now has its own `krypton0` account like every other
 level), `instance_group: krypton`.
 
-### natas (16 levels)
+### natas (36 levels)
 
 | ID | Points | Flag source | Instance type | Reset/teardown | Hints (cost) | Expected solve path |
 | :--- | ---: | :--- | :--- | :--- | :--- | :--- |
@@ -149,6 +149,26 @@ level), `instance_group: krypton`.
 | `natas-12` | 800 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Upload and execute a web shell. |
 | `natas-13` | 850 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Get a PHP payload past a file-type check based on content, not extension. |
 | `natas-14` | 900 | `per_team_dynamic` | `target-attacker` | **auto on solve** | 3 (20%/50%/85%) | Bypass a login form using SQL injection. |
+| `natas-15` | 950 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Query a bounded boolean response oracle. |
+| `natas-16` | 1000 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Search controlled in-memory training data. |
+| `natas-17` | 1050 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Compare deterministic response timing. |
+| `natas-18` | 1100 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Inspect bounded numeric session state. |
+| `natas-19` | 1150 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Decode a bounded session token. |
+| `natas-20` | 1200 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Trace a controlled session record. |
+| `natas-21` | 1250 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Compare two internal session scopes. |
+| `natas-22` | 1300 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Inspect redirect and response behavior. |
+| `natas-23` | 1350 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Contrast toy numeric and strict comparisons. |
+| `natas-24` | 1400 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Validate a bounded alternate request shape. |
+| `natas-25` | 1450 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Trace a synthetic audit resolver. |
+| `natas-26` | 1500 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Validate a JSON virtual export. |
+| `natas-27` | 1550 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Inspect an identity normalization model. |
+| `natas-28` | 1600 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Reason about a visual block token model. |
+| `natas-29` | 1650 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Use a virtual command catalog. |
+| `natas-30` | 1700 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Trace repeated parameters through a mock query model. |
+| `natas-31` | 1750 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Select an allowlisted virtual artifact. |
+| `natas-32` | 1800 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Use a fixed command emulator. |
+| `natas-33` | 1850 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Record inert upload metadata. |
+| `natas-34` | 1900 | `per_team_dynamic` | `target-attacker` | **auto on solve** | 3 (20%/50%/85%) | Complete the terminal debrief. |
 | `natas-start-here` | 10 | `WELCOME TO NATAS` (static — see finding above) | `target-attacker` | idle-timeout | 0 | Learn the launch controls, then prove you used them. |
 
 Dependencies: `targets/natas/` (LAMP target) + kali-novnc attacker image,
@@ -177,10 +197,10 @@ organizer releases it manually.
 
 ## Totals
 
-35 + 8 + 16 = **59 staged levels**, matching `game-stages.yml`'s
+35 + 8 + 36 = **79 staged levels**, matching `game-stages.yml`'s
 `expected_challenge_count` for all three staggered-game stages, plus the
-6 deliberately-unstaged AI Copilot Setup challenges above = **65
+6 deliberately-unstaged AI Copilot Setup challenges above = **85
 challenges total** (the same split `scripts/validate_generated.py`
 encodes as `UNSTAGED_TRACK_CHALLENGE_COUNT`). Points run
 sequentially within each track (Bandit 100→1750, Krypton 200/250...500,
-Natas 200→900), all `start-here` levels fixed at 10 points.
+Natas 200→1900), all `start-here` levels fixed at 10 points.

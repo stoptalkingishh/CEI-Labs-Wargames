@@ -30,5 +30,5 @@ instance_type: target-attacker
 target_image: ghcr.io/stoptalkingishh/cei-labs-wargames/natas-target:latest
 attacker_image: ghcr.io/stoptalkingishh/cei-labs-wargames/natas-attacker:latest
 instance_group: natas
-shutdown_on_solve: true
+shutdown_on_solve: false
 show_launcher: false

@@ -200,6 +200,20 @@ for i in $(seq 1 30); do
     sleep 1
 done
 
+# Level 14's application credential is per-container runtime state, never an
+# image-layer secret. Only the level-14 account can read this PHP config.
+db_password=$(openssl rand -hex 32)
+install -d -o root -g natas14 -m 710 /etc/cei-labs/natas-db
+printf "<?php\n\$natas14_db_host = '127.0.0.1';\n\$natas14_db_user = 'natas14';\n\$natas14_db_password = '%s';\n" "$db_password" > /etc/cei-labs/natas-db/natas14.php
+chown natas14:natas14 /etc/cei-labs/natas-db/natas14.php
+chmod 600 /etc/cei-labs/natas-db/natas14.php
+mysql -u root <<SQL
+CREATE USER IF NOT EXISTS 'natas14'@'127.0.0.1' IDENTIFIED BY '${db_password}';
+ALTER USER 'natas14'@'127.0.0.1' IDENTIFIED BY '${db_password}';
+GRANT SELECT ON natas14.users TO 'natas14'@'127.0.0.1';
+FLUSH PRIVILEGES;
+SQL
+
 # Must be a genuine exec of the apache2 binary AS apache-itk-idle (not
 # started as root and setuid()'d down internally) for the file
 # capabilities granted via `setcap` at build time to actually apply --
