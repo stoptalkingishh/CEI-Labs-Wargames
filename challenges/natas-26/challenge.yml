@@ -1,29 +1,29 @@
-name: "Natas 19 -> 20: Encoded Weak Session Token"
+name: "Natas 26 -> 27: JSON Virtual Export"
 author: "CEI Labs (self-hosted recreation of OverTheWire's Natas)"
 category: "Web Security"
 description: |
   ## Goal
-  Recognize encoding as distinct from session integrity protection.
+  Validate structured project input without native object deserialization.
 
   ---
 
   ### Get there
   1. Launch the environment and open your **attacker workstation** (noVNC, or SSH if the platform supplied credentials) from the launch panel — everything below happens inside it, not on your own machine.
-  2. Browse to `http://<target-host>:8019/`, where `<target-host>` is the **Target** value in that panel (NOT the **Host** field — that one is only for SSH-ing into the attacker itself).
-  3. Log in as `natas19` with the flag from Natas 18 as your password.
+  2. Browse to `http://<target-host>:8026/`, where `<target-host>` is the **Target** value in that panel (NOT the **Host** field — that one is only for SSH-ing into the attacker itself).
+  3. Log in as `natas26` with the flag from Natas 25 as your password.
 
-  > **Using curl?** Authenticate every request: `curl -u 'natas19:<flag from Natas 18>' ...`. A bare request gets `401 Unauthorized` before it reaches the level.
+  > **Using curl?** Authenticate every request: `curl -u 'natas26:<flag from Natas 25>' ...`. A bare request gets `401 Unauthorized` before it reaches the level.
 
   ### The task
-  The ticket portal uses a strict, encoded two-field session ticket.
+  Submit a compact JSON project that requests the documented virtual export destination.
 
-  **Commands you may need:** `curl`, `base64`
-value: 1150
+  **Commands you may need:** `curl`
+value: 1500
 type: standard
 flags:
   - type: per_team_dynamic
     content: "per-team-dynamic (placeholder, not read)"
-    data: "natas20"
+    data: "natas27"
 state: visible
 version: "0.1"
 instance_type: target-attacker

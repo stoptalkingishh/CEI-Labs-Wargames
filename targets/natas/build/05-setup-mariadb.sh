@@ -12,14 +12,6 @@ chown mysql:mysql /var/run/mysqld
 
 mariadb-install-db --user=mysql --datadir=/var/lib/mysql >/dev/null
 
-# Only level 14 can traverse this directory and read its database settings.
-# Upload RCE at levels 12/13 therefore cannot reuse the application account.
-db_password=$(openssl rand -hex 32)
-install -d -o root -g natas14 -m 710 /etc/cei-labs/natas-db
-printf "<?php\n\$natas14_db_host = '127.0.0.1';\n\$natas14_db_user = 'natas14';\n\$natas14_db_password = '%s';\n" "$db_password" > /etc/cei-labs/natas-db/natas14.php
-chown natas14:natas14 /etc/cei-labs/natas-db/natas14.php
-chmod 600 /etc/cei-labs/natas-db/natas14.php
-
 mysqld_safe --datadir=/var/lib/mysql --skip-networking=0 --bind-address=127.0.0.1 &
 for i in $(seq 1 30); do
     mysqladmin ping --silent && break
@@ -35,9 +27,6 @@ CREATE TABLE IF NOT EXISTS users (
 );
 REPLACE INTO users (username, password) VALUES ('natas14', 'CHANGEME_NOT_THE_REAL_FLAG_9f31');
 
-CREATE USER IF NOT EXISTS 'natas14'@'127.0.0.1' IDENTIFIED BY '${db_password}';
-GRANT SELECT ON natas14.users TO 'natas14'@'127.0.0.1';
-FLUSH PRIVILEGES;
 SQL
 
 mysqladmin -u root shutdown

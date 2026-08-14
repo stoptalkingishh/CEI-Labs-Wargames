@@ -20,4 +20,4 @@ stages:
     category: "Web Security"
     challenge_prefix: "natas-"
     start_challenge: "natas-start-here"
-    expected_challenge_count: 16
+    expected_challenge_count: 36
