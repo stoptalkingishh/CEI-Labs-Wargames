@@ -45,6 +45,10 @@ Each game's folder holds three docs:
   and [blueprint](docs/self-hosted-wargames-blueprint.md)
 - [Staggered game-stage contract](docs/staggered-game-stages.md) — the
   Bandit/Krypton/Natas grouping and pre-deployment validation used by Engine
+- [Staged game operations](docs/staged-game-operations.md) — rehearsal and
+  event-day controls for independently released game stages
+- [Presentation sources](presentation/README.md) — current kickoff and
+  per-track briefing source
 - [Event recap — 2026-08-06](docs/event-recap-2026-08-06.md) — post-event
   write-up of the 2026-08-06 run (issues, network end-state, what was
   sacrificed, how challenges were played)
