@@ -71,8 +71,14 @@ chmod +x deploy.sh
 ./deploy.sh
 ```
 
+### Natas RCE isolation audit
+
+For an authorized synthetic-secret container audit of the intentional Natas
+12/13 upload RCE lessons, see
+[`docs/natas-12-13-rce-isolation-audit.md`](docs/natas-12-13-rce-isolation-audit.md).
+
 Deployment generates all four tracks and runs the read-only stage validator
-before uploading. It must report Bandit 35, Krypton 8, and Natas 16 (the
+before uploading. It must report Bandit 35, Krypton 8, and Natas 36 (the
 staged/wave-gated games); AI Copilot Setup's 6 challenges aren't part of
 that staging and are validated separately by `validate_generated.py`. The
 event administrator then syncs and starts each staged game independently in
@@ -80,7 +86,7 @@ Engine; loading challenge content does not start a game clock.
 
 The deployment preflight is fail-closed: it requires authenticated CTFd
 inventory access, successful challenge install/sync responses, successful
-instance-launcher mapping sync, and exact totals of 65 challenges, 59 mapped
+instance-launcher mapping sync, and exact totals of 85 challenges, 79 mapped
 environments, and 4 visible launchers. `.ctf/config` is written mode `0600`.
 
 ## Validation and immutable releases
@@ -124,3 +130,27 @@ export CTFD_INSECURE=true
 This disables TLS certificate verification for the `ctfcli` calls this
 script makes. It defaults to `false` (verification on) and must be set
 explicitly — never enable it against an instance you don't control.
+
+## Local Natas Runtime Audit
+
+`scripts/runtime_audit_natas.py` is an opt-in integration audit for a local,
+authorized Natas target only. It verifies the Natas 0-34 solve and HTTP auth
+chains using supplied synthetic per-team secrets. It is not run by the normal
+CI validation workflow and rejects non-loopback URLs.
+
+After building the Natas target image, publish its internal ports only to the
+local host and start it with synthetic `LEVEL_SECRETS`. Then run the audit
+with the same JSON values:
+
+```bash
+SECRETS="$(python3 -c 'import json; print(json.dumps({**{f"natas{n}": f"local-{n}" for n in range(1, 35)}, "natas34final": "local-final"}))')"
+docker build -t cei-natas-local targets/natas
+docker run --rm -d --name cei-natas-audit --env "LEVEL_SECRETS=$SECRETS" $(for n in $(seq 0 34); do printf '%s ' "-p 127.0.0.1:$((18000 + n)):$((8000 + n))"; done) cei-natas-local
+for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:18000/ && break; sleep 1; done
+python3 scripts/runtime_audit_natas.py --base-url http://127.0.0.1:18000 --secrets "$SECRETS"
+docker stop cei-natas-audit
+```
+
+An image workflow can run these same commands as a post-build smoke test with
+ephemeral synthetic values and localhost-only port mappings. The audit has no
+public-target fallback or external service dependency.

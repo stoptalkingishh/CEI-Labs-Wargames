@@ -18,9 +18,10 @@ method, since they're not all the same:
 
 - **Bandit and Krypton** connect you directly via SSH to a shared
   target box.
-- **Natas** is different: launching gives you a shared **attacker
-  workstation** first, and every Natas target is only reachable from
-  *inside* that workstation — never directly from your own machine.
+- **Natas** is different: when your event operator has made it available,
+  launching gives you a shared **attacker workstation** first, and every
+  Natas target is only reachable from *inside* that workstation — never
+  directly from your own machine.
 
 ## 3. Use the Launch panel
 
@@ -37,18 +38,19 @@ to the attacker workstation).
   every level after the first one in that track reuses the same
   environment automatically.
 
-**For Natas specifically:** use the **noVNC** link (a full desktop, right
-in your browser) — it needs no extra login. SSH into the attacker
-workstation is offered too, but if you don't already have a login for
-it, don't worry about it — noVNC is the intended path and needs nothing
-extra from you.
+**For Natas specifically:** after the event operator has completed the
+release checks in [`natas-completion-status.md`](natas-completion-status.md),
+use the supported **noVNC** link (a full desktop in your browser). It needs no
+extra participant login. SSH is unavailable unless the operator explicitly
+supplies a tested endpoint and credential; noVNC is the intended path.
 
 ## 4. Read the description carefully
 
 Every challenge's description includes a free **"Commands you may need"**
 and **"Helpful reading"** section — pointers to the exact tools and
 background concepts involved, given up front, before you spend any
-points on hints.
+points on hints. Helpful Reading titles are plain offline references,
+not live links.
 
 ## 5. Use hints if you're stuck
 

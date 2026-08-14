@@ -1,0 +1,4 @@
+<?php
+require '/etc/cei-labs/natas-runtime/natas26.php';
+$raw = isset($_POST['project']) && is_string($_POST['project']) ? $_POST['project'] : ''; $project = strlen($raw) <= 512 ? json_decode($raw, true, 8) : null; $exported = is_array($project) && count($project) === 1 && isset($project['project']) && is_array($project['project']) && count($project['project']) === 1 && isset($project['project']['export']) && $project['project']['export'] === 'handoff';
+?><!doctype html><html><body><h1>Project export desk</h1><p>Projects are parsed as bounded JSON and exported to a virtual sink.</p><form method="post"><textarea name="project" maxlength="512"></textarea><button>Preview export</button></form><?php if ($exported): ?><p>Virtual export handoff: <?php echo htmlspecialchars($natas27_secret, ENT_QUOTES, 'UTF-8'); ?></p><?php else: ?><p>No virtual export requested.</p><?php endif; ?></body></html>

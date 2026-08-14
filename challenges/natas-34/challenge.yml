@@ -1,0 +1,34 @@
+name: "Natas 34: Terminal Debrief"
+author: "CEI Labs (self-hosted recreation of OverTheWire's Natas)"
+category: "Web Security"
+description: |
+  ## Goal
+  Complete the final local debrief and close the Natas training range.
+
+  ---
+
+  ### Get there
+  1. Launch the environment and open your **attacker workstation** (noVNC, or SSH if the platform supplied credentials) from the launch panel — everything below happens inside it, not on your own machine.
+  2. Browse to `http://<target-host>:8034/`, where `<target-host>` is the **Target** value in that panel (NOT the **Host** field — that one is only for SSH-ing into the attacker itself).
+  3. Log in as `natas34` with the flag from Natas 33 as your password.
+
+  > **Using curl?** Authenticate every request: `curl -u 'natas34:<flag from Natas 33>' ...`. A bare request gets `401 Unauthorized` before it reaches the level.
+
+  ### The task
+  Submit the documented terminal completion marker. This level has no successor credential.
+
+  **Commands you may need:** `curl`
+value: 1900
+type: standard
+flags:
+  - type: per_team_dynamic
+    content: "per-team-dynamic (placeholder, not read)"
+    data: "natas34final"
+state: visible
+version: "0.1"
+instance_type: target-attacker
+target_image: ghcr.io/stoptalkingishh/cei-labs-wargames/natas-target:latest
+attacker_image: ghcr.io/stoptalkingishh/cei-labs-wargames/natas-attacker:latest
+instance_group: natas
+shutdown_on_solve: true
+show_launcher: false

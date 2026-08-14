@@ -1,0 +1,34 @@
+name: "Natas 24 -> 25: Request Shape Confusion"
+author: "CEI Labs (self-hosted recreation of OverTheWire's Natas)"
+category: "Web Security"
+description: |
+  ## Goal
+  Understand why request field shape must be validated as well as field values.
+
+  ---
+
+  ### Get there
+  1. Launch the environment and open your **attacker workstation** (noVNC, or SSH if the platform supplied credentials) from the launch panel — everything below happens inside it, not on your own machine.
+  2. Browse to `http://<target-host>:8024/`, where `<target-host>` is the **Target** value in that panel (NOT the **Host** field — that one is only for SSH-ing into the attacker itself).
+  3. Log in as `natas24` with the flag from Natas 23 as your password.
+
+  > **Using curl?** Authenticate every request: `curl -u 'natas24:<flag from Natas 23>' ...`. A bare request gets `401 Unauthorized` before it reaches the level.
+
+  ### The task
+  The local access model accepts a compact request and handles a bounded alternate shape.
+
+  **Commands you may need:** `curl`
+value: 1400
+type: standard
+flags:
+  - type: per_team_dynamic
+    content: "per-team-dynamic (placeholder, not read)"
+    data: "natas25"
+state: visible
+version: "0.1"
+instance_type: target-attacker
+target_image: ghcr.io/stoptalkingishh/cei-labs-wargames/natas-target:latest
+attacker_image: ghcr.io/stoptalkingishh/cei-labs-wargames/natas-attacker:latest
+instance_group: natas
+shutdown_on_solve: false
+show_launcher: false

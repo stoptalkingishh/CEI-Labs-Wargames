@@ -101,10 +101,12 @@ implemented in `targets/krypton/build/generate_banners.py`.
 "Natas" is "Satan" spelled backwards. Natas is a mirrored, upside-down
 digital underworld where the ordinary logic of the web gets inverted and
 manipulated. This is already realized in the attacker workstation's
-desktop wallpaper (`cei-labs-engine`'s `operator/kali-novnc/wallpaper/
-natas-wallpaper.svg`: the NATAS wordmark reflecting into SATAN below a
-waterline, cool navy-teal palette, scattered inverted/rotated HTTP-header
-and markup fragments). The per-level login banner's depth shaft extends
+desktop wallpaper ([`cei-labs-engine`'s `operator/kali-novnc/wallpaper/
+natas-wallpaper.svg`](https://github.com/stoptalkingishh/cei-labs-engine/blob/main/operator/kali-novnc/wallpaper/natas-wallpaper.svg):
+the NATAS wordmark reflecting into SATAN below a waterline, cool navy-teal
+palette, scattered inverted/rotated HTTP-header and markup fragments). Engine
+owns that asset; its appearance in a live Natas workstation is an event-time
+check, not a Wargames build guarantee. The per-level login banner's depth shaft extends
 the same descent -- surface to depths -- reinforced by the page's own
 existing cool-to-hot color progression (see "Color" below).
 

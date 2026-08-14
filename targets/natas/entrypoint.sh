@@ -1,27 +1,33 @@
 #!/bin/bash
 set -e
 
-# Per-team secrets for levels 1-14 (webpass files + htpasswd hashes) and
-# the level-14 final flag, generated fresh by cei-labs-engine's
+# Per-team secrets for levels 1-34 (webpass files + htpasswd hashes) and
+# the terminal flag, generated fresh by cei-labs-engine's
 # orchestrator at container START from $LEVEL_SECRETS (a JSON blob) --
 # not identical hardcoded values baked into every build (see
 # docs/security-audit-status.md). natas0's password stays the real,
 # public "natas0" (OverTheWire's well-known bootstrap credential, not a
-# secret). If $LEVEL_SECRETS is missing a key (e.g. CTFd content hasn't
-# been synced with the per_team_dynamic flags yet), that level's webpass/
-# htpasswd files are simply left as the invalid build-time placeholder
-# (locked out -- a safe failure mode, not a shared-credential one), and
-# any content-page placeholder text stays literally visible rather than
-# silently falling back to a shared value.
-if [ -n "${LEVEL_SECRETS:-}" ]; then
-    python3 - <<'PYEOF'
-import json
+# secret). A target without a complete, valid secret set must never start:
+# a partially initialized target can mix team credentials or expose build-time
+# placeholders.
+python3 - <<'PYEOF'
 import os
 import subprocess
+import sys
+import re
+import json
 
-secrets = json.loads(os.environ.get("LEVEL_SECRETS", "{}"))
+sys.path.insert(0, "/usr/local/lib")
+from natas_levels import WEBPASS_LEVELS
+from natas_runtime_secrets import load_required_secrets, write_php_secret
 
-for n in range(1, 15):
+try:
+    secrets = load_required_secrets(os.environ.get("LEVEL_SECRETS"))
+except ValueError as error:
+    print(f"Natas startup refused: {error}", file=sys.stderr)
+    raise SystemExit(1)
+
+for n in WEBPASS_LEVELS:
     key = f"natas{n}"
     value = secrets.get(key)
     if not value:
@@ -50,13 +56,9 @@ CONTENT_SUBS = {
     "/var/www/natas/natas1/index.php": ("__NATAS2_SECRET__", "natas2"),
     "/var/www/natas/natas2/files/users.txt": ("__NATAS3_SECRET__", "natas3"),
     "/var/www/natas/natas3/s3cr3t/users.txt": ("__NATAS4_SECRET__", "natas4"),
-    "/var/www/natas/natas4/index.php": ("__NATAS5_SECRET__", "natas5"),
-    "/var/www/natas/natas5/index.php": ("__NATAS6_SECRET__", "natas6"),
 }
 for path, (placeholder, key) in CONTENT_SUBS.items():
     value = secrets.get(key)
-    if not value or not os.path.exists(path):
-        continue
     with open(path, "r") as f:
         content = f.read()
     with open(path, "w") as f:
@@ -73,21 +75,96 @@ NEXT_PASSWORD_FILES = {
     "/var/www/natas/natas6/next_password.php": ("natas6", "natas7", "next_password"),
     "/var/www/natas/natas8/next_password.php": ("natas8", "natas9", "next_password"),
     "/var/www/natas/natas11/next_password.php": ("natas11", "natas12", "next_password"),
-    "/var/www/natas/natas14/next_password.php": ("natas14", "natas14final", "final_flag"),
+    "/var/www/natas/natas14/next_password.php": ("natas14", "natas15", "final_flag"),
 }
 for path, (owner, key, var_name) in NEXT_PASSWORD_FILES.items():
     value = secrets.get(key)
-    if not value:
-        continue
-    php_string = value.replace("\\", "\\\\").replace("'", "\\'")
-    with open(path, "w") as f:
-        f.write(f"<?php ${var_name} = '{php_string}';\n")
+    write_php_secret(path, var_name, value)
     subprocess.run(["chown", f"{owner}:{owner}", path], check=True)
     os.chmod(path, 0o600)
+
+# Levels 4 and 5 render their next passwords in an HTML response. Keep these
+# values outside the served source files, as with the view-source levels.
+for path, owner, key, var_name in (
+    ("/etc/cei-labs/natas-runtime/natas4.php", "natas4", "natas5", "natas5_secret"),
+    ("/etc/cei-labs/natas-runtime/natas5.php", "natas5", "natas6", "natas6_secret"),
+):
+    write_php_secret(path, var_name, secrets[key])
+    subprocess.run(["chown", f"{owner}:{owner}", path], check=True)
+    os.chmod(path, 0o600)
+
+# Batch A and B keep challenge state outside served content. Each file is
+# replaced on container start, giving every target/team a clean bounded state.
+team = re.sub(r"[^A-Za-z0-9_-]", "_", os.environ.get("NATAS_TARGET_TEAM", "local"))[:64] or "local"
+for path, owner, key, var_name in (
+    ("/etc/cei-labs/natas-runtime/natas15.php", "natas15", "natas16", "natas16_secret"),
+    ("/etc/cei-labs/natas-runtime/natas16.php", "natas16", "natas17", "natas17_secret"),
+    ("/etc/cei-labs/natas-runtime/natas17.php", "natas17", "natas18", "natas18_secret"),
+    ("/etc/cei-labs/natas-runtime/natas18.php", "natas18", "natas19", "natas19_secret"),
+    ("/etc/cei-labs/natas-runtime/natas19.php", "natas19", "natas20", "natas20_secret"),
+    ("/etc/cei-labs/natas-runtime/natas20.php", "natas20", "natas21", "natas21_secret"),
+    ("/etc/cei-labs/natas-runtime/natas21.php", "natas21", "natas22", "natas22_secret"),
+    ("/etc/cei-labs/natas-runtime/natas22.php", "natas22", "natas23", "natas23_secret"),
+    ("/etc/cei-labs/natas-runtime/natas23.php", "natas23", "natas24", "natas24_secret"),
+    ("/etc/cei-labs/natas-runtime/natas24.php", "natas24", "natas25", "natas25_secret"),
+    ("/etc/cei-labs/natas-runtime/natas25.php", "natas25", "natas26", "natas26_secret"),
+    ("/etc/cei-labs/natas-runtime/natas26.php", "natas26", "natas27", "natas27_secret"),
+    ("/etc/cei-labs/natas-runtime/natas27.php", "natas27", "natas28", "natas28_secret"),
+    ("/etc/cei-labs/natas-runtime/natas28.php", "natas28", "natas29", "natas29_secret"),
+    ("/etc/cei-labs/natas-runtime/natas29.php", "natas29", "natas30", "natas30_secret"),
+    ("/etc/cei-labs/natas-runtime/natas30.php", "natas30", "natas31", "natas31_secret"),
+    ("/etc/cei-labs/natas-runtime/natas31.php", "natas31", "natas32", "natas32_secret"),
+    ("/etc/cei-labs/natas-runtime/natas32.php", "natas32", "natas33", "natas33_secret"),
+    ("/etc/cei-labs/natas-runtime/natas33.php", "natas33", "natas34", "natas34_secret"),
+    ("/etc/cei-labs/natas-runtime/natas34.php", "natas34", "natas34final", "terminal_secret"),
+):
+    write_php_secret(path, var_name, secrets[key])
+    with open(path, "a") as state_file:
+        state_file.write("$natas_team = %r;\n" % team)
+    subprocess.run(["chown", f"{owner}:{owner}", path], check=True)
+    os.chmod(path, 0o600)
+
+state_dir = "/var/lib/cei-labs/natas-batch-a"
+os.makedirs(state_dir, exist_ok=True)
+subprocess.run(["chown", "natas18:natas18", state_dir], check=True)
+os.chmod(state_dir, 0o700)
+state_path = os.path.join(state_dir, "sessions-%s.json" % team)
+with open(state_path, "w") as state_file:
+    # The single elevated record is challenge data, not a framework session.
+    json.dump({"42": {"role": "operator"}}, state_file)
+subprocess.run(["chown", "natas18:natas18", state_path], check=True)
+os.chmod(state_path, 0o600)
+
+state_dir = "/var/lib/cei-labs/natas-batch-d"
+os.makedirs(state_dir, exist_ok=True)
+subprocess.run(["chown", "natas33:natas33", state_dir], check=True)
+os.chmod(state_dir, 0o700)
+state_path = os.path.join(state_dir, "uploads-%s.json" % team)
+with open(state_path, "w") as state_file:
+    json.dump({"team": team, "artifacts": []}, state_file)
+subprocess.run(["chown", "natas33:natas33", state_path], check=True)
+os.chmod(state_path, 0o600)
+
+state_dir = "/var/lib/cei-labs/natas-batch-b"
+os.makedirs(state_dir, exist_ok=True)
+subprocess.run(["chown", "natas20:natas20", state_dir], check=True)
+os.chmod(state_dir, 0o700)
+state_path = os.path.join(state_dir, "record-%s.txt" % team)
+with open(state_path, "w") as state_file:
+    state_file.write("id=guest|role=viewer|note=welcome")
+subprocess.run(["chown", "natas20:natas20", state_path], check=True)
+os.chmod(state_path, 0o600)
+
+state_dir = "/var/lib/cei-labs/natas-batch-c"
+os.makedirs(state_dir, exist_ok=True)
+subprocess.run(["chown", "natas25:natas25", state_dir], check=True)
+os.chmod(state_dir, 0o700)
+state_path = os.path.join(state_dir, "audit-%s.json" % team)
+with open(state_path, "w") as state_file:
+    json.dump({"requests": 0, "team": team}, state_file)
+subprocess.run(["chown", "natas25:natas25", state_path], check=True)
+os.chmod(state_path, 0o600)
 PYEOF
-else
-    echo "WARNING: no LEVEL_SECRETS set -- natas1-14 will not be playable until content is synced." >&2
-fi
 
 # Security: child processes spawned from this script inherit its ENTIRE
 # environment, including $LEVEL_SECRETS -- the JSON blob holding every
@@ -122,6 +199,20 @@ for i in $(seq 1 30); do
     mysqladmin ping --silent && break
     sleep 1
 done
+
+# Level 14's application credential is per-container runtime state, never an
+# image-layer secret. Only the level-14 account can read this PHP config.
+db_password=$(openssl rand -hex 32)
+install -d -o root -g natas14 -m 710 /etc/cei-labs/natas-db
+printf "<?php\n\$natas14_db_host = '127.0.0.1';\n\$natas14_db_user = 'natas14';\n\$natas14_db_password = '%s';\n" "$db_password" > /etc/cei-labs/natas-db/natas14.php
+chown natas14:natas14 /etc/cei-labs/natas-db/natas14.php
+chmod 600 /etc/cei-labs/natas-db/natas14.php
+mysql -u root <<SQL
+CREATE USER IF NOT EXISTS 'natas14'@'127.0.0.1' IDENTIFIED BY '${db_password}';
+ALTER USER 'natas14'@'127.0.0.1' IDENTIFIED BY '${db_password}';
+GRANT SELECT ON natas14.users TO 'natas14'@'127.0.0.1';
+FLUSH PRIVILEGES;
+SQL
 
 # Must be a genuine exec of the apache2 binary AS apache-itk-idle (not
 # started as root and setuid()'d down internally) for the file

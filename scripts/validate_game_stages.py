@@ -130,7 +130,7 @@ def main():
         for error in errors:
             print(f"- {error}", file=sys.stderr)
         return 1
-    print("Game-stage validation passed: Bandit 35, Krypton 8, Natas 16.")
+    print("Game-stage validation passed: Bandit 35, Krypton 8, Natas 36.")
     return 0
 
 

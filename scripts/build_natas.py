@@ -53,8 +53,9 @@ INSTANCE_GROUP = "natas"
 # two-hop model this note summarizes below.
 #
 # Natas is target-attacker, not single-target: everything happens FROM
-# inside your attacker workstation (reachable via noVNC or SSH, both shown
-# on the launch panel) -- the targets are never reachable directly. All 15
+# inside your attacker workstation (reachable via noVNC; SSH is usable only
+# when the platform supplies credentials) -- the targets are never reachable
+# directly. All 15
 # levels share ONE attacker and ONE target box; each level is just a
 # different port (8000 + level number) on that same target, matching the
 # real OverTheWire Natas layout. The "Get there" block built by
@@ -81,7 +82,7 @@ def _get_there(level: int) -> str:
     cred_phrase, cred_curl = _credentials(level)
     return (
         "### Get there\n"
-        "1. Launch the environment and open your **attacker workstation** (noVNC or SSH) "
+        "1. Launch the environment and open your **attacker workstation** (noVNC, or SSH if the platform supplied credentials) "
         "from the launch panel \u2014 everything below happens inside it, not on your own machine.\n"
         f"2. Browse to `http://<target-host>:{8000 + level}/`, where `<target-host>` is the "
         "**Target** value in that panel (NOT the **Host** field \u2014 that one is only for "
@@ -104,22 +105,22 @@ challenges_data = [
             "### How Natas is different\n"
             "Natas works differently from Bandit and Krypton: launching gives you a shared "
             "**attacker workstation**, not a direct connection to a target. Every one of "
-            "Natas's 15 targets is reachable only from inside that workstation -- never "
+            "Natas's 15 level endpoints are reachable only from inside that workstation -- never "
             "directly from your own machine.\n\n"
             "### The launch controls\n"
             "The launch control attached to this (and every other Natas) challenge offers:\n"
             "- **Launch Environment** -- starts your attacker workstation and this track's "
-            "shared target box (all 15 levels share one target, distinguished by port). "
-            "Shows both a noVNC link (a full desktop in your browser) and an SSH connection.\n"
+            "shared target box (all 15 level endpoints share one target, distinguished by port). "
+            "Provides a noVNC link (a full desktop in your browser); use SSH only when the "
+            "platform has supplied credentials.\n"
             "- **Reboot Host** -- restarts your attacker in place if it gets stuck.\n"
             "- **Relaunch Environment** -- destroys and recreates your whole range (attacker "
             "and target) from scratch. Use this if something's broken beyond a reboot.\n"
             "- **+5 more minutes** -- shows up only once every level in this track is solved "
             "and a shutdown countdown has started.\n\n"
             "### Prove you found it\n"
-            "Click Launch, then open the attacker workstation using the **noVNC** link "
-            "specifically (not SSH this time -- SSH gives you a text-only shell with no "
-            "desktop, and what you need to read next is only visible on the desktop "
+            "Click Launch, then open the attacker workstation using the supported **noVNC** link "
+            "specifically (the required information is visible only on the desktop "
             "itself). The moment the desktop loads, its wallpaper already has your answer "
             "on it -- no file to go read, no login to figure out. The small line directly "
             "under the large NATAS logo (not the logo itself, and not the smaller \"CEI "
@@ -210,7 +211,7 @@ challenges_data = [
         "name": "Natas 9 -> 10: Command Injection I",
         "points": 650,
         "goal": "Inject a shell command through an unsanitized input field.",
-        "task": "The page's search box is passed straight into a shell `grep` command (visible in the source). Inject a shell metacharacter (like `;`) to run your own command and read `/etc/natas_webpass/natas10`.",
+        "task": "Inspect the source and determine how the search input reaches the server-side command. Use that behavior to retrieve the next password.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas10"}
     },
     {
@@ -218,7 +219,7 @@ challenges_data = [
         "name": "Natas 10 -> 11: Command Injection II (Sanitization Bypass)",
         "points": 700,
         "goal": "Achieve the same result once the easy metacharacters are filtered.",
-        "task": "Same underlying `grep` command as before, but `;` and `&` are now blocked. `grep` itself accepts a second filename argument on its own command line -- use that instead of a shell metacharacter to read `/etc/natas_webpass/natas11`.",
+        "task": "The input filter blocks some characters used by the prior level. Inspect the source and the invoked program's behavior to find another way to retrieve the next password.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas11"}
     },
     {
@@ -226,15 +227,15 @@ challenges_data = [
         "name": "Natas 11 -> 12: XOR Encryption Bypass",
         "points": 750,
         "goal": "Recover an XOR key and forge encrypted data with it.",
-        "task": "Preferences are stored in a cookie XOR-encrypted with a short repeating key. The logged-out default plaintext is predictable -- XOR it against the default ciphertext to recover the key, then forge a cookie with `showpassword` set to `yes`. This one needs a short script rather than a single command -- `python3` is on your attacker workstation for the byte-level XOR/base64 work.",
+        "task": "Preferences are stored in a cookie protected with a short repeating XOR key. Inspect the source and cookie, recover what you need to forge an authorized preference, and retrieve the next password. `python3` is available for byte-level work.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas12"}
     },
     {
         "id": "natas-12",
-        "name": "Natas 12 -> 13: Arbitrary File Upload (Web Shell)",
+        "name": "Natas 12 -> 13: Arbitrary File Upload",
         "points": 800,
-        "goal": "Upload and execute a web shell.",
-        "task": "The upload form performs no real validation. Upload a one-line PHP web shell and request it directly to read the next password.",
+        "goal": "Exploit insufficient upload validation to retrieve the next password.",
+        "task": "Inspect the upload flow and its server-side handling. Determine how the accepted file is exposed, then use the behavior to retrieve the next password.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas13"}
     },
     {
@@ -251,7 +252,127 @@ challenges_data = [
         "points": 900,
         "goal": "Bypass a login form using SQL injection.",
         "task": "This is the final Natas level. The login form builds its SQL query with raw string concatenation from your username and password fields.",
-        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas14final"}
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas15"}
+    },
+    {
+        "id": "natas-15", "name": "Natas 15 -> 16: Boolean Response Oracle",
+        "points": 950, "goal": "Recover a credential through a constrained boolean validation oracle.",
+        "task": "The validation console accepts a narrow account predicate and reveals only whether a matching record exists.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas16"}
+    },
+    {
+        "id": "natas-16", "name": "Natas 16 -> 17: Denylist Search Emulator",
+        "points": 1000, "goal": "Understand why command-like denylist filtering is not a safe design.",
+        "task": "Inspect the bounded archive adapter's source and determine how its legacy reference expansion reaches a hidden training record.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas17"}
+    },
+    {
+        "id": "natas-17", "name": "Natas 17 -> 18: Timing Response Oracle",
+        "points": 1050, "goal": "Measure an application-layer timing difference without relying on response content.",
+        "task": "The verifier gives one message for every candidate; compare repeated, bounded measurements.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas18"}
+    },
+    {
+        "id": "natas-18", "name": "Natas 18 -> 19: Predictable Numeric Sessions",
+        "points": 1100, "goal": "Assess the risk of a small predictable session identifier space.",
+        "task": "The service desk identifies sessions with a bounded numeric cookie.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas19"}
+    },
+    {
+        "id": "natas-19", "name": "Natas 19 -> 20: Encoded Weak Session Token",
+        "points": 1150, "goal": "Recognize encoding as distinct from session integrity protection.",
+        "task": "The ticket portal uses a strict, encoded two-field session ticket.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas20"}
+    },
+    {
+        "id": "natas-20", "name": "Natas 20 -> 21: Delimited Session Record",
+        "points": 1200, "goal": "Identify how ambiguous custom record serialization can alter local state.",
+        "task": "The profile desk saves a short note in a compact local record. State persists only for this instance until reset.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas21"}
+    },
+    {
+        "id": "natas-21", "name": "Natas 21 -> 22: Cross-Route Session Trust",
+        "points": 1250, "goal": "Assess trust boundaries between separately routed internal applications.",
+        "task": "Use the office's two local routes and observe how a desk-issued badge is trusted by reports.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas22"}
+    },
+    {
+        "id": "natas-22", "name": "Natas 22 -> 23: Redirect Execution Mismatch",
+        "points": 1300, "goal": "Recognize that a redirect does not necessarily stop server-side response generation.",
+        "task": "The local dispatch route returns a redirect and a no-store response body. Compare both response behaviors.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas23"}
+    },
+    {
+        "id": "natas-23", "name": "Natas 23 -> 24: Toy Numeric Prefix Comparison",
+        "points": 1350, "goal": "Contrast a bounded numeric-prefix compatibility check with strict comparison.",
+        "task": "The training console displays the result of a toy compatibility check alongside a strict control.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas24"}
+    },
+    {
+        "id": "natas-24", "name": "Natas 24 -> 25: Request Shape Confusion",
+        "points": 1400, "goal": "Understand why request field shape must be validated as well as field values.",
+        "task": "The local access model accepts a compact request and handles a bounded alternate shape.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas25"}
+    },
+    {
+        "id": "natas-25", "name": "Natas 25 -> 26: Synthetic Audit Resolver",
+        "points": 1450, "goal": "Trace controlled marker data through a synthetic audit resolver.",
+        "task": "The audit console resolves only named in-memory fixtures and keeps a bounded local request counter.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas26"}
+    },
+    {
+        "id": "natas-26", "name": "Natas 26 -> 27: JSON Virtual Export",
+        "points": 1500, "goal": "Validate structured project input without native object deserialization.",
+        "task": "Submit a compact JSON project that requests the documented virtual export destination.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas27"}
+    },
+    {
+        "id": "natas-27", "name": "Natas 27 -> 28: Identity Normalization Model",
+        "points": 1550, "goal": "Recognize ambiguity introduced by identity normalization.",
+        "task": "The bounded account store normalizes a local identity before comparison.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas28"}
+    },
+    {
+        "id": "natas-28", "name": "Natas 28 -> 29: Visual Block Token Model",
+        "points": 1600, "goal": "Reason about block assembly and integrity without a real encryption oracle.",
+        "task": "Arrange the fixed visual blocks into an allowlisted local query model.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas29"}
+    },
+    {
+        "id": "natas-29", "name": "Natas 29 -> 30: Virtual Command Catalog",
+        "points": 1650, "goal": "Separate filename interpretation from actual command execution.",
+        "task": "Use the parser's compact filename/catalog grammar against its fixed virtual catalog.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas30"}
+    },
+    {
+        "id": "natas-30", "name": "Natas 30 -> 31: Mock Quote Query Model",
+        "points": 1700, "goal": "Trace repeated form parameters through a fixed type-aware comparison model.",
+        "task": "Submit the two documented scalar quote values in their intended order; the model never contacts a database.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas31"}
+    },
+    {
+        "id": "natas-31", "name": "Natas 31 -> 32: Virtual Multipart Artifact",
+        "points": 1750, "goal": "Distinguish legacy multipart ambiguity from a bounded modern artifact selection model.",
+        "task": "Select the assigned virtual artifact by its allowlisted name; no file upload or path resolution exists.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas32"}
+    },
+    {
+        "id": "natas-32", "name": "Natas 32 -> 33: Fixed Command Emulator",
+        "points": 1800, "goal": "Reason about command-like input without running an interpreter or process.",
+        "task": "Use the documented fixed command label that maps to the local debrief output.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas33"}
+    },
+    {
+        "id": "natas-33", "name": "Natas 33 -> 34: Inert Upload Registry",
+        "points": 1850, "goal": "Identify the metadata trust boundary in a benign, non-executable artifact lifecycle.",
+        "task": "Record the named report with its reviewed archive metadata; no upload bytes are stored.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas34"}
+    },
+    {
+        "id": "natas-34", "name": "Natas 34: Terminal Debrief",
+        "points": 1900, "goal": "Complete the final local debrief and close the Natas training range.",
+        "task": "Submit the documented terminal completion marker. This level has no successor credential.",
+        "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas34final"}
     }
 ]
 
@@ -274,6 +395,14 @@ EXTRA_INFO = {
     "natas-12": (["browser view-source", "curl"], []),
     "natas-13": (["browser view-source", "curl"], []),
     "natas-14": (["browser view-source"], [("SQL injection on Wikipedia", "https://en.wikipedia.org/wiki/SQL_injection")]),
+    "natas-15": (["curl"], []), "natas-16": (["curl"], []), "natas-17": (["curl"], []),
+    "natas-18": (["curl"], []), "natas-19": (["curl", "base64"], []),
+    "natas-20": (["curl"], []), "natas-21": (["curl"], []), "natas-22": (["curl"], []),
+    "natas-23": (["curl"], []), "natas-24": (["curl"], []),
+    "natas-25": (["curl"], []), "natas-26": (["curl"], []), "natas-27": (["curl"], []),
+    "natas-28": (["curl"], []), "natas-29": (["curl"], []),
+    "natas-30": (["curl"], []), "natas-31": (["curl"], []), "natas-32": (["curl"], []),
+    "natas-33": (["curl"], []), "natas-34": (["curl"], []),
 }
 
 # One real, technique-specific hint per level (not natas-start-here --
@@ -355,8 +484,28 @@ HINTS = {
     'natas-14': [
         "The login form checks a username and password against a database, most likely by building a query out of exactly what you typed and running it. If your input becomes part of that query's actual TEXT rather than being kept separate from it, what else could you make the query do besides just checking a password?",
         "Click 'View sourcecode': the login query is built by directly gluing your username and password INTO a SQL string, with no escaping at all. That means a quote character you type doesn't stay 'just data' -- it can close the string the developer intended early and let you add your own SQL logic that the database executes as part of the real query. Pay attention to which quote character the source itself uses to wrap each field, since your input needs to match that same style to actually close the string.",
-        'The query wraps each field in DOUBLE quotes and concatenates them directly, so a username like `" OR "1"="1" -- ` (matching that double-quote style -- note the trailing space after the double-dash, which comments out the rest of the original query) closes the string early, adds an always-true condition, and comments out everything after it.\n\nIllustrative example only -- your real value will differ:\n```\n$ curl --data-urlencode \'username=" OR "1"="1" -- \' --data-urlencode \'password=x\' http://<target-host>:8014/index.php\nLogged in. The password for natas15 is <the final password>\n```',
+        'The query wraps each field in DOUBLE quotes and concatenates them directly, so a username like `" OR "1"="1" -- ` (matching that double-quote style -- note the trailing space after the double-dash, which comments out the rest of the original query) closes the string early, adds an always-true condition, and comments out everything after it.\n\nIllustrative example only -- your real value will differ:\n```\n$ curl --data-urlencode \'username=" OR "1"="1" -- \' --data-urlencode \'password=x\' http://<target-host>:8014/index.php\nLogged in. The FINAL Natas flag is <the final password>\n```',
     ],
+    'natas-15': ["Observe the two stable outcomes.", "The accepted grammar is deliberately narrow; compare prefixes one position at a time.", "Automate small, bounded prefix probes and keep only candidates that produce the positive outcome."],
+    'natas-16': ["This is an emulator, not a shell.", "The punctuation denylist is applied before a legacy reference-expansion step.", "Use the source view to learn the strict expansion grammar, then use its documented reference rather than a literal catalog query."],
+    'natas-17': ["The response text is intentionally uniform.", "Compare several requests for each candidate rather than trusting one measurement.", "A matching prefix takes longer application work; enumerate conservatively."],
+    'natas-18': ["The session cookie is numeric.", "Its accepted range is small and the service has one local elevated record.", "Test bounded numeric identifiers rather than guessing unbounded values."],
+    'natas-19': ["The ticket is encoded, not signed.", "Decode it as a strict two-field text record.", "Change only a valid field value, then re-encode using the URL-safe token alphabet."],
+    'natas-20': ["The first request changes state for a later request.", "Read how the compact record is assembled and then parsed.", "Test whether note data can create another record field without exceeding the form limit."],
+    'natas-21': ["There are exactly two internal routes.", "One route issues a badge and the other relies on it.", "Keep both requests on this local target and preserve the cookie between them."],
+    'natas-22': ["Do not let your client discard the first response automatically.", "A redirect status and a response body can coexist.", "Inspect the original local response headers and body without following its redirect."],
+    'natas-23': ["The two result lines intentionally use different comparisons.", "The compatibility check reads only a constrained numeric prefix and requires a non-canonical boundary value.", "Find a bounded input accepted by the compatibility line but rejected by the strict control."],
+    'natas-24': ["A request field can arrive in more than one shape.", "The model accepts only a small named set in its alternate shape.", "Compare a scalar request with a compact structured request while keeping its local region unchanged."],
+    'natas-25': ["The page names its resolver as synthetic.", "Only a fixed marker is present in its in-memory fixture map.", "Submit `marker=audit:handoff`; path-like markers are not resolver inputs."],
+    'natas-26': ["The export desk accepts JSON, not a serialized object.", "The parser permits one top-level `project` object with one export field.", "Submit `{\"project\":{\"export\":\"handoff\"}}` as the project field."],
+    'natas-27': ["The account store applies a small normalization step first.", "It lowercases and removes periods before comparing a fixed local account list.", "Use `ops.lead` to reach the normalized `opslead` operator record."],
+    'natas-28': ["Every token is four visual blocks long.", "The tiles assemble a local query string, not encrypted data.", "Arrange `VISI`, `TOR-`, `ATOR`, `OPER` as `VISITOR-ATOROPER`."],
+    'natas-29': ["This interpreter is only a parser over a fixed catalog.", "Its input has a filename, then one catalog directive separated by `|`.", "Submit `handoff.log|catalog:handoff`; nothing is executed."],
+    'natas-30': ["The form intentionally accepts a repeated field.", "Only two short scalar values survive the fixed parser, in order.", "Submit `quote[]=visitor` and `quote[]=operator`; this is a mock comparison, not SQL."],
+    'natas-31': ["This is a modern simulation, not a legacy CGI endpoint.", "Only named virtual artifacts are considered; paths and file content are absent.", "Select `handoff.note` as the artifact."],
+    'natas-32': ["The command label is data, never an executable instruction.", "The fixed catalog has a status label and a debrief label.", "Submit `command=debrief` to receive the next handoff."],
+    'natas-33': ["The registry accepts metadata only, never upload bytes.", "Both the report name and lifecycle marker must match the bounded registry entry.", "Submit `name=field-report.txt` and `metadata=archive:reviewed`."],
+    'natas-34': ["This endpoint is the end of the range.", "Terminal completion is a local route marker, not a new account password.", "Submit `complete=debrief-complete` to view the terminal material."],
 }
 
 HINT_TITLES = (
@@ -463,11 +612,14 @@ for i, ch in enumerate(challenges_data):
             links = "\n".join(f"- {title}" for title, url in reading)
             full_desc += f"\n\n**Helpful reading:**\n{links}"
 
+    indented_description = "\n".join(
+        "  " + line if line else "" for line in full_desc.splitlines()
+    )
     yaml_content = f"""name: "{ch['name']}"
 author: "CEI Labs (self-hosted recreation of OverTheWire's Natas)"
 category: "Web Security"
 description: |
-  {full_desc.replace(chr(10), chr(10) + '  ')}
+{indented_description}
 value: {ch['points']}
 type: standard
 flags:

@@ -1,7 +1,7 @@
 # Natas — Learning Objectives
 
-A skills inventory for the Natas track (web application security, 15
-levels), organized by concept rather than by level number, so it can be
+A skills inventory for the Natas track (web application security, level
+  endpoints 0-34), organized by concept rather than by level number, so it can be
 referenced independent of any specific level: to check what a
 participant has actually learned, to plan which levels to assign for a
 given skill gap, or to compare against a course syllabus. Each entry
@@ -64,4 +64,34 @@ which level(s) teach it. Pairs with `writeups.md` (full solutions) and
 - Recognize a login query built by raw string concatenation and
   construct an injection payload (matching the target's actual quoting
   style) that produces an always-true condition and comments out the
-  remainder of the query.
+   remainder of the query.
+
+## Oracle and session design failures (levels 15–19)
+- Distinguish a binary query-validation oracle from a protected lookup and use bounded sampling responsibly.
+- Recognize why filtering command punctuation does not make a command-shaped interface safe; this lab uses an isolated evaluator.
+- Measure deterministic application timing differences without response-content disclosure.
+- Identify predictable bounded numeric session identifiers and encoded tokens that lack integrity protection.
+
+## Bounded state and control-flow trust failures (levels 20-24)
+- Assess ambiguous custom serialization using a private, reset-safe state record.
+- Identify trust decisions that cross two internal application routes.
+- Inspect a local redirect response without assuming execution stopped.
+- Compare a deliberately pinned numeric-prefix compatibility rule with strict equality.
+- Validate both request values and request shapes in a bounded in-memory model.
+
+## Safe models of high-risk legacy concepts (levels 25-29)
+- Trace an inert marker through a synthetic fixture resolver without filesystem or log access.
+- Validate bounded JSON data and route it to a virtual export sink without native deserialization.
+- Identify how normalization can create local account-identity ambiguity.
+- Assemble fixed visual blocks into an allowlisted query model without encryption.
+- Reason about filename interpretation through a parser and fixed catalog without process execution.
+
+## Safe transition and terminal models (levels 30-34)
+- Trace repeated parameters through a fixed type-aware parser and mock query comparison without DBI or a database.
+- Select only allowlisted virtual multipart artifacts, rather than resolving paths or accepting files.
+- Reason about command-shaped input through a fixed output emulator with no interpreter or subprocess.
+- Identify metadata as an upload/archive trust boundary in an inert per-team registry.
+- Complete a terminal debrief route that releases final material without creating a next credential.
+
+## Local audit runner
+- `python3 scripts/run_natas_0_29_audits.py` builds one local target, reserves a contiguous loopback port range, waits for authenticated Apache readiness, and runs the 0-34 audits. It uses synthetic secrets and removes its container afterward.

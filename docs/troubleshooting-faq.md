@@ -44,14 +44,12 @@ the same action succeeds. Not fixed; see "Known open items" in
 
 **Q: How does a Natas participant log into the shared attacker
 workstation?**
-Use **noVNC** (the browser-desktop link on the launch panel) — it needs
-no credential from the participant's side. SSH is also offered as an
-option, but its login credential (`operator` / a build-time secret) is
-not currently surfaced anywhere in the launch panel UI or its API
-responses — a real gap, not something participants are meant to
-puzzle out. Point everyone at noVNC first; treat "I can't SSH into the
-attacker" reports as expected, not a bug to chase, until this is fixed
-platform-side.
+After the event operator has completed the checks in
+`natas-completion-status.md`, use the supported **noVNC** browser-desktop link
+on the launch panel. It needs no participant credential. SSH is unavailable
+unless the operator explicitly supplies a tested endpoint and credential. Do
+not ask participants to infer credentials from the launch panel or image
+source; treat unavailable SSH as expected.
 
 **Q: The launch panel used to show a full explanatory paragraph and a
 pre-filled `ssh operator@...` line — now it just shows Host/Port. Is

@@ -1,5 +1,13 @@
 # Self-Hosted Wargames: Status (CEI-Labs-Wargames)
 
+> **Current release note (2026-08-12):** The historical completion claims
+> below are not a current Natas release attestation. See
+> [`natas-completion-status.md`](natas-completion-status.md) for the current
+> ownership boundary, image-tag discrepancy, external prerequisite, and
+> required live verification. In particular, do not infer a pullable
+> `natas-attacker:latest` image or working noVNC/SSH access from this status
+> history.
+
 **Status:** Merged to `main` (confirmed via `git merge-base --is-ancestor
 fb30456 main`). Originally written from `feature/self-hosted-wargames` @
 `fb30456` before that branch landed.

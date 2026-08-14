@@ -18,7 +18,7 @@ for i in $(seq 1 30); do
     sleep 1
 done
 
-mysql -u root <<'SQL'
+mysql -u root <<SQL
 CREATE DATABASE IF NOT EXISTS natas14;
 USE natas14;
 CREATE TABLE IF NOT EXISTS users (
@@ -27,9 +27,6 @@ CREATE TABLE IF NOT EXISTS users (
 );
 REPLACE INTO users (username, password) VALUES ('natas14', 'CHANGEME_NOT_THE_REAL_FLAG_9f31');
 
-CREATE USER IF NOT EXISTS 'natas14'@'127.0.0.1' IDENTIFIED BY 'natas14dbP4ss';
-GRANT SELECT ON natas14.users TO 'natas14'@'127.0.0.1';
-FLUSH PRIVILEGES;
 SQL
 
 mysqladmin -u root shutdown

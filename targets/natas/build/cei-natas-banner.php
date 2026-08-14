@@ -2,7 +2,7 @@
 /* PHP 5.6-compatible static banner injector; port is server-owned metadata. */
 function cei_natas_banner_fragment() {
     $port = isset($_SERVER['SERVER_PORT']) ? (int) $_SERVER['SERVER_PORT'] : 0;
-    if ($port < 8000 || $port > 8014) return '';
+    if ($port < 8000 || $port > 8034) return '';
     $path = '/etc/cei-labs/natas-banners/natas' . ($port - 8000) . '.html';
     return is_readable($path) ? file_get_contents($path) : '';
 }
@@ -12,7 +12,7 @@ function cei_natas_banner_fragment() {
  * state -- which state it renders is decided by cei_natas_theme_state(). */
 function cei_natas_theme_style_fragment() {
     $port = isset($_SERVER['SERVER_PORT']) ? (int) $_SERVER['SERVER_PORT'] : 0;
-    if ($port < 8000 || $port > 8014) return '';
+    if ($port < 8000 || $port > 8034) return '';
     $path = '/etc/cei-labs/natas-themes/natas' . ($port - 8000) . '.css';
     if (!is_readable($path)) return '';
     return "<style>\n" . file_get_contents($path) . "\n</style>";
@@ -31,7 +31,7 @@ function cei_natas_theme_style_fragment() {
 function cei_natas_theme_state() {
     $port = isset($_SERVER['SERVER_PORT']) ? (int) $_SERVER['SERVER_PORT'] : 0;
     $level = $port - 8000;
-    if ($level < 0 || $level > 14) return 'cei-locked';
+    if ($level < 0 || $level > 34) return 'cei-locked';
     $marker = '/etc/cei-labs/natas-solve-state/natas' . $level . '.solved';
     return is_readable($marker) ? 'cei-solved' : 'cei-locked';
 }
@@ -48,7 +48,7 @@ function cei_natas_theme_state() {
 function cei_natas_mark_previous_level_solved() {
     $port = isset($_SERVER['SERVER_PORT']) ? (int) $_SERVER['SERVER_PORT'] : 0;
     $level = $port - 8000;
-    if ($level < 1 || $level > 14) return;
+    if ($level < 1 || $level > 34) return;
     $dir = '/etc/cei-labs/natas-solve-state';
     if (!is_dir($dir)) return;
     $marker = $dir . '/natas' . ($level - 1) . '.solved';
