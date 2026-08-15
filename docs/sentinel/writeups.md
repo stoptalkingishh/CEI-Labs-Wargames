@@ -1,8 +1,9 @@
-# Sentinel Pilot Writeups
+# Sentinel Writeups
 
 Instructor material for the non-staged Sentinel pilot. Real submissions are
-per-team values generated at runtime; never distribute a team's result. Levels
-06-21 remain planned.
+per-team values generated at runtime; never distribute a team's result. Labs
+06-21 remain planned. Labs 22-27 are non-staged, offline expansion material and
+are not a release commitment or progression replacement for the planned labs.
 
 ## Start Here
 
@@ -23,6 +24,42 @@ Connect as `sentinel1`, read `~/evidence/controls.md` and
 `~/evidence/control-evidence.md`, and
 submit the documented `mfa`, `badge_review`, and `log_review` classification
 tuple to `sentinel-submit`.
+
+## 22 Phishing Header Analysis
+
+Connect as `sentinel22`, read `~/evidence/phishing-message.eml`, and submit the
+from-domain, return-path-domain, and DMARC tuple. This synthetic RFC-822 message
+is static local evidence; do not contact mail systems or services.
+
+## 23 Detection Rule Validation
+
+Connect as `sentinel23`, review `~/evidence/detection-rule.yml`,
+`~/evidence/detection-corpus.log`, and `~/evidence/decision-record.txt`, then
+submit the rule ID, match count, and decision tuple. Do not query a live
+detection service.
+
+## 24 Endpoint Enrollment Evidence
+
+Connect as `sentinel24`, review `~/evidence/endpoint-enrollment.txt`, and submit
+the endpoint ID, enrollment-status, and key-status tuple. Do not contact an
+endpoint, agent, or manager.
+
+## 25 Alert Triage Summary
+
+Connect as `sentinel25`, review `~/evidence/alert-triage-summary.txt`, and submit
+the alert ID, root cause, and disposition tuple. The summary is deterministic
+local evidence; do not use an external AI service or contact systems.
+
+## 26 Network Inventory Review
+
+Connect as `sentinel26`, review `~/evidence/network-inventory.txt`, and submit
+the device MAC, zone, and disposition tuple. Do not scan or probe a network.
+
+## 27 Evidence Metadata Review
+
+Connect as `sentinel27`, review `~/evidence/evidence-metadata.txt`, and submit
+the filename, checksum, and extracted-author tuple. Do not upload, transmit, or
+externally enrich the fixture.
 
 ## 03 Change Window
 

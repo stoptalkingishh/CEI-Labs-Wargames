@@ -13,6 +13,12 @@ SECRETS = {
     "sentinel-03": "three-secret",
     "sentinel-04": "four-secret",
     "sentinel-05": "five-secret",
+    "sentinel-22": "twenty-two-secret",
+    "sentinel-23": "twenty-three-secret",
+    "sentinel-24": "twenty-four-secret",
+    "sentinel-25": "twenty-five-secret",
+    "sentinel-26": "twenty-six-secret",
+    "sentinel-27": "twenty-seven-secret",
 }
 USERS = {
     "sentinel-start-here": "sentinel0",
@@ -21,6 +27,12 @@ USERS = {
     "sentinel-03": "sentinel2",
     "sentinel-04": "sentinel3",
     "sentinel-05": "sentinel4",
+    "sentinel-22": "sentinel22",
+    "sentinel-23": "sentinel23",
+    "sentinel-24": "sentinel24",
+    "sentinel-25": "sentinel25",
+    "sentinel-26": "sentinel26",
+    "sentinel-27": "sentinel27",
 }
 ANSWERS = {
     "sentinel-start-here": {"engagement_scope": "local-evidence-only"},
@@ -29,6 +41,12 @@ ANSWERS = {
     "sentinel-03": {"disposition": "DEFER", "missing_evidence": "change-owner-signature"},
     "sentinel-04": {"service": "ops.northstar.training", "issuer": "Northstar Training Test CA", "revocation_status": "clear", "key_mode": "0400"},
     "sentinel-05": {"listener": "ssh", "port": 22, "legacy_metrics": "disabled"},
+    "sentinel-22": {"from_domain": "northstar.training", "return_path_domain": "invoice-notice.example", "dmarc": "fail"},
+    "sentinel-23": {"rule_id": "NS-DET-104", "matches": 1, "decision": "triggered"},
+    "sentinel-24": {"endpoint_id": "northstar-lt-042", "enrollment_status": "enrolled", "key_status": "active"},
+    "sentinel-25": {"alert_id": "ALT-2048", "root_cause": "expired-vpn-certificate", "disposition": "close-benign"},
+    "sentinel-26": {"device_mac": "02:00:00:00:26:01", "zone": "engineering", "disposition": "unauthorized"},
+    "sentinel-27": {"filename": "field-notes.pdf", "sha256": "dc3014d5c2f708b7e4628082170c3c0385afbd6dd8d84f1aff0eca6d8abe7710", "extracted_author": "Northstar Training"},
 }
 
 
@@ -70,7 +88,7 @@ class SentinelContainerContractTests(unittest.TestCase):
             result = self.submit(user, {"lab": lab, "answer": answer})
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(result.stdout.strip(), SECRETS[lab])
-            adjacent = f"sentinel{(int(user[-1]) + 1) % 6}"
+            adjacent = "sentinel0" if user != "sentinel0" else "sentinel1"
             rejected = self.submit(adjacent, {"lab": lab, "answer": answer})
             self.assertNotEqual(rejected.returncode, 0, lab)
             self.assertEqual(rejected.stdout, "")
@@ -99,6 +117,19 @@ class SentinelContainerContractTests(unittest.TestCase):
         result = self.execute("su sentinel1 -s /bin/sh -c 'cat /home/sentinel1/evidence/controls.md'")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("MFA: technical preventive", result.stdout)
+
+    def test_expansion_evidence_is_static_and_readable_by_its_account(self):
+        result = self.execute("su sentinel22 -s /bin/sh -c 'cat ~/evidence/phishing-message.eml'")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("dmarc=fail", result.stdout)
+        result = self.execute("su sentinel27 -s /bin/sh -c 'cat ~/evidence/evidence-metadata.txt'")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("Original static local document fixture", result.stdout)
+        result = self.execute("su sentinel27 -s /bin/sh -c 'test -f ~/evidence/field-notes.pdf'")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        result = self.execute("su sentinel27 -s /bin/sh -c 'sha256sum ~/evidence/field-notes.pdf'")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue(result.stdout.startswith(ANSWERS["sentinel-27"]["sha256"]))
 
 
 if __name__ == "__main__":

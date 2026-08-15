@@ -11,6 +11,12 @@ LAB_USERS = {
     "sentinel-03": "sentinel2",
     "sentinel-04": "sentinel3",
     "sentinel-05": "sentinel4",
+    "sentinel-22": "sentinel22",
+    "sentinel-23": "sentinel23",
+    "sentinel-24": "sentinel24",
+    "sentinel-25": "sentinel25",
+    "sentinel-26": "sentinel26",
+    "sentinel-27": "sentinel27",
 }
 MAX_SUBMISSION_BYTES = 65536
 

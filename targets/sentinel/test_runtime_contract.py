@@ -24,6 +24,11 @@ class SentinelRuntimeContractTests(unittest.TestCase):
         self.assertNotEqual(runtime.derived("team-a", "asset"), runtime.derived("team-b", "asset"))
         self.assertNotEqual(runtime.derived("team-a", "asset"), runtime.derived("team-a", "control"))
 
+    def test_credential_accounts_do_not_assume_sequential_lab_numbers(self):
+        self.assertEqual(runtime.ACCOUNT_CREDENTIAL_KEYS["sentinel22"], "sentinel-22")
+        self.assertEqual(runtime.ACCOUNT_CREDENTIAL_KEYS["sentinel27"], "sentinel-27")
+        self.assertNotIn("sentinel6", runtime.ACCOUNT_CREDENTIAL_KEYS)
+
     def test_files_are_private_to_the_intended_account(self):
         with patch("runtime.write_atomic") as write_atomic:
             runtime.write("sentinel1", "asset-census.txt", "evidence")
@@ -46,13 +51,19 @@ class SentinelRuntimeContractTests(unittest.TestCase):
             "sentinel-03": "sentinel2",
             "sentinel-04": "sentinel3",
             "sentinel-05": "sentinel4",
+            "sentinel-22": "sentinel22",
+            "sentinel-23": "sentinel23",
+            "sentinel-24": "sentinel24",
+            "sentinel-25": "sentinel25",
+            "sentinel-26": "sentinel26",
+            "sentinel-27": "sentinel27",
         }
         credentials = {lab: f"{lab}-credential" for lab in runtime.ANSWERS}
         self.assertEqual(answer_service.LAB_USERS, expected_users)
         for lab, caller in expected_users.items():
             submission = {"lab": lab, "answer": runtime.ANSWERS[lab]}
             self.assertEqual(answer_service.release(submission, caller, runtime.ANSWERS, credentials), credentials[lab])
-            adjacent = f"sentinel{(int(caller[-1]) + 1) % 6}"
+            adjacent = "sentinel0" if caller != "sentinel0" else "sentinel1"
             with self.assertRaises(SystemExit, msg=lab):
                 answer_service.release(submission, adjacent, runtime.ANSWERS, credentials)
 
@@ -99,7 +110,24 @@ class SentinelRuntimeContractTests(unittest.TestCase):
         self.assertIn('write("sentinel2", "change-window.txt"', content)
         self.assertIn('write("sentinel3", "certificate-ledger.txt"', content)
         self.assertIn('write("sentinel4", "exposure-review.conf"', content)
+        self.assertIn('write("sentinel22", "phishing-message.eml"', content)
+        self.assertIn('write("sentinel23", "decision-record.txt"', content)
+        self.assertIn('write("sentinel24", "endpoint-enrollment.txt"', content)
+        self.assertIn('write("sentinel25", "alert-triage-summary.txt"', content)
+        self.assertIn('write("sentinel26", "network-inventory.txt"', content)
+        self.assertIn('write("sentinel27", "evidence-metadata.txt"', content)
+        self.assertIn('write("sentinel27", "field-notes.pdf"', content)
         self.assertNotIn('"/home/{owner}/{name}"', content)
+
+    def test_expansion_evidence_is_static_and_contains_no_credentials(self):
+        with open("runtime.py", encoding="utf-8") as source:
+            content = source.read()
+        expansion = content[content.index('write("sentinel22"'):]
+        self.assertIn("Static", expansion)
+        self.assertNotIn("secrets[", expansion)
+        self.assertNotIn("http://", expansion)
+        self.assertNotIn("https://", expansion)
+        self.assertIn("/opt/sentinel/fixtures/field-notes.pdf", expansion)
 
     def test_lab01_contract_does_not_require_systemctl(self):
         builder = Path(__file__).resolve().parents[2] / "scripts" / "build_sentinel.py"
@@ -112,6 +140,8 @@ class SentinelRuntimeContractTests(unittest.TestCase):
         self.assertIn("EXPOSE 22", content)
         self.assertNotIn("EXPOSE 80", content)
         self.assertIn('chmod 750 "/home/sentinel${number}"', content)
+        for number in range(22, 28):
+            self.assertIn(str(number), content)
 
 
 if __name__ == "__main__":
