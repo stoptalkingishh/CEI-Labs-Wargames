@@ -44,6 +44,13 @@ class SentinelBuilderTests(unittest.TestCase):
         self.assertNotIn("recorded disposition", HINTS["sentinel-03"][2])
         self.assertNotIn("signed finding", HINTS["sentinel-05"][2])
 
+    def test_lab24_requires_the_cross_record_enrollment_identifier(self):
+        lab = next(challenge for challenge in challenges_data if challenge["id"] == "sentinel-24")
+        self.assertIn("enrollment record", lab["goal"])
+        self.assertIn("enrollment record ID", lab["task"])
+        self.assertIn("enrollment record ID", HINTS["sentinel-24"][0])
+        self.assertIn("enrollment_record_id", HINTS["sentinel-24"][2])
+
     def test_generated_yaml_and_wallet_keep_the_runtime_contract(self):
         with tempfile.TemporaryDirectory() as directory:
             build(directory)
