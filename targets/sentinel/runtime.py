@@ -37,6 +37,17 @@ ANSWERS = {
     "sentinel-27": {"filename": "field-notes.pdf", "sha256": "dc3014d5c2f708b7e4628082170c3c0385afbd6dd8d84f1aff0eca6d8abe7710", "extracted_author": "Northstar Training"},
 }
 
+LAB_22_MESSAGE = (
+    "From: Northstar Billing <billing@northstar.training>\n"
+    "Return-Path: <reply@invoice-notice.example>\n"
+    "Authentication-Results: northstar.training; spf=pass smtp.mailfrom=invoice-notice.example; dkim=fail header.d=invoice-notice.example; dmarc=fail header.from=northstar.training\n"
+    "Received: from relay.invoice-notice.example (192.0.2.44) by mail.northstar.training with ESMTP\n"
+    "Subject: Synthetic training invoice\n"
+    "\n"
+    "Static synthetic RFC-822 training fixture. Do not contact mail systems.\n"
+    "Submit from_domain, return_path_domain, and dmarc through `sentinel-submit`.\n"
+)
+
 
 def derived(secret, label, length=16):
     return hashlib.sha256(f"sentinel:{label}:{secret}".encode()).hexdigest()[:length]
@@ -99,7 +110,7 @@ def main():
         write("sentinel3", "service.key", source.read(), 0o400)
     write("sentinel3", "certificate-ledger.txt", "Service: ops.northstar.training\nIssuer: Northstar Training Test CA\nRevocation: clear in training-ca.crl\nKey permissions: /srv/sentinel-evidence/sentinel3/service.key is root:root mode 0400\nVerify offline with: openssl verify -attime 1893456000 -CAfile training-ca.pem -CRLfile training-ca.crl -crl_check service.pem\nSubmit service, issuer, revocation_status, and key_mode through `sentinel-submit`.\n")
     write("sentinel4", "exposure-review.conf", "Observed listener: ssh tcp/22\nConfigured default service: legacy-metrics disabled\nNo web, database, or remote-management service is exposed.\nSubmit listener, port, and legacy_metrics through `sentinel-submit`.\n")
-    write("sentinel22", "phishing-message.eml", "From: Northstar Billing <billing@northstar.training>\nReturn-Path: <reply@invoice-notice.example>\nAuthentication-Results: northstar.training; spf=pass smtp.mailfrom=invoice-notice.example; dkim=fail header.d=invoice-notice.example; dmarc=fail header.from=northstar.training\nReceived: from relay.invoice-notice.example (192.0.2.44) by mail.northstar.training with ESMTP\nSubject: Synthetic training invoice\n\nStatic synthetic RFC-822 training fixture. Do not contact mail systems.\nSubmit from_domain, return_path_domain, and dmarc through `sentinel-submit`.\n")
+    write("sentinel22", "phishing-message.eml", LAB_22_MESSAGE)
     write("sentinel23", "detection-rule.yml", "id: NS-DET-104\ntitle: Encoded PowerShell Command\ncondition: command_line contains '-EncodedCommand'\n")
     write("sentinel23", "detection-corpus.log", "2026-08-14T12:00:00Z host=lab-01 process=powershell.exe command_line='powershell.exe -EncodedCommand VwByAGkAdABlAC0ASABvAHMAdAAn\n")
     write("sentinel23", "decision-record.txt", "Static local rule-runner decision record\nRule: NS-DET-104\nMatches: 1\nDecision: triggered\nNo live detection service was queried. Submit rule_id, matches, and decision through `sentinel-submit`.\n")
