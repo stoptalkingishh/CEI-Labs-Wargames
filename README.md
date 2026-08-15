@@ -48,6 +48,8 @@ Each game's folder holds three docs:
   Bandit/Krypton/Natas grouping and pre-deployment validation used by Engine
 - [Staged game operations](docs/staged-game-operations.md) — rehearsal and
   event-day controls for independently released game stages
+- [Security lab intake backlog](docs/security-lab-intake.md) — proposed
+  offline, safe, and testable future lab concepts
 - [Presentation sources](presentation/README.md) — current kickoff and
   per-track briefing source
 - [Event recap — 2026-08-06](docs/event-recap-2026-08-06.md) — post-event
