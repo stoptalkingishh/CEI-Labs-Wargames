@@ -31,7 +31,7 @@ ANSWERS = {
     "sentinel-05": {"listener": "ssh", "port": 22, "legacy_metrics": "disabled"},
     "sentinel-22": {"from_domain": "northstar.training", "return_path_domain": "invoice-notice.example", "dmarc": "fail"},
     "sentinel-23": {"rule_id": "NS-DET-104", "matches": 1, "decision": "triggered"},
-    "sentinel-24": {"endpoint_id": "northstar-lt-042", "enrollment_status": "enrolled", "key_status": "active"},
+    "sentinel-24": {"endpoint_id": "northstar-lt-042", "enrollment_record_id": "ENR-24-042", "enrollment_status": "enrolled", "key_status": "active"},
     "sentinel-25": {"alert_id": "ALT-2048", "root_cause": "expired-vpn-certificate", "disposition": "close-benign"},
     "sentinel-26": {"device_mac": "02:00:00:00:26:01", "zone": "engineering", "disposition": "unauthorized"},
     "sentinel-27": {"filename": "field-notes.pdf", "sha256": "dc3014d5c2f708b7e4628082170c3c0385afbd6dd8d84f1aff0eca6d8abe7710", "extracted_author": "Northstar Training"},
@@ -103,7 +103,7 @@ def main():
     write("sentinel23", "detection-rule.yml", "id: NS-DET-104\ntitle: Encoded PowerShell Command\ncondition: command_line contains '-EncodedCommand'\n")
     write("sentinel23", "detection-corpus.log", "2026-08-14T12:00:00Z host=lab-01 process=powershell.exe command_line='powershell.exe -EncodedCommand VwByAGkAdABlAC0ASABvAHMAdAAn\n")
     write("sentinel23", "decision-record.txt", "Static local rule-runner decision record\nRule: NS-DET-104\nMatches: 1\nDecision: triggered\nNo live detection service was queried. Submit rule_id, matches, and decision through `sentinel-submit`.\n")
-    write("sentinel24", "endpoint-enrollment.txt", "Static simulated enrollment transcript\nEndpoint inventory ID: northstar-lt-042\nEnrollment transcript: accepted\nEnrollment status: enrolled\nEnrollment key lifecycle: active\nDo not contact an endpoint, agent, or manager. Submit endpoint_id, enrollment_status, and key_status through `sentinel-submit`.\n")
+    write("sentinel24", "endpoint-enrollment.txt", "Static simulated endpoint enrollment evidence\n\nInventory entry\nEndpoint inventory ID: northstar-lt-042\nEnrollment record ID: ENR-24-042\n\nEnrollment transcript\nEnrollment record ID: ENR-24-042\nEnrollment transcript: accepted\nEnrollment status: enrolled\n\nKey lifecycle record\nEnrollment record ID: ENR-24-042\nEnrollment key status: active\n\nDo not contact an endpoint, agent, or manager. Submit endpoint_id, enrollment_record_id, enrollment_status, and key_status through `sentinel-submit`.\n")
     write("sentinel25", "alert-triage-summary.txt", "Deterministic local alert summary\nAlert ID: ALT-2048\nSummary: VPN authentication failures followed certificate expiry; no anomalous source or privilege change is present.\nSource evidence: certificate inventory records the VPN certificate as expired.\nEvidence-supported root cause: expired-vpn-certificate\nDisposition: close-benign\nDo not use an external AI service or contact systems. Submit alert_id, root_cause, and disposition through `sentinel-submit`.\n")
     write("sentinel26", "network-inventory.txt", "Static synthetic network inventory\nARP: 10.42.8.61 02:00:00:00:26:01\nDHCP: no lease for 02:00:00:00:26:01\nNetwork-zone policy: engineering permits only registered DHCP endpoints.\nObserved zone: engineering\nDisposition: unauthorized\nDo not scan or probe a network. Submit device_mac, zone, and disposition through `sentinel-submit`.\n")
     with open("/opt/sentinel/fixtures/field-notes.pdf", encoding="ascii") as source:
