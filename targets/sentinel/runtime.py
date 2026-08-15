@@ -37,6 +37,16 @@ ANSWERS = {
     "sentinel-27": {"filename": "field-notes.pdf", "sha256": "dc3014d5c2f708b7e4628082170c3c0385afbd6dd8d84f1aff0eca6d8abe7710", "extracted_author": "Northstar Training"},
 }
 
+LAB_26_EVIDENCE = (
+    "Static synthetic network inventory\n"
+    "ARP observation: 10.42.8.61 02:00:00:00:26:01\n"
+    "DHCP registration: no lease for 02:00:00:00:26:01\n"
+    "Network-zone policy: engineering permits only registered DHCP endpoints.\n"
+    "Observed zone: engineering\n"
+    "This is static evidence only. Do not scan or probe a network. "
+    "Submit device_mac, zone, and disposition through `sentinel-submit`.\n"
+)
+
 
 def derived(secret, label, length=16):
     return hashlib.sha256(f"sentinel:{label}:{secret}".encode()).hexdigest()[:length]
@@ -105,7 +115,7 @@ def main():
     write("sentinel23", "decision-record.txt", "Static local rule-runner decision record\nRule: NS-DET-104\nMatches: 1\nDecision: triggered\nNo live detection service was queried. Submit rule_id, matches, and decision through `sentinel-submit`.\n")
     write("sentinel24", "endpoint-enrollment.txt", "Static simulated enrollment transcript\nEndpoint inventory ID: northstar-lt-042\nEnrollment transcript: accepted\nEnrollment status: enrolled\nEnrollment key lifecycle: active\nDo not contact an endpoint, agent, or manager. Submit endpoint_id, enrollment_status, and key_status through `sentinel-submit`.\n")
     write("sentinel25", "alert-triage-summary.txt", "Deterministic local alert summary\nAlert ID: ALT-2048\nSummary: VPN authentication failures followed certificate expiry; no anomalous source or privilege change is present.\nSource evidence: certificate inventory records the VPN certificate as expired.\nEvidence-supported root cause: expired-vpn-certificate\nDisposition: close-benign\nDo not use an external AI service or contact systems. Submit alert_id, root_cause, and disposition through `sentinel-submit`.\n")
-    write("sentinel26", "network-inventory.txt", "Static synthetic network inventory\nARP: 10.42.8.61 02:00:00:00:26:01\nDHCP: no lease for 02:00:00:00:26:01\nNetwork-zone policy: engineering permits only registered DHCP endpoints.\nObserved zone: engineering\nDisposition: unauthorized\nDo not scan or probe a network. Submit device_mac, zone, and disposition through `sentinel-submit`.\n")
+    write("sentinel26", "network-inventory.txt", LAB_26_EVIDENCE)
     with open("/opt/sentinel/fixtures/field-notes.pdf", encoding="ascii") as source:
         write("sentinel27", "field-notes.pdf", source.read())
     write("sentinel27", "evidence-metadata.txt", "Original static local document fixture: field-notes.pdf\nSHA-256 (bounded fixture record): dc3014d5c2f708b7e4628082170c3c0385afbd6dd8d84f1aff0eca6d8abe7710\nMetadata author: Northstar Training\nBounded extraction result: training field notes\nDo not upload, transmit, or enrich this fixture externally. Submit filename, sha256, and extracted_author through `sentinel-submit`.\n")
