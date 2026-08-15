@@ -43,7 +43,7 @@ ANSWERS = {
     "sentinel-05": {"listener": "ssh", "port": 22, "legacy_metrics": "disabled"},
     "sentinel-22": {"from_domain": "northstar.training", "return_path_domain": "invoice-notice.example", "dmarc": "fail"},
     "sentinel-23": {"rule_id": "NS-DET-104", "matches": 1, "decision": "triggered"},
-    "sentinel-24": {"endpoint_id": "northstar-lt-042", "enrollment_status": "enrolled", "key_status": "active"},
+    "sentinel-24": {"endpoint_id": "northstar-lt-042", "enrollment_record_id": "ENR-24-042", "enrollment_status": "enrolled", "key_status": "active"},
     "sentinel-25": {"alert_id": "ALT-2048", "root_cause": "expired-vpn-certificate", "disposition": "close-benign"},
     "sentinel-26": {"device_mac": "02:00:00:00:26:01", "zone": "engineering", "disposition": "unauthorized"},
     "sentinel-27": {"filename": "field-notes.pdf", "sha256": "dc3014d5c2f708b7e4628082170c3c0385afbd6dd8d84f1aff0eca6d8abe7710", "extracted_author": "Northstar Training"},

@@ -35,7 +35,7 @@ ANSWERS = {
     "sentinel-05": {"listener": "ssh", "port": 22, "legacy_metrics": "disabled"},
     "sentinel-22": {"from_domain": "northstar.training", "return_path_domain": "invoice-notice.example", "dmarc": "fail"},
     "sentinel-23": {"rule_id": "NS-DET-104", "matches": 1, "decision": "triggered"},
-    "sentinel-24": {"endpoint_id": "northstar-lt-042", "enrollment_status": "enrolled", "key_status": "active"},
+    "sentinel-24": {"endpoint_id": "northstar-lt-042", "enrollment_record_id": "ENR-24-042", "enrollment_status": "enrolled", "key_status": "active"},
     "sentinel-25": {"alert_id": "ALT-2048", "root_cause": "expired-vpn-certificate", "disposition": "close-benign"},
     "sentinel-26": {"device_mac": "02:00:00:00:26:01", "zone": "engineering", "disposition": "unauthorized"},
     "sentinel-27": {"filename": "field-notes.pdf", "sha256": LAB27_SHA256, "extracted_author": LAB27_EXTRACTED_AUTHOR},
@@ -154,7 +154,7 @@ def main():
     write("sentinel23", "detection-rule.yml", LAB_23_RULE)
     write("sentinel23", "detection-corpus.log", LAB_23_CORPUS)
     write("sentinel23", "decision-record.txt", LAB_23_DECISION_RECORD)
-    write("sentinel24", "endpoint-enrollment.txt", "Static simulated enrollment transcript\nEndpoint inventory ID: northstar-lt-042\nEnrollment transcript: accepted\nEnrollment status: enrolled\nEnrollment key lifecycle: active\nDo not contact an endpoint, agent, or manager. Submit endpoint_id, enrollment_status, and key_status through `sentinel-submit`.\n")
+    write("sentinel24", "endpoint-enrollment.txt", "Static simulated endpoint enrollment evidence\n\nInventory entry\nEndpoint inventory ID: northstar-lt-042\nEnrollment record ID: ENR-24-042\n\nEnrollment transcript\nEnrollment record ID: ENR-24-042\nEnrollment transcript: accepted\nEnrollment status: enrolled\n\nKey lifecycle record\nEnrollment record ID: ENR-24-042\nEnrollment key status: active\n\nDo not contact an endpoint, agent, or manager. Submit endpoint_id, enrollment_record_id, enrollment_status, and key_status through `sentinel-submit`.\n")
     write("sentinel25", "alert-triage-summary.txt", "Deterministic local alert summary\nAlert ID: ALT-2048\nObserved window: 2026-08-14T09:00:00Z to 2026-08-14T09:15:00Z\nSummary: VPN authentication failures followed certificate expiry; no anomalous source or privilege change is present.\nCorroborating evidence: vpn-certificate-inventory.txt record VPN-GW-01.\nRoot-cause assessment: expired VPN certificate.\nDisposition: close-benign\nDo not use an external AI service or contact systems. Submit alert_id, root_cause, and disposition through `sentinel-submit`.\n")
     write("sentinel25", "vpn-certificate-inventory.txt", "Static local certificate inventory\nRecord ID: VPN-GW-01\nCertificate subject: vpn.northstar.training\nCertificate status: expired\nExpiration timestamp: 2026-08-14T08:55:00Z\nThe expiry predates the alert window in alert-triage-summary.txt.\nNo network, endpoint, or external-service access is required.\n")
     write("sentinel26", "network-inventory.txt", LAB_26_EVIDENCE)
