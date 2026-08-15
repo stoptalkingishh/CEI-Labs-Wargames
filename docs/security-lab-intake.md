@@ -65,6 +65,47 @@ separate offensive track:
 | Future analysis track | Metadata, static web corpus, fake-secret scanning, word frequency. | Needs a track charter, target model, and Engine integration contract. |
 | Deferred simulations | Captive portal, C2, SSTI/RCE, exploit/CVE concepts. | Safety/design review required before backlog promotion. |
 
+## Sentinel Expansion
+
+Add the following as new Sentinel labs after the existing approved curriculum.
+They are distinct from the current lab contracts and remain fixture-only until
+the Sentinel platform integration is approved.
+
+| Proposed Sentinel lab | Source concept | Core evidence and deterministic result |
+| --- | --- | --- |
+| 22 Phishing Header Analysis | Fishing email dissection | Original synthetic RFC-822 message; identify sender-path inconsistency from SPF, DKIM, DMARC, and Received headers. |
+| 23 Detection Rule Validation | Detection-as-code pipeline | Local rule runner evaluates a fixed rule against a committed log corpus and returns a machine-verifiable decision record. |
+| 24 Endpoint Enrollment Evidence | Home SOC agent onboarding | Simulated enrollment transcript, enrollment key lifecycle, and endpoint inventory; no live manager or endpoint agent. |
+| 25 Alert Triage Summary | AI-enhanced investigation | Deterministic local summaries paired with underlying fixed evidence; identify the evidence-supported root cause without an external model. |
+| 26 Network Inventory Review | Rogue device discovery | Static ARP/DHCP inventory, network-zone policy, and one unauthorized synthetic device; no scanning traffic. |
+| 27 Evidence Metadata Review | Metadata forensics | Original image/PDF fixture with non-sensitive metadata, checksum, and one bounded extraction result. |
+
+These proposals substantially overlap existing Sentinel labs and must be
+implemented as additional evidence in those labs, not new scored challenges:
+
+| Existing Sentinel lab | Absorbed concepts |
+| --- | --- |
+| 08 Least Privilege | Least-privilege IAM design through the existing local policy/effective-access model. |
+| 09 Segmented Services | Rogue-device inventory context when it supports the static zone-policy decision. |
+| 13 Integrity Alert | File-integrity monitoring evidence. |
+| 15 Alert Tuning | Traffic anomaly, DNS exfiltration, and detection-rule evidence. |
+| 17 Incident Containment | PCAP/DNS incident timeline and IR tabletop response. |
+| 18 Forensic Handoff | Tabletop after-action fields and evidence-preservation workflow. |
+| 19-21 Governance and assurance | GRC assessment, risk register, vendor evidence, and phishing-reporting scenario. |
+
+## Future CTF Material
+
+The following concepts do not fit Sentinel and remain parked as future-track
+material. They require a separate charter and must not be added as unreviewed
+Sentinel levels:
+
+| Future theme | Concepts | Required boundary |
+| --- | --- | --- |
+| Web and AI safety | Prompt injection and inert WAF/parser exercises. | Clean-room local toy service, no executable payload, real system prompt, or production target. |
+| Intelligence and analysis | Fake-secret scanning, static web reconnaissance, and word-frequency analysis. | Original offline corpus, deterministic answer, and no public repository or web access. |
+| Adversary-behavior simulation | Captive portal, C2, SSTI/RCE, and CVE-triage concepts. | Ethics review and emulator-only design: no credential capture, implant, interpreter execution, or live exploit. |
+| Shared advanced operations | Wazuh, Velociraptor, Greenbone, and optional Windows evidence. | Separate capacity, license, isolation, retention, reset, and maintenance approval. |
+
 ## Required Implementation Packet
 
 Every promoted row must add:
