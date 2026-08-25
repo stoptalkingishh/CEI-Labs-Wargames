@@ -2,6 +2,9 @@
 challenges/*/
 challenges/*.json
 
+# Ignore generated OSINT track output (non-staged, produced by build_osint.py)
+/osint/
+
 # Ignore Python compilation caches
 __pycache__/
 *.pyc

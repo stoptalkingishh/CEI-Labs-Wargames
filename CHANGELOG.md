@@ -9,6 +9,17 @@ record.
 ## [Unreleased]
 
 ### Added
+- New **OSINT** wargame track (proposed, non-staged, hidden-by-default):
+  - `docs/osint/` — design + research index (`docs/osint/osint-research-index.md`)
+    cataloging real OSINT exercises and CTFs across Hacktoria, Gralhix, and the
+    Bellingcat Challenge, including a skill->tool->method->doctrine table mapped
+    to ATP 2-22.9 / FM 2-0 / ADP 2-0; plus `learning-objectives.md`,
+    `cheatsheet.md`, `writeups.md` for the 13-challenge track.
+  - `scripts/build_osint.py` — generator writing the track's CTFd import output
+    to the git-ignored `osint/` (single source of truth for flags; release via
+    `CEI_OSINT_RELEASE_STATE=visible`, mirroring the AI Copilot track). Track
+    stays out of `game-stages.yml` and `challenges/` so all existing stage
+    validators are untouched.
 - `docs/event-recap-2026-08-06.md`: post-event recap of the 2026-08-06
   wargames run — issues hit and fixed, infrastructure end-state, what was
   sacrificed (network + systems), how challenges were played, and player
