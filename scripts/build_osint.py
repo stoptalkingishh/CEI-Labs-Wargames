@@ -673,7 +673,6 @@ FLAGS = {
     "osint-33-cult-cipher": "klumgongyn-credential",
     "osint-34-cult-caravan": "maldives-elhe-didi-magu",
     "osint-35-cult-ledger": "gaius-suetonius-de-vita-caesarum",
-    "osint-36-cult-pilgrimage": "usa-nevada-lincoln",
     "osint-36-cult-prophecy": "amber-sam-sing-1930",
     "osint-37-cult-relic": "relic-video-key",
     "osint-38-cult-money": "case.thrillers.jams",

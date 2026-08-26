@@ -44,10 +44,15 @@ OSINT is **not** a fourth "staged" boss.
 
 - Challenges live under the `osint-` id prefix and the player-facing name is
   "OSINT" (category: `OSINT`).
-- The track defines 13 challenges: `osint-start-here` plus 12 skill drills.
+- The track defines **43 challenges**: `osint-00-start-here` plus a **42-lead
+  campaign** organized into 8 storyline arcs (cartel, wire syndicate, gilded
+  generals, chancellery, order of hades, ashfall, house of krohndahkyr, the
+  loom capstone).
 - Import output is written to the git-ignored `osint/` directory by
   `scripts/build_osint.py`, ready for `ctf challenge sync osint/` when the
   organizer chooses to release it.
+- Event pacing: ~42 leads x ~10 min ≈ a **6–7 hour** session (see
+  [`event-runbook.md`](event-runbook.md)).
 
 ## Skill ladder (from the source research)
 
@@ -98,6 +103,7 @@ hand-editing generated files).
 - [`osint-research-index.md`](osint-research-index.md) — the source/doctrine index
 - [`storyline.md`](storyline.md) — the overarching faction/plot design ("Gilded Hose")
 - [`skill-building-priority.md`](skill-building-priority.md) — scoring rule used to select the no-theme challenges
+- [`event-runbook.md`](event-runbook.md) — 6–7 hour session run-of-show
 - [`learning-objectives.md`](learning-objectives.md) — per-concept skills + doctrine
 - [`cheatsheet.md`](cheatsheet.md) — instructor walk-the-room fast lookup
 - [`writeups.md`](writeups.md) — step-by-step answer key (instructor only)

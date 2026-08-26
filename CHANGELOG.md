@@ -32,6 +32,10 @@ record.
     transferability, doctrine anchor, multi-step depth, tool authenticity,
     ground-truth verifiability) used to pick which no-theme challenges earn a
     slot, with the ranked table that drove the 42-lead selection.
+  - `docs/osint/writeups.md`, `docs/osint/cheatsheet.md` rewritten for all
+    42 leads (answer key verified against the generator's `FLAGS` dict), plus
+    `docs/osint/event-runbook.md` — a 7-hour run-of-show with per-arc pacing,
+    a 6-hour trim, facilitation notes, and a pre-flight checklist.
 - `docs/event-recap-2026-08-06.md`: post-event recap of the 2026-08-06
   wargames run — issues hit and fixed, infrastructure end-state, what was
   sacrificed (network + systems), how challenges were played, and player
