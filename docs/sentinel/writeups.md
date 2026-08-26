@@ -58,8 +58,9 @@ the device MAC, zone, and disposition tuple. Do not scan or probe a network.
 ## 27 Evidence Metadata Review
 
 Connect as `sentinel27`, review `~/evidence/evidence-metadata.txt`, and submit
-the filename, checksum, and extracted-author tuple. Do not upload, transmit, or
-externally enrich the fixture.
+the filename, checksum, and extracted-author tuple. Verify the bounded local
+fixture with `sha256sum ~/evidence/field-notes.pdf`. Do not upload, transmit,
+or externally enrich the fixture.
 
 ## 03 Change Window
 
