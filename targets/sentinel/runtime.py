@@ -37,6 +37,21 @@ ANSWERS = {
     "sentinel-27": {"filename": "field-notes.pdf", "sha256": "dc3014d5c2f708b7e4628082170c3c0385afbd6dd8d84f1aff0eca6d8abe7710", "extracted_author": "Northstar Training"},
 }
 
+LAB_23_RULE = "id: NS-DET-104\ntitle: Encoded PowerShell Command\ncondition: command_line contains '-EncodedCommand'\n"
+LAB_23_CORPUS = (
+    "2026-08-14T12:00:00Z host=lab-01 process=powershell.exe command_line='powershell.exe -EncodedCommand VwByAGkAdABlAC0ASABvAHMAdAAn\n"
+    "2026-08-14T12:01:00Z host=lab-01 process=powershell.exe command_line='powershell.exe -NoProfile -Command Get-Date'\n"
+)
+LAB_23_DECISION_RECORD = (
+    "Static local rule-runner decision record\n"
+    "Rule: NS-DET-104\n"
+    "Corpus records: 2\n"
+    "Matches: 1\n"
+    "Decision: triggered\n"
+    "The fixed condition matched one record and did not match one record. No live detection service was queried. "
+    "Submit rule_id, matches, and decision through `sentinel-submit`.\n"
+)
+
 
 def derived(secret, label, length=16):
     return hashlib.sha256(f"sentinel:{label}:{secret}".encode()).hexdigest()[:length]
@@ -100,9 +115,9 @@ def main():
     write("sentinel3", "certificate-ledger.txt", "Service: ops.northstar.training\nIssuer: Northstar Training Test CA\nRevocation: clear in training-ca.crl\nKey permissions: /srv/sentinel-evidence/sentinel3/service.key is root:root mode 0400\nVerify offline with: openssl verify -attime 1893456000 -CAfile training-ca.pem -CRLfile training-ca.crl -crl_check service.pem\nSubmit service, issuer, revocation_status, and key_mode through `sentinel-submit`.\n")
     write("sentinel4", "exposure-review.conf", "Observed listener: ssh tcp/22\nConfigured default service: legacy-metrics disabled\nNo web, database, or remote-management service is exposed.\nSubmit listener, port, and legacy_metrics through `sentinel-submit`.\n")
     write("sentinel22", "phishing-message.eml", "From: Northstar Billing <billing@northstar.training>\nReturn-Path: <reply@invoice-notice.example>\nAuthentication-Results: northstar.training; spf=pass smtp.mailfrom=invoice-notice.example; dkim=fail header.d=invoice-notice.example; dmarc=fail header.from=northstar.training\nReceived: from relay.invoice-notice.example (192.0.2.44) by mail.northstar.training with ESMTP\nSubject: Synthetic training invoice\n\nStatic synthetic RFC-822 training fixture. Do not contact mail systems.\nSubmit from_domain, return_path_domain, and dmarc through `sentinel-submit`.\n")
-    write("sentinel23", "detection-rule.yml", "id: NS-DET-104\ntitle: Encoded PowerShell Command\ncondition: command_line contains '-EncodedCommand'\n")
-    write("sentinel23", "detection-corpus.log", "2026-08-14T12:00:00Z host=lab-01 process=powershell.exe command_line='powershell.exe -EncodedCommand VwByAGkAdABlAC0ASABvAHMAdAAn\n")
-    write("sentinel23", "decision-record.txt", "Static local rule-runner decision record\nRule: NS-DET-104\nMatches: 1\nDecision: triggered\nNo live detection service was queried. Submit rule_id, matches, and decision through `sentinel-submit`.\n")
+    write("sentinel23", "detection-rule.yml", LAB_23_RULE)
+    write("sentinel23", "detection-corpus.log", LAB_23_CORPUS)
+    write("sentinel23", "decision-record.txt", LAB_23_DECISION_RECORD)
     write("sentinel24", "endpoint-enrollment.txt", "Static simulated enrollment transcript\nEndpoint inventory ID: northstar-lt-042\nEnrollment transcript: accepted\nEnrollment status: enrolled\nEnrollment key lifecycle: active\nDo not contact an endpoint, agent, or manager. Submit endpoint_id, enrollment_status, and key_status through `sentinel-submit`.\n")
     write("sentinel25", "alert-triage-summary.txt", "Deterministic local alert summary\nAlert ID: ALT-2048\nObserved window: 2026-08-14T09:00:00Z to 2026-08-14T09:15:00Z\nSummary: VPN authentication failures followed certificate expiry; no anomalous source or privilege change is present.\nCorroborating evidence: vpn-certificate-inventory.txt record VPN-GW-01.\nRoot-cause assessment: expired VPN certificate.\nDisposition: close-benign\nDo not use an external AI service or contact systems. Submit alert_id, root_cause, and disposition through `sentinel-submit`.\n")
     write("sentinel25", "vpn-certificate-inventory.txt", "Static local certificate inventory\nRecord ID: VPN-GW-01\nCertificate subject: vpn.northstar.training\nCertificate status: expired\nExpiration timestamp: 2026-08-14T08:55:00Z\nThe expiry predates the alert window in alert-triage-summary.txt.\nNo network, endpoint, or external-service access is required.\n")
