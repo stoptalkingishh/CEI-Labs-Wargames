@@ -36,6 +36,13 @@ record.
     42 leads (answer key verified against the generator's `FLAGS` dict), plus
     `docs/osint/event-runbook.md` — a 7-hour run-of-show with per-arc pacing,
     a 6-hour trim, facilitation notes, and a pre-flight checklist.
+  - Verified all 42 OSINT flags against the extracted Hacktoria ground-truth
+    writeups in `hacktoria-archive/`; updated `scripts/build_osint.py` `FLAGS`,
+    `docs/osint/writeups.md`, and `docs/osint/release-verification.md` to
+    ground-truth values (e.g., `https://nuforc.org/sighting/?id=175200`,
+    `spain-cambados-aldea-o-facho`, Guria full port chain, Cyrillic substation
+    identifier). Wired `deploy.sh` to generate/sync the hidden `osint/` track
+    and `validate.yml` to build it in CI.
 - `docs/event-recap-2026-08-06.md`: post-event recap of the 2026-08-06
   wargames run — issues hit and fixed, infrastructure end-state, what was
   sacrificed (network + systems), how challenges were played, and player

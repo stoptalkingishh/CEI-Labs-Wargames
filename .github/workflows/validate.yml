@@ -23,6 +23,7 @@ jobs:
       - run: python scripts/build_krypton.py
       - run: python scripts/build_natas.py
       - run: python scripts/build_agent.py
+      - run: python scripts/build_osint.py
       - run: python scripts/check_inventory_sync.py
       - run: pip install requests
       - run: python -m unittest discover -s scripts -t scripts -v

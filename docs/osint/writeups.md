@@ -29,14 +29,14 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Method (from `florida-snow`): annotate street grid/coastline/landmarks in the
   overhead still; match to public satellite imagery; narrow region → city → exact
   coastal point.
-- Flag: `cartel-drop-lane`
+- Flag: `spain-cambados-aldea-o-facho`
 - Doctrine: GEOINT/IMINT; FM IPB ground-truth.
 
 ### osint-02-cartel-safehouse — Cartel Safehouse
 - Objective: pin a downtown beach-house address from one photo.
 - Method (from `the-cartel-connection`): extract street signs/district clues;
   search maps + Street View; read the house number.
-- Flag: `cartel-safehouse-street`
+- Flag: `calle-106-riomar-barranquilla-atlantico-colombia`
 - Doctrine: FM IPB ground-truth.
 
 ### osint-03-cartel-precursor — Precursor Source
@@ -52,7 +52,7 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Method (from `a-strange-file`, ground truth): File-to-Hex → Hex-to-Text yields
   two images; geolocate both; reduce spot to what3words `definitive.doorpost.thickness`;
   compose `libya-nalut-dirj-47-definitive-doorpost-thickness-car-wash`.
-- Flag: `definitive.doorpost.thickness`
+- Flag: `libya-nalut-dirj-47-definitive-doorpost-thickness-car-wash`
 - Doctrine: ATP discovery/collection + geo.
 
 ## Arc 2 — Wire Syndicate (the hackers)
@@ -61,21 +61,21 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Objective: recover the Syndicate's exfil URL from packet capture.
 - Method (from `on-the-wire`): ID the pcap despite mangled extension; filter
   DNS/NSLOOKUP; read the pastebin/raw URL; follow to the dead-drop link.
-- Flag: `exfil-pastebin-url`
+- Flag: `https://pastebin.com/raw/U7zb8Kyh`
 - Doctrine: discovery/collection; OPSEC.
 
 ### osint-06-synd-intercept — Intercepted Meeting
 - Objective: extract a meeting time/place from intercepted traffic.
 - Method (from `operation-wiretap`): open pcap; find the shared link; decode the
   meeting details; format time+venue.
-- Flag: `meet-time-place`
+- Flag: `sheraton-hotel-zagreb-31-03-2023-1300`
 - Doctrine: collection → analysis (FM intelligence cycle).
 
 ### osint-07-synd-beacon — Emergency Beacon
 - Objective: break a layered cipher to recover coordinates.
 - Method (from `emergency-transmission`, ground truth): Base85-decode; Vigenère
   with key `KLUMKLOOV`; transcribe spoken coords → `-1.251946,-78.370167`.
-- Flag: `-1.251946,-78.370167`
+- Flag: `-1.251946,-78.370167,19`
 - Doctrine: capture/authenticate; processing & exploitation.
 
 ### osint-08-synd-burn — The Burn Laptop
@@ -83,21 +83,21 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Method (from `the-copycat-killer`, ground truth): History → "copy"; Bookmarks
   → "cat"; cached image contrast → "kitty"; assemble `FLAG{copycatkitty}`;
   decrypt Login Data with debug.log key.
-- Flag: `flag-copycatkitty`
+- Flag: `FLAG{copycatkitty}`
 - Doctrine: discovery/collection; intelligence cycle.
 
 ### osint-09-synd-wallet — The Wallet Ledger
 - Objective: multi-stage decrypt an email to reveal a target coordinate.
 - Method (from `the-sleeper-cell`, ground truth): Base64 → decimal → Vigenère key
   `Androktasiai` → `SoFi-Stadium 33.953417,-118.338863`.
-- Flag: `sofi-stadium-33.953417`
+- Flag: `SoFi-Stadium-33.953417,-118.338863,18`
 - Doctrine: capture/authenticate.
 
 ### osint-10-synd-deaddrop — Dead-Drop Slip
 - Objective: reassemble a hidden short-link from document fragments.
 - Method (from `dialogues-from-atlantis`, ground truth): find `bit.ly` +
   fragment `3Dq6rGW`; assemble case-sensitively `https://bit.ly/3Dq6rGW`.
-- Flag: `dead-drop-link`
+- Flag: `https://bit.ly/3Dq6rGW`
 - Doctrine: capture/authenticate; OPSEC.
 
 ## Arc 3 — Gilded Generals (military tech sales)
@@ -106,7 +106,7 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Objective: identify an armored vehicle from a drone still.
 - Method (from `friendly-fire`, ground truth): hull/turret/gun layout → Merkava
   Mk 4M.
-- Flag: `merkava-mk-4m`
+- Flag: `israel-merkava-mk-4m`
 - Doctrine: IMINT target acquisition.
 
 ### osint-12-gen-frigate — Sold Frigate Plans
@@ -120,7 +120,7 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Objective: locate an air base and structure its hierarchy.
 - Method (from `cold-war-enemies`, ground truth): Khmeimim Air Base →
   Syria→Latakia→Jableh.
-- Flag: `syria-latakia-jableh`
+- Flag: `syria-latakia-jableh-khmeimim-air-base`
 - Doctrine: IPB ground-truth; targeting.
 
 ### osint-14-gen-aircraft — The Decommissioned 747
@@ -136,21 +136,21 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Objective: synthesize locations + person + timing into one answer.
 - Method (from `line-of-control`, ground truth): IAF bases Jaisalmer/Amritsar/
   Naliya; translate Urdu briefing; commander Imran Hameed; next Tuesday 2000hrs.
-- Flag: `jaisalmer-amritsar-naliya`
+- Flag: `jaisalmer-amritsar-naliya-tuesday-2000-imran-hameed`
 - Doctrine: intelligence cycle; targeting.
 
 ### osint-16-chan-ao — The Quiet AO
 - Objective: geolocate an NGO facility inside an operational area.
 - Method (from `prisoner-of-war`, ground truth): ambush coord near Kayes/Mali;
   scan RN1 corridor; match children's facility → Village d'Enfants SOS Khouloum.
-- Flag: `sos-childrens-village`
+- Flag: `village-d-enfants-sos-khouloum-kayes`
 - Doctrine: spatial/IPB; targeting.
 
 ### osint-17-chan-smuggle — The Sanctioned Road
 - Objective: extract stego-hidden coordinates and map them.
 - Method (from `road-to-nowhere`, ground truth): marker + number 1920 → steghide
   password 1920 → location.txt → `20.899370,95.118041` (Myanmar).
-- Flag: `20.899370,95.118041`
+- Flag: `20.899370,95.118041,16`
 - Doctrine: capture/authenticate; discovery.
 
 ### osint-18-chan-fleet — The Flagged Corridor (centerpiece)
@@ -158,14 +158,14 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Method (from `undercover-fleet`, ground truth): coords `19.5084,-49.6377` on
   03 DEC 2025 22:47 UTC @ 16.5 kn → vessel `Guria`, IMO `9758351`; verify visuals;
   ports Abidjan→Mindelo→Las Palmas(44d)→Manzanillo→Posorja.
-- Flag: `guria-imo-9758351`
+- Flag: `guria_9758351_abidjan.ivory.coast_mindelo.cape.verde_las.palmas.spain_manzanillo.panama_posorja.ecuador`
 - Doctrine: multi-INT fusion; collection management.
 
 ### osint-19-chan-manifest — The Decoy Manifest
 - Objective: derive a password from vessel metadata and interpret telemetry.
 - Method (from `lost-at-sea`, ground truth): password `Narwhal2018` (ship+year);
   beacon log last coords `44.470394,32.264429`, NNE 32°, 7 kts.
-- Flag: `narwhal-log-recovered`
+- Flag: `44.470394,32.264429`
 - Doctrine: discovery/collection; maritime.
 
 ### osint-20-chan-cover — The Approved Trade
@@ -181,14 +181,14 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Objective: locate where a Hades defector is staying from GPS-camera photos.
 - Method (from `operation-bloodhound`, ground truth): photos → Latanya Hotel,
   Ankara; listing phone `+90 312 416 88 00`.
-- Flag: `latanya-hotel-ankara`
+- Flag: `latanya-hotel-ankara-+903124168800`
 - Doctrine: collection management; IPB.
 
 ### osint-22-hades-cutout — The Hades Cutout
 - Objective: decode a hidden location string and verify spatially.
 - Method (from `rogue-agent`, ground truth): decode `æÊ…` message →
   `serbia-rakinac-44.259654-21.057843`.
-- Flag: `serbia-rakinac-44.259654`
+- Flag: `serbia-rakinac-44.259654-21.057843`
 - Doctrine: discovery/collection; IPB.
 
 ### osint-23-hades-payment — Payment on the Corner
@@ -210,7 +210,7 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Objective: pin a park/path intersection from a photo.
 - Method (from `the-killer-clown`, ground truth): Berkeley parks → Ohlone
   Greenway ∩ Cedar Rose Park.
-- Flag: `cedar-rose-park`
+- Flag: `cedar-rose-park-ohlone-greenway`
 - Doctrine: IPB ground-truth.
 
 ### osint-26-hades-slayer — Four Points to an Address
@@ -227,7 +227,7 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Objective: fuse conflict-map + mapping + infra docs to ID a targeted asset.
 - Method (from `substation-bombing`, ground truth): Eyes-on-Russia event UW53036
   → Antonivka, Kherson; substation Кіндійська; docs → 35/6 kV.
-- Flag: `kindijska-35-6kv`
+- Flag: `Антонівка-Херсонськаобласть-Кіндійська-35/6`
 - Doctrine: IPB; targeting.
 
 ### osint-28-ash-distress — Morse on the Dead Network
@@ -243,7 +243,7 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
   translate Russian speech ("this pie is very good… leave a review"); reviews by
   Evgenil Kuznetsova (Restaurant Guru/TripAdvisor) → Mastodon handle → declared
   house → `11 Kestrel Drive`.
-- Flag: `evgenil-kuznetsova-11-kestrel`
+- Flag: `Evgenil_Kuznetsova_11_Kestrel_Drive`
 - Doctrine: multi-INT fusion; corroboration; OPSEC.
 
 ## Arc 7 — House of Krohndahkyr (cult / money funnel)
@@ -253,14 +253,14 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Method (from `alien-abduction`, ground truth): NUFORC filter Broomfield CO /
   Apr 2 2023 / 22:00 / Circle / 10 min → report id 175200 →
   `https://nuforc.org/sighting/?id=175200`.
-- Flag: `nuforc-sighting-id`
+- Flag: `https://nuforc.org/sighting/?id=175200`
 - Doctrine: collection management; corroboration.
 
 ### osint-31-cult-origin — Origin Myth
 - Objective: recover one specific old article URL from sparse clues.
 - Method (from `chasing-bigfoot`, ground truth): 1970s military night-road query →
   `thecryptocrew.com/2014/06/driver-has-close-sighting-of-bigfoot.html`.
-- Flag: `bigfoot-article-url`
+- Flag: `https://www.thecryptocrew.com/2014/06/driver-has-close-sighting-of-bigfoot.html`
 - Doctrine: collection management; corroboration.
 
 ### osint-32-cult-signal — The Signal Site
@@ -268,7 +268,7 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Method (from `appalachian-aliens`, ground truth): spectrogram warning + hex →
   `galacticfiles.org` → coords `37.455327,-79.981241` → Roanoke Cement Co,
   Catawba Rd.
-- Flag: `37.455327,-79.981241`
+- Flag: `37455327-79981241-catawba-rd`
 - Doctrine: discovery/collection; multi-INT.
 
 ### osint-33-cult-cipher — The Cult Cipher
@@ -289,21 +289,21 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Objective: identify the classical source of a translated text.
 - Method (from `return-of-the-krohndahkyr`, ground truth): translate Latin →
   De Vita Caesarum (Suetonius).
-- Flag: `gaius-suetonius-de-vita-caesarum`
+- Flag: `gaius-suetonius-tranquillus-de-vita-caesarum`
 - Doctrine: capture/authenticate; corroboration.
 
 ### osint-36-cult-prophecy — The Prophecy Site
 - Objective: connect location + decoded message + date across a chain.
 - Method (from `lost-in-time`, ground truth): Amber Palace Jaipur; Kitisakkullian
   font decodes Gorlaer message; Sam Sing Kung Temple + year 1930.
-- Flag: `amber-sam-sing-1930`
+- Flag: `amber-palace-sam-sing-kung-temple-1930`
 - Doctrine: IPB ground-truth; temporality.
 
 ### osint-37-cult-relic — Relic Video
 - Objective: mine media metadata for a hidden credential.
 - Method (from `nightmare-fuel`, ground truth): download video; metadata viewer
   reveals the embedded password string.
-- Flag: `relic-video-key`
+- Flag: `fh453n3fk45b384gm$&%#fjksdfmo94853ff`
 - Doctrine: discovery/collection; OPSEC.
 
 ### osint-38-cult-money — The Money Pass
@@ -311,14 +311,14 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Method (from `peepeekun`, ground truth): jigsaw → Dropbox folder → three w3w
   locations → vault password = first words `case.thrillers.jams` → final key
   `D94KF932409KGL09324`.
-- Flag: `case.thrillers.jams`
+- Flag: `D94KF932409KGL09324`
 - Doctrine: multi-INT fusion; OPSEC.
 
 ### osint-39-cult-cache — Relic Cache
 - Objective: landmark → what3words + local context.
 - Method (from `kanonniers`, ground truth): old cannon in Elburg; area code
   0525; w3w `punk-runways-messed`; unlock `0525-Elburg-punk-runways-messed`.
-- Flag: `0525-elburg-punk-runways-messed`
+- Flag: `0525-Elburg-punk-runways-messed`
 - Doctrine: IPB ground-truth.
 
 ## Arc 8 — Corroboration & the Loom (capstone)
