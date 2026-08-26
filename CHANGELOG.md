@@ -9,6 +9,33 @@ record.
 ## [Unreleased]
 
 ### Added
+  - `docs/osint/storyline.md` — overarching faction/plot design for the OSINT
+    track: the "Gilded Hose" meta-narrative, a Tiberian Order analyst framing,
+    a faction map (reusing real HACKTORIA lore — Tiberian Order, Order of Hades,
+    cartels — plus new Gilded Generals / Chancellery / Wire Syndicate / Ashfall /
+    the Loom), and a challenge→faction→plot-beat table for all ~50 leads, all
+    constrained to 5–15 minute solves.
+  - `docs/osint/` — design + research index (`docs/osint/osint-research-index.md`)
+    cataloging real OSINT exercises and CTFs across Hacktoria, Gralhix, and the
+    Bellingcat Challenge, including a skill->tool->method->doctrine table mapped
+    to ATP 2-22.9 / FM 2-0 / ADP 2-0; plus `learning-objectives.md`,
+    `cheatsheet.md`, `writeups.md` for the 13-challenge track.
+  - `scripts/build_osint.py` — generator writing the track's CTFd import output
+    to the git-ignored `osint/` (single source of truth for flags; release via
+    `CEI_OSINT_RELEASE_STATE=visible`, mirroring the AI Copilot track). Track
+    stays out of `game-stages.yml` and `challenges/` so all existing stage
+    validators are untouched. Expanded to a full **42-lead campaign** organized
+    by storyline arc (cartel / syndicate / generals / chancellery / hades /
+    ashfall / cult / loom), each a 5–15 min solve wearing faction + plot-beat
+    framing.
+  - `docs/osint/skill-building-priority.md` — the scoring rubric (skill
+    transferability, doctrine anchor, multi-step depth, tool authenticity,
+    ground-truth verifiability) used to pick which no-theme challenges earn a
+    slot, with the ranked table that drove the 42-lead selection.
+  - `docs/osint/writeups.md`, `docs/osint/cheatsheet.md` rewritten for all
+    42 leads (answer key verified against the generator's `FLAGS` dict), plus
+    `docs/osint/event-runbook.md` — a 7-hour run-of-show with per-arc pacing,
+    a 6-hour trim, facilitation notes, and a pre-flight checklist.
 - `docs/event-recap-2026-08-06.md`: post-event recap of the 2026-08-06
   wargames run — issues hit and fixed, infrastructure end-state, what was
   sacrificed (network + systems), how challenges were played, and player
