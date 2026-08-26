@@ -24,7 +24,14 @@ record.
     to the git-ignored `osint/` (single source of truth for flags; release via
     `CEI_OSINT_RELEASE_STATE=visible`, mirroring the AI Copilot track). Track
     stays out of `game-stages.yml` and `challenges/` so all existing stage
-    validators are untouched.
+    validators are untouched. Expanded to a full **42-lead campaign** organized
+    by storyline arc (cartel / syndicate / generals / chancellery / hades /
+    ashfall / cult / loom), each a 5–15 min solve wearing faction + plot-beat
+    framing.
+  - `docs/osint/skill-building-priority.md` — the scoring rubric (skill
+    transferability, doctrine anchor, multi-step depth, tool authenticity,
+    ground-truth verifiability) used to pick which no-theme challenges earn a
+    slot, with the ranked table that drove the 42-lead selection.
 - `docs/event-recap-2026-08-06.md`: post-event recap of the 2026-08-06
   wargames run — issues hit and fixed, infrastructure end-state, what was
   sacrificed (network + systems), how challenges were played, and player

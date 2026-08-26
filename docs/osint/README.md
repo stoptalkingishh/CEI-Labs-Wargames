@@ -96,6 +96,8 @@ hand-editing generated files).
 ## Deliverables in this folder
 
 - [`osint-research-index.md`](osint-research-index.md) — the source/doctrine index
+- [`storyline.md`](storyline.md) — the overarching faction/plot design ("Gilded Hose")
+- [`skill-building-priority.md`](skill-building-priority.md) — scoring rule used to select the no-theme challenges
 - [`learning-objectives.md`](learning-objectives.md) — per-concept skills + doctrine
 - [`cheatsheet.md`](cheatsheet.md) — instructor walk-the-room fast lookup
 - [`writeups.md`](writeups.md) — step-by-step answer key (instructor only)
