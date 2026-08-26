@@ -7,6 +7,20 @@ exercises, and the Bellingcat Challenge — indexed in
 this repository whose "target" is **the public web and the participant's own
 workstation**, not a shared per-team Docker box.
 
+## The storyline
+
+Every challenge is a short **lead** tied into one overarching conspiracy — see
+[`storyline.md`](storyline.md). The player is a **Tiberian Order** OSINT analyst
+working a discovery board: each contract (a tip, a seized file, a flagged
+vessel, an intercept) resolves in **5–15 minutes**, but the collected leads
+reveal a single hidden network — **the Loom** — coordinating many differently-
+motivated groups (cartels, corrupt military generals, corrupt politicians,
+hackers, terrorists, and a global doomsday cult) whose operations all flow
+through shared "cover-company / port-lane / wallet / dead-drop" logistics. Real
+HACKTORIA lore (Tiberian Order, Order of Hades, the cartels) is reused as-is;
+the missing faction threads (Gilded Generals, the Chancellery, the Wire
+Syndicate, Ashfall, the Loom) are our new connective story built on top.
+
 ## Why it is a non-staged, hidden track
 
 This track deliberately follows the AI Copilot Setup precedent:
@@ -37,11 +51,17 @@ OSINT is **not** a fourth "staged" boss.
 
 ## Skill ladder (from the source research)
 
-| Tier | Character | Example node | Est. effort |
+Every single lead is a **5–15 minute** solve — this is a hard constraint per the
+storyline design (see `storyline.md`), not a target. The tiers below describe
+*how many moving pieces* a lead has, not how long it takes; even a Tier C lead
+stays inside 15 minutes by keeping the fiction as framing-only and the puzzle to
+a single resolved answer.
+
+| Tier | Character | Example node | Solve time |
 |---|---|---|---|
 | A (crawl) | Single-tool direct answer | a landmark photo -> name/coords | 5–10 min |
-| B (walk) | One transform, then a geo | decode/EXIF/capture -> geo | 15–30 min |
-| C (run) | Multi-clue, cross-toolchain, corroborate | a "mini case": bind 2+ independent sources to a judgement | 30–60+ min |
+| B (walk) | One transform, then a geo | decode/EXIF/capture -> geo | 8–15 min |
+| C (run) | Multi-clue, cross-toolchain | corroborate 2+ independent sources | 12–15 min |
 
 ## The twelve drills (id, skill, doctrine anchor)
 

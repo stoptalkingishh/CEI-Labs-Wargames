@@ -9,7 +9,12 @@ record.
 ## [Unreleased]
 
 ### Added
-- New **OSINT** wargame track (proposed, non-staged, hidden-by-default):
+  - `docs/osint/storyline.md` — overarching faction/plot design for the OSINT
+    track: the "Gilded Hose" meta-narrative, a Tiberian Order analyst framing,
+    a faction map (reusing real HACKTORIA lore — Tiberian Order, Order of Hades,
+    cartels — plus new Gilded Generals / Chancellery / Wire Syndicate / Ashfall /
+    the Loom), and a challenge→faction→plot-beat table for all ~50 leads, all
+    constrained to 5–15 minute solves.
   - `docs/osint/` — design + research index (`docs/osint/osint-research-index.md`)
     cataloging real OSINT exercises and CTFs across Hacktoria, Gralhix, and the
     Bellingcat Challenge, including a skill->tool->method->doctrine table mapped
