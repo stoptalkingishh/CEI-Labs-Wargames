@@ -38,6 +38,21 @@ same change.
 | `help.ubuntu.com` | SSH key-based authentication reference (Bandit 13) |
 | `jwiegley.github.io` | "Git from the Bottom Up" internals guide (Bandit's 5 git levels) |
 | `linux.die.net` | Bash special-characters reference (Bandit 1) |
+| `maps.google.com` / `google.com` / `earth.google.com` | Maps / Earth / Street View (OSINT track: geolocation and ground-truth corroboration) |
+| `marine-traffic.com` / `vesselfinder.com` / `globalfishingwatch.org` | AIS / vessel registry / port history (OSINT track) |
+| `flightradar24.com` / `adsbexchange.com` / `planespotters.net` | Aviation / aircraft registration / ICAO (OSINT track) |
+| `what3words.com` | Coordinate encoding (OSINT track) |
+| `earthdata.nasa.gov` / `firms.modaps.eosdis.nasa.gov` | FIRMS / NASA GIBS thermal (OSINT track) |
+| `archive.org` / `web.archive.org` | Wayback / web-history recovery (OSINT track) |
+| `images.google.com` / `yandex.com` / `tineye.com` | Reverse-image search (OSINT track) |
+
+Note on OSINT track tooling: the "Required domains" row above is the smallest
+firewall-allowlist that must be reachable for the OSINT track to be runnable.
+The allowlist is intentionally scoped to the *free* public PAI sources the
+wargame's challenges actually depend on — not to every site a solver might
+stumble onto while solving. Solvers remain free to use any additional legal
+public web source; only these hosts are guaranteed priority QoS handling
+(see `cei-labs-net`'s `Wargame_Reference_Sites` alias).
 
 ## Full link inventory, by level
 

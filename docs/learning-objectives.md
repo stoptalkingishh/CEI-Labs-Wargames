@@ -13,6 +13,10 @@ track's writeups and cheat sheet:
   classical cryptography (7 levels)
 - [`natas/learning-objectives.md`](natas/learning-objectives.md) — web
   application security (15 levels)
+- [`osint/learning-objectives.md`](osint/learning-objectives.md) — open-source
+  intelligence (42 leads across 8 arcs — see
+  [`osint/osint-research-index.md`](osint/osint-research-index.md) for the full
+  catalog and [`osint/storyline.md`](osint/storyline.md) for its factions)
 
 ## Cross-track meta-skills
 
