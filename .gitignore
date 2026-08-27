@@ -5,6 +5,10 @@ challenges/*.json
 # Ignore generated OSINT track output (non-staged, produced by build_osint.py)
 /osint/
 
+# Ignore generated Threadline wargame output (non-staged, produced by
+# build_threadline.py from docs/threadline transcripts + external evidence)
+/threadline/
+
 # Ignore Python compilation caches
 __pycache__/
 *.pyc
