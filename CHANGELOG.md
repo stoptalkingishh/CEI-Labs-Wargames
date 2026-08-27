@@ -15,6 +15,41 @@ record.
     cartels — plus new Gilded Generals / Chancellery / Wire Syndicate / Ashfall /
     the Loom), and a challenge→faction→plot-beat table for all ~50 leads, all
     constrained to 5–15 minute solves.
+  - `docs/osint/pr-handoff.md` — handoff report for the OSINT track: where
+    things live, the local playtest instance & commands, regeneration steps,
+    and maintainer TODOs.
+  - `docs/osint/briefing-transcripts.json` — OCR'd source-briefing narratives
+    for all 39 source-backed OSINT leads (the briefing PDFs are raster scans
+    with no text layer, so the generator renders their text through this file).
+  - `scripts/local-ctfd/ocr_briefings.py` — OCRs each Hacktoria briefing PDF
+    (RapidOCR) and writes `docs/osint/briefing-transcripts.json`.
+  - `scripts/local-ctfd/upload_osint_files.py` — syncs generated OSINT challenge
+    files + descriptions into a local CTFd (supports `--remove-pdfs` to prune
+    retired PDF attachments).
+  - `scripts/build_osint.py` now attaches the best evidence image per
+    non-capstone lead and embeds an **"Open Briefing"** intel-report popup
+    (Tiberian Order / OSINT Directorate styling, classification mark, "Exhibit"
+    pages pulled from the OCR transcripts) in each description instead of
+    shipping raw PDFs. Popup is a dependency-free fixed overlay (avoids
+    Bootstrap nested-modal failure inside CTFd's own modal).
+
+### Changed
+  - `docs/osint/writeups.md`, `docs/osint/release-verification.md`: transliterated
+    the `ash-strike` ground-truth flag to keep generated YAML ASCII-safe on
+    Windows (`Антонівка-…` → `Antonivka-Khersonska-Kindijska-35-6`).
+
+### Validated
+  - Local CTFd black-box run: 42 challenges present, 42 descriptions non-empty,
+    39 evidence images attached, 39 retired PDFs pruned, and the live popup
+    confirmed to contain the real PDF narrative (e.g. `Cartel Air-Drop Lane`).
+  - `python -m compileall` passes for the changed scripts.
+
+- `docs/event-recap-2026-08-06.md`: post-event recap of the 2026-08-06
+    track: the "Gilded Hose" meta-narrative, a Tiberian Order analyst framing,
+    a faction map (reusing real HACKTORIA lore — Tiberian Order, Order of Hades,
+    cartels — plus new Gilded Generals / Chancellery / Wire Syndicate / Ashfall /
+    the Loom), and a challenge→faction→plot-beat table for all ~50 leads, all
+    constrained to 5–15 minute solves.
   - `docs/osint/` — design + research index (`docs/osint/osint-research-index.md`)
     cataloging real OSINT exercises and CTFs across Hacktoria, Gralhix, and the
     Bellingcat Challenge, including a skill->tool->method->doctrine table mapped

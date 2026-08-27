@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Generate the OSINT wargame track (a full 6-7 hour campaign).
 
 OSINT is a deliberate **non-staged, hidden-by-default** track, exactly like the
@@ -46,7 +46,9 @@ Usage:
 """
 import json
 import os
+import shutil
 import sys
+import zipfile
 
 from pathlib import Path
 
@@ -81,6 +83,10 @@ def mk(arc, faction, skill, tier, doctrine, cid, name, points, framing,
         "name": name,
         "points": points,
         "desc": desc,
+        "framing": framing.strip(),
+        "premise": premise.strip(),
+        "method": method.strip(),
+        "tools": tools.strip(),
         "arc": arc,
         "faction": faction,
         "skill": skill,
@@ -89,9 +95,132 @@ def mk(arc, faction, skill, tier, doctrine, cid, name, points, framing,
     }
 
 
-# ---------------------------------------------------------------------------
-# The campaign: ~45 leads across the storyline arcs
-# ---------------------------------------------------------------------------
+def _briefing_html(ch):
+    """Render the 'Full Briefing' lead as a clean, in-theme intel report.
+
+    The player is a Tiberian Order OSINT analyst, so each lead renders as a
+    professional case file: an agency masthead, a classification banner, a
+    summary block, the source briefing pulled from the OCR'd PDF, and a footer.
+    Deliberately avoids a Bootstrap modal (CTFd nests this inside its own modal
+    and a nested modal silently fails) -- uses a plain fixed overlay toggled
+    with inline vanilla JS, which always sits above CTFd's modal. CTFd renders
+    challenge descriptions with CMARK_OPT_UNSAFE (raw HTML passthrough, global
+    HTML sanitization off), so the markup and inline script reach the page
+    verbatim. ASCII-only on purpose.
+    """
+    cid = ch["id"]
+    mid = f"briefing-{cid}"
+    name = ch["name"].replace('"', "&quot;")
+    framing = ch.get("framing", "") or ""
+    premise = ch.get("premise", "")
+    method = ch.get("method", "")
+    tools = ch.get("tools", "")
+    arc = (ch.get("arc") or "").replace('"', "&quot;")
+    faction = (ch.get("faction") or "").replace('"', "&quot;")
+    doctrine = (ch.get("doctrine") or "").replace('"', "&quot;")
+
+    label = "FIELD TRACE"
+    if arc == "0-onboarding":
+        label = "ORDERS"
+    elif faction == "cult":
+        label = "RECON"
+    # A clean classification + case header consistent with the wargame theme.
+    classification = "CEI-RESTRICTED // FOR TIBERIAN ORDER PERSONNEL"
+
+    def _sum(_label, _value):
+        return ('<div style="margin-bottom:.85rem">'
+                '<div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;'
+                'text-transform:uppercase;color:#7b828b">' + _label + '</div>'
+                '<div style="font-size:.95rem;line-height:1.5;color:#24292f">' + _value + '</div></div>')
+
+    summary = _sum("Subject", _esc(name)) + _sum("Situation", _esc(framing)) + _sum("Objective", _esc(premise)) + _sum("Approach", _esc(method)) + _sum("Supporting tools", _esc(tools))
+
+    # Durable narrative pulled from the source briefing PDF (OCR'd -- those
+    # PDFs are raster scans with no text layer).
+    transcript_html = ""
+    t = TRANSCRIPTS.get(cid) if TRANSCRIPTS else None
+    if t and t.get("pages"):
+        pages_html = []
+        for i, page_txt in enumerate(t["pages"]):
+            page_html = "\n".join(_esc(line) for line in page_txt.splitlines())
+            pages_html.append(
+                '<div style="margin-bottom:1rem">'
+                '<div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;'
+                'text-transform:uppercase;color:#7b828b">Exhibit ' + str(i + 1) + '</div>'
+                '<div style="white-space:pre-wrap;margin-top:.3rem;line-height:1.6;'
+                'font-size:.95rem">' + page_html + '</div></div>'
+            )
+        transcript_html = "\n".join(pages_html)
+    else:
+        transcript_html = '<em>(Source transcript unavailable.)</em>'
+
+    overlay_id = mid + "-overlay"
+    open_js = ("var m=document.getElementById('" + overlay_id + "');if(m){m.style.display='block';}return false;")
+    close_js = ("var m=document.getElementById('" + overlay_id + "');if(m){m.style.display='none';}")
+    body_click_js = ("if(event.target===this){var m=document.getElementById('" + overlay_id + "');if(m){m.style.display='none';}}")
+
+    overlay = (
+        '<div id="' + overlay_id + '" class="to-report" style="display:none;position:fixed;top:0;left:0;'
+        'right:0;bottom:0;z-index:2147483647;background:rgba(12,24,38,.62);overflow:auto;'
+        'padding:1rem;" onclick="' + body_click_js + '">'
+        ' <div style="max-width:780px;margin:3vh auto;background:#fbfbf7;color:#22272e;'
+        'border:1px solid #cfd4da;border-radius:6px;box-shadow:0 22px 60px rgba(0,0,0,.45);'
+        'overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;">'
+        '   <div style="border-bottom:3px solid #8c6d2f;background:#fff;">'
+        '     <div style="display:flex;justify-content:space-between;align-items:center;padding:.9rem 1.4rem;">'
+        '       <div style="display:flex;align-items:center;gap:.6rem;">'
+        '         <span style="font-weight:800;color:#1f3d57;letter-spacing:.02em">TIBERIAN ORDER</span>'
+        '         <span style="color:#8c6d2f;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase">OSINT Directorate</span>'
+        '       </div>'
+        '       <button type="button" onclick="' + close_js + '" aria-label="Close" styles=":focus{outline:none}" '
+        '       style="border:0;background:none;font-size:1.8rem;line-height:1;cursor:pointer;color:#6b7280;'
+        '       padding:.1rem .3rem;">&times;</button>'
+        '     </div>'
+        '     <div style="padding:0 1.4rem .6rem;font-size:.72rem;font-weight:700;letter-spacing:.14em;'
+        'text-transform:uppercase;color:#8c6d2f;border-top:1px solid #e5e0d5;padding-top:.6rem;">'
+        + label + ' // CASE FILE</div>'
+        '   </div>'
+        '   <div style="padding:1.2rem 1.4rem 0.2rem;">' + summary + '</div>'
+        '   <div style="margin:0 1.4rem;border-top:1px solid #e2ddd2;padding-top:.9rem;margin-top:.4rem;">'
+        '     <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7b828b">Source briefing (seized document)</div>'
+        '     <div style="margin-top:.6rem;">' + transcript_html + '</div>'
+        '   </div>'
+        '   <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;'
+        'padding:.7rem 1.4rem;margin-top:.6rem;background:#f2efe9;border-top:1px solid #d8d2c6;">'
+        '     <span style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6b7076">' + classification + '</span>'
+        '     <button type="button" onclick="' + close_js + '" '
+        'style="border:1px solid #8a6d2f;background:#8a6d2f;color:#fff;border-radius:3px;'
+        'padding:.38rem 1rem;cursor:pointer;font-weight:600;">Close Report</button>'
+        '   </div>'
+        ' </div>'
+        '</div>'
+    )
+
+    button = ('<button type="button" class="btn btn-info btn-sm mb-2" onclick="' + open_js + '">'
+              'Open Briefing</button>')
+    return button + "\n" + overlay
+
+
+def _esc(text):
+    """HTML-escape text so OCR transcript / authored prose can't break the
+    overlay markup or assume inline JS attribute contexts. CTFd passes this
+    through as raw HTML (CMARK_OPT_UNSAFE)."""
+    return (text.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;"))
+
+
+import json as _json
+from pathlib import Path as _Path
+_TRANSCRIPT_FILE = _Path(__file__).resolve().parent.parent / "docs" / "osint" / "briefing-transcripts.json"
+if _TRANSCRIPT_FILE.exists():
+    try:
+        TRANSCRIPTS = _json.loads(_TRANSCRIPT_FILE.read_text(encoding="utf-8"))
+    except Exception as _e:  # noqa: BLE001
+        TRANSCRIPTS = None
+        print(f"warning: could not load briefing transcripts: {_e}", file=sys.stderr)
+else:
+    TRANSCRIPTS = None
 
 F = []  # the ordered lead list
 
@@ -311,7 +440,7 @@ F.append(mk(
     "4-chan", "chan", "AO / NGO facility geolocation", "C",
     "FM spatial/IPB, FM target-acq",
     "osint-16-chan-ao", "The Quiet AO", 150,
-    "The Chancellery quietly refuses to act in a humanitarian AO â€” prove it by "
+    "The Chancellery quietly refuses to act in a humanitarian AO -- prove it by "
     "geolocating the facility from a child's photo.",
     "Locate an NGO children's facility from a photograph within a known "
     "operational area.",
@@ -336,7 +465,7 @@ F.append(mk(
     "multi-INT fusion, FM collection-mgmt, maritime/AIS",
     "osint-18-chan-fleet", "The Flagged Corridor", 180,
     "The Chancellery brokers a flagged shipping lane; an IMINT report spots a "
-    "suspicious vessel â€” trace it.",
+    "suspicious vessel -- trace it.",
     "Fuse an IMINT coordinate/time with historical AIS to identify a vessel, "
     "verify it, and reconstruct its port history (the centerpiece link).",
     "Query the coordinate/time on AIS data; identify the vessel; verify against "
@@ -621,12 +750,12 @@ F.append(mk(
 ))
 
 # ---------------------------------------------------------------------------
-# name/points/desc idempotence â€” build CHALLENGES + metadata from F
+# name/points/desc idempotence -- build CHALLENGES + metadata from F
 # ---------------------------------------------------------------------------
 CHALLENGES = []
 META = {}
 for _l in F:
-    CHALLENGES.append({"id": _l["id"], "name": _l["name"], "points": _l["points"], "desc": _l["desc"]})
+    CHALLENGES.append(_l)
     META[_l["id"]] = (
         _l["skill"],
         _l["tier"],
@@ -664,7 +793,7 @@ FLAGS = {
     "osint-24-hades-hostage": "inched.barman.fast",
     "osint-25-hades-hit": "cedar-rose-park-ohlone-greenway",
     "osint-26-hades-slayer": "forum.report.rent",
-    "osint-27-ash-strike": "Антонівка-Херсонськаобласть-Кіндійська-35/6",
+    "osint-27-ash-strike": "Antonivka-Khersonska-Kindijska-35-6",
     "osint-28-ash-distress": "omega.expendable.ridge",
     "osint-29-ash-freelancer": "Evgenil_Kuznetsova_11_Kestrel_Drive",
     "osint-30-cult-funnel": "https://nuforc.org/sighting/?id=175200",
@@ -681,6 +810,53 @@ FLAGS = {
     "osint-41-loom-assess": "the-loom-assess-product",
 }
 
+# --- challenge files (source zips in hacktoria-archive) --------------------
+# Maps each OSINT lead to its source Hacktoria zip. During generation the
+# primary image (or pcap/txt) is extracted and attached as a downloadable
+# file so the challenge is playable without the original archive.
+CHALLENGE_SOURCE_ZIP = {
+    "osint-01-cartel-airdrop": "florida-snow.zip",
+    "osint-02-cartel-safehouse": "the-cartel-connection.zip",
+    "osint-03-cartel-precursor": "gas-attack.zip",
+    "osint-04-cartel-meet": "a-strange-file.zip",
+    "osint-05-synd-exfil": "on-the-wire.zip",
+    "osint-06-synd-intercept": "operation-wiretap.zip",
+    "osint-07-synd-beacon": "emergency-transmission.zip",
+    "osint-08-synd-burn": "the-copycat-killer.zip",
+    "osint-09-synd-wallet": "the-sleeper-cell.zip",
+    "osint-10-synd-deaddrop": "dialogues-from-atlantis.zip",
+    "osint-11-gen-tank": "friendly-fire.zip",
+    "osint-12-gen-frigate": "naval-intrusion.zip",
+    "osint-13-gen-airfield": "cold-war-enemies.zip",
+    "osint-14-gen-aircraft": "last-flight.zip",
+    "osint-15-chan-strike": "line-of-control.zip",
+    "osint-16-chan-ao": "prisoner-of-war.zip",
+    "osint-17-chan-smuggle": "road-to-nowhere.zip",
+    "osint-18-chan-fleet": "undercover_fleet.zip",
+    "osint-19-chan-manifest": "lost-at-sea.zip",
+    "osint-20-chan-cover": "the-road-to-rome.zip",
+    "osint-21-hades-operative": "operation-bloodhound.zip",
+    "osint-22-hades-cutout": "rogue-agent.zip",
+    "osint-23-hades-payment": "echoes-of-retaliation.zip",
+    "osint-24-hades-hostage": "kidnapped.zip",
+    "osint-25-hades-hit": "the-killer-clown.zip",
+    "osint-26-hades-slayer": "the-midnight-slayer.zip",
+    "osint-27-ash-strike": "substation-bombing.zip",
+    "osint-28-ash-distress": "saving-isabella.zip",
+    "osint-29-ash-freelancer": "the-russian-blackmailer.zip",
+    "osint-30-cult-funnel": "alien-abduction.zip",
+    "osint-31-cult-origin": "chasing-bigfoot.zip",
+    "osint-32-cult-signal": "appalachian-aliens.zip",
+    "osint-33-cult-cipher": "klumgongyn-returns.zip",
+    "osint-34-cult-caravan": "wheres-klumgongyn.zip",
+    "osint-35-cult-ledger": "return-of-the-krohndahkyr.zip",
+    "osint-36-cult-prophecy": "lost-in-time.zip",
+    "osint-37-cult-relic": "nightmare-fuel.zip",
+    "osint-38-cult-money": "peepeekun.zip",
+    "osint-39-cult-cache": "kanonniers.zip",
+    # osint-40/41 are capstones with no single source zip
+}
+
 # --- hints (subset; OSINT is not wallet-managed, but author for future) ------
 HINTS = {
     "osint-01-cartel-airdrop": [
@@ -689,7 +865,7 @@ HINTS = {
         "Pin the exact coastal point and cite the coordinate.",
     ],
     "osint-04-cartel-meet": [
-        "That file isn't text â€” try converting to hex then back.",
+        "That file isn't text -- try converting to hex then back.",
         "Two images hide inside; geolocate each.",
         "Reduce the exact spot to a what3words triple.",
     ],
@@ -719,7 +895,7 @@ HINTS = {
         "Resolve the final what3words triple.",
     ],
     "osint-40-loom-corroborate": [
-        "One hit isn't proof â€” find a second source.",
+        "One hit isn't proof -- find a second source.",
         "Score each source on a reliability scale.",
         "Flag the contradiction before you commit.",
     ],
@@ -745,6 +921,7 @@ def managed_tiers(value, texts):
 
 def main_build():
     BASE_DIR.mkdir(parents=True, exist_ok=True)
+    ARCHIVE_DIR = ROOT.parent / "hacktoria-archive"
 
     wallet = []
     for ch in CHALLENGES:
@@ -752,7 +929,66 @@ def main_build():
         folder = BASE_DIR / cid
         folder.mkdir(parents=True, exist_ok=True)
 
-        full_desc = ch["desc"].replace(chr(10), chr(10) + "  ")
+        # Attach primary file from hacktoria-archive if this lead has a source zip
+        files_yaml = ""
+        source_zip = CHALLENGE_SOURCE_ZIP.get(cid)
+        if source_zip and ARCHIVE_DIR.is_dir():
+            zip_path = ARCHIVE_DIR / source_zip
+            if zip_path.is_file():
+                try:
+                    with zipfile.ZipFile(zip_path) as zf:
+                        # Prefer starting-image / image-*, exclude __MACOSX / Poster / ._
+                        candidates = []
+                        for n in zf.namelist():
+                            low = n.lower()
+                            if "__macosx" in low or n.startswith("._") or "/._" in n:
+                                continue
+                            if low.endswith((".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp")):
+                                # score: starting-image highest, then image-, then other
+                                score = 0
+                                if "starting-image" in low:
+                                    score = 2
+                                elif "image-" in low or "starting-" in low:
+                                    score = 1
+                                # deprioritize poster files unless nothing else
+                                if "poster" in low:
+                                    score -= 1
+                                candidates.append((score, n))
+                        if candidates:
+                            candidates.sort(key=lambda x: -x[0])
+                            primary = candidates[0][1]
+                            # extract to files/ subdir
+                            files_dir = folder / "files"
+                            files_dir.mkdir(parents=True, exist_ok=True)
+                            # clean old files
+                            for old in files_dir.iterdir():
+                                if old.is_file():
+                                    old.unlink()
+                            dest = files_dir / Path(primary).name
+                            with zf.open(primary) as src, open(dest, "wb") as dst:
+                                shutil.copyfileobj(src, dst)
+                            files_yaml = f'files:\n  - "files/{Path(primary).name}"\n'
+                        else:
+                            # fallback: any txt/pcap inside
+                            for n in zf.namelist():
+                                if "__macosx" in n.lower() or n.startswith("._"):
+                                    continue
+                                if n.lower().endswith((".txt", ".pcap", ".cap")):
+                                    files_dir = folder / "files"
+                                    files_dir.mkdir(parents=True, exist_ok=True)
+                                    dest = files_dir / Path(n).name
+                                    with zf.open(n) as src, open(dest, "wb") as dst:
+                                        shutil.copyfileobj(src, dst)
+                                    files_yaml = f'files:\n  - "files/{Path(n).name}"\n'
+                                    break
+                except Exception as e:
+                    print(f"warning: could not attach file for {cid} from {source_zip}: {e}", file=sys.stderr)
+
+        # Describe then a clickable "Full Briefing" popup rendered from the
+        # authored narrative (the source PDFs are scanned images, so the
+        # narrative below is the durable, reproducible edition).
+        body = ch["desc"] + "\n\n" + _briefing_html(ch)
+        full_desc = body.replace(chr(10), chr(10) + "  ")
         yaml = f"""name: "{ch['name']}"
 author: "CEI Labs (OSINT wargame track)"
 category: "OSINT"
@@ -762,7 +998,7 @@ value: {ch["points"]}
 type: standard
 flags:
   - "{FLAGS[cid]}"
-state: {RELEASE_STATE}
+{files_yaml}state: {RELEASE_STATE}
 version: "1.0"
 """
         if cid in HINTS:

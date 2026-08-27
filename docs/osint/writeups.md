@@ -227,7 +227,7 @@ Each lead: **objective**, **method**, **flag**, **doctrine anchor**.
 - Objective: fuse conflict-map + mapping + infra docs to ID a targeted asset.
 - Method (from `substation-bombing`, ground truth): Eyes-on-Russia event UW53036
   → Antonivka, Kherson; substation Кіндійська; docs → 35/6 kV.
-- Flag: `Антонівка-Херсонськаобласть-Кіндійська-35/6`
+- Flag: `Antonivka-Khersonska-Kindijska-35-6`
 - Doctrine: IPB; targeting.
 
 ### osint-28-ash-distress — Morse on the Dead Network

@@ -96,7 +96,7 @@ public tool** (never from a write-up copy-paste).
 
 | Lead | What to verify | Tool | Flag |
 |---|---|---|---|
-| `27-ash-strike` | conflict map UW53036 → Кіндійська 35/6 | Eyes-on-Russia, infra docs | `Антонівка-Херсонськаобласть-Кіндійська-35/6` |
+| `27-ash-strike` | conflict map UW53036 → Кіндійська 35/6 | Eyes-on-Russia, infra docs | `Antonivka-Khersonska-Kindijska-35-6` |
 | `28-ash-distress` | Morse(omega expendable ridge) → triple | Morse decoder | `omega.expendable.ridge` |
 | `29-ash-freelancer` | Sugarmill Pub → reviews → Mastodon → address | Restaurant Guru, Maps | `Evgenil_Kuznetsova_11_Kestrel_Drive` |
 
