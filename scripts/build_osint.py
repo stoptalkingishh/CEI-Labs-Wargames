@@ -3,8 +3,9 @@
 
 The plugin is the canonical source for evidence, private ground truth, and answer
 specifications. This adapter copies only ``public/`` artifacts into downloadable
-CTFd files and derives the CTFd flag once from ``private/answer.json``. It never
-carries forward the legacy placeholder campaign or any unrelated project lore.
+CTFd files and embeds ``private/answer.json`` only as private typed CTFd flag
+metadata. It never carries forward the legacy placeholder campaign or unrelated
+project lore.
 """
 
 from __future__ import annotations
@@ -180,7 +181,10 @@ def _write_challenge(
         public_hashes[exported] = hashlib.sha256(content).hexdigest()
 
     answer_spec = json.loads(_as_bytes(rendered["private/answer.json"], "private/answer.json"))
-    answer = canonical_answer(answer_spec)
+    canonical_answer(answer_spec)
+    answer_data = json.dumps(
+        answer_spec, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    )
     description = "\n".join(f"  {line}" for line in briefing.rstrip().splitlines())
     files_yaml = "".join(f"  - {_yaml_scalar(path)}\n" for path in public_files)
     challenge_yaml = (
@@ -192,9 +196,11 @@ def _write_challenge(
         "value: 150\n"
         "type: standard\n"
         "flags:\n"
-        f"  - {_yaml_scalar(answer)}\n"
+        f"  - type: {_yaml_scalar('typed_answer')}\n"
+        f"    content: {_yaml_scalar('ctfgenerator-answer-spec-v1')}\n"
+        f"    data: {_yaml_scalar(answer_data)}\n"
         f"state: {release_state}\n"
-        'version: "1.0"\n'
+        'version: "1.1"\n'
         "files:\n"
         f"{files_yaml}"
     )
@@ -227,7 +233,7 @@ def export_pilot(
         for index, (seed, rendered) in enumerate(_pilot_bundles(family), start=1)
     ]
     manifest: dict[str, object] = {
-        "schema_version": 2,
+        "schema_version": 3,
         "track": "osint",
         "release_state": release_state,
         "source_plugin": getattr(family, "name", ENTRY_POINT_NAME),

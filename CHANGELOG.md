@@ -59,6 +59,11 @@ record.
   visibly distinct and the art is bigger besides.
 
 ### Changed
+- OSINT pilot exports now preserve the complete typed verifier specification
+  in CTFd `typed_answer` flag metadata instead of collapsing each verifier to
+  one canonical static answer. Generated challenge versions are `1.1` and the
+  public build manifest schema is `3`; deployment requires CEI Engine's
+  `typed-answer-flags` plugin.
 - Login banner art redesigned around a storyboard mechanic instead of a
   standalone per-level scene: each banner is now a fixed track-wide
   establishing-shot frame plus a programmatically generated progress

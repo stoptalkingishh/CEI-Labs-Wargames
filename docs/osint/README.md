@@ -10,7 +10,7 @@ The initial pilot contains the plugin's three reviewed artifact dossiers:
 2. vessel or aircraft movement corroboration;
 3. public-record/entity corroboration.
 
-The adapter copies only `public/` artifacts into player-downloadable files. Canonical answers are derived from the plugin's private typed verifier specification and written once to generated CTFd metadata. No private solution, ground truth, or provenance file is copied into the player bundle.
+The adapter copies only `public/` artifacts into player-downloadable files. The complete private typed verifier specification is written only to the generated CTFd flag's `data` metadata, preserving aliases, identifier normalization, coordinate tolerance, and multipart matching. No private solution, ground truth, or provenance file is copied into the player bundle.
 
 ## Evidence gate
 
@@ -20,7 +20,9 @@ No storyline or cross-project lore is part of this track.
 
 ## Build
 
-Install the trusted host and private plugin, then run:
+Install the trusted host and reviewed plugin. The target CTFd deployment must
+include CEI Engine's `typed-answer-flags` plugin before these challenges are
+synced. Then run:
 
 ```bash
 CEI_OSINT_RELEASE_STATE=hidden python3 scripts/build_osint.py

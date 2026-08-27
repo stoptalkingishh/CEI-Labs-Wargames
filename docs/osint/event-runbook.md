@@ -3,10 +3,15 @@
 ## Pre-flight
 
 - Install the trusted CTFGenerator host and reviewed OSINT plugin.
+- Deploy a CEI Engine CTFd image that includes the `typed-answer-flags` plugin;
+  do not sync the pilot to stock CTFd or an older Engine image.
 - Run `python3 -m unittest -v test_build_osint_adapter` from `scripts/`.
 - Build with `CEI_OSINT_RELEASE_STATE=hidden`.
 - Review generated `osint-training.json`, evidence hashes, licensing, safety/privacy approval, and private instructor solutions.
 - Sync only after organizer approval.
+- Confirm all three imported flags have type `typed_answer` before testing
+  submissions; a static flag indicates an obsolete export and must fail the
+  release gate.
 
 ## Session
 
