@@ -115,7 +115,7 @@ public tool** (never from a write-up copy-paste).
 | `38-cult-money` | jigsaw→w3w→vault → `case.thrillers.jams` | puzzel.org, w3w | `D94KF932409KGL09324` |
 | `39-cult-cache` | cannon + 0525 → w3w triple | what3words | `0525-Elburg-punk-runways-messed` |
 
-### Arc 8 — the Loom (capstone) (2)
+### Arc 8 — the connector (capstone) (2)
 
 | Lead | What to verify | Tool | Flag |
 |---|---|---|---|
