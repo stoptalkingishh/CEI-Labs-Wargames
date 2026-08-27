@@ -1,0 +1,385 @@
+{
+  "count": 42,
+  "ideas": [
+    {
+      "doctrine": "PAI / legal boundary",
+      "id": "osint-00-start-here",
+      "name": "Wargame Briefing (Start Here)",
+      "points": 10,
+      "skill": "onboarding",
+      "status": "archived_missing_source_evidence",
+      "tier": "A"
+    },
+    {
+      "doctrine": "GEOINT/IMINT, IPB ground-truth",
+      "id": "osint-01-cartel-airdrop",
+      "name": "Cartel Air-Drop Lane",
+      "points": 100,
+      "skill": "IMINT geolocation (air-drop lane)",
+      "status": "archived_missing_source_evidence",
+      "tier": "A"
+    },
+    {
+      "doctrine": "FM IPB/ground-truth",
+      "id": "osint-02-cartel-safehouse",
+      "name": "Cartel Safehouse",
+      "points": 100,
+      "skill": "IMINT geolocation (safehouse)",
+      "status": "archived_missing_source_evidence",
+      "tier": "A"
+    },
+    {
+      "doctrine": "ATP provenance, FM IPB",
+      "id": "osint-03-cartel-precursor",
+      "name": "Precursor Source",
+      "points": 100,
+      "skill": "Reverse image + geolocation",
+      "status": "archived_missing_source_evidence",
+      "tier": "A"
+    },
+    {
+      "doctrine": "ATP discovery/collection, ATP geo",
+      "id": "osint-04-cartel-meet",
+      "name": "The Strange File",
+      "points": 100,
+      "skill": "Hex decode + what3words + geolocation",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "ATP discovery/collection, OPSEC",
+      "id": "osint-05-synd-exfil",
+      "name": "Exfil on the Wire",
+      "points": 120,
+      "skill": "DNS / packet capture",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "ATP discovery/collection, FM intelligence-cycle",
+      "id": "osint-06-synd-intercept",
+      "name": "Intercepted Meeting",
+      "points": 120,
+      "skill": "PCAP analysis + decoding",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "ATP capture/authenticate, ATP discovery",
+      "id": "osint-07-synd-beacon",
+      "name": "Emergency Beacon",
+      "points": 120,
+      "skill": "Base85 + Vigenere + geolocation",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "ATP discovery/collection, FM intelligence-cycle",
+      "id": "osint-08-synd-burn",
+      "name": "The Burn Laptop",
+      "points": 130,
+      "skill": "Browser forensics",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "ATP capture/authenticate",
+      "id": "osint-09-synd-wallet",
+      "name": "The Wallet Ledger",
+      "points": 130,
+      "skill": "Multi-stage decryption + geolocation",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "ATP capture/authenticate, OPSEC",
+      "id": "osint-10-synd-deaddrop",
+      "name": "Dead-Drop Slip",
+      "points": 100,
+      "skill": "Hidden URL / OPSEC",
+      "status": "archived_missing_source_evidence",
+      "tier": "A"
+    },
+    {
+      "doctrine": "FM target-acq, IMINT",
+      "id": "osint-11-gen-tank",
+      "name": "The Stolen AFV",
+      "points": 140,
+      "skill": "Vehicle / IMINT identification",
+      "status": "archived_missing_source_evidence",
+      "tier": "B"
+    },
+    {
+      "doctrine": "FM target-acq, maritime/AIS",
+      "id": "osint-12-gen-frigate",
+      "name": "Sold Frigate Plans",
+      "points": 140,
+      "skill": "Vessel / class identification",
+      "status": "archived_missing_source_evidence",
+      "tier": "B"
+    },
+    {
+      "doctrine": "FM IPB/ground-truth, FM target-acq",
+      "id": "osint-13-gen-airfield",
+      "name": "The Safe Airfield",
+      "points": 140,
+      "skill": "Air-base geolocation",
+      "status": "archived_missing_source_evidence",
+      "tier": "B"
+    },
+    {
+      "doctrine": "FM IPB/ground-truth, temporality",
+      "id": "osint-14-gen-aircraft",
+      "name": "The Decommissioned 747",
+      "points": 150,
+      "skill": "Aviation / aircraft lifecycle",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "FM intelligence-cycle, FM target-acq",
+      "id": "osint-15-chan-strike",
+      "name": "The Strike Window",
+      "points": 150,
+      "skill": "Geo + translation + temporal",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "FM spatial/IPB, FM target-acq",
+      "id": "osint-16-chan-ao",
+      "name": "The Quiet AO",
+      "points": 150,
+      "skill": "AO / NGO facility geolocation",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "ATP capture/authenticate, ATP discovery",
+      "id": "osint-17-chan-smuggle",
+      "name": "The Sanctioned Road",
+      "points": 150,
+      "skill": "Steganography + geolocation",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "multi-INT fusion, FM collection-mgmt, maritime/AIS",
+      "id": "osint-18-chan-fleet",
+      "name": "The Flagged Corridor",
+      "points": 180,
+      "skill": "Maritime / AIS + IMINT",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "ATP discovery/collection, maritime/AIS",
+      "id": "osint-19-chan-manifest",
+      "name": "The Decoy Manifest",
+      "points": 130,
+      "skill": "Maritime + simple crypto",
+      "status": "archived_missing_source_evidence",
+      "tier": "B"
+    },
+    {
+      "doctrine": "reliability/corroboration, FM IPB",
+      "id": "osint-20-chan-cover",
+      "name": "The Approved Trade",
+      "points": 150,
+      "skill": "Aerial geolocation + historical corroboration",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "FM collection-mgmt, FM IPB",
+      "id": "osint-21-hades-operative",
+      "name": "The Gifted Jacket",
+      "points": 140,
+      "skill": "Geolocation + web enrichment",
+      "status": "archived_missing_source_evidence",
+      "tier": "B"
+    },
+    {
+      "doctrine": "ATP discovery/collection, FM IPB",
+      "id": "osint-22-hades-cutout",
+      "name": "The Hades Cutout",
+      "points": 150,
+      "skill": "Decode + geolocation",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "FM IPB/ground-truth, multi-INT",
+      "id": "osint-23-hades-payment",
+      "name": "Payment on the Corner",
+      "points": 150,
+      "skill": "IP + Street View + what3words",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "ATP capture/authenticate",
+      "id": "osint-24-hades-hostage",
+      "name": "The Hostage Note",
+      "points": 160,
+      "skill": "Multi-cipher + what3words",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "FM IPB/ground-truth",
+      "id": "osint-25-hades-hit",
+      "name": "Dead Man's Park",
+      "points": 140,
+      "skill": "Park/route geolocation",
+      "status": "archived_missing_source_evidence",
+      "tier": "B"
+    },
+    {
+      "doctrine": "FM spatial/IPB, FM target-acq",
+      "id": "osint-26-hades-slayer",
+      "name": "Four Points to an Address",
+      "points": 180,
+      "skill": "Multi-point geo + what3words + riddle",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "FM IPB/ground-truth, FM target-acq",
+      "id": "osint-27-ash-strike",
+      "name": "Grid-Strike Plot",
+      "points": 160,
+      "skill": "Web + geolocation + technical",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "FM discovery/collection, FM spatial/IPB",
+      "id": "osint-28-ash-distress",
+      "name": "Morse on the Dead Network",
+      "points": 140,
+      "skill": "Morse + what3words",
+      "status": "archived_missing_source_evidence",
+      "tier": "B"
+    },
+    {
+      "doctrine": "multi-INT fusion, reliability/corroboration, OPSEC",
+      "id": "osint-29-ash-freelancer",
+      "name": "The Financed Freelancer",
+      "points": 160,
+      "skill": "Social footprint + translation",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "FM collection-mgmt, reliability/corroboration",
+      "id": "osint-30-cult-funnel",
+      "name": "The Believers' Ledger",
+      "points": 140,
+      "skill": "Public-database web research",
+      "status": "archived_missing_source_evidence",
+      "tier": "B"
+    },
+    {
+      "doctrine": "FM collection-mgmt, reliability/corroboration",
+      "id": "osint-31-cult-origin",
+      "name": "Origin Myth",
+      "points": 140,
+      "skill": "Archival web research",
+      "status": "archived_missing_source_evidence",
+      "tier": "B"
+    },
+    {
+      "doctrine": "ATP discovery/collection, multi-INT",
+      "id": "osint-32-cult-signal",
+      "name": "The Signal Site",
+      "points": 150,
+      "skill": "Audio spectrogram + hex + geolocation",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "ATP capture/authenticate",
+      "id": "osint-33-cult-cipher",
+      "name": "The Cult Cipher",
+      "points": 140,
+      "skill": "Cipher / translation",
+      "status": "archived_missing_source_evidence",
+      "tier": "B"
+    },
+    {
+      "doctrine": "FM IPB/ground-truth",
+      "id": "osint-34-cult-caravan",
+      "name": "The Traveling Saint",
+      "points": 140,
+      "skill": "Street-view geolocation",
+      "status": "archived_missing_source_evidence",
+      "tier": "B"
+    },
+    {
+      "doctrine": "ATP capture/authenticate, reliability",
+      "id": "osint-35-cult-ledger",
+      "name": "The Tithing Ledger",
+      "points": 140,
+      "skill": "Translation / provenance",
+      "status": "archived_missing_source_evidence",
+      "tier": "B"
+    },
+    {
+      "doctrine": "FM IPB/ground-truth, temporality",
+      "id": "osint-36-cult-prophecy",
+      "name": "The Prophecy Site",
+      "points": 150,
+      "skill": "Font decoding + geolocation + temporal",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "ATP discovery/collection, OPSEC",
+      "id": "osint-37-cult-relic",
+      "name": "Relic Video",
+      "points": 100,
+      "skill": "EXIF / metadata",
+      "status": "archived_missing_source_evidence",
+      "tier": "A"
+    },
+    {
+      "doctrine": "multi-INT fusion, OPSEC",
+      "id": "osint-38-cult-money",
+      "name": "The Money Pass",
+      "points": 150,
+      "skill": "Web -> what3words -> archive",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "FM IPB/ground-truth",
+      "id": "osint-39-cult-cache",
+      "name": "Relic Cache",
+      "points": 130,
+      "skill": "Landmark + what3words",
+      "status": "archived_missing_source_evidence",
+      "tier": "B"
+    },
+    {
+      "doctrine": "reliability/corroboration, OPSEC",
+      "id": "osint-40-source-corroborate",
+      "name": "Source Discipline",
+      "points": 190,
+      "skill": "Cross-verification / reliability",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    },
+    {
+      "doctrine": "multi-INT fusion, reliability/product",
+      "id": "osint-41-fused-assessment",
+      "name": "Fused Assessment",
+      "points": 250,
+      "skill": "Fused assessment (capstone)",
+      "status": "archived_missing_source_evidence",
+      "tier": "C"
+    }
+  ],
+  "reason": "The original source evidence packages are absent from this repository; these concepts are not releaseable challenges.",
+  "schema_version": 1
+}
