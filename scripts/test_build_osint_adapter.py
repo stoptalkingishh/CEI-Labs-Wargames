@@ -99,6 +99,49 @@ class OsintAdapterTests(unittest.TestCase):
             for secret in (b"Harbor Light", b"IMO1234567", b"Aster Research", b"AR-2048"):
                 self.assertNotIn(secret, downloadable)
 
+    def test_export_uses_typed_answer_flags_with_full_verifier_specs(self) -> None:
+        expected = {title: verifier for title, verifier in _ReviewedFamily._cases}
+
+        with tempfile.TemporaryDirectory() as output:
+            manifest = build_osint.export_pilot(_ReviewedFamily(), Path(output))
+
+            for challenge in manifest["challenges"]:
+                challenge_yaml = (
+                    Path(output) / challenge["id"] / "challenge.yml"
+                ).read_text(encoding="utf-8")
+                lines = challenge_yaml.splitlines()
+                flag_fields = {}
+                for line in lines:
+                    stripped = line.strip()
+                    if stripped.startswith("- "):
+                        stripped = stripped[2:]
+                    if ": " not in stripped:
+                        continue
+                    key, value = stripped.split(": ", 1)
+                    if key in {"type", "content", "data"}:
+                        flag_fields[key] = value
+
+                self.assertEqual(set(flag_fields), {"type", "content", "data"})
+                self.assertEqual(json.loads(flag_fields["type"]), "typed_answer")
+                self.assertEqual(
+                    json.loads(flag_fields["content"]),
+                    "ctfgenerator-answer-spec-v1",
+                )
+                encoded_spec = json.loads(flag_fields["data"])
+                self.assertEqual(json.loads(encoded_spec), expected[challenge["name"]])
+                self.assertNotIn(f'  - {json.dumps(build_osint.canonical_answer(expected[challenge["name"]]))}', lines)
+
+    def test_typed_flag_export_bumps_manifest_and_challenge_versions(self) -> None:
+        with tempfile.TemporaryDirectory() as output:
+            manifest = build_osint.export_pilot(_ReviewedFamily(), Path(output))
+
+            self.assertEqual(manifest["schema_version"], 3)
+            for challenge in manifest["challenges"]:
+                challenge_yaml = (
+                    Path(output) / challenge["id"] / "challenge.yml"
+                ).read_text(encoding="utf-8")
+                self.assertIn('version: "1.1"', challenge_yaml.splitlines())
+
     def test_canonical_answers_come_from_verifier_specs(self) -> None:
         self.assertEqual(
             build_osint.canonical_answer({"kind": "aliases", "answers": ["Harbor Light"]}),
