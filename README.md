@@ -24,6 +24,12 @@ This repository contains the infrastructure and challenge generation scripts to 
    runtime, ships **hidden by default**, and is intentionally outside the
    staged rollout. Release only after organizer review with
    `CEI_OSINT_RELEASE_STATE=visible python3 scripts/build_osint.py`.
+6. **Threadline:** a full-length, 42-lead OSINT wargame — a 6–7 hour discovery
+   campaign for a **Tiberian Order** analyst, unravelling the hidden
+   coordination node called **the Loom**. See [docs/threadline/](docs/threadline/).
+   Like the pilot it has no container, ports, or per-team runtime, ships
+   **hidden by default**, and lives outside the staged rollout. Release with
+   `THREADLINE_RELEASE_STATE=visible python3 scripts/build_threadline.py`.
 
 Each game's folder holds three docs:
 - `writeups.md` — complete, step-by-step solutions for every level

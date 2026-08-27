@@ -184,17 +184,37 @@ class OsintAdapterTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "evidence manifest mismatch"):
                 build_osint.export_pilot(DriftedEvidenceFamily(), Path(output))
 
-    def test_repository_has_no_decima_loom_concept(self) -> None:
+    def test_osint_pilot_has_no_loom_concept(self) -> None:
+        """The neutral OSINT pilot (plugin adapter + its docs/archive) must stay
+        lore-free. Named wargames such as Threadline deliberately carry the Loom
+        theme and are exempt."""
         root = Path(__file__).resolve().parents[1]
         needle = ("the " + "loom").casefold()
         extensions = {".md", ".py", ".json", ".yaml", ".yml"}
-        for path in sorted(root.rglob("*")):
-            if path.is_file() and path.suffix in extensions and ".git" not in path.parts:
+
+        def _files(base):
+            if base.is_file():
+                return [base]
+            return sorted(
+                p for p in base.rglob("*")
+                if p.is_file() and p.suffix in extensions
+            )
+
+        scopes = [
+            root / "scripts" / "build_osint.py",
+            root / "docs" / "osint",
+        ]
+        checked: list[Path] = []
+        for base in scopes:
+            for path in _files(base):
+                checked.append(path)
                 self.assertNotIn(
                     needle,
                     path.read_text(encoding="utf-8").casefold(),
                     path.as_posix(),
                 )
+        # Guard against the scope collapsing silently (e.g. a rename).
+        self.assertTrue(checked, "no-lore guard scope unexpectedly empty")
 
 
 if __name__ == "__main__":
