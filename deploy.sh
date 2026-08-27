@@ -45,6 +45,7 @@ python3 scripts/build_bandit.py
 python3 scripts/build_krypton.py
 python3 scripts/build_natas.py
 python3 scripts/build_agent.py
+python3 scripts/build_osint.py
 python3 scripts/validate_game_stages.py
 python3 scripts/validate_generated.py --output deployment-manifest.json
 
@@ -221,13 +222,14 @@ PYEOF
 # gets silently skipped, every native hint on the live instance is wiped
 # with nothing to replace it. See docs/P0-CONTENT-DEPLOY-LOG-2026-07-23.md.
 sync_hint_wallet_bundle() {
-    # NOTE: challenges/agent-hint-wallet.json (AI Copilot Setup's hints) is
-    # deliberately NOT included here yet. cei-labs-engine's orchestrator
+    # NOTE: challenges/agent-hint-wallet.json (AI Copilot Setup) and
+    # osint/osint-hint-wallet.json (OSINT track) are deliberately NOT
+    # included here yet. cei-labs-engine's orchestrator
     # (docker/orchestrator/app/wallet.py) hard-validates the bundle to
     # EXACTLY the 3 tracks {bandit, krypton, natas} and rejects a 4th with
-    # HTTP 400 (incomplete_tracks) -- see REQUIRED_TRACKS there. Add it back
-    # here once that validation is updated to accept "agent" too (and the
-    # orchestrator image is rebuilt/redeployed with that change).
+    # HTTP 400 (incomplete_tracks) -- see REQUIRED_TRACKS there. Add them
+    # back here once that validation is updated to accept "agent" and
+    # "osint" too (and the orchestrator image is rebuilt/redeployed).
     local wallet_files=(challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json)
 
     # Determine whether there is actually any hint-wallet content that a sync
@@ -378,6 +380,26 @@ for dir in challenges/*/ ; do
 
     sync_instance_mapping "$dir_trimmed"
 done
+
+# OSINT track — non-staged, lives in osint/ (not challenges/). Sync if built, hidden by default.
+# Not counted in the staged 65-challenge total above and has no instance mappings.
+if [ -d "osint" ]; then
+    echo "Syncing OSINT track (osint/) — hidden by default, not counted in staged total..."
+    for dir in osint/*/ ; do
+        [ -d "$dir" ] || continue
+        [ -f "${dir}challenge.yml" ] || continue
+        dir_trimmed="${dir%/}"
+        echo "----------------------------------------"
+        echo "Syncing OSINT challenge from: $dir_trimmed"
+        if challenge_exists "$dir_trimmed/challenge.yml"; then
+            ctf challenge sync "$dir_trimmed"
+            echo "Successfully synced OSINT challenge metadata!"
+        else
+            echo "OSINT challenge not found on CTFd. Installing as new..."
+            ctf challenge install "$dir_trimmed"
+        fi
+    done
+fi
 
 sync_hint_wallet_bundle
 sync_wargame_stages

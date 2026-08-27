@@ -19,6 +19,35 @@ record.
     source evidence packages are absent from this repository. Their neutral
     skill ideas remain in `docs/osint/archive/legacy-idea-bank.json`, without
     placeholder answers, factions, or storyline.
+  - `docs/osint/archive/` now also holds the earlier campaign's artifacts for
+    history: `briefing-transcripts.json` (OCR'd source-briefing narratives for
+    the 39 source-backed leads), `participant-quickstart.md`, and
+    `release-verification.md` — all superseded by the plugin pilot but kept as
+    a record of the 42-lead design work.
+  - `docs/osint/pr-handoff.md` — handoff report recording the full history of
+    this track (42-lead campaign → local playtest → plugin-pilot pivot), where
+    each part lives, the local test instance commands, and maintainer TODOs.
+  - `scripts/local-ctfd/upload_osint_files.py` — local development tooling that
+    syncs generated challenge files + descriptions into a local CTFd instance
+    (add `--remove-pdfs` to prune retired PDF attachments); handy regardless of
+    which generator produced `osint/`.
+  - `scripts/local-ctfd/ocr_briefings.py` — retained local tooling for the
+    superseded 42-lead campaign: OCRs Hacktoria briefing PDFs (RapidOCR) into
+    `docs/osint/archive/briefing-transcripts.json`.
+
+### Changed
+  - `docs/osint/writeups.md`, `docs/osint/release-verification.md`: transliterated
+    the `ash-strike` ground-truth flag to keep generated YAML ASCII-safe on
+    Windows (`Антонівка-…` → `Antonivka-Khersonska-Kindijska-35-6`). Both docs
+    now live in the archive (see above), reflecting the retired campaign.
+
+### Validated
+  - While the 42-lead campaign was still live (pre-pilot), a local CTFd
+    black-box run confirmed: 42 challenges present, 42 descriptions non-empty,
+    39 evidence images attached, 39 retired PDFs pruned, and the briefing-popup
+    markup rendered the real PDF narrative (e.g. `Cartel Air-Drop Lane`).
+  - `python -m compileall` passes for the changed scripts.
+
 - `docs/event-recap-2026-08-06.md`: post-event recap of the 2026-08-06
   wargames run — issues hit and fixed, infrastructure end-state, what was
   sacrificed (network + systems), how challenges were played, and player
