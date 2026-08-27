@@ -9,75 +9,45 @@ record.
 ## [Unreleased]
 
 ### Added
-  - `docs/osint/storyline.md` — overarching faction/plot design for the OSINT
-    track: the "Gilded Hose" meta-narrative, a Tiberian Order analyst framing,
-    a faction map (reusing real HACKTORIA lore — Tiberian Order, Order of Hades,
-    cartels — plus new Gilded Generals / Chancellery / Wire Syndicate / Ashfall /
-    the Loom), and a challenge→faction→plot-beat table for all ~50 leads, all
-    constrained to 5–15 minute solves.
-  - `docs/osint/pr-handoff.md` — handoff report for the OSINT track: where
-    things live, the local playtest instance & commands, regeneration steps,
-    and maintainer TODOs.
-  - `docs/osint/briefing-transcripts.json` — OCR'd source-briefing narratives
-    for all 39 source-backed OSINT leads (the briefing PDFs are raster scans
-    with no text layer, so the generator renders their text through this file).
-  - `scripts/local-ctfd/ocr_briefings.py` — OCRs each Hacktoria briefing PDF
-    (RapidOCR) and writes `docs/osint/briefing-transcripts.json`.
-  - `scripts/local-ctfd/upload_osint_files.py` — syncs generated OSINT challenge
-    files + descriptions into a local CTFd (supports `--remove-pdfs` to prune
-    retired PDF attachments).
-  - `scripts/build_osint.py` now attaches the best evidence image per
-    non-capstone lead and embeds an **"Open Briefing"** intel-report popup
-    (Tiberian Order / OSINT Directorate styling, classification mark, "Exhibit"
-    pages pulled from the OCR transcripts) in each description instead of
-    shipping raw PDFs. Popup is a dependency-free fixed overlay (avoids
-    Bootstrap nested-modal failure inside CTFd's own modal).
+  - `scripts/build_osint.py` now exports reviewed artifact bundles from the
+    separately maintained `ctfgen-family-osint` package instead of generating
+    placeholder challenge facts locally.
+  - The initial neutral OSINT pilot contains three reviewed vertical cases.
+    CTFd files are generated from public plugin artifacts; canonical answers
+    come from the plugin's private typed verifier specifications.
+  - The former 42 placeholder proposals were retired because their referenced
+    source evidence packages are absent from this repository. Their neutral
+    skill ideas remain in `docs/osint/archive/legacy-idea-bank.json`, without
+    placeholder answers, factions, or storyline.
+  - `docs/osint/archive/` now also holds the earlier campaign's artifacts for
+    history: `briefing-transcripts.json` (OCR'd source-briefing narratives for
+    the 39 source-backed leads), `participant-quickstart.md`, and
+    `release-verification.md` — all superseded by the plugin pilot but kept as
+    a record of the 42-lead design work.
+  - `docs/osint/pr-handoff.md` — handoff report recording the full history of
+    this track (42-lead campaign → local playtest → plugin-pilot pivot), where
+    each part lives, the local test instance commands, and maintainer TODOs.
+  - `scripts/local-ctfd/upload_osint_files.py` — local development tooling that
+    syncs generated challenge files + descriptions into a local CTFd instance
+    (add `--remove-pdfs` to prune retired PDF attachments); handy regardless of
+    which generator produced `osint/`.
+  - `scripts/local-ctfd/ocr_briefings.py` — retained local tooling for the
+    superseded 42-lead campaign: OCRs Hacktoria briefing PDFs (RapidOCR) into
+    `docs/osint/archive/briefing-transcripts.json`.
 
 ### Changed
   - `docs/osint/writeups.md`, `docs/osint/release-verification.md`: transliterated
     the `ash-strike` ground-truth flag to keep generated YAML ASCII-safe on
-    Windows (`Антонівка-…` → `Antonivka-Khersonska-Kindijska-35-6`).
+    Windows (`Антонівка-…` → `Antonivka-Khersonska-Kindijska-35-6`). Both docs
+    now live in the archive (see above), reflecting the retired campaign.
 
 ### Validated
-  - Local CTFd black-box run: 42 challenges present, 42 descriptions non-empty,
-    39 evidence images attached, 39 retired PDFs pruned, and the live popup
-    confirmed to contain the real PDF narrative (e.g. `Cartel Air-Drop Lane`).
+  - While the 42-lead campaign was still live (pre-pilot), a local CTFd
+    black-box run confirmed: 42 challenges present, 42 descriptions non-empty,
+    39 evidence images attached, 39 retired PDFs pruned, and the briefing-popup
+    markup rendered the real PDF narrative (e.g. `Cartel Air-Drop Lane`).
   - `python -m compileall` passes for the changed scripts.
 
-- `docs/event-recap-2026-08-06.md`: post-event recap of the 2026-08-06
-    track: the "Gilded Hose" meta-narrative, a Tiberian Order analyst framing,
-    a faction map (reusing real HACKTORIA lore — Tiberian Order, Order of Hades,
-    cartels — plus new Gilded Generals / Chancellery / Wire Syndicate / Ashfall /
-    the Loom), and a challenge→faction→plot-beat table for all ~50 leads, all
-    constrained to 5–15 minute solves.
-  - `docs/osint/` — design + research index (`docs/osint/osint-research-index.md`)
-    cataloging real OSINT exercises and CTFs across Hacktoria, Gralhix, and the
-    Bellingcat Challenge, including a skill->tool->method->doctrine table mapped
-    to ATP 2-22.9 / FM 2-0 / ADP 2-0; plus `learning-objectives.md`,
-    `cheatsheet.md`, `writeups.md` for the 13-challenge track.
-  - `scripts/build_osint.py` — generator writing the track's CTFd import output
-    to the git-ignored `osint/` (single source of truth for flags; release via
-    `CEI_OSINT_RELEASE_STATE=visible`, mirroring the AI Copilot track). Track
-    stays out of `game-stages.yml` and `challenges/` so all existing stage
-    validators are untouched. Expanded to a full **42-lead campaign** organized
-    by storyline arc (cartel / syndicate / generals / chancellery / hades /
-    ashfall / cult / loom), each a 5–15 min solve wearing faction + plot-beat
-    framing.
-  - `docs/osint/skill-building-priority.md` — the scoring rubric (skill
-    transferability, doctrine anchor, multi-step depth, tool authenticity,
-    ground-truth verifiability) used to pick which no-theme challenges earn a
-    slot, with the ranked table that drove the 42-lead selection.
-  - `docs/osint/writeups.md`, `docs/osint/cheatsheet.md` rewritten for all
-    42 leads (answer key verified against the generator's `FLAGS` dict), plus
-    `docs/osint/event-runbook.md` — a 7-hour run-of-show with per-arc pacing,
-    a 6-hour trim, facilitation notes, and a pre-flight checklist.
-  - Verified all 42 OSINT flags against the extracted Hacktoria ground-truth
-    writeups in `hacktoria-archive/`; updated `scripts/build_osint.py` `FLAGS`,
-    `docs/osint/writeups.md`, and `docs/osint/release-verification.md` to
-    ground-truth values (e.g., `https://nuforc.org/sighting/?id=175200`,
-    `spain-cambados-aldea-o-facho`, Guria full port chain, Cyrillic substation
-    identifier). Wired `deploy.sh` to generate/sync the hidden `osint/` track
-    and `validate.yml` to build it in CI.
 - `docs/event-recap-2026-08-06.md`: post-event recap of the 2026-08-06
   wargames run — issues hit and fixed, infrastructure end-state, what was
   sacrificed (network + systems), how challenges were played, and player
@@ -118,6 +88,11 @@ record.
   visibly distinct and the art is bigger besides.
 
 ### Changed
+- OSINT pilot exports now preserve the complete typed verifier specification
+  in CTFd `typed_answer` flag metadata instead of collapsing each verifier to
+  one canonical static answer. Generated challenge versions are `1.1` and the
+  public build manifest schema is `3`; deployment requires CEI Engine's
+  `typed-answer-flags` plugin.
 - Login banner art redesigned around a storyboard mechanic instead of a
   standalone per-level scene: each banner is now a fixed track-wide
   establishing-shot frame plus a programmatically generated progress

@@ -1,66 +1,76 @@
-# OSINT Wargame — PR Handoff Report
+# OSINT Wargame — Handoff Report
 
-> Status: **MERGED** (PR #86, `feat/osint-wargame` → `main`).
-> This file summarizes the follow-up work done after the initial merge:
-> local playtest validation, source-briefing recovery via OCR, and the
-> on-theme "intel report" briefing popup. It is the single entry point for
-> anyone picking up this track.
+> **Status:** Superseded by the plugin pilot (see §2). This file records the
+> full history of the OSINT track so anyone picking it up understands what was
+> built, what was playtested, and why the current generator is the way it is.
 
 ---
 
-## 1. Where things live
+## 1. TL;DR
+
+- **Where the track is now:** `main` runs a small, neutral **plugin-based OSINT
+  pilot**. `scripts/build_osint.py` is an adapter that exports reviewed artifact
+  bundles from the separately maintained `ctfgen-family-osint` package; it no
+  longer generates a 42-lead campaign locally. See
+  `docs/osint/README.md` and the pilot entries in `CHANGELOG.md`.
+- **Why:** after an earlier 42-lead campaign was merged and locally playtested,
+  the project retired those 42 placeholder proposals (their source evidence
+  packages aren't in this repository) in favor of the reviewed plugin pilot.
+- **Where the earlier work went:** `docs/osint/archive/` — `legacy-idea-bank.json`
+  (neutral skill ideas), plus `briefing-transcripts.json`,
+  `participant-quickstart.md`, and `release-verification.md` (kept as a record
+  of the campaign and its validation).
+- **Local tooling that still works:** `scripts/local-ctfd/upload_osint_files.py`
+  (syncs any `osint/` output into a local CTFd) and
+  `scripts/local-ctfd/ocr_briefings.py` (re-OCR the retired campaign's source
+  briefings into the archive). Both are independent of which generator produced
+  the challenge folders.
+
+---
+
+## 2. Timeline
+
+1. **42-lead campaign designed & generated** (`feat/osint-wargame`, PR #86
+   merged). `scripts/build_osint.py` produced 42 leads (storyline arcs, factions,
+   flags) into the git-ignored `osint/`. Docs: `storyline.md`, `writeups.md`,
+   `cheatsheet.md`, `event-runbook.md`, etc.
+2. **Local playtest** (2026-08-27). A local CTFd stack
+   (`scripts/local-ctfd/docker-compose.yml`) validated: 42 challenges listed,
+   descriptions non-empty, 39 evidence images attached, and the "Open Briefing"
+   popup rendered the real source-briefing narrative.
+3. **PDF content recovered via OCR.** The briefing PDFs are raster scans with
+   no text layer (verified: pypdf + pdfplumber extract 0 glyphs). RapidOCR
+   transcribed all 39 source briefings → `briefing-transcripts.json`, and the
+   popup was restyled as an on-theme intel report (Tiberian Order / OSINT
+   Directorate).
+4. **Project pivot (PRs #88/#89).** `main` retired the 42 placeholder proposals
+   and switched `scripts/build_osint.py` to the plugin adapter exporting the
+   reviewed `ctfgen-family-osint` pilot (3 vertical cases, typed answer
+   verifiers, no storyline). The campaign docs were archived.
+5. **Reconciliation.** This handoff merges the playtest tooling + documentation
+   into `main` and archives the retired-campaign artifacts, without restoring
+   the retired generator.
+
+---
+
+## 3. Where things live now
 
 | Concern | Location |
 |---|---|
-| Campaign generator (single source of truth for flags) | `scripts/build_osint.py` |
-| Generated CTFd import YAML (git-ignored, not committed) | `osint/*/challenge.yml` |
-| Per-lead metadata / skill / doctrine mapping | `scripts/build_osint.py` (`META`, `HINTS`) |
-| Storyline & factions ("Gilded Hose", Tiberian Order, the Loom) | `docs/osint/storyline.md` |
-| OCR'd source-briefing narratives (one entry per challenge) | `docs/osint/briefing-transcripts.json` |
-| Instructor answer key | `docs/osint/writeups.md` |
-| Release / pre-flight verification | `docs/osint/release-verification.md` |
+| OSINT adapter (plugin pilot, canonical) | `scripts/build_osint.py` |
+| Pilot docs & state | `docs/osint/README.md` |
+| Generated CTFd import YAML (git-ignored) | `osint/*/challenge.yml` |
+| Retired 42-lead skill ideas | `docs/osint/archive/legacy-idea-bank.json` |
+| Retired campaign: OCR'd briefings | `docs/osint/archive/briefing-transcripts.json` |
+| Retired campaign: player quickstart | `docs/osint/archive/participant-quickstart.md` |
+| Retired campaign: release verification | `docs/osint/archive/release-verification.md` |
 | Local CTFd stack for black-box testing | `scripts/local-ctfd/` |
-| Sync challenge files + descriptions into local CTFd | `scripts/local-ctfd/upload_osint_files.py` |
-| OCR the source briefing PDFs → transcripts JSON | `scripts/local-ctfd/ocr_briefings.py` |
+| Sync files + descriptions into local CTFd | `scripts/local-ctfd/upload_osint_files.py` |
+| Re-OCR retired source briefings | `scripts/local-ctfd/ocr_briefings.py` |
 
 ---
 
-## 2. What changed in this handoff
-
-### 2.1 Functional games-term changes
-
-- **Source files attached to each non-capstone challenge** so every lead is
-  playable without the original `hacktoria-archive/` zips. The generator picks
-  the best evidence image (`starting-image-*`, `image-*`) and writes it under
-  `osint/<id>/files/`, then `challenge.yml` lists it in `files:`.
-- **The raw PDFs are NOT attached as downloads.** The source briefings are
-  raster scans with **no text layer** (verified with pypdf + pdfplumber: 0
-  glyphs on all 51 PDFs). So the generator instead:
-  1. **OCR's each briefing** (via `scripts/local-ctfd/ocr_briefings.py` using
-     RapidOCR) into `docs/osint/briefing-transcripts.json` (39 challenges,
-     per-page text);
-  2. renders that narrative inside a **"Source briefing (seized document)"**
-     block.
-- **"Open Briefing" popup** — a clean, on-theme intelligence report styled for
-  the Tiberian Order / OSINT Directorate (off-white paper, slate + gold, a
-  `FIELD TRACE` / `ORDERS` / `RECON` header tag, a `CEI-RESTRICTED // FOR
-  TIBERIAN ORDER PERSONNEL` classification, structured summary, and
-  "Exhibit N" transcribed pages). Implemented as a dependency-free fixed
-  overlay toggled with inline vanilla JS — CTFd embeds the description as raw
-  HTML (`CMARK_OPT_UNSAFE`), and a nested Bootstrap modal would silently fail
-  to open inside CTFd's own modal, so we deliberately avoid Bootstrap here.
-
-### 2.2 ASCII / encoding hardening
-
-- `scripts/build_osint.py` generates ASCII-safe YAML end-to-end (Windows
-  CP1252-safe). One ground-truth flag that contained Cyrillic was transliterated
-  to keep generated YAML loadable by `ctfcli` on Windows:
-  - `Антонівка-Херсонськаобласть-Кіндійська-35/6` → `Antonivka-Khersonska-Kindijska-35-6`
-  - Mirrored in `docs/osint/writeups.md` and `docs/osint/release-verification.md`.
-
----
-
-## 3. Local black-box playtest instance
+## 4. Local test instance
 
 `scripts/local-ctfd/` provides a minimal CTFd stack (no Traefik, no Swarm) with
 the wargame plugins baked into the image from `CEI_LABS_ENGINE_PATH`.
@@ -69,54 +79,44 @@ the wargame plugins baked into the image from `CEI_LABS_ENGINE_PATH`.
 cd scripts\local-ctfd
 $env:CEI_LABS_ENGINE_PATH="C:\Users\Ismael\.buzz\REPOS\cei-labs-engine"
 docker compose up -d --build
-# browse http://localhost:8000  (admin/CTFd once-setup, see setup_local_ctfd.py)
+# browse http://localhost:8000 ; admin credentials per setup_local_ctfd.py
 ```
 
-Playtest results (local instance, 2026-08-27):
-
-- All **42 OSINT challenges** listed via `/api/v1/challenges?view=admin`.
-- **All 42 descriptions** verified non-empty after the popup embed.
-- **39 evidence images** attached (one per non-capstone lead); the 2 capstones
-  and the start-here briefing intentionally have no image.
-- **39 PDF attachments removed** from the instance (the popup replaced them).
-- Verified the live popup for `Cartel Air-Drop Lane` contains the real PDF
-  prose ("Greetings, Special Agent … Los Aztecas").
-
-Re-sync a rebuilt track into a fresh local CTFd:
+Sync a generated track (pilot or campaign) into the instance:
 
 ```powershell
 $env:CTFD_TOKEN="ctfd_<token>"
 python scripts\local-ctfd\upload_osint_files.py --remove-pdfs
 ```
 
-> The admin token in `.ctf/config` is git-ignored and stays local.
+Playtest results (retired 42-lead campaign, 2026-08-27):
+
+- 42 challenges present via `/api/v1/challenges?view=admin`.
+- 42 descriptions non-empty (after the popup embed).
+- 39 evidence images attached (one per non-capstone lead).
+- 39 retired PDF attachments pruned (the popup replaced them).
+- Verified the popup for `Cartel Air-Drop Lane` contained the real PDF prose
+  ("Greetings, Special Agent … Los Aztecas").
 
 ---
 
-## 4. Regenerating the track
+## 5. Maintainer TODOs
 
-```bash
-CEI_OSINT_RELEASE_STATE=visible python3 scripts/build_osint.py
-```
-
-Re-OCR (only if you want to re-run transcription — output already committed):
-
-```bash
-python3 scripts/local-ctfd/ocr_briefings.py
-```
-
-CI already runs `python3 scripts/build_osint.py` in `validate.yml` (generation
-must stay idempotent and ASCII-safe).
+- Spot-check the plugin pilot's generated challenges on the live board
+  (the pilot ships no storyline; confirm that's intended).
+- Move `scripts/local-ctfd/ocr_briefings.py` dependencies
+  (`pypdfium2`, `rapidocr_onnxruntime`) into a dev-requirements file if you
+  plan to re-run it; they are not runtime dependencies.
+- If `HTML_SANITIZATION` is ever enabled on the deployment, the raw-HTML
+  briefing popup markup (retired campaign) would be sanitized away — that only
+  affects archived artifacts, not the pilot.
 
 ---
 
-## 5. TODO / next steps for maintainers
+## 6. Reference: retired campaign details
 
-- Verify OCR transcripts read naturally on the live events board (RapidOCR
-  transcription of stylized covers can be noisy — spot-check a few Exhibits).
-- Confirm the `hacktoria-archive/` location is documented/reachable for anyone
-  who wants to re-OCR from source. The archive itself is not committed.
-- Confirm the deployed CTFd has `HTML_SANITIZATION` disabled (it is by default
-  here) so raw-HTML descriptions render; if that setting is ever enabled, the
-  popup markup + inline script would be sanitized away and you'd need a real
-  plugin.
+For anyone who wants to study or revive the 42-lead design (e.g. to re-read the
+OCR'd briefings or the answer key), the archived files above are the record.
+The generator that produced them is in `git history` (branch
+`feat/osint-wargame`, up to and including commit `7c0cdec`); it is intentionally
+**not** restored on `main`.

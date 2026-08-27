@@ -17,18 +17,13 @@ This repository contains the infrastructure and challenge generation scripts to 
    `CEI_AGENT_RELEASE_STATE=visible python3 scripts/build_agent.py` (or by
    toggling visibility directly in the CTFd admin UI). See that script's
    header comment for both ways.
-5. **OSINT (proposed):** an Open-Source Intelligence wargame --
-   [docs/osint/](docs/osint/). Research-indexed against real OSINT training
-   bodies (Hacktoria, Gralhix, Bellingcat) and the U.S. Army intelligence
-   doctrine (ATP 2-22.9, FM 2-0 / ADP 2-0). Like AI Copilot Setup it has no
-   per-team Docker instance (the "target" is the public web + the player's
-   own tools), ships **hidden by default**, and is generated with
-   `python3 scripts/build_osint.py` (release via
-   `CEI_OSINT_RELEASE_STATE=visible`). It is intentionally **not** part of
-   the staged/wave-gated rollout below, so `game-stages.yml` and its
-   validators are unchanged. Flag/'answer' strings in
-   `scripts/build_osint.py` are illustrative placeholders that must be
-   re-verified against real, legal public sources before a release.
+5. **OSINT pilot:** a neutral, artifact-only Open-Source Intelligence track —
+   [docs/osint/](docs/osint/). Three reviewed dossiers are supplied by the
+   separately maintained `ctfgen-family-osint` package and exported to CTFd by
+   `scripts/build_osint.py`. The track has no container, ports, or per-team
+   runtime, ships **hidden by default**, and is intentionally outside the
+   staged rollout. Release only after organizer review with
+   `CEI_OSINT_RELEASE_STATE=visible python3 scripts/build_osint.py`.
 
 Each game's folder holds three docs:
 - `writeups.md` — complete, step-by-step solutions for every level
@@ -60,6 +55,8 @@ Each game's folder holds three docs:
   Bandit/Krypton/Natas grouping and pre-deployment validation used by Engine
 - [Staged game operations](docs/staged-game-operations.md) — rehearsal and
   event-day controls for independently released game stages
+- [Security lab intake backlog](docs/security-lab-intake.md) — proposed
+  offline, safe, and testable future lab concepts
 - [Presentation sources](presentation/README.md) — current kickoff and
   per-track briefing source
 - [Event recap — 2026-08-06](docs/event-recap-2026-08-06.md) — post-event
