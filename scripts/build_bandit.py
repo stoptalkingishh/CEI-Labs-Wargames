@@ -20,7 +20,7 @@ def _flags_yaml(flag) -> str:
     return f'  - "{flag}"\n'
 
 
-# Self-hosted image reference (see docs/self-hosted-wargames-blueprint.md
+# Self-hosted image reference (see docs/guides/self-hosted-wargames-blueprint.md
 # Phase 2's "Wire Bandit into CTFd" task). Not yet published by a CI
 # workflow -- until it is, build+tag locally with this exact name/tag
 # before deploying (`docker build -t ghcr.io/stoptalkingishh/cei-labs-
@@ -59,7 +59,7 @@ INSTANCE_GROUP = "bandit"
 # player already knows how to open a terminal and run `ssh`, so repeating
 # this per-level would just be noise. Every app name here is plain text,
 # deliberately not a clickable link: this venue's network has no internet
-# access during the event (see docs/offline-dependency-audit.md, the same
+# access during the event (see docs/guides/offline-dependency-audit.md, the same
 # reason EXTRA_INFO's own reading-material links are plain titles, not
 # URLs) -- a player installs an app on their own device beforehand, over
 # their own connection, not from inside the venue.
@@ -681,7 +681,7 @@ def _render_description(challenge: dict) -> str:
             sections.append(f"**Commands you may need:** {cmd_list}")
         if reading:
             # No live links: the venue network runs with no internet access
-            # (see docs/offline-dependency-audit.md and
+            # (see docs/guides/offline-dependency-audit.md and
             # cei-labs-event#8/live-hint-links-offline-gap), so these are
             # rendered as plain reference titles rather than clickable
             # [title](url) markdown links, which would be dead at the venue.

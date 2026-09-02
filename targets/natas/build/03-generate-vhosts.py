@@ -8,7 +8,7 @@ own AssignUserID (MPM-ITK) and HTTP Basic Auth htpasswd file.
 
 Security: levels 1-34's htpasswd files are placeholder/invalid at build
 time -- entrypoint.sh regenerates them with real per-team secrets at
-container START (see docs/security-audit-status.md). Only level 0's
+container START (see docs/guides/security-audit-status.md). Only level 0's
 password is real here: it's OverTheWire's public well-known bootstrap
 credential, not a secret, so there's nothing to rotate per team."""
 import os

@@ -21,7 +21,7 @@ def _flags_yaml(flag) -> str:
     return f'  - "{flag}"\n'
 
 
-# Self-hosted image references (see docs/self-hosted-wargames-blueprint.md
+# Self-hosted image references (see docs/guides/self-hosted-wargames-blueprint.md
 # Phase 4's "Wire Natas into CTFd" task). Neither is published by a CI
 # workflow yet -- until it is, build+tag locally with these exact names
 # before deploying:
@@ -605,7 +605,7 @@ for i, ch in enumerate(challenges_data):
             full_desc += f"{sep_after_task}**Commands you may need:** {cmd_list}"
         if reading:
             # No live links: the venue network runs with no internet access
-            # (see docs/offline-dependency-audit.md and
+            # (see docs/guides/offline-dependency-audit.md and
             # cei-labs-event#8/live-hint-links-offline-gap), so these are
             # rendered as plain reference titles rather than clickable
             # [title](url) markdown links, which would be dead at the venue.

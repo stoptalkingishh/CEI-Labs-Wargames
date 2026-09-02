@@ -3,7 +3,7 @@ import json
 
 from hint_economy import managed_tiers
 
-# Self-hosted image reference (see docs/self-hosted-wargames-blueprint.md
+# Self-hosted image reference (see docs/guides/self-hosted-wargames-blueprint.md
 # Phase 3's "Wire Krypton into CTFd" task). Not yet published by a CI
 # workflow -- until it is, build+tag locally with this exact name/tag
 # before deploying (`docker build -t ghcr.io/stoptalkingishh/cei-labs-
@@ -149,7 +149,7 @@ challenges_data = [
         # value per team at instance-creation time (env key "krypton2"),
         # and cei-labs-engine's routes.py persists it for CTFd to validate
         # against -- no longer an identical hardcoded string every team
-        # gets (see docs/security-audit-status.md). See ctfcli's
+        # gets (see docs/guides/security-audit-status.md). See ctfcli's
         # _create_flags(): a non-string flags[] entry is POSTed to
         # /api/v1/flags verbatim, so {"type": ..., "content": ..., "data":
         # ...} becomes that Flags row directly.
@@ -312,7 +312,7 @@ def _render_description(challenge: dict) -> str:
                 task_parts.append(f"**Commands you may need:** {cmd_list}")
             if reading:
                 # No live links: the venue network runs with no internet access
-                # (see docs/offline-dependency-audit.md and
+                # (see docs/guides/offline-dependency-audit.md and
                 # cei-labs-event#8/live-hint-links-offline-gap), so these are
                 # rendered as plain reference titles rather than clickable
                 # [title](url) markdown links, which would be dead at the venue.

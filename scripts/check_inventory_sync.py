@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Fail CI if docs/challenge-inventory.md drifts from the generated challenges.
+"""Fail CI if docs/guides/challenge-inventory.md drifts from the generated challenges.
 
-docs/challenge-inventory.md is a committed, human-audited index that answers
+docs/guides/challenge-inventory.md is a committed, human-audited index that answers
 the event tracker's P0 inventory item. It says of itself: "regenerate by
 re-running the extraction against current challenge.yml files if content
 changes" -- but nothing enforced that, so a builder change (a level added,
@@ -33,7 +33,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from hint_economy import TIER_PERCENTS
 
 CHALLENGES_DIR = Path("challenges")
-INVENTORY_DOC = Path("docs/challenge-inventory.md")
+INVENTORY_DOC = Path("docs/guides/challenge-inventory.md")
 
 # Challenges whose hints are priced by the hint-wallet plugin; the start-here
 # tutorials and the AI Copilot Setup track carry no hints (cell "0").
@@ -115,13 +115,13 @@ def main() -> int:
     missing_from_doc = [i for i in generated if not id_pattern(i).search(doc)]
     if missing_from_doc:
         problems.append(
-            "generated challenges missing from docs/challenge-inventory.md: "
+            "generated challenges missing from docs/guides/challenge-inventory.md: "
             + ", ".join(missing_from_doc)
         )
     only_in_doc = [i for i in rows if i not in generated]
     if only_in_doc:
         problems.append(
-            "ids documented in docs/challenge-inventory.md but not generated: "
+            "ids documented in docs/guides/challenge-inventory.md but not generated: "
             + ", ".join(sorted(only_in_doc))
         )
 
@@ -148,7 +148,7 @@ def main() -> int:
             )
 
     if problems:
-        print("inventory drift detected (regenerate docs/challenge-inventory.md):")
+        print("inventory drift detected (regenerate docs/guides/challenge-inventory.md):")
         for p in problems:
             print(f"  {p}")
         return 1

@@ -6,7 +6,7 @@ Runs as an unprivileged daemon user (not bandit14/root). Security: reads
 its expected/next passwords from $LEVEL_SECRETS at process start (this
 daemon is (re)started fresh by entrypoint.sh on every container boot) --
 per-team values, not identical hardcoded strings shared by every team
-(see docs/security-audit-status.md). If the relevant keys are missing
+(see docs/guides/security-audit-status.md). If the relevant keys are missing
 (e.g. content not yet synced), the daemon simply never accepts any
 password -- a safe failure mode, not a shared-credential one.
 """

@@ -202,7 +202,7 @@ class OsintAdapterTests(unittest.TestCase):
 
         scopes = [
             root / "scripts" / "build_osint.py",
-            root / "docs" / "osint",
+            root / "docs" / "tracks" / "osint",
         ]
         checked: list[Path] = []
         for base in scopes:

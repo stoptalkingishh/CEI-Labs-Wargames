@@ -5,9 +5,9 @@ Part of the **CEI-Labs** ecosystem.
 This repository contains the infrastructure and challenge generation scripts to host a local Capture The Flag (CTF) event using **CTFd**, while leveraging the excellent educational wargames hosted by [OverTheWire](https://overthewire.org).
 
 ## 🎮 Featured Games
-1. **[Bandit](docs/bandit/):** Unix/Linux Basics
-2. **[Krypton](docs/krypton/):** Cryptography
-3. **[Natas](docs/natas/):** Server-side Web Security
+1. **[Bandit](docs/tracks/bandit/):** Unix/Linux Basics
+2. **[Krypton](docs/tracks/krypton/):** Cryptography
+3. **[Natas](docs/tracks/natas/):** Server-side Web Security
 4. **AI Copilot Setup:** set up [CEI Labs Agent](https://github.com/Judgernaut777/CEI-Labs-Agent),
    a free, local AI coaching assistant for the three tracks above (see
    `scripts/build_agent.py`). Unlike the three tracks above, this one has no
@@ -18,20 +18,25 @@ This repository contains the infrastructure and challenge generation scripts to 
    toggling visibility directly in the CTFd admin UI). See that script's
    header comment for both ways.
 5. **OSINT pilot:** a neutral, artifact-only Open-Source Intelligence track —
-   [docs/osint/](docs/osint/). Three reviewed dossiers are supplied by the
-   separately maintained `ctfgen-family-osint` package and exported to CTFd by
-   `scripts/build_osint.py`. The track has no container, ports, or per-team
-   runtime, ships **hidden by default**, and is intentionally outside the
-   staged rollout. Release only after organizer review with
-   `CEI_OSINT_RELEASE_STATE=visible python3 scripts/build_osint.py`.
+   [docs/tracks/osint/](docs/tracks/osint/). Three reviewed dossiers are
+   supplied by the separately maintained `ctfgen-family-osint` package and
+   exported to CTFd by `scripts/build_osint.py`. The track has no container,
+   ports, or per-team runtime, ships **hidden by default**, and is
+   intentionally outside the staged rollout. Release only after organizer
+   review with `CEI_OSINT_RELEASE_STATE=visible python3 scripts/build_osint.py`.
 6. **Threadline:** a full-length, 42-lead OSINT wargame — a 6–7 hour discovery
    campaign for a **Tiberian Order** analyst, unravelling the hidden
-   coordination node called **the Loom**. See [docs/threadline/](docs/threadline/).
-   Like the pilot it has no container, ports, or per-team runtime, ships
-   **hidden by default**, and lives outside the staged rollout. Release with
+   coordination node called **the Loom**. See
+   [docs/tracks/threadline/](docs/tracks/threadline/). Like the pilot it has
+   no container, ports, or per-team runtime, ships **hidden by default**, and
+   lives outside the staged rollout. Release with
    `THREADLINE_RELEASE_STATE=visible python3 scripts/build_threadline.py`.
+7. **Sentinel:** a defensive security lab track (see
+   [docs/tracks/sentinel/](docs/tracks/sentinel/) and
+   [docs/tracks/sentinel-ooda/](docs/tracks/sentinel-ooda/)).
 
-Each game's folder holds three docs:
+Each game's folder holds the same core docs:
+- `README.md` — track overview and how to build/release it
 - `writeups.md` — complete, step-by-step solutions for every level
   (instructor answer key, not for participant distribution).
 - `learning-objectives.md` — the real-world skills taught, organized by
@@ -41,33 +46,33 @@ Each game's folder holds three docs:
 
 ## 📚 Documentation
 
-- [Learning objectives](docs/learning-objectives.md) — index into each
-  track's skills inventory, plus cross-track meta-skills
-- [Instructor cheat sheet](docs/instructor-cheatsheet.md) — index into
-  each track's fast-lookup table
-- [Facilitation runbook](docs/facilitation-runbook.md) — how to run a
-  live event, start to finish
-- [Troubleshooting / known-issues FAQ](docs/troubleshooting-faq.md)
-- [Participant quick-start](docs/participant-quickstart.md) — one-pager
+The canonical index is **[docs/README.md](docs/README.md)** — it organizes every
+document into **guides** (evergreen operator/instructor material),
+**tracks** (per-wargame docs), **reference**, and **archive** (history:
+event recaps, worklogs, plans, dated gap analyses, art/story proposals).
+
+Highlights:
+- [Participant quick-start](docs/guides/participant-quickstart.md) — one-pager
   for players
-- [Wargame-building playbook](docs/wargame-building-playbook.md) — the
-  reusable methodology behind these tracks, for building the next one
-- [Required network access](docs/network-access.md) — external sites
-  the challenge hints link to; source of truth for `cei-labs-net`'s
+- [Facilitation runbook](docs/guides/facilitation-runbook.md) — how to run a
+  live event, start to finish
+- [Troubleshooting / known-issues FAQ](docs/guides/troubleshooting-faq.md)
+- [Challenge inventory](docs/guides/challenge-inventory.md) — generated from
+  the challenge definitions, audited by CI
+- [Required network access](docs/guides/network-access.md) — external sites
+  the challenge hints link to; source of truth for `cei-labs-net`' s
   firewall allowlist
-- [Self-hosted wargames status](docs/self-hosted-wargames-status.md)
-  and [blueprint](docs/self-hosted-wargames-blueprint.md)
-- [Staggered game-stage contract](docs/staggered-game-stages.md) — the
+- [Self-hosted wargames status](docs/guides/self-hosted-wargames-status.md)
+  and [blueprint](docs/guides/self-hosted-wargames-blueprint.md)
+- [Staggered game-stage contract](docs/guides/staggered-game-stages.md) — the
   Bandit/Krypton/Natas grouping and pre-deployment validation used by Engine
-- [Staged game operations](docs/staged-game-operations.md) — rehearsal and
-  event-day controls for independently released game stages
-- [Security lab intake backlog](docs/security-lab-intake.md) — proposed
+- [Staged game operations](docs/guides/staged-game-operations.md) — rehearsal
+  and event-day controls for independently released game stages
+- [Security lab intake backlog](docs/guides/security-lab-intake.md) — proposed
   offline, safe, and testable future lab concepts
-- [Presentation sources](presentation/README.md) — current kickoff and
-  per-track briefing source
-- [Event recap — 2026-08-06](docs/event-recap-2026-08-06.md) — post-event
-  write-up of the 2026-08-06 run (issues, network end-state, what was
-  sacrificed, how challenges were played)
+- [Presentation sources](docs/presentation/README.md) — kickoff and game-guide
+  briefing sources
+- [Event archive](docs/archive/events/) — recaps of past runs
 
 ## 🚀 Setup Instructions
 
@@ -90,7 +95,7 @@ chmod +x deploy.sh
 
 For an authorized synthetic-secret container audit of the intentional Natas
 12/13 upload RCE lessons, see
-[`docs/natas-12-13-rce-isolation-audit.md`](docs/natas-12-13-rce-isolation-audit.md).
+[`docs/tracks/natas/natas-12-13-rce-isolation-audit.md`](docs/tracks/natas/natas-12-13-rce-isolation-audit.md).
 
 Deployment generates all four tracks and runs the read-only stage validator
 before uploading. It must report Bandit 35, Krypton 8, and Natas 36 (the

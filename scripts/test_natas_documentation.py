@@ -1,4 +1,4 @@
-"""Offline guardrails for Natas participant and release documentation."""
+﻿"""Offline guardrails for Natas participant and release documentation."""
 
 import ast
 import sys
@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 class NatasDocumentationTest(unittest.TestCase):
     def test_completion_contract_covers_release_blockers(self):
-        text = (ROOT / "docs/natas-completion-status.md").read_text(encoding="utf-8")
+        text = (ROOT / "docs/guides/natas-completion-status.md").read_text(encoding="utf-8")
         for required in (
             "not release-ready",
             "natas-attacker:latest",
@@ -26,9 +26,9 @@ class NatasDocumentationTest(unittest.TestCase):
 
     def test_participant_docs_do_not_advertise_unprovisioned_ssh(self):
         for relative_path in (
-            "docs/participant-quickstart.md",
-            "docs/instructor-cheatsheet.md",
-            "docs/facilitation-runbook.md",
+            "docs/guides/participant-quickstart.md",
+            "docs/guides/instructor-cheatsheet.md",
+            "docs/guides/facilitation-runbook.md",
         ):
             text = (ROOT / relative_path).read_text(encoding="utf-8")
             self.assertTrue(
@@ -59,7 +59,7 @@ class NatasDocumentationContracts(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.natas = load_generator()
-        cls.writeups = (ROOT / "docs" / "natas" / "writeups.md").read_text(encoding="utf-8")
+        cls.writeups = (ROOT / "docs" / "tracks" / "natas" / "writeups.md").read_text(encoding="utf-8")
 
     def test_free_descriptions_do_not_disclose_level_nine_through_twelve_solutions(self):
         challenges = {challenge["id"]: challenge for challenge in self.natas.challenges_data}

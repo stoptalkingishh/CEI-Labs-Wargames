@@ -3,7 +3,7 @@
 Run as root at image build time (needs chown to arbitrary bandit* users).
 
 Security: levels 1-12's flags are now per-team secrets generated at
-container START by entrypoint.sh (see docs/security-audit-status.md),
+container START by entrypoint.sh (see docs/guides/security-audit-status.md),
 not identical hardcoded values baked into every build. Levels whose flag
 is written PLAIN into a file (0-9) get a fixed-length 32-char PLACEHOLDER
 here, substituted for the real value by entrypoint.sh at container start

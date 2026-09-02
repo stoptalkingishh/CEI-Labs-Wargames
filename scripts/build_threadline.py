@@ -19,7 +19,7 @@ hidden until the organizer releases it manually (mirroring
 STORYLINE
 ---------
 Every lead belongs to one faction in the "Gilded Hose" meta-plot (see
-docs/threadline/storyline.md). The player is a Tiberian Order analyst resolving
+docs/tracks/threadline/storyline.md). The player is a Tiberian Order analyst resolving
 one short lead at a time (5-15 min each) across a discovery board. The factions:
 
   CARTEL   = Crimson Cartel / Los Aztecas (narcotics & goods)

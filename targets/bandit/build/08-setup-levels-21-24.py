@@ -51,7 +51,7 @@ os.chmod("/etc/cron.d/cronjob_bandit24", 0o644)
 # Security: fixed-length placeholders here -- entrypoint.sh substitutes
 # the real per-team values (and sets bandit22/23/24's actual login
 # passwords to match) at container start (see
-# docs/security-audit-status.md). placeholder(N) always means "bandit-N's
+# docs/guides/security-audit-status.md). placeholder(N) always means "bandit-N's
 # own flag" consistently, matching the "banditN" secret-key convention
 # used everywhere else -- NOT the account number the file happens to be
 # named after.

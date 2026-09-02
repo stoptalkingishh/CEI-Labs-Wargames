@@ -4,7 +4,7 @@
 Security: these flags are now per-team secrets generated at container
 START by entrypoint.sh -- a fixed-length placeholder here, substituted
 for the real value at container start (see
-docs/security-audit-status.md)."""
+docs/guides/security-audit-status.md)."""
 import os
 import random
 import subprocess

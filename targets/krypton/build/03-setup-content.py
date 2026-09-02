@@ -2,7 +2,7 @@
 """Krypton onboarding content only. Levels 0, 1, 3, 4, 5's actual puzzle
 content (Base64, ROT13, substitution, two Vigenere variants) is
 generated at CONTAINER START by entrypoint.sh from per-team secrets, not
-baked in here at build time -- see docs/security-audit-status.md. Levels
+baked in here at build time -- see docs/guides/security-audit-status.md. Levels
 2 and 6 (which need the compiled `encrypt` binaries) are handled
 separately too, also at container start (both levels 2 and 6)."""
 import os
