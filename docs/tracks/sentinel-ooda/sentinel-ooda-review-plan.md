@@ -152,7 +152,7 @@ orchestrator decision recorded in each cell after each subagent result.
 
 ## Completed review
 
-The completed review workspace is in [`sentinel-ooda/README.md`](sentinel-ooda/README.md),
+The completed review workspace is in [`README.md`](README.md),
 with the compact 210-decision ledger, consolidated findings, and implementation
 backlog. The ledger uses one cell per lab/loop to keep the complete record
 reviewable without duplicating the full protocol in every row.

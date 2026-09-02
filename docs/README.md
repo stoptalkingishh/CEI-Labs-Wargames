@@ -30,11 +30,14 @@ Under `docs/guides/`.
 | `security-lab-intake.md` | Backlog of proposed offline lab concepts |
 | `hint-wallet-sync-deployment.md` | Hint-wallet sync + deployment notes |
 | `natas-completion-status.md` | Natas build/release status |
+| `game-completion-status.md` | Current source, generated-scope, and release-readiness status for every track |
 
 ## Tracks — per-wargame documentation
 
-Under `docs/tracks/`. Every track has the same core set
+Under `docs/tracks/`. The three primary self-hosted tracks share the core set
 (`README.md`, `learning-objectives.md`, `cheatsheet.md`, `writeups.md`).
+The additional tracks use the same pattern where applicable and retain their
+own design, release, and evidence documents.
 
 | Track | Docs | Type |
 |---|---|---|
@@ -74,8 +77,10 @@ current.
 
 ## Where the generated content lives
 
-- `challenges/` — generated CTFd challenge folders (git-ignored; produced by the
-  `scripts/build_*.py` generators)
+- `challenges/` — generated CTFd challenge folders for the three staged games
+  and AI Copilot (git-ignored)
+- `sentinel/` — generated CTFd challenge folders for the hidden Sentinel track
+  (git-ignored; intentionally separate from the staged-game export)
 - `osint/`, `threadline/` — generated output for the hidden OSINT tracks
   (git-ignored)
 - `scripts/` — generators, validators, and tests (`test_*.py`)
