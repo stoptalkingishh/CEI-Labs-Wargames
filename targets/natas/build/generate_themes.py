@@ -5,7 +5,7 @@ each containing TWO selectable states -- `.cei-locked` and `.cei-solved`
 
 IMPORTANT -- what "solved" means here: Natas's own web app has NO
 visibility into CTFd's scoring/solve state at all (they're completely
-separate systems -- see docs/security-audit-status.md and the PR
+separate systems -- see docs/guides/security-audit-status.md and the PR
 description on the branch that introduced this file for the full
 investigation). The signal used instead is locally observable by Natas
 itself: level N is marked "solved" the moment a request successfully

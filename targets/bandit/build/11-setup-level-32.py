@@ -13,7 +13,7 @@ import subprocess
 # Security: this flag is now a per-team secret generated at container
 # START by entrypoint.sh -- a fixed-length placeholder here, substituted
 # for the real value at container start (see
-# docs/security-audit-status.md).
+# docs/guides/security-audit-status.md).
 FLAG_32 = "BANDITPLACEHOLDER32".ljust(32, "Z")  # -> bandit33's password
 
 SHELL_PATH = "/home/bandit32/uppershell"

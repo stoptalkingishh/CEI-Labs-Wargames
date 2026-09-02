@@ -4,7 +4,7 @@
 Kept as historical/local tooling for the superseded 42-lead OSINT campaign.
 The source briefings are raster scans (no text layer), so this uses RapidOCR
 to transcribe each page. Output:
-    docs/osint/archive/briefing-transcripts.json
+    docs/tracks/osint/archive/briefing-transcripts.json
 mapping challenge-id -> {source, pages}. ASCII-safe output.
 
 The challenge->zip mapping below is frozen from the retired campaign. It is
@@ -24,7 +24,7 @@ from rapidocr_onnxruntime import RapidOCR
 
 ROOT = Path(__file__).resolve().parents[2]
 ARCHIVE_DIR = ROOT.parent / "hacktoria-archive"
-OUT = ROOT / "docs" / "osint" / "archive" / "briefing-transcripts.json"
+OUT = ROOT / "docs" / "tracks" / "osint" / "archive" / "briefing-transcripts.json"
 
 # Frozen from the retired 42-lead campaign (scripts/build_osint.py
 # CHALLENGE_SOURCE_ZIP at commit 7c0cdec).

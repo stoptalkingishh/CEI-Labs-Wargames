@@ -220,7 +220,7 @@ PYEOF
 # hint content lives solely in the challenges/*-hint-wallet.json manifests
 # synced here. So if there IS wallet-bundle content to sync but this step
 # gets silently skipped, every native hint on the live instance is wiped
-# with nothing to replace it. See docs/P0-CONTENT-DEPLOY-LOG-2026-07-23.md.
+# with nothing to replace it. See docs/archive/events/P0-CONTENT-DEPLOY-LOG-2026-07-23.md.
 sync_hint_wallet_bundle() {
     # NOTE: challenges/agent-hint-wallet.json (AI Copilot Setup) and
     # osint/osint-hint-wallet.json (OSINT track) are deliberately NOT

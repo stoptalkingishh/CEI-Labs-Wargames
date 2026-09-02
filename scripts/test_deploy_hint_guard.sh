@@ -13,7 +13,7 @@
 # When wallet content exists, an unset secret must hard-fail (non-zero exit)
 # instead of silently skipping -- because "ctf challenge sync" unconditionally
 # deletes native CTFd hints and nothing else would recreate them. See
-# docs/P0-CONTENT-DEPLOY-LOG-2026-07-23.md for the real near-incident this
+# docs/archive/events/P0-CONTENT-DEPLOY-LOG-2026-07-23.md for the real near-incident this
 # guards against.
 set -Eeuo pipefail
 
