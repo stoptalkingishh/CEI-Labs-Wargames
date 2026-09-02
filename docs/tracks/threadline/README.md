@@ -40,6 +40,22 @@ and a doomsday cult that all unknowingly feed it.
 | `event-runbook.md` | 7-hour run-of-show + pacing |
 | `release-verification.md` | Pre-flight checklist before going visible |
 | `briefing-transcripts.json` | OCR'd source-briefing narratives for the popups |
+| `source-lineage.md` | Broader OSINT source and ownership context |
+
+## Source and release boundary
+
+Threadline is a curated campaign, not a direct import of every exercise in the
+OSINT research catalog. Its lead-to-source mapping is in
+`scripts/build_threadline.py`; the 39 non-capstone leads map to named packages
+in the external `hacktoria-archive/` checkout, while the two Loom capstones use
+the campaign's case-file structure. The broader Hacktoria, Gralhix, and
+Bellingcat research is documented in the sibling OSINT track's
+[`source-lineage.md`](../osint/source-lineage.md).
+
+The generator falls back to committed briefing transcripts when the external
+archive is unavailable, but missing source attachments must be recorded and
+resolved before release. Generated output is always rebuilt from scratch under
+`threadline/`.
 
 ## Build
 
