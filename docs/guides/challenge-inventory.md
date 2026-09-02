@@ -1,14 +1,14 @@
 # Challenge inventory
 
 Answers `cei-labs-event/TRACKER.md` §3's P0 item: "Produce a challenge
-inventory for all three tracks with ID, audience, objective, prerequisites,
+inventory for the generated metadata tracks with ID, audience, objective, prerequisites,
 points, flag source, expected solve path, estimated duration, hints, reset
 method, dependencies, and owner." Generated directly from each level's
 `challenges/<id>/challenge.yml` (the actual CTFd-imported source of truth),
 not hand-transcribed — regenerate by re-running the extraction against
 current `challenge.yml` files if content changes. Full narrative
-walkthroughs already exist per track in `docs/{bandit,krypton,natas}/
-writeups.md` and `docs/{bandit,krypton,natas}/cheatsheet.md`; this table
+walkthroughs already exist per track in `docs/tracks/{bandit,krypton,natas}/
+writeups.md` and `docs/tracks/{bandit,krypton,natas}/cheatsheet.md`; this table
 doesn't duplicate that content, it indexes it.
 
 **Hints (cost) is the one column not sourced from `challenge.yml`** — native
@@ -33,11 +33,11 @@ three costs 85%, not 20+50+85).
 - **Owner** — every level is currently unowned (`TBD` across the whole
   tracker). Not invented here.
 - **Prerequisites** — CTFd has no configured prerequisite/requirement
-  chain for any of these 65 challenges (checked directly). The content
+  chain for any of these 85 challenges (checked directly). The content
   design assumes sequential play within a track (each level's solution is
   the next level's login), but nothing technically gates level N+1 behind
   level N — a player can jump to any unlocked level. Audience is the same
-  across all three tracks: any registered participant/team.
+  across the generated metadata tracks: any registered participant/team.
 
 ## A real finding surfaced while building this table
 

@@ -129,4 +129,5 @@ show_launcher: {str(challenge["id"] == "sentinel-start-here").lower()}
 
 if __name__ == "__main__":
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    build(os.path.join(root, "challenges"))
+    # Keep this hidden, non-staged track out of the primary staged-game export.
+    build(os.path.join(root, "sentinel"))

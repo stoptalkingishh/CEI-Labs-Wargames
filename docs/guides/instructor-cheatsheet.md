@@ -4,9 +4,9 @@ Fast-lookup reference for walking a room during a live session. Each
 track has its own cheat sheet, in its own folder alongside that track's
 full writeups and learning objectives:
 
-- [`bandit/cheatsheet.md`](bandit/cheatsheet.md)
-- [`krypton/cheatsheet.md`](krypton/cheatsheet.md)
-- [`natas/cheatsheet.md`](natas/cheatsheet.md)
+- [`Bandit cheatsheet`](../tracks/bandit/cheatsheet.md)
+- [`Krypton cheatsheet`](../tracks/krypton/cheatsheet.md)
+- [`Natas cheatsheet`](../tracks/natas/cheatsheet.md)
 
 Every level's own in-platform hints (3 tiers, point-costed) are the
 first thing to point a stuck participant at — these sheets are for when

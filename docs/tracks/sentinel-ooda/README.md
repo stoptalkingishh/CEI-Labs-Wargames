@@ -5,7 +5,7 @@ This workspace records the completed 210-loop, orchestrator-led content review:
 in `ledger.md` is the authoritative completed record: each cell records the
 final decision for one lab/loop pair, not a claim of 210 verbose rows. The
 protocol and terms are defined in
-[`../sentinel-ooda-review-plan.md`](../sentinel-ooda-review-plan.md).
+ [`sentinel-ooda-review-plan.md`](sentinel-ooda-review-plan.md).
 
 ## Status
 

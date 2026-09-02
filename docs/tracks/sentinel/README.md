@@ -3,6 +3,11 @@
 **Sentinel** — a defensive security lab track built for offline, safe,
 observability-focused practice (SOC analyst / security-operations training).
 
+The current generated pilot contains Start Here, labs 01–05, and six deferred
+expansion labs (22–27). Labs 06–21 remain planned. All generated challenges are
+hidden and non-staged until the target, evidence contracts, and runtime checks
+are independently validated.
+
 ## Doc set
 
 - `learning-objectives.md` — skills inventory by concept
@@ -16,7 +21,7 @@ observability-focused practice (SOC analyst / security-operations training).
 ## Build & release
 
 ```bash
-python3 scripts/build_sentinel.py   # writes challenges/ (git-ignored)
+python3 scripts/build_sentinel.py   # writes sentinel/ (git-ignored)
 ```
 
 Target image: `targets/sentinel/` (per-team via Docker Swarm + instance-launcher).

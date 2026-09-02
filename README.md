@@ -35,7 +35,7 @@ This repository contains the infrastructure and challenge generation scripts to 
    [docs/tracks/sentinel/](docs/tracks/sentinel/) and
    [docs/tracks/sentinel-ooda/](docs/tracks/sentinel-ooda/)).
 
-Each game's folder holds the same core docs:
+Each primary game's folder holds the same core docs:
 - `README.md` — track overview and how to build/release it
 - `writeups.md` — complete, step-by-step solutions for every level
   (instructor answer key, not for participant distribution).
@@ -59,6 +59,8 @@ Highlights:
 - [Troubleshooting / known-issues FAQ](docs/guides/troubleshooting-faq.md)
 - [Challenge inventory](docs/guides/challenge-inventory.md) — generated from
   the challenge definitions, audited by CI
+- [Wargame completion status](docs/guides/game-completion-status.md) — current
+  scope, generated counts, and release-readiness boundaries for every track
 - [Required network access](docs/guides/network-access.md) — external sites
   the challenge hints link to; source of truth for `cei-labs-net`' s
   firewall allowlist

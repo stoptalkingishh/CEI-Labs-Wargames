@@ -8,6 +8,7 @@ challenges/*.json
 # Ignore generated Threadline wargame output (non-staged, produced by
 # build_threadline.py from docs/threadline transcripts + external evidence)
 /threadline/
+/sentinel/
 
 # Ignore Python compilation caches
 __pycache__/
