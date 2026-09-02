@@ -57,7 +57,8 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT = SCRIPT_DIR.parent
 BASE_DIR = ROOT / "threadline"
 
-RELEASE_STATE = os.environ.get("THREADLINE_RELEASE_STATE", "hidden")
+_VALID_RELEASE_STATES = ("hidden", "visible")
+RELEASE_STATE = os.environ.get("THREADLINE_RELEASE_STATE", "hidden").strip().lower()
 
 # ---------------------------------------------------------------------------
 # Challenge authoring helper
@@ -921,6 +922,17 @@ def managed_tiers(value, texts):
 
 
 def main_build():
+    if RELEASE_STATE not in _VALID_RELEASE_STATES:
+        raise SystemExit(
+            f"THREADLINE_RELEASE_STATE must be one of {_VALID_RELEASE_STATES}, "
+            f"got {RELEASE_STATE!r}. Leave it unset for the default "
+            f"({_VALID_RELEASE_STATES[0]})."
+        )
+
+    # Rebuild from a clean generated directory so removed or renamed leads
+    # cannot survive into a later CTFd sync.
+    if BASE_DIR.exists():
+        shutil.rmtree(BASE_DIR)
     BASE_DIR.mkdir(parents=True, exist_ok=True)
     ARCHIVE_DIR = ROOT.parent / "hacktoria-archive"
 
@@ -1035,4 +1047,3 @@ version: "1.0"
 
 if __name__ == "__main__":
     main_build()
-

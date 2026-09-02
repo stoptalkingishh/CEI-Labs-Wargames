@@ -13,7 +13,7 @@ Pairs with `cheatsheet.md` (fast lookup) and `writeups.md` (answer key).
   each arc's first lead is its easiest anchor skill. Teams may skip ahead, but
   the capstone (`threadline-41`) assumes notes from earlier arcs.
 - **Release model:** track ships hidden; organizer releases manually
-  (`CEI_Threadline_RELEASE_STATE=visible python3 scripts/build_threadline.py`, then sync).
+  (`THREADLINE_RELEASE_STATE=visible python3 scripts/build_threadline.py`, then sync).
 
 ## Timeline (7-hour plan)
 
@@ -52,7 +52,7 @@ works because it keys on arcs 1-6 artifacts.
 ## Pre-flight checklist
 
 - [ ] `python3 scripts/build_threadline.py` (hidden default) or with
-      `CEI_Threadline_RELEASE_STATE=visible`, then `ctf challenge sync threadline/`.
+      `THREADLINE_RELEASE_STATE=visible`, then `ctf challenge sync threadline/`.
 - [ ] Answers re-verified against live sources (all flags are placeholders until
       then - see `writeups.md` header).
 - [ ] Workstations have: browser + Google account, one reverse-image engine,
