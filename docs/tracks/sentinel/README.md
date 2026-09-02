@@ -22,6 +22,8 @@ are independently validated.
 
 ```bash
 python3 scripts/build_sentinel.py   # writes sentinel/ (git-ignored)
+# then import the hidden track separately when its release gate is approved:
+ctf challenge sync sentinel/
 ```
 
 Target image: `targets/sentinel/` (per-team via Docker Swarm + instance-launcher).

@@ -3,7 +3,8 @@
 A skills inventory for the OSINT track (12 drills + a Start Here), organized by
 concept rather than level number, so it can be referenced by skill gap. Every
 skill is paired with the U.S. Army intelligence doctrine it teaches (see
-`threadline-research-index.md` §4 for the doctrine vocabulary). Pairs with
+[`../osint/osint-research-index.md`](../osint/osint-research-index.md) §4 for
+the shared doctrine vocabulary). Pairs with
 `writeups.md` (answer key) and `cheatsheet.md` (fast lookup) in this folder.
 
 ## Geolocation / imagery analysis (drill 1, 4, 9)
