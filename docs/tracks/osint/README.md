@@ -18,6 +18,13 @@ The previous 42 proposals were placeholders: their original evidence packages ar
 
 No storyline or cross-project lore is part of this track.
 
+## Source lineage
+
+The broader research set and the reason this pilot is separate from Threadline
+are documented in [`source-lineage.md`](source-lineage.md). The detailed source,
+tool, methodology, and doctrine research remains in
+[`osint-research-index.md`](osint-research-index.md).
+
 ## Build
 
 Install the trusted host and reviewed plugin. The target CTFd deployment must
