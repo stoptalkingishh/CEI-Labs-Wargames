@@ -46,7 +46,7 @@ own design, release, and evidence documents.
 | [natas](tracks/natas/) | README + 3 core + RCE-isolation audit | Staged (web security) |
 | [sentinel](tracks/sentinel/) | README + 3 core + design matrix + tooling + `ooda/` | Hidden lab (defensive) |
 | [sentinel-ooda](tracks/sentinel-ooda/) | README + ledger/findings/remediation + review-plan | Companion project |
-| [osint](tracks/osint/) | README + storyline/runbook + 3-core-ish + archive | Hidden pilot |
+| [osint](tracks/osint/) | README + source lineage/research index + 3-case pilot docs + archive | Hidden pilot |
 | [threadline](tracks/threadline/) | README + storyline/runbook + 3-core-ish + transcripts | Hidden full campaign |
 
 ## Reference

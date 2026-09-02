@@ -1,15 +1,17 @@
 # OSINT Wargame — Source & Doctrine Research Index
 
-Working index behind the new **OSINT** wargame track. It catalogs real Open-Source
+Working research index behind the OSINT program. It catalogs real Open-Source
 Intelligence exercises and CTFs from the four source bodies named in the project
 request, records what each one teaches, which tools and methodology the solver
 uses, and maps every skill back to the U.S. Army intelligence doctrine the track
 uses as its learning-objective language (ATP 2-22.9 *Open-Source Intelligence*,
 FM 2-0 / ADP 2-0 *Intelligence*).
 
-This document is the *research picture*; `docs/tracks/osint/` itself (plus
-`scripts/build_osint.py` and the `osint/` import output) is the wargame built
-from it.
+This document is the *research picture*. It is broader than the current
+three-case OSINT pilot: the pilot uses only reviewed bundles from the external
+`ctfgen-family-osint` package, while the separate Threadline campaign uses a
+curated subset of the Hacktoria-inspired work. See
+[`source-lineage.md`](source-lineage.md) for the ownership and scope boundary.
 
 - [1. Sources](#1-sources)
 - [2. OSINT skill taxonomy (recurring across all sources)](#2-osint-skill-taxonomy)
@@ -167,6 +169,8 @@ Concepts used as the **learning-objective language** for the OSINT track.
 2. **Skill ladder** reused from the sources: Tier A (single-tool direct answer) -> Tier B (one transform: decode-then-geo) -> Tier C (multi-clue cross-toolchain / a "mini case" requiring corroboration).
 3. **Every challenge carries the doctrine vocabulary** from §4 in its learning-objectives doc, so a participant can trace each flag back to an ATP/FM concept (this is the OS-Schoolhouse hook).
 4. **Legal boundary is a first-class objective** — at least one challenge and the player quick-start make the ATP "legally available vs legally protected / PII" line explicit, mirroring the AI track's own "do not message users" rule.
-5. **Corroboration / reliability is the capstone node** — a later challenge asks the driver to produce a sourced judgement string (bodies of a "product"), closing the cycle.
+5. **Corroboration / reliability is a capstone design pattern** — it is used in
+   Threadline and remains a candidate for future reviewed pilot cases; it is not
+   a claim that every current pilot bundle implements the full research ladder.
 
 The build: start with `scripts/build_osint.py` (generates the `osint/` import), tune difficulty from the writeup traces above, and release the track hidden-by-default exactly like the AI Copilot track.
