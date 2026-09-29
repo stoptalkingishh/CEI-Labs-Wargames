@@ -53,6 +53,11 @@ import zipfile
 
 from pathlib import Path
 
+try:  # imported as a script (scripts/ on sys.path) or as scripts.build_threadline
+    from hint_economy import ctfd_tiers
+except ModuleNotFoundError:
+    from scripts.hint_economy import ctfd_tiers
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT = SCRIPT_DIR.parent
 BASE_DIR = ROOT / "threadline"
@@ -909,18 +914,6 @@ HINTS = {
 }
 
 
-def managed_tiers(value, texts):
-    """Mirror the staged tracks' tier generation (prices via hint_economy)."""
-    sys.path.insert(0, str(SCRIPT_DIR))
-    from hint_economy import tier_costs  # noqa: PLC0415 (late import)
-
-    costs = tier_costs(value)
-    tiers = []
-    for n, (text, cost) in enumerate(zip(texts, costs), 1):
-        tiers.append({"tier": n, "cost": cost, "content": text})
-    return tiers
-
-
 def main_build():
     if RELEASE_STATE not in _VALID_RELEASE_STATES:
         raise SystemExit(
@@ -1017,7 +1010,7 @@ version: "1.0"
         if cid in HINTS:
             wallet.append({
                 "name": ch["name"],
-                "tiers": managed_tiers(ch["points"], HINTS[cid]),
+                "tiers": ctfd_tiers(ch["points"], HINTS[cid]),
             })
         (folder / "challenge.yml").write_text(yaml, encoding="utf-8")
 

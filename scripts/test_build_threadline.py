@@ -54,6 +54,30 @@ class ThreadlineBuilderTests(unittest.TestCase):
                 with self.assertRaises(SystemExit):
                     builder.main_build()
 
+    def test_uses_the_shared_tier_helper_instead_of_a_local_copy(self):
+        # #102: build_threadline.py used to define its own `managed_tiers`
+        # that reimplemented hint_economy's pairing *without* its
+        # "exactly three hint tiers" ValueError guard, so a tier-count typo
+        # in HINTS shipped a silently short wallet.
+        self.assertFalse(hasattr(builder, "managed_tiers"))
+        for challenge_id, texts in builder.HINTS.items():
+            with self.subTest(challenge_id=challenge_id):
+                tiers = builder.ctfd_tiers(100, texts)
+                self.assertEqual(len(tiers), 3)
+                self.assertEqual([tier["tier"] for tier in tiers], [1, 2, 3])
+
+    def test_hint_wallet_tiers_raise_on_malformed_authored_data(self):
+        malformed = dict(builder.HINTS)
+        first_id = sorted(malformed)[0]
+        malformed[first_id] = malformed[first_id][:2]
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "threadline"
+            with patch.object(builder, "BASE_DIR", output), patch.object(
+                builder, "RELEASE_STATE", "hidden"
+            ), patch.object(builder, "HINTS", malformed):
+                with self.assertRaises(ValueError):
+                    builder.main_build()
+
 
 if __name__ == "__main__":
     unittest.main()
