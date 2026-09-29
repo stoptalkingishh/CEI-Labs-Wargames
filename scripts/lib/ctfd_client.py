@@ -129,8 +129,8 @@ def add_static_flag(admin: CTFdSession, challenge_id: int, content: str) -> None
     per_team_dynamic* flag deploy.sh installed. CTFd accepts a submission if
     ANY of a challenge's flags match, so this lets black-box tests exercise
     real solve/scoreboard behavior without needing a live orchestrator to
-    mint per-team secrets (out of scope here -- see docs/staggered-wargame-
-    stage-verification.md, which assumes a full Engine deployment)."""
+    mint per-team secrets (out of scope here -- see docs/guides/staggered-
+    game-stages.md, which assumes a full Engine deployment)."""
     resp = admin.api("POST", "/api/v1/flags", json={
         "challenge_id": challenge_id, "content": content, "type": "static", "data": "",
     })
@@ -181,7 +181,7 @@ def scoreboard_page(session: CTFdSession, slug: str) -> requests.Response:
 # -- direct DB read-only introspection -------------------------------------------
 # The wargame-stages plugin exposes no HTTP endpoint for the audit trail (only
 # rendered into the admin HTML template), so "confirm the audit table has only
-# one start mutation" (docs/staggered-wargame-stage-verification.md item 4) has
+# one start mutation" (docs/guides/staggered-game-stages.md item 4) has
 # no other black-box-observable surface. This shells out to the DB container
 # read-only via `docker exec ... mysql -e SELECT ...` -- never INSERT/UPDATE/DELETE.
 

@@ -88,7 +88,16 @@ def main() -> int:
             f"live={live} expected={expected}",
         )
 
-    check("total live challenge count is 59 (35 + 8 + 16)", len(admin_challenges) == 59, str(len(admin_challenges)))
+    # Derived from the manifest, never a literal: the per-stage loop above
+    # already reads expected_challenge_count, so a hardcoded total here would
+    # silently contradict game-stages.yml the next time a track gains levels.
+    expected_total = sum(stage["expected_challenge_count"] for stage in manifest["stages"])
+    per_stage = " + ".join(str(stage["expected_challenge_count"]) for stage in manifest["stages"])
+    check(
+        f"total live challenge count is {expected_total} ({per_stage})",
+        len(admin_challenges) == expected_total,
+        str(len(admin_challenges)),
+    )
 
     # -- 2. JSON vs CSV export agreement, per stage -----------------------------
     for stage in manifest["stages"]:

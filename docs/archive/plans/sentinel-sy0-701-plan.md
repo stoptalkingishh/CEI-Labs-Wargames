@@ -10,20 +10,22 @@ and does not claim that completing it prepares a participant to pass an exam.
 
 The alignment source is CompTIA's official exam-objectives page, recorded with
 version and retrieval/checksum instructions in the project-owned
-[`reference/comptia-security-plus-sy0-701-v7-objectives.md`](reference/comptia-security-plus-sy0-701-v7-objectives.md)
+[`docs/reference/comptia-security-plus-sy0-701-v7-objectives.md`](../../reference/comptia-security-plus-sy0-701-v7-objectives.md)
 coverage map. The map does not reproduce objective wording. Sentinel
 complements the existing Linux, cryptography, and web-security tracks with
 defensive system administration and incident response work.
 
 Tooling and lab-platform research, including the recommended lightweight
 open-source toolchain and Windows scope, is recorded in
-[`sentinel-tooling-research.md`](sentinel-tooling-research.md).
+[`docs/tracks/sentinel/sentinel-tooling-research.md`](../../tracks/sentinel/sentinel-tooling-research.md).
 
 The per-lab learning, evidence, validation, software, and build contracts are
-maintained in [`sentinel-lab-design-matrix.md`](sentinel-lab-design-matrix.md).
+maintained in
+[`docs/tracks/sentinel/sentinel-lab-design-matrix.md`](../../tracks/sentinel/sentinel-lab-design-matrix.md).
 
 The quality-review operating model for the 210-loop, orchestrator-led OODA
-review is in [`sentinel-ooda-review-plan.md`](sentinel-ooda-review-plan.md).
+review is in
+[`docs/tracks/sentinel-ooda/sentinel-ooda-review-plan.md`](../../tracks/sentinel-ooda/sentinel-ooda-review-plan.md).
 
 ## Player experience
 

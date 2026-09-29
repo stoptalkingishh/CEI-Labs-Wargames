@@ -195,12 +195,40 @@ organizer releases it manually.
 | `cei-agent-04-ssh` | 150 | static via `ctf-agent-verify` | none | n/a | 0 | Point the agent at a challenge box and complete a live SSH round-trip. |
 | `cei-agent-05-prompt` | 150 | static via `ctf-agent-verify` | none | n/a | 0 | Ask for help using the documented prompt shape. |
 
+## Scope: tracks deliberately not in this table
+
+This inventory covers the **staged** tracks (Bandit, Krypton, Natas) plus the
+**AI Copilot Setup** metadata track — the 85 challenges whose `challenge.yml`
+files land in the git-ignored `challenges/` directory and are therefore the
+input this table is extracted from.
+
+Three further tracks are built by generators in this repository but are
+**out of scope here**, because they write to separate git-ignored top-level
+output directories rather than `challenges/`:
+
+| Track | Challenges | Generator | Output | Why not here |
+|---|---:|---|---|---|
+| Sentinel | 12 | `scripts/build_sentinel.py` | `sentinel/` | Non-staged and hidden by default; labs 01-05 still need independent runtime/assessment verification, so a generated count would overstate readiness. |
+| Threadline | 42 | `scripts/build_threadline.py` | `threadline/` | Non-staged; requires the external evidence archive where attachments are expected, plus organizer review. |
+| OSINT pilot | 3 | `scripts/build_osint.py` | `osint/` | Non-staged, and generation cannot be reproduced from this checkout at all without the external `ctf_generator.families:osint_investigation` entry point installed. |
+
+The opening paragraph's "generated directly from each level's
+`challenges/<id>/challenge.yml`" is a statement about *how* this table is
+built, not a claim that it covers every challenge in the repository. For
+per-track counts and release posture across **all** tracks — including the
+57 challenges omitted above — see
+[`game-completion-status.md`](game-completion-status.md), which is the
+repository-wide status doc. Where the two disagree in scope, the difference
+is deliberate: this table is an extraction audit, that one is a release
+assessment.
+
 ## Totals
 
-35 + 8 + 36 = **79 staged levels**, matching `game-stages.yml`'s
-`expected_challenge_count` for all three staggered-game stages, plus the
-6 deliberately-unstaged AI Copilot Setup challenges above = **85
-challenges total** (the same split `scripts/validate_generated.py`
-encodes as `UNSTAGED_TRACK_CHALLENGE_COUNT`). Points run
+79 staged levels + 6 AI Copilot Setup challenges = **85 challenges in
+scope**, of which 35 + 8 + 36 = 79 match `game-stages.yml`'s
+`expected_challenge_count` for all three staggered-game stages (the same split
+`scripts/validate_generated.py` encodes as
+`UNSTAGED_TRACK_CHALLENGE_COUNT`). The 57 challenges listed in the scope
+section above are in the repository but not in this table. Points run
 sequentially within each track (Bandit 100→1750, Krypton 200/250...500,
 Natas 200→1900), all `start-here` levels fixed at 10 points.
