@@ -45,7 +45,36 @@ python3 scripts/build_bandit.py
 python3 scripts/build_krypton.py
 python3 scripts/build_natas.py
 python3 scripts/build_agent.py
-python3 scripts/build_osint.py
+
+# The OSINT pilot is the one non-staged track with an EXTERNAL dependency:
+# scripts/build_osint.py resolves the operator-installed
+# ctf_generator.families:osint_investigation entry point (see ENTRY_POINT_GROUP
+# / ENTRY_POINT_NAME in that script) and raises RuntimeError when it is absent.
+# Called unguarded under `set -Eeuo pipefail` that aborted the ENTIRE deploy --
+# before the stage validator, the manifest, and every upload -- over a
+# hidden-by-default, artifact-only 3-challenge pilot, blocking the 65 staged
+# Bandit/Krypton/Natas/Agent challenges that need no such plugin. Probe for the
+# entry point first and skip the pilot with a loud warning instead. A build
+# that starts is still fatal on any real error, so a broken plugin is never
+# silently downgraded to "skip".
+osint_track_built=0
+if python3 -c 'import importlib.metadata as md; raise SystemExit(0 if sum(1 for e in md.entry_points(group="ctf_generator.families") if e.name == "osint_investigation") == 1 else 1)' 2>/dev/null; then
+    python3 scripts/build_osint.py
+    osint_track_built=1
+else
+    echo "⚠️  Skipping the OSINT pilot: the ctfgen-family-osint package is not installed."
+    echo "   It needs its ctf_generator.families:osint_investigation entry point; the other"
+    echo "   tracks are unaffected. Install it to include osint/ in this deploy."
+    if [ -d "osint" ]; then
+        # Stale output left by an earlier run (when the plugin WAS installed) must
+        # NOT reach CTFd: the OSINT upload loop below only tests for the directory's
+        # existence, so without this removal it would happily publish unreviewed
+        # content that this run just declined to build. Mirrors build_osint.py,
+        # which rmtree's its output dir on every successful run.
+        rm -rf -- osint
+        echo "   Removed a stale osint/ tree from a previous run; it will not be uploaded."
+    fi
+fi
 python3 scripts/validate_game_stages.py
 python3 scripts/validate_generated.py --output deployment-manifest.json
 
@@ -383,7 +412,10 @@ done
 
 # OSINT track — non-staged, lives in osint/ (not challenges/). Sync if built, hidden by default.
 # Not counted in the staged 65-challenge total above and has no instance mappings.
-if [ -d "osint" ]; then
+# Gated on osint_track_built as well as the directory: a tree left on disk by an
+# earlier run (e.g. after the plugin was uninstalled) must never be synced, so
+# "the directory exists" is not on its own evidence that it is current.
+if [ "$osint_track_built" -eq 1 ] && [ -d "osint" ]; then
     echo "Syncing OSINT track (osint/) — hidden by default, not counted in staged total..."
     for dir in osint/*/ ; do
         [ -d "$dir" ] || continue

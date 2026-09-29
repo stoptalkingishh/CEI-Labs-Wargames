@@ -93,6 +93,15 @@ chmod +x deploy.sh
 ./deploy.sh
 ```
 
+The optional OSINT pilot is built only when the separately maintained
+`ctfgen-family-osint` package is installed, because `scripts/build_osint.py`
+resolves its `ctf_generator.families:osint_investigation` entry point and cannot
+run without it. Without that package `deploy.sh` prints a warning, skips the
+pilot (and discards any stale `osint/` output from an earlier run so it is
+never synced), and deploys the four main tracks as normal. To include the
+pilot, install the package first — see
+[docs/tracks/osint/](docs/tracks/osint/).
+
 ### Natas RCE isolation audit
 
 For an authorized synthetic-secret container audit of the intentional Natas
