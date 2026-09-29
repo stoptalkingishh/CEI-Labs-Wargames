@@ -92,6 +92,52 @@ class NatasDocumentationContracts(unittest.TestCase):
         self.assertIn("<team-natas-1-password>", self.writeups)
         self.assertIn("<team's final Natas flag>", self.writeups)
 
+    def test_only_the_terminal_level_claims_to_be_the_final_level(self):
+        """natas-14's task once opened with "This is the final Natas level."
+        while the track runs to natas-34, so a participant on level 14 was told
+        the track ended there and then found 20 more levels. Only the genuinely
+        terminal level may claim the track ends at it; a non-terminal level may
+        still say it ends the *original* course, but only with a count that
+        matches the levels actually generated after it."""
+        qualified = "final level of the original natas course"
+        end_of_track_claims = (
+            "this is the final",
+            "final natas level",
+            "last level of natas",
+            "final level of natas",
+        )
+        terminal_id = self.natas.challenges_data[-1]["id"]
+        self.assertEqual(terminal_id, "natas-34")
+        for challenge in self.natas.challenges_data:
+            if challenge["id"] == terminal_id:
+                continue
+            for field in ("name", "goal", "task", "desc"):
+                # natas-start-here carries a hand-written `desc` instead of
+                # goal/task, so only the fields this challenge actually has.
+                text = challenge.get(field, "").lower()
+                if qualified in text:
+                    following = self.natas.challenges_data[
+                        self.natas.challenges_data.index(challenge) + 1:
+                    ]
+                    remaining = len([c for c in following if c["id"] != "natas-start-here"])
+                    self.assertIn(
+                        f"{remaining} additional scoped levels",
+                        text,
+                        f"{challenge['id']} states a remaining-level count that does "
+                        f"not match the {remaining} levels generated after it",
+                    )
+                # The qualified claim is masked out first: "this is the final
+                # level of the original Natas course" is accurate, "this is the
+                # final level" is not.
+                unqualified = text.replace(qualified, "")
+                for claim in end_of_track_claims:
+                    self.assertNotIn(
+                        claim,
+                        unqualified,
+                        f"{challenge['id']} {field} claims to be the final Natas level, "
+                        f"but the track ends at {terminal_id}",
+                    )
+
     def test_generated_range_ends_at_terminal_level_thirty_four(self):
         level_ids = [
             int(challenge["id"].rsplit("-", 1)[1])
