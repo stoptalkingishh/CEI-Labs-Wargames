@@ -39,9 +39,6 @@ offline evidence text, accepted submission, and rejected altered digest.
 
 ## 5. Verify
 
-Run the dedicated Lab 27 tests and the focused Sentinel builder and runtime
-contract tests.
+`python3 -m unittest test_lab_27 test_runtime_contract` from `targets/sentinel` passed 19 tests, and `python3 -m unittest test_lab_22 test_lab_27 test_runtime_contract test_lab_23_contract test_lab25_alert_triage` from `targets/sentinel` passed 26 tests.
 
-Evidence: `python3 -m unittest test_lab_27.py test_runtime_contract.py` from
-`targets/sentinel` passed 19 tests. `python3 -m unittest
-scripts.test_build_sentinel` from the repository root passed 4 tests.
+Evidence: the computed `LAB27_SHA256` was compared against the previously hardcoded `dc3014d5c2f708b7e4628082170c3c0385afbd6dd8d84f1aff0eca6d8abe7710` and matched, so replacing the literal with `hashlib.sha256` is behavior-preserving. `targets/sentinel/test_lab_27.py` verifies the fixture digest, the fixed author, the offline evidence text, an accepted submission, and rejection of an altered digest. `git diff --check` completed with no output.
