@@ -13,9 +13,22 @@ permissions:
   packages: write
   id-token: write
 
+# NOTE: cancel-in-progress is deliberately false here.
+# This workflow is workflow_dispatch-only and each run is a deliberate manual
+# immutable-image build that pushes by digest to GHCR. Cancelling a dispatch
+# mid-flight would leave a half-published image tag and a wasted 4-way Docker
+# build. The group still prevents an operator from accidentally firing two
+# identical builds for the same base image concurrently -- the second run
+# queues behind the first instead of racing it.
+concurrency:
+  group: build-targets-${{ inputs.base_image }}
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Bounds a wedged buildx/SBOM/provenance step well under the 6h default.
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
