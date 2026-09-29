@@ -99,3 +99,15 @@ taking seriously rather than assuming participant error. If you confirm
 a real mismatch during a live event, note the exact command/output and
 file it the same way — the goal is for the writeups and hints to stay
 accurate as the source of truth, not just the target images.
+
+**Q: How do I actually run `scripts/test_staggered_concurrency.py`,
+`test_staggered_smoke.py`, or `test_export_reconciliation.py`?** They
+need a live CTFd instance and are not run by CI, so nothing in the
+pipeline will tell you they broke. Bring up the local instance in
+`scripts/local-ctfd/`, load the generated challenges, and run the
+three in order (concurrency, then smoke, then export reconciliation)
+-- each leaves stage state the next one reads. Full procedure,
+including the expected failures in a partial deployment, in
+`staggered-live-test-procedure.md`. What CI *does* enforce is
+`scripts/check_live_ctfd_scripts.py`, which statically refuses a
+hardcoded challenge count in any of the three.

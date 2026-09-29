@@ -25,6 +25,7 @@ Under `docs/guides/`.
 | `self-hosted-wargames-blueprint.md` | Full self-hosted architecture blueprint |
 | `self-hosted-wargames-status.md` | Current status of the self-hosted build-out |
 | `staggered-game-stages.md` | Bandit/Krypton/Natas grouping + pre-deploy validation contract |
+| `staggered-live-test-procedure.md` | Manual procedure for the three live-CTFd black-box scripts (never run in CI) |
 | `staged-game-operations.md` | Rehearsal and event-day controls for released game stages |
 | `security-audit-status.md` | Security audit state for all target images |
 | `security-lab-intake.md` | Backlog of proposed offline lab concepts |
