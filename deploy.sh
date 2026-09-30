@@ -20,7 +20,7 @@ fi
 
 if ! command -v ctf &> /dev/null; then
     echo "❌ Error: 'ctfcli' (ctf command) is not installed." >&2
-    echo "   Please install it using: pip install ctfcli" >&2
+    echo "   Please install it using: pip install -r requirements-deploy.txt" >&2
     exit 1
 fi
 

@@ -1,0 +1,17 @@
+# Dependencies for deploy.sh, which runs on the OPERATOR's machine against a
+# live CTFd instance -- never in CI (see .github/workflows/validate.yml).
+# Kept in a separate file from requirements.txt precisely so that installing
+# the build/test dependencies never pulls in a deploy-only tool.
+#
+# Install with:
+#   pip install -r requirements-deploy.txt
+
+# Provides the `ctf` CLI that deploy.sh shells out to for every challenge
+# sync. deploy.sh fails closed without it and names this command in its error.
+#
+# NOTE: the floor below is intentionally NOT being raised as part of the
+# dependency-hygiene change. `>=0.1.0` already resolves to 0.1.8 on PyPI
+# today, which spans eight releases and changes hint-sync internals and
+# connection_info write-back semantics that deploy.sh depends on. That bump
+# needs its own review and a live-CTFd rehearsal; see dependabot PR #115.
+ctfcli>=0.1.0

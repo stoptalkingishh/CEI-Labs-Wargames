@@ -21,9 +21,13 @@ the manual procedure for the part CI cannot do.
   `wargame-stages` and `instance-launcher` plugins from there, and there is no
   CTFd image in this repository. The default path is `../../../cei-labs-engine`
   relative to `scripts/local-ctfd/`; override it with `CEI_LABS_ENGINE_PATH`.
-- Python 3.12 (the version CI pins) with `requests` and `PyYAML` (the same two
-  CI installs).
-- `ctfcli` (`pip install ctfcli`) if you use `deploy.sh` to load challenges.
+- Python 3.12 (the version CI pins). Install the dependencies with
+  `pip install -r requirements.txt` — that is the same file the Validate
+  workflow installs, so the two stay in sync. (`requirements.txt` is resolved
+  relative to the repository root, not this directory.)
+- `ctfcli` if you use `deploy.sh` to load challenges:
+  `pip install -r requirements-deploy.txt`. It is deliberately kept out of
+  `requirements.txt` because CI never contacts a CTFd instance.
 
 Never point this at production, or at any instance holding real participants.
 The scripts add flags to real challenges and start stages on schedule.

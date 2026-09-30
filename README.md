@@ -79,6 +79,30 @@ Highlights:
 ## 🚀 Setup Instructions
 
 ### 1. Generate and Deploy the Challenges
+
+#### Prerequisites
+
+`deploy.sh` runs on your machine and fails closed if its dependencies are
+missing. Install them first:
+
+```bash
+# Python 3.12+ (deploy.sh invokes `python3` for every build step).
+python3 --version
+
+# Everything in scripts/ needs, plus the `ctf` CLI that deploy.sh shells out
+# to for each challenge sync.
+pip install -r requirements.txt
+pip install -r requirements-deploy.txt
+```
+
+`requirements.txt` is the same file CI installs, so your environment matches
+the gate. `requirements-deploy.txt` is separate on purpose: it holds `ctfcli`,
+which is needed only to deploy and is never installed by CI.
+
+If you only want to run the build scripts and the test suite, or you only
+want to re-run the validation gate from source, `requirements.txt` alone is
+enough — the `ctf` CLI is not needed for either.
+
 You can build and deploy the entire training pipeline directly into your CTFd instance using the automated deployment script.
 
 Ensure you pass your CTFd scoreboard details as environment variables if running in an automated CI/CD runner:
