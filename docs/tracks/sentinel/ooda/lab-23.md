@@ -20,12 +20,12 @@ Evidence: the change is limited to Lab 23 generator copy, Lab 23 runtime evidenc
 
 ## 4. Act
 
-Defined named deterministic Lab 23 evidence constants, added the `-NoProfile -Command Get-Date` non-match, recorded `Corpus records: 2`, and updated the first hint to require comparison against each corpus record. Added `targets/sentinel/test_lab_23_contract.py`.
+Defined named deterministic Lab 23 evidence constants, added the `-NoProfile -Command Get-Date` non-match, recorded `Corpus records: 2`, and updated the first hint to require comparison against each corpus record. Added `targets/sentinel/test_lab23_contract.py`.
 
 Evidence: `LAB_23_RULE`, `LAB_23_CORPUS`, and `LAB_23_DECISION_RECORD` are rendered only into `sentinel23`'s local evidence directory.
 
 ## 5. Verify
 
-`python3 -m unittest test_lab_23_contract.py` from `targets/sentinel` passed 3 tests. `python3 -m unittest scripts.test_build_sentinel` from the repository root passed 4 tests. `python3 -m unittest test_runtime_contract.py` from `targets/sentinel` passed 16 tests. `git diff --check` completed with no output.
+`python3 -m unittest test_lab23_contract.py` from `targets/sentinel` passed 3 tests. `python3 -m unittest scripts.test_build_sentinel` from the repository root passed 4 tests. `python3 -m unittest test_runtime_contract.py` from `targets/sentinel` passed 16 tests. `git diff --check` completed with no output.
 
 Evidence: the dedicated test proves two corpus records produce exactly one fixed-condition match, the decision record reports that result, and the evidence contains no HTTP(S) endpoint.
