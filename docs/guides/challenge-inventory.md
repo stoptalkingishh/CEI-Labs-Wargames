@@ -148,7 +148,7 @@ level), `instance_group: krypton`.
 | `natas-11` | 750 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Recover an XOR key and forge encrypted data with it. |
 | `natas-12` | 800 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Upload and execute a web shell. |
 | `natas-13` | 850 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Get a PHP payload past a file-type check based on content, not extension. |
-| `natas-14` | 900 | `per_team_dynamic` | `target-attacker` | **auto on solve** | 3 (20%/50%/85%) | Bypass a login form using SQL injection. |
+| `natas-14` | 900 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Bypass a login form using SQL injection. |
 | `natas-15` | 950 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Query a bounded boolean response oracle. |
 | `natas-16` | 1000 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Search controlled in-memory training data. |
 | `natas-17` | 1050 | `per_team_dynamic` | `target-attacker` | idle-timeout | 3 (20%/50%/85%) | Compare deterministic response timing. |

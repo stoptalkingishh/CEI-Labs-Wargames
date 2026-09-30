@@ -236,7 +236,9 @@ challenges_data = [
         "name": "Natas 14 -> 15: SQL Injection (SQLi)",
         "points": 900,
         "goal": "Bypass a login form using SQL injection.",
-        "task": "This is the final Natas level. The login form builds its SQL query with raw string concatenation from your username and password fields.",
+        # The "final level of the original course" sentence is prepended below,
+        # where the remaining-level count can be derived from the data set.
+        "task": "The login form builds its SQL query with raw string concatenation from your username and password fields.",
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas15"}
     },
     {
@@ -360,6 +362,23 @@ challenges_data = [
         "flag": {"type": "per_team_dynamic", "content": "per-team-dynamic (placeholder, not read)", "data": "natas34final"}
     }
 ]
+
+# natas-14 is the last level of the ORIGINAL OverTheWire Natas course, but this
+# deployment continues past it (natas-15 ... natas-34). Its task text used to
+# open with "This is the final Natas level", which told a participant standing
+# on level 14 that the track ended there and then handed them 20 more levels.
+# The remaining count is derived from challenges_data above rather than written
+# into the string, so extending the track again cannot leave it stale.
+ORIGINAL_COURSE_FINAL_LEVEL_ID = "natas-14"
+_natas_14 = next(c for c in challenges_data if c["id"] == ORIGINAL_COURSE_FINAL_LEVEL_ID)
+_scoped_levels_after = [
+    c for c in challenges_data[challenges_data.index(_natas_14) + 1:]
+    if c["id"] != "natas-start-here"
+]
+_natas_14["task"] = (
+    f"This is the final level of the original Natas course; this deployment continues "
+    f"with {len(_scoped_levels_after)} additional scoped levels. {_natas_14['task']}"
+)
 
 # "Commands you may need" + "Helpful reading" shown directly in the
 # description, free -- matching OverTheWire's own real page structure
@@ -546,6 +565,41 @@ def _validate_natas_content() -> None:
     _require("man " not in hint_text, "Natas hints must use image-supported built-in help")
     for challenge_id, tiers in HINTS.items():
         _require(len(tiers) == 3, f"{challenge_id} must have exactly three managed hint tiers")
+
+    # Only the genuinely terminal level may tell a participant the track ends
+    # here. A stale "This is the final Natas level." once shipped on natas-14
+    # while the track ran to natas-34, so an unqualified end-of-track claim is
+    # now checked against the data instead of trusted. The one qualified
+    # wording a non-terminal level may use -- "final level of the original
+    # Natas course" -- is masked out first, and the count beside it is computed
+    # from challenges_data (see ORIGINAL_COURSE_FINAL_LEVEL_ID above).
+    terminal_id = challenges_data[-1]["id"]
+    qualified = "final level of the original natas course"
+    end_of_track_claims = (
+        "this is the final",
+        "final natas level",
+        "last level of natas",
+        "final level of natas",
+    )
+    for challenge in challenges_data:
+        if challenge["id"] == terminal_id:
+            continue
+        for field in ("name", "goal", "task", "desc"):
+            # natas-start-here carries a hand-written `desc` instead of
+            # goal/task, so only the fields this challenge actually has.
+            lowered = challenge.get(field, "").lower().replace(qualified, "")
+            for claim in end_of_track_claims:
+                _require(
+                    claim not in lowered,
+                    f"{challenge['id']} {field} claims to be the final Natas level "
+                    f"({claim!r}) but the track ends at {terminal_id}",
+                )
+
+    # The qualified claim above is only honest if its count matches reality.
+    _require(
+        f"{len(_scoped_levels_after)} additional scoped levels" in _natas_14["task"].lower(),
+        f"{ORIGINAL_COURSE_FINAL_LEVEL_ID} does not state the real remaining level count",
+    )
 
 
 _validate_natas_content()
