@@ -66,6 +66,26 @@ jobs:
         working-directory: targets/natas
       - run: python -m unittest -v test_runtime_secrets
         working-directory: targets/natas
+      # Sentinel is a shipped track (12 challenges, docs/tracks/sentinel) whose
+      # 37 tests -- all six labs (22-27), the runtime answer contract, and each
+      # lab's evidence behaviour -- had no step here at all, so deleting one
+      # left the gate green.
+      #
+      # 6 of the 37 (test_container_contract) are Docker-dependent: they
+      # `docker build` this directory's image and `docker exec` the compiled
+      # sentinel-submit binary. They are NOT skipped. This is the only check
+      # anywhere that compiles submit.c and proves the real binary enforces the
+      # answer contract; the other 31 read runtime.py/entrypoint.sh as source
+      # text and never touch the C. ubuntu-latest has Docker and the
+      # ghcr.io base image in targets/sentinel/Dockerfile pulls anonymously, so
+      # no secrets are needed. Budget ~2 min on a cold runner (92s measured for
+      # a --no-cache build); the job allows 30.
+      #
+      # working-directory must be the target root: the tests use a bare
+      # `import runtime`, and test_container_contract builds with context ".",
+      # so both require targets/sentinel as the process cwd.
+      - run: python -m unittest discover -s . -t . -p "test_*.py" -v
+        working-directory: targets/sentinel
       - run: python scripts/validate_game_stages.py
       - run: python scripts/validate_generated.py --output validation-manifest.json
       - run: bash scripts/test_deploy_hint_guard.sh
