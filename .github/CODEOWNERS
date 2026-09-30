@@ -1,0 +1,24 @@
+# Code owners are requested as reviewers on every PR that touches a matched
+# path. They are advisory, not a merge gate -- CI still runs for everyone.
+
+# Default: the repo owner reviews everything not matched below.
+*                               @stoptalkingishh
+
+# CI, release plumbing, and repo policy are security-track owned.
+.github/                        @stoptalkingishh
+CODEOWNERS                      @stoptalkingishh
+SECURITY.md                     @stoptalkingishh
+deploy.sh                       @stoptalkingishh
+
+# Sentinel is the defensive security track; its build script and target image
+# source stay with the security-track owner.
+scripts/build_sentinel.py       @stoptalkingishh
+targets/sentinel/               @stoptalkingishh
+docs/tracks/sentinel/           @stoptalkingishh
+
+# Krypton/Natas build + target surface is co-owned by the active contributor
+# who has driven those tracks.
+scripts/build_krypton.py        @Judgernaut777 @stoptalkingishh
+scripts/build_natas.py          @Judgernaut777 @stoptalkingishh
+targets/krypton/                @Judgernaut777 @stoptalkingishh
+targets/natas/                  @Judgernaut777 @stoptalkingishh
