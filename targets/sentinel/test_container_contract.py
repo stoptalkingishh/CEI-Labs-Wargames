@@ -6,6 +6,17 @@ import unittest
 
 IMAGE = "sentinel-pilot-security-test:local"
 CONTAINER = "sentinel-pilot-security-test"
+# Worst-case wait for the entrypoint to finish rendering. The entrypoint runs
+# runtime.py and only then `exec`s sshd, so sshd being up is the real
+# "container is ready" signal; the poll normally returns in a few seconds and
+# this bound is only ever reached on genuine failure.
+READY_TIMEOUT = 60.0
+# asset-census.txt is only the third of the ~25 files runtime.py writes, so it
+# proves far less than it looks like. Pair it with sshd so the whole of
+# runtime.py has finished before any test execs into the container. Polling
+# happens inside the container (one host process, not one per attempt) so the
+# wait itself costs no measurable wall time.
+READY_PROBE = "until test -f /srv/sentinel-evidence/sentinel0/asset-census.txt && pgrep -x sshd >/dev/null; do sleep 0.2; done"
 SECRETS = {
     "sentinel-start-here": "start-secret",
     "sentinel-01": "one-secret",
@@ -53,17 +64,61 @@ ANSWERS = {
 class SentinelContainerContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        # The container name is fixed, so a container left behind by an
+        # interrupted run (cancelled job, killed runner) would make `docker
+        # run` exit 125 with a name conflict. Clear it up front rather than
+        # trusting cleanup that a cancellation never reaches.
+        cls.remove_container()
         subprocess.run(["docker", "build", "-t", IMAGE, "."], check=True)
         subprocess.run(["docker", "run", "--rm", "--name", CONTAINER, "-d", "-e", f"LEVEL_SECRETS={json.dumps(SECRETS)}", IMAGE], check=True)
-        for _ in range(20):
-            if subprocess.run(["docker", "exec", CONTAINER, "test", "-f", "/srv/sentinel-evidence/sentinel0/asset-census.txt"]).returncode == 0:
+        cls.wait_until_ready("initial container start")
+
+    @classmethod
+    def remove_container(cls):
+        subprocess.run(["docker", "rm", "-f", CONTAINER], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+
+    @classmethod
+    def wait_until_ready(cls, context):
+        """Block until the entrypoint has finished rendering evidence.
+
+        On timeout, raise with the container's own output attached: a bare
+        "did not render evidence" gives no way to tell a slow start from a
+        crashed runtime.
+        """
+        deadline = time.monotonic() + READY_TIMEOUT
+        while True:
+            probe = subprocess.run(["docker", "exec", CONTAINER, "sh", "-c", READY_PROBE], text=True, capture_output=True, check=False)
+            if probe.returncode == 0:
                 return
-            time.sleep(0.1)
-        raise RuntimeError("Sentinel runtime did not render evidence")
+            state = cls.inspect_state()
+            if not state.get("Running"):
+                raise RuntimeError(f"Sentinel container exited during {context} (status {state.get('Status')}, exit code {state.get('ExitCode')}).\n{cls.container_logs()}")
+            if time.monotonic() >= deadline:
+                raise RuntimeError(
+                    f"Sentinel container did not become ready within {READY_TIMEOUT:.0f}s during {context}. "
+                    f"Waiting for: {READY_PROBE}\n"
+                    f"Container state: {state}\n"
+                    f"Container logs:\n{cls.container_logs()}"
+                )
+            time.sleep(0.2)
+
+    @classmethod
+    def inspect_state(cls):
+        inspected = subprocess.run(["docker", "inspect", "-f", "{{.State.Status}} {{.State.Running}} {{.State.ExitCode}}", CONTAINER], text=True, capture_output=True, check=False)
+        fields = inspected.stdout.split()
+        if len(fields) != 3:
+            return {"Status": "unknown", "Running": True, "ExitCode": "unknown", "inspect": inspected.stderr.strip()}
+        return {"Status": fields[0], "Running": fields[1] == "true", "ExitCode": fields[2]}
+
+    @classmethod
+    def container_logs(cls):
+        logs = subprocess.run(["docker", "logs", CONTAINER], text=True, capture_output=True, check=False)
+        output = (logs.stdout + logs.stderr).strip()
+        return output or "<container produced no output>"
 
     @classmethod
     def tearDownClass(cls):
-        subprocess.run(["docker", "rm", "-f", CONTAINER], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        cls.remove_container()
 
     def execute(self, command, **kwargs):
         return subprocess.run(["docker", "exec", CONTAINER, "sh", "-c", command], text=True, capture_output=True, **kwargs)
@@ -108,6 +163,10 @@ class SentinelContainerContractTests(unittest.TestCase):
         result = self.execute("su sentinel0 -s /bin/sh -c 'printf untouched > /tmp/sentinel-attack; ln -sf /tmp/sentinel-attack /home/sentinel0/asset-census.txt'", check=True)
         self.assertEqual(result.returncode, 0)
         subprocess.run(["docker", "restart", CONTAINER], check=True, stdout=subprocess.DEVNULL)
+        # `docker restart` returns as soon as the container is up, which is
+        # before the entrypoint has re-rendered anything. Reading evidence here
+        # without waiting races the same way setUpClass used to.
+        self.wait_until_ready("container restart")
         result = self.execute("cat /tmp/sentinel-attack")
         self.assertEqual(result.stdout, "untouched")
         result = self.execute("su sentinel0 -s /bin/sh -c 'cat /home/sentinel0/evidence/asset-census.txt'")
