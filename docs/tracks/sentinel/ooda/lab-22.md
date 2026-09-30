@@ -26,6 +26,6 @@ Evidence: `LAB_22_MESSAGE` is written only into `sentinel22`'s local `phishing-m
 
 ## 5. Verify
 
-`python3 -m unittest test_build_sentinel_lab22` from `scripts` passed 1 test, and `python3 -m unittest test_build_sentinel` from `scripts` passed 4 tests. `python3 -m unittest test_lab_22 test_lab_27 test_runtime_contract test_lab_23_contract test_lab25_alert_triage` from `targets/sentinel` passed 26 tests. `python3 -m unittest discover -s scripts -t scripts` passed 45 tests, and `git diff --check` completed with no output.
+`python3 -m unittest test_build_sentinel_lab22` from `scripts` passed 1 test, and `python3 -m unittest test_build_sentinel` from `scripts` passed 4 tests. `python3 -m unittest test_lab_22 test_lab_27 test_runtime_contract test_lab23_contract test_lab25_alert_triage` from `targets/sentinel` passed 26 tests. `python3 -m unittest discover -s scripts -t scripts` passed 45 tests, and `git diff --check` completed with no output.
 
 Evidence: the generator test asserts the offline boundary and that no answer value leaks into the hints, while the runtime test parses the RFC-822 fixture, confirms each answer field is derived from the headers, and rejects wrong-account, wrong-value, and extra-field submissions. No suite contacts a mail system.

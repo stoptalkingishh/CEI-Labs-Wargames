@@ -70,6 +70,9 @@ Highlights:
   Bandit/Krypton/Natas grouping and pre-deployment validation used by Engine
 - [Staged game operations](docs/guides/staged-game-operations.md) — rehearsal
   and event-day controls for independently released game stages
+- [Staggered live-CTFd test procedure](docs/guides/staggered-live-test-procedure.md)
+  — manual runbook for the three black-box stage tests that CI cannot run,
+  against the throwaway CTFd in `scripts/local-ctfd/`
 - [Security lab intake backlog](docs/guides/security-lab-intake.md) — proposed
   offline, safe, and testable future lab concepts
 - [Presentation sources](docs/presentation/README.md) — kickoff and game-guide
@@ -209,3 +212,23 @@ docker stop cei-natas-audit
 An image workflow can run these same commands as a post-build smoke test with
 ephemeral synthetic values and localhost-only port mappings. The audit has no
 public-target fallback or external service dependency.
+
+## Staggered stage tests (need a live CTFd)
+
+`scripts/test_staggered_concurrency.py`, `scripts/test_staggered_smoke.py`, and
+`scripts/test_export_reconciliation.py` are black-box tests of the Engine's
+`wargame-stages` plugin. They drive a **live CTFd over HTTP and change it** --
+they create users and teams, add static flags to real challenges, and start,
+lock, and close real stages. They are `main()`-driven with no `unittest.TestCase`,
+so `unittest discover` imports them and collects zero tests; they are **not run
+by CI**, by design.
+
+They also require a throwaway CTFd that does not exist in this repository:
+`scripts/local-ctfd/` builds one from a sibling `cei-labs-engine` checkout
+(override with `CEI_LABS_ENGINE_PATH`). Only ever point it at localhost.
+
+CI's substitute is the static guard `scripts/check_live_ctfd_scripts.py`, which
+fails if any of the three hardcodes a challenge count, bakes in a non-loopback
+host, or loses its reachable `main()`. The full manual runbook -- bringing the
+instance up, loading challenges, script order, and what each failure means --
+is [`docs/guides/staggered-live-test-procedure.md`](docs/guides/staggered-live-test-procedure.md).
