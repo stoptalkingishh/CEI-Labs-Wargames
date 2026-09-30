@@ -8,6 +8,16 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # Several action pins live in the same file, so Dependabot's per-action
+    # PRs collide with each other in .github/workflows/build-targets.yml and
+    # each one is individually unverifiable (that workflow is
+    # workflow_dispatch-only, so CI never exercises it). One grouped PR per
+    # run is reviewable as a unit. Grouping does not change the SHA-pin
+    # style above; the pins are still full commit SHAs.
+    groups:
+      github-actions:
+        patterns:
+          - "*"
     commit-message:
       prefix: "ci"
     labels:
