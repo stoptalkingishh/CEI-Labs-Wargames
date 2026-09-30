@@ -12,8 +12,8 @@ Exercises, against the live HTTP API (no direct DB writes except one
 read-only audit-count query -- see ctfd_client.audit_count):
 
   1. N concurrent POST .../bandit/start requests -> exactly one audit
-     'start' row and a single stable started_at (docs/staggered-wargame-
-     stage-verification.md item 4's "issue simultaneous Start requests"
+     'start' row and a single stable started_at (docs/guides/staggered-
+     game-stages.md item 4's "issue simultaneous Start requests"
      bug-injection case).
   2. N teams submitting the same correct flag concurrently right after
      start -> every solve recorded, correct total score, no crash/hang

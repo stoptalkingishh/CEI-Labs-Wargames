@@ -14,14 +14,33 @@ for levels 15-34 remains pending and is deliberately not a release of 36
 challenges. Deployment totals, `game-stages.yml`, and current deployment
 behavior remain unchanged. See plan PR #69 for the deferred scenario work.
 
-### Deployed 0-14 Compatibility Boundary
+### Flag Chain And The Deployed 0-14 Boundary
+
+The scored flag for level N is the runtime secret for level N+1, so a level's
+own number never names its flag. `scripts/build_natas.py` and
+`targets/natas/entrypoint.sh` agree on the whole 0-34 chain:
+
+- `natas-00` through `natas-13` score `natas1` through `natas14`.
+- `natas-14` scores **`natas15`**, not a key named for its own level. It is
+  the terminal flag of the deployed 0-14 range: `natas14/next_password.php`
+  serves it as `$final_flag`, written per-team at container start from the
+  `NEXT_PASSWORD_FILES` table. There is no `natas14final` key anywhere in this
+  repository.
+- `natas-15` through `natas-33` score `natas16` through `natas34`, each
+  disclosed by the preceding level's `natas<N>.php`. All of these authenticate
+  inert pending endpoints.
+- `natas-34` scores **`natas34final`**, served by `natas34.php` as
+  `$terminal_secret`. It is the only key with a `final` suffix, and the only
+  one not named for a level.
 
 Until the atomic 36-challenge expansion updates the challenge generator, stage
-manifest, and audit contract together, the deployed `natas-14` challenge keeps
-its existing terminal behavior: its SQLi solve exposes and scores
-`natas14final`. The reserved `natas15` through `natas34` runtime secrets only
-authenticate their inert pending endpoints; no released 0-14 route discloses
-them or changes the terminal flag semantics.
+manifest, and audit contract together, the deployed 0-14 range discloses
+`natas1` through `natas15` and nothing beyond them: no released route
+discloses `natas16`-`natas34final`. An operator auditing a live range should
+confirm two checkable facts — that solving `natas-14` yields a value the
+deployed target accepts, and that the terminal key is `natas34final` rather
+than any level-numbered variant. Both are grep-verifiable against
+`scripts/build_natas.py` and `targets/natas/entrypoint.sh`.
 
 ## What This Repository Owns
 

@@ -28,7 +28,7 @@ them entirely.
 | :--- | :--- | :--- | :--- |
 | Bandit | 34 (0-33) | `targets/bandit/` | `single-target`, one persistent SSH box, shared `instance_group: bandit` |
 | Krypton | 7 (0-6) | `targets/krypton/` | `single-target`, same pattern; every level including 0 has a real account/instance now (see cei-labs-event#17) |
-| Natas | 15 (0-14) | `targets/natas/` | `target-attacker`, one range (kali-novnc attacker + LAMP target) per team, shared `instance_group: natas` |
+| Natas | 15 (0-14) _(historical; now 35, 0-34)_ | `targets/natas/` | `target-attacker`, one range (kali-novnc attacker + LAMP target) per team, shared `instance_group: natas` |
 
 All three are wired into CTFd via `scripts/build_{bandit,krypton,natas}.py`
 (`instance_type`/`target_image`/`attacker_image`/`instance_group`/
@@ -92,12 +92,20 @@ whose descriptions are already full walkthroughs):
   project that had been written off as minor test noise.
 
 **Verified live, not just written:** full YAML validation sweep across
-all 59 generated `challenge.yml` files after every edit round, synced to
+all 59 generated `challenge.yml` files after every edit round _(historical
+count: 35 + 8 + 16; the current repository generates 85 across the staged
+and agent tracks — see
+[`challenge-inventory.md`](challenge-inventory.md))_, synced to
 a running CTFd test instance, checked for zero duplicate/leftover hints
 via the real admin API, and the fixed descriptions' live rendering
 confirmed directly (not just diffed against source).
 
-## Known open items
+## Known open items (as of 2026-07; re-verify before relying on any)
+
+Counts and scope statements in this section describe the 0-14 / 59-challenge
+state this status history was written against, not the repository today.
+Current figures: 35 + 8 + 36 = 79 staged challenges plus 6 agent challenges
+= 85, and Natas is approved through endpoint 34.
 
 - **Content-accuracy pass not done:** the flags in `build_bandit.py`/
   `build_krypton.py`/`build_natas.py` were flagged early on as looking like
@@ -110,6 +118,12 @@ confirmed directly (not just diffed against source).
   confirmed with the user (2026-07-08). Real Natas's 34+ level catalog
   (including levels 25-26, PHP object injection) is explicitly out of scope
   here; extending it later is new content authoring, not a correction.
+  **Superseded (2026-08-12):** the approved scope is now endpoints 0-34, and
+  `game-stages.yml` builds 36 Natas challenges (0-34 plus Start Here). The
+  0-34 expansion plan is archived at
+  [`../archive/plans/natas-0-34-expansion-plan.md`](../archive/plans/natas-0-34-expansion-plan.md).
+  The 2026-07-08 decision above describes only the 0-14 state this status
+  history was written against; do not cite it as a current scope decision.
 - **Level 33 (Bandit's final level) and Krypton's final LFSR mechanic are
   original designs**, not reconstructions of real OTW mechanics — noted
   where relevant in the target images' own comments, since no reliable

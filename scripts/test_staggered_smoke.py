@@ -7,9 +7,9 @@ instance (see scripts/local-ctfd/).
 Run SECOND, after test_staggered_concurrency.py (which owns Bandit and
 leaves it LOCKED). This script owns Krypton and Natas end-to-end:
 
-  1/2. Sync Krypton (8/8) and Natas (16/16) -- start() 409s on a count
-       mismatch, so a successful start below is itself proof the count
-       matched exactly.
+  1/2. Sync Krypton (8/8) and Natas (36/36, the 0-34 expansion) -- start()
+       409s on a count mismatch, so a successful start below is itself proof
+       the count matched exactly.
   3.   Confirm Krypton/Natas are hidden from a participant while pending.
   4.   Start Krypton; a second Start call must be a no-op (same
        started_at, no extra audit row).

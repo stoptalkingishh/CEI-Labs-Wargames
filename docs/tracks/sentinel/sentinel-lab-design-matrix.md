@@ -41,7 +41,7 @@ which remains non-staged pending platform integration.
 
 The design details for the shared validator, fixture manifest, hints/debriefs,
 mutation helpers, and PR #68 gate are in
-[`sentinel-ooda/shared-remediation-contracts.md`](sentinel-ooda/shared-remediation-contracts.md).
+[`../sentinel-ooda/shared-remediation-contracts.md`](../sentinel-ooda/shared-remediation-contracts.md).
 They are implementation contracts, not evidence that a target or runtime check
 has been completed.
 
