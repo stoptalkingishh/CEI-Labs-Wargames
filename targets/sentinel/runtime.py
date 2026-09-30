@@ -6,8 +6,12 @@ import json
 import os
 import subprocess
 import tempfile
+from pathlib import Path
 
 KEYS = ("sentinel-start-here", "sentinel-01", "sentinel-02", "sentinel-03", "sentinel-04", "sentinel-05", "sentinel-22", "sentinel-23", "sentinel-24", "sentinel-25", "sentinel-26", "sentinel-27")
+LAB27_FIXTURE = Path(__file__).with_name("fixtures") / "field-notes.pdf"
+LAB27_SHA256 = hashlib.sha256(LAB27_FIXTURE.read_bytes()).hexdigest()
+LAB27_EXTRACTED_AUTHOR = "Northstar Training"
 ACCOUNT_CREDENTIAL_KEYS = {
     "sentinel1": "sentinel-start-here",
     "sentinel2": "sentinel-01",
@@ -34,7 +38,7 @@ ANSWERS = {
     "sentinel-24": {"endpoint_id": "northstar-lt-042", "enrollment_status": "enrolled", "key_status": "active"},
     "sentinel-25": {"alert_id": "ALT-2048", "root_cause": "expired-vpn-certificate", "disposition": "close-benign"},
     "sentinel-26": {"device_mac": "02:00:00:00:26:01", "zone": "engineering", "disposition": "unauthorized"},
-    "sentinel-27": {"filename": "field-notes.pdf", "sha256": "dc3014d5c2f708b7e4628082170c3c0385afbd6dd8d84f1aff0eca6d8abe7710", "extracted_author": "Northstar Training"},
+    "sentinel-27": {"filename": "field-notes.pdf", "sha256": LAB27_SHA256, "extracted_author": LAB27_EXTRACTED_AUTHOR},
 }
 
 LAB_23_RULE = "id: NS-DET-104\ntitle: Encoded PowerShell Command\ncondition: command_line contains '-EncodedCommand'\n"
@@ -50,6 +54,17 @@ LAB_23_DECISION_RECORD = (
     "Decision: triggered\n"
     "The fixed condition matched one record and did not match one record. No live detection service was queried. "
     "Submit rule_id, matches, and decision through `sentinel-submit`.\n"
+)
+
+LAB_22_MESSAGE = (
+    "From: Northstar Billing <billing@northstar.training>\n"
+    "Return-Path: <reply@invoice-notice.example>\n"
+    "Authentication-Results: northstar.training; spf=pass smtp.mailfrom=invoice-notice.example; dkim=fail header.d=invoice-notice.example; dmarc=fail header.from=northstar.training\n"
+    "Received: from relay.invoice-notice.example (192.0.2.44) by mail.northstar.training with ESMTP\n"
+    "Subject: Synthetic training invoice\n"
+    "\n"
+    "Static synthetic RFC-822 training fixture. Do not contact mail systems.\n"
+    "Submit from_domain, return_path_domain, and dmarc through `sentinel-submit`.\n"
 )
 
 
@@ -94,6 +109,18 @@ def write_root(name, text):
     write_atomic("/var/lib/sentinel", name, text, 0o600)
 
 
+def lab27_metadata_evidence():
+    return (
+        "Original static local document fixture: field-notes.pdf\n"
+        f"SHA-256 (bounded fixture record): {LAB27_SHA256}\n"
+        f"Metadata author: {LAB27_EXTRACTED_AUTHOR}\n"
+        "Bounded extraction result: training field notes\n"
+        "Verify locally with: sha256sum field-notes.pdf\n"
+        "Do not upload, transmit, or enrich this fixture externally. "
+        "Submit filename, sha256, and extracted_author through `sentinel-submit`.\n"
+    )
+
+
 def main():
     secrets = load_secrets()
     for account, key in ACCOUNT_CREDENTIAL_KEYS.items():
@@ -114,7 +141,7 @@ def main():
         write("sentinel3", "service.key", source.read(), 0o400)
     write("sentinel3", "certificate-ledger.txt", "Service: ops.northstar.training\nIssuer: Northstar Training Test CA\nRevocation: clear in training-ca.crl\nKey permissions: /srv/sentinel-evidence/sentinel3/service.key is root:root mode 0400\nVerify offline with: openssl verify -attime 1893456000 -CAfile training-ca.pem -CRLfile training-ca.crl -crl_check service.pem\nSubmit service, issuer, revocation_status, and key_mode through `sentinel-submit`.\n")
     write("sentinel4", "exposure-review.conf", "Observed listener: ssh tcp/22\nConfigured default service: legacy-metrics disabled\nNo web, database, or remote-management service is exposed.\nSubmit listener, port, and legacy_metrics through `sentinel-submit`.\n")
-    write("sentinel22", "phishing-message.eml", "From: Northstar Billing <billing@northstar.training>\nReturn-Path: <reply@invoice-notice.example>\nAuthentication-Results: northstar.training; spf=pass smtp.mailfrom=invoice-notice.example; dkim=fail header.d=invoice-notice.example; dmarc=fail header.from=northstar.training\nReceived: from relay.invoice-notice.example (192.0.2.44) by mail.northstar.training with ESMTP\nSubject: Synthetic training invoice\n\nStatic synthetic RFC-822 training fixture. Do not contact mail systems.\nSubmit from_domain, return_path_domain, and dmarc through `sentinel-submit`.\n")
+    write("sentinel22", "phishing-message.eml", LAB_22_MESSAGE)
     write("sentinel23", "detection-rule.yml", LAB_23_RULE)
     write("sentinel23", "detection-corpus.log", LAB_23_CORPUS)
     write("sentinel23", "decision-record.txt", LAB_23_DECISION_RECORD)
@@ -124,7 +151,7 @@ def main():
     write("sentinel26", "network-inventory.txt", "Static synthetic network inventory\nARP: 10.42.8.61 02:00:00:00:26:01\nDHCP: no lease for 02:00:00:00:26:01\nNetwork-zone policy: engineering permits only registered DHCP endpoints.\nObserved zone: engineering\nDisposition: unauthorized\nDo not scan or probe a network. Submit device_mac, zone, and disposition through `sentinel-submit`.\n")
     with open("/opt/sentinel/fixtures/field-notes.pdf", encoding="ascii") as source:
         write("sentinel27", "field-notes.pdf", source.read())
-    write("sentinel27", "evidence-metadata.txt", "Original static local document fixture: field-notes.pdf\nSHA-256 (bounded fixture record): dc3014d5c2f708b7e4628082170c3c0385afbd6dd8d84f1aff0eca6d8abe7710\nMetadata author: Northstar Training\nBounded extraction result: training field notes\nDo not upload, transmit, or enrich this fixture externally. Submit filename, sha256, and extracted_author through `sentinel-submit`.\n")
+    write("sentinel27", "evidence-metadata.txt", lab27_metadata_evidence())
 
 
 if __name__ == "__main__":
