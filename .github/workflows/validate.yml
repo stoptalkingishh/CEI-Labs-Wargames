@@ -31,7 +31,12 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - run: pip install PyYAML==6.0.2
+      # requirements.txt is the single source of truth for the build/validate/
+      # test dependencies, so a dependabot bump to it actually changes what
+      # this gate runs against. ctfcli is excluded on purpose: it is a
+      # deploy.sh-only tool (requirements-deploy.txt) and has no place in a
+      # CI environment that never contacts a CTFd instance.
+      - run: pip install -r requirements.txt
       - run: python -m compileall -q scripts targets
       - run: python scripts/build_bandit.py
       - run: python scripts/build_krypton.py
@@ -44,7 +49,6 @@ jobs:
       - run: python scripts/build_threadline.py
       - run: python scripts/check_inventory_sync.py
       - run: python scripts/check_doc_links.py
-      - run: pip install requests
       - run: python -m unittest discover -s scripts -t scripts -v
       # The three main()-driven live-CTFd scripts are imported by the discover
       # step above but collect zero tests from it; this is the coverage they do

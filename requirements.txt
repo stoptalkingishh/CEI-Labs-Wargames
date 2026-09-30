@@ -1,2 +1,25 @@
-ctfcli>=0.1.0
-pyyaml>=6.0.3
+# Python dependencies for the build scripts, validators, and tests in this
+# repository. This file is the SINGLE SOURCE OF TRUTH for them: CI installs it
+# with `pip install -r requirements.txt` (.github/workflows/validate.yml), and
+# this is what a local developer installs to run the same suite.
+#
+# It previously listed ctfcli and was read by nothing, while CI hardcoded
+# `pip install PyYAML==6.0.2` and `pip install requests` inline. Two
+# independent sources of truth meant they could silently drift -- and had:
+# dependabot bumped pyyaml here to >=6.0.3 while CI was still installing 6.0.2.
+#
+# ctfcli is deliberately NOT here. It is needed only by deploy.sh, which runs
+# on the operator's machine against a live CTFd, never in CI. Installing it
+# here would drag a deploy-only tool into every validation run. It lives in
+# requirements-deploy.txt; see README.md for how to install it.
+
+# Parses the inventory/stage/manifest YAML consumed by
+# scripts/validate_generated.py, scripts/check_live_ctfd_scripts.py, and
+# scripts/test_export_reconciliation.py.
+PyYAML==6.0.2
+
+# HTTP client for scripts/lib/ctfd_client.py, used by the live-CTFd scripts.
+# CI previously installed this with a bare `pip install requests`, so the gate
+# was not even reproducible run-to-run. Both are pinned exactly now; dependabot
+# proposes bumps, and a bump now actually reaches CI.
+requests==2.34.2
