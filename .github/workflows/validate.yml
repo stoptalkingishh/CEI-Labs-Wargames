@@ -46,6 +46,10 @@ jobs:
       - run: python scripts/check_doc_links.py
       - run: pip install requests
       - run: python -m unittest discover -s scripts -t scripts -v
+      # The three main()-driven live-CTFd scripts are imported by the discover
+      # step above but collect zero tests from it; this is the coverage they do
+      # have. See docs/guides/staggered-live-test-procedure.md.
+      - run: python scripts/check_live_ctfd_scripts.py
       - run: python -m unittest -v test_generate_banners
         working-directory: targets/bandit/build
       - run: python -m unittest -v test_generate_banners

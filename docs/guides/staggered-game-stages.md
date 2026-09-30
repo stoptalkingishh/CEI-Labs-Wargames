@@ -33,3 +33,11 @@ expected-count consistency.
 
 After deployment, an administrator must also run Engine's CTFd mapping sync
 and compare its report with this manifest before starting any stage.
+
+## Verifying the live instance
+
+`scripts/test_staggered_concurrency.py`, `scripts/test_staggered_smoke.py`, and
+`scripts/test_export_reconciliation.py` check this manifest against a running
+CTFd instance. They need a live instance and are not run in CI; the procedure,
+and the static guard that stands in for them there, are documented in
+[Staggered Live-CTFd Test Procedure](staggered-live-test-procedure.md).
