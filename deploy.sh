@@ -49,6 +49,20 @@ python3 scripts/build_osint.py
 python3 scripts/validate_game_stages.py
 python3 scripts/validate_generated.py --output deployment-manifest.json
 
+# Single source of truth for the post-sync preflight total below: the same
+# manifest validate_generated.py just wrote. Its expected_challenge_count is
+# game-stages.yml's staged sum plus the deliberately-unstaged tracks (see
+# validate_generated.py's expected_counts()) -- the identical derivation the
+# CI Validate workflow gates on. A hardcoded literal here silently breaks every
+# deploy the moment a track is added or removed.
+expected_challenges=$(python3 - <<'PYEOF'
+import json
+
+with open("deployment-manifest.json", encoding="utf-8") as manifest_file:
+    print(json.load(manifest_file)["expected_challenge_count"])
+PYEOF
+)
+
 # 3. Connection and Authentication Configuration
 echo "[3/4] Checking CTFd Connection..."
 if [ -n "${CTFD_URL:-}" ] && [ -n "${CTFD_TOKEN:-}" ]; then
@@ -295,7 +309,12 @@ PYEOF
     local payload_file signature_file
     payload_file=$(mktemp)
     signature_file=$(mktemp)
-    HINT_WALLET_PAYLOAD_FILE="$payload_file" HINT_WALLET_SIGNATURE_FILE="$signature_file" \
+    # These two files hold the HMAC-signed bundle, so a failure must not strand
+    # them on disk. The signing step is therefore tested directly instead of
+    # via a following `if [ $? -ne 0 ]`: under `set -Eeuo pipefail` a non-zero
+    # python3 aborts the script *before* a `$?` check could ever run, so the
+    # cleanup branch was unreachable on every failure path.
+    if ! HINT_WALLET_PAYLOAD_FILE="$payload_file" HINT_WALLET_SIGNATURE_FILE="$signature_file" \
         python3 - challenges/bandit-hint-wallet.json challenges/krypton-hint-wallet.json challenges/natas-hint-wallet.json <<'PYEOF'
 import hashlib, hmac, json, os, sys
 manifests=[]
@@ -311,7 +330,8 @@ with open(os.environ["HINT_WALLET_PAYLOAD_FILE"], "wb") as f:
 with open(os.environ["HINT_WALLET_SIGNATURE_FILE"], "wb") as f:
     f.write(signature.encode("ascii"))
 PYEOF
-    if [ $? -ne 0 ]; then
+    then
+        echo "Error: failed to sign the hint-wallet bundle payload." >&2
         rm -f -- "$payload_file" "$signature_file"
         return 1
     fi
@@ -382,7 +402,7 @@ for dir in challenges/*/ ; do
 done
 
 # OSINT track — non-staged, lives in osint/ (not challenges/). Sync if built, hidden by default.
-# Not counted in the staged 65-challenge total above and has no instance mappings.
+# Not counted in the challenges/ preflight total above and has no instance mappings.
 if [ -d "osint" ]; then
     echo "Syncing OSINT track (osint/) — hidden by default, not counted in staged total..."
     for dir in osint/*/ ; do
@@ -408,8 +428,8 @@ echo "=========================================="
 if [ "$challenges_found" -eq 0 ]; then
     echo "Error: no challenges were found inside the 'challenges/' directory." >&2
     exit 1
-elif [ "$challenges_found" -ne 65 ]; then
-    echo "Error: expected 65 challenges, deployed ${challenges_found}." >&2
+elif [ "$challenges_found" -ne "$expected_challenges" ]; then
+    echo "Error: expected ${expected_challenges} challenges, deployed ${challenges_found}." >&2
     exit 1
 else
     echo "✅ Deployment Complete! All $challenges_found challenges are synced & live."
