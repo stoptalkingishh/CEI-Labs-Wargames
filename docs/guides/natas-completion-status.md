@@ -11,8 +11,12 @@ The approved eventual Natas scope is level endpoints 0-34. The range
 foundation is complete: endpoints, identities, authentication, runtime secret
 validation, and inert pending pages exist through level 34. Scenario content
 for levels 15-34 remains pending and is deliberately not a release of 36
-challenges. Deployment totals, `game-stages.yml`, and current deployment
-behavior remain unchanged. See plan PR #69 for the deferred scenario work.
+challenges. What *has* moved since this plan was written is the accounting
+around those levels, not the content: `game-stages.yml` now declares Natas at
+`expected_challenge_count: 36`, and `deploy.sh` derives its preflight total
+from the manifest `validate_generated.py` writes rather than pinning one, so
+neither figure is stable the way this paragraph once implied. See plan PR #69
+for the deferred scenario work.
 
 ### Flag Chain And The Deployed 0-14 Boundary
 

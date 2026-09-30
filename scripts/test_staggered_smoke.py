@@ -4,6 +4,14 @@ automating cei-labs-engine/docs/staggered-wargame-stage-verification.md's
 "Deployment smoke test" checklist (items 1-10) against a local CTFd
 instance (see scripts/local-ctfd/).
 
+That checklist lives in the cei-labs-engine repository, not this one, which
+is why the path above is qualified by that repo name: the Engine checkout is
+the sibling tree this very script's CTFd image is built from
+(scripts/local-ctfd/docker-compose.yml). The repo-local document describing
+the same stage contract is docs/guides/staggered-game-stages.md, which is a
+different document with different content -- do not "fix" the cross-repo path
+by repointing it there.
+
 Run SECOND, after test_staggered_concurrency.py (which owns Bandit and
 leaves it LOCKED). This script owns Krypton and Natas end-to-end:
 
