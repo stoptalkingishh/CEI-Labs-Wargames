@@ -4,7 +4,7 @@
 # this is what a local developer installs to run the same suite.
 #
 # It previously listed ctfcli and was read by nothing, while CI hardcoded
-# `pip install PyYAML==6.0.2` and `pip install requests` inline. Two
+# `pip install PyYAML==6.0.3` and `pip install requests` inline. Two
 # independent sources of truth meant they could silently drift -- and had:
 # dependabot bumped pyyaml here to >=6.0.3 while CI was still installing 6.0.2.
 #
@@ -16,7 +16,7 @@
 # Parses the inventory/stage/manifest YAML consumed by
 # scripts/validate_generated.py, scripts/check_live_ctfd_scripts.py, and
 # scripts/test_export_reconciliation.py.
-PyYAML==6.0.2
+PyYAML==6.0.3
 
 # HTTP client for scripts/lib/ctfd_client.py, used by the live-CTFd scripts.
 # CI previously installed this with a bare `pip install requests`, so the gate
