@@ -3,23 +3,8 @@ import json
 import re
 
 from hint_economy import managed_tiers
-
-
-def _flags_yaml(flag) -> str:
-    """A challenge's `flag` field is either a plain string (the historical
-    shorthand -- ctfcli treats it as a static, case-sensitive flag) or a
-    dict (per_team_dynamic and any future non-static type) -- ctfcli's
-    _create_flags() POSTs a non-string entry to /api/v1/flags verbatim, so
-    the dict's keys must already match that API's real fields
-    (type/content/data)."""
-    if isinstance(flag, dict):
-        lines = [f"  - type: {flag['type']}\n"]
-        lines.append(f"    content: \"{flag['content']}\"\n")
-        if "data" in flag:
-            lines.append(f"    data: \"{flag['data']}\"\n")
-        return "".join(lines)
-    return f'  - "{flag}"\n'
-
+from lib.flags import flags_yaml as _flags_yaml
+from lib.validation import require as _require
 
 # Self-hosted image references (see docs/guides/self-hosted-wargames-blueprint.md
 # Phase 4's "Wire Natas into CTFd" task). Neither is published by a CI
@@ -541,10 +526,6 @@ def _render_hint(challenge_id: str, tier_number: int, content: str) -> str:
         content,
     )
     return f"### {HINT_TITLES[tier_number - 1]}\n\n{_curl_auth_note(challenge_id)}\n\n{authenticated}"
-
-def _require(condition: bool, message: str) -> None:
-    if not condition:
-        raise ValueError(message)
 
 
 def _validate_natas_content() -> None:

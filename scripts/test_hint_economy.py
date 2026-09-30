@@ -1,9 +1,9 @@
 import unittest
 
 try:  # Supports both `python scripts/test_hint_economy.py` and unittest.
-    from hint_economy import TIER_PERCENTS, managed_tiers, retained_percent, tier_costs
+    from hint_economy import TIER_PERCENTS, ctfd_tiers, managed_tiers, retained_percent, tier_costs
 except ModuleNotFoundError:
-    from scripts.hint_economy import TIER_PERCENTS, managed_tiers, retained_percent, tier_costs
+    from scripts.hint_economy import TIER_PERCENTS, ctfd_tiers, managed_tiers, retained_percent, tier_costs
 
 
 class HintEconomyTests(unittest.TestCase):
@@ -46,6 +46,25 @@ class HintEconomyTests(unittest.TestCase):
         for bad in (4, -1, "1"):
             with self.assertRaises(ValueError):
                 retained_percent(bad)
+
+    def test_ctfd_tiers_numbers_tiers_from_one_in_order(self):
+        self.assertEqual(
+            ctfd_tiers(100, ["nudge", "bigger nudge", "answer"]),
+            [
+                {"tier": 1, "cost": 20, "content": "nudge"},
+                {"tier": 2, "cost": 50, "content": "bigger nudge"},
+                {"tier": 3, "cost": 85, "content": "answer"},
+            ],
+        )
+
+    def test_ctfd_tiers_does_not_bypass_the_three_tier_arity_guard(self):
+        # ctfd_tiers() is only a reshape adapter -- a track must not be able
+        # to ship two or four hint tiers by going through it. This was a real
+        # bug: build_threadline.py used to reimplement the tier pairing
+        # locally and silently zipped whatever it was given (#102).
+        for bad in (["only one"], ["one", "two", "three", "four"]):
+            with self.assertRaises(ValueError):
+                ctfd_tiers(100, bad)
 
 
 if __name__ == "__main__":

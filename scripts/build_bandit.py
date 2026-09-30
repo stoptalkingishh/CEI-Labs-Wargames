@@ -2,22 +2,9 @@ import os
 import json
 
 from hint_economy import managed_tiers
-
-
-def _flags_yaml(flag) -> str:
-    """A challenge's `flag` field is either a plain string (the historical
-    shorthand -- ctfcli treats it as a static, case-sensitive flag) or a
-    dict (per_team_dynamic_fixed and any future non-static type) --
-    ctfcli's _create_flags() POSTs a non-string entry to /api/v1/flags
-    verbatim, so the dict's keys must already match that API's real
-    fields (type/content/data)."""
-    if isinstance(flag, dict):
-        lines = [f"  - type: {flag['type']}\n"]
-        lines.append(f"    content: \"{flag['content']}\"\n")
-        if "data" in flag:
-            lines.append(f"    data: \"{flag['data']}\"\n")
-        return "".join(lines)
-    return f'  - "{flag}"\n'
+from lib.flags import flags_yaml as _flags_yaml
+from lib.progression import progression_note
+from lib.validation import require as _require
 
 
 # Self-hosted image reference (see docs/guides/self-hosted-wargames-blueprint.md
@@ -604,35 +591,20 @@ HINTS = {
 
 
 def _progression_note(challenge_id: str) -> str:
-    """Return the trailing account-transition section (heading + body)."""
-    if challenge_id == "bandit-start-here":
-        return (
-            "### Up next\n"
+    """Bandit's instance of the shared progression note (scripts/lib/progression.py)."""
+    return progression_note(
+        challenge_id,
+        prefix="",
+        account="bandit",
+        track="Bandit",
+        final_level=33,
+        start_here_id="bandit-start-here",
+        start_here_body=(
             "After submitting this flag, begin Bandit 0 -> 1. "
             "Use the current host and port shown by the launch panel to connect as "
             "`bandit0` with password `bandit0`."
-        )
-
-    level = int(challenge_id.rsplit("-", 1)[1])
-    if level == 33:
-        return (
-            "### Finish line\n"
-            "You are working as `bandit33`. Submit the recovered "
-            "password here to complete the Bandit track; no further account switch is required."
-        )
-
-    return (
-        f"### Moving on\n"
-        f"You are working as `bandit{level}`. After "
-        "recovering and submitting this password, exit and reconnect as "
-        f"`bandit{level + 1}` at the host and port shown by the launch panel, using the "
-        "recovered password, before starting the next level."
+        ),
     )
-
-
-def _require(condition: bool, message: str) -> None:
-    if not condition:
-        raise ValueError(message)
 
 
 def _render_description(challenge: dict) -> str:

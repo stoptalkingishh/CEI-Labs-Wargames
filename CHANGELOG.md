@@ -58,6 +58,15 @@ record.
     `docs/osint/archive/briefing-transcripts.json`.
 
 ### Changed
+  - Build-script helpers that were copy-pasted across the generators now live
+    in `scripts/lib/`: `flags_yaml()` (was byte-identical in bandit, krypton,
+    and natas), `require()` (byte-identical in all three), and
+    `progression_note()` (structurally identical in bandit and krypton; the
+    three `_flags_yaml` docstrings had already drifted into disagreeing about
+    `per_team_dynamic` vs `per_team_dynamic_fixed`). `build_threadline.py` no
+    longer mutates `sys.path` on every tier call. Pure deduplication: all 138
+    generated files under `challenges/` and `threadline/` are byte-identical
+    to before.
   - `docs/osint/writeups.md`, `docs/osint/release-verification.md`: transliterated
     the `ash-strike` ground-truth flag to keep generated YAML ASCII-safe on
     Windows (`Антонівка-…` → `Antonivka-Khersonska-Kindijska-35-6`). Both docs
@@ -96,6 +105,13 @@ record.
   stay contiguous, non-empty, and cover every level exactly once.
 
 ### Fixed
+- `build_threadline.py` reimplemented `hint_economy.managed_tiers` locally and
+  dropped its "exactly three hint tiers" arity guard, so malformed Threadline
+  hint data shipped silently: two authored hint texts produced a two-tier
+  wallet, and four were silently truncated to three by `zip`. It now calls the
+  shared pricing code through a thin `hint_economy.ctfd_tiers()` reshape
+  adapter, so a tier-count typo raises `ValueError` at build time instead of
+  shipping. Generated output is unchanged for all well-formed data.
 - Bandit's chapter boundaries came from an even 34/6 split, which cut
   through related level runs -- Cron Jobs landed in a different chapter
   than Cron Debugging/Scripting, and the git levels straddled two. Now

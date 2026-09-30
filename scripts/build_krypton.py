@@ -2,6 +2,9 @@ import os
 import json
 
 from hint_economy import managed_tiers
+from lib.flags import flags_yaml as _flags_yaml
+from lib.progression import progression_note
+from lib.validation import require as _require
 
 # Self-hosted image reference (see docs/guides/self-hosted-wargames-blueprint.md
 # Phase 3's "Wire Krypton into CTFd" task). Not yet published by a CI
@@ -13,22 +16,6 @@ KRYPTON_IMAGE = os.environ.get(
     "KRYPTON_IMAGE",
     "ghcr.io/stoptalkingishh/cei-labs-wargames/krypton-target:latest",
 )
-
-
-def _flags_yaml(flag) -> str:
-    """A challenge's `flag` field is either a plain string (the historical
-    shorthand -- ctfcli treats it as a static, case-sensitive flag) or a
-    dict (per_team_dynamic and any future non-static type) -- ctfcli's
-    _create_flags() POSTs a non-string entry to /api/v1/flags verbatim, so
-    the dict's keys must already match that API's real fields
-    (type/content/data)."""
-    if isinstance(flag, dict):
-        lines = [f"  - type: {flag['type']}\n"]
-        lines.append(f"    content: \"{flag['content']}\"\n")
-        if "data" in flag:
-            lines.append(f"    data: \"{flag['data']}\"\n")
-        return "".join(lines)
-    return f'  - "{flag}"\n'
 
 # All 7 challenges share ONE instance_group -- same "one box, many
 # levels" design as Bandit. Only the final level opts into
@@ -249,45 +236,28 @@ HINTS = {
 
 
 def _progression_note(challenge_id: str) -> str:
-    """Return the common, current-instance account-transition instruction.
-    Mirrors build_bandit.py's _progression_note -- see that function's
-    docstring/comment for the full rationale. Krypton's account chain now
-    runs the full 0-6 range, same shape as Bandit's: `krypton-00` used to
-    be a pure Base64 decode with no environment/account of its own (see
+    """Krypton's instance of the shared progression note
+    (scripts/lib/progression.py). Krypton's account chain runs the full 0-6
+    range, same shape as Bandit's: `krypton-00` used to be a pure Base64
+    decode with no environment/account of its own (see
     build/01-create-users.sh's history and cei-labs-event#17), but it now
     has a real `krypton0` account like every other level, so it falls
     through to the same generic progression note the other non-final
     levels use -- no more special-casing needed here."""
-    if challenge_id == "krypton-start-here":
-        return (
-            "\n\n---\n\n### Up next\n"
+    return progression_note(
+        challenge_id,
+        prefix="\n\n---\n\n",
+        account="krypton",
+        track="Krypton",
+        final_level=6,
+        start_here_id="krypton-start-here",
+        start_here_body=(
             "After submitting this flag, begin Krypton 0 -> 1: "
             "Base64 Decoding. Connect as `krypton0` (password `krypton0`, the fixed "
             "public entry password) and decode the Base64 string in your home "
             "directory to find the password for `krypton1`."
-        )
-
-    level = int(challenge_id.rsplit("-", 1)[1])
-
-    if level == 6:
-        return (
-            "\n\n---\n\n### Finish line\n"
-            "You are working as `krypton6`. Submit the recovered "
-            "password here to complete the Krypton track; no further account switch is required."
-        )
-
-    return (
-        "\n\n---\n\n### Moving on\n"
-        f"You are working as `krypton{level}`. After "
-        "recovering and submitting this password, exit and reconnect as "
-        f"`krypton{level + 1}` at the host and port shown by the launch panel, "
-        "using the recovered password, before starting the next level."
+        ),
     )
-
-
-def _require(condition: bool, message: str) -> None:
-    if not condition:
-        raise ValueError(message)
 
 
 def _render_description(challenge: dict) -> str:

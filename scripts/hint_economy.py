@@ -52,6 +52,23 @@ def managed_tiers(value: int, tiers):
     return list(zip(texts, tier_costs(value)))
 
 
+def ctfd_tiers(value: int, texts):
+    """`managed_tiers()` reshaped into the hint-wallet manifest's tier dicts.
+
+    Every builder's hint-wallet JSON stores tiers as
+    ``{"tier": n, "cost": percent, "content": text}`` objects. This is a thin
+    adapter over `managed_tiers()` -- deliberately NOT a second copy of the
+    pricing logic, and deliberately NOT a second arity check: a track that
+    wants a different tier count must say so by changing `managed_tiers()`
+    itself, so the "exactly three tiers" guard above cannot be bypassed by a
+    builder that reshapes the result.
+    """
+    return [
+        {"tier": n, "cost": cost, "content": text}
+        for n, (text, cost) in enumerate(managed_tiers(value, texts), 1)
+    ]
+
+
 def retained_percent(opened_tier) -> int:
     """The percent of a challenge's value a player keeps on solve, given the
     highest hint tier they opened for it (None/0 = no hint opened -> 100%)."""
