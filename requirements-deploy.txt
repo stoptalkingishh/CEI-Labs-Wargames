@@ -14,4 +14,4 @@
 # today, which spans eight releases and changes hint-sync internals and
 # connection_info write-back semantics that deploy.sh depends on. That bump
 # needs its own review and a live-CTFd rehearsal; see dependabot PR #115.
-ctfcli>=0.1.0
+ctfcli>=0.1.8
