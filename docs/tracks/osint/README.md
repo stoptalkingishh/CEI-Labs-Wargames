@@ -35,4 +35,13 @@ synced. Then run:
 CEI_OSINT_RELEASE_STATE=hidden python3 scripts/build_osint.py
 ```
 
+The plugin is not bundled with this repository, so a clean checkout cannot
+generate the pilot: without it `build_osint.py` raises `RuntimeError:
+expected one installed ctf_generator.families:osint_investigation entry point;
+found 0`. `deploy.sh` therefore probes for the entry point and, when it is
+absent, prints a warning, skips the pilot, and deploys the remaining tracks
+rather than aborting the whole run (see the setup notes in the top-level
+[README](../../README.md)). Any stale `osint/` output left by an earlier run is
+discarded on that path so it can never be synced to a live instance.
+
 Set the state to `visible` only after organizer review. Output is written to the ignored `osint/` directory for `ctf challenge sync osint/`.
